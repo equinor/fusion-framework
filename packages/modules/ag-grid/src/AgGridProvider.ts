@@ -1,8 +1,10 @@
 import { LicenseManager } from 'ag-grid-enterprise';
 import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-community';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import type { AgGridConfig } from './AgGridConfigurator.interface.js';
 import { applyThemeShim } from './apply-theme-shim.js';
+import { version } from './version.js';
 
 /**
  * Public contract for the resolved AG Grid module provider.
@@ -28,8 +30,11 @@ export interface IAgGridProvider {
  * @remarks
  * This class also applies the {@link applyThemeShim | theme shim} to work around
  * `agStyleInjectionState` inconsistencies in module-federation setups.
+ *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it
+ * as a standard provider and can report the package `version`.
  */
-export class AgGridProvider implements IAgGridProvider {
+export class AgGridProvider extends BaseModuleProvider<AgGridConfig> implements IAgGridProvider {
   /**
    * The AG Grid enterprise license key, if configured.
    *
@@ -54,6 +59,7 @@ export class AgGridProvider implements IAgGridProvider {
    * @param _config - The resolved AG Grid configuration produced by {@link AgGridConfigurator}.
    */
   constructor(protected _config: AgGridConfig) {
+    super({ version, config: _config });
     this._init();
   }
 

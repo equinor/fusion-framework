@@ -1,10 +1,12 @@
 import type { AccountInfo, AuthenticationResult, PublicClientApplication } from '@azure/msal-node';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import { AuthServerError } from './errors/AuthServerError.js';
 import { NoAccountsError } from './errors/NoAccountsError.js';
 import { SilentTokenAcquisitionError } from './errors/SilentTokenAcquisitionError.js';
 
 import type { IAuthProvider } from './AuthProvider.interface.js';
+import { version } from './version.js';
 
 /**
  * Implementation of the authentication provider for the Fusion MSAL Node module.
@@ -21,12 +23,22 @@ import type { IAuthProvider } from './AuthProvider.interface.js';
  *
  * Developers extending this class can add support for additional authentication flows or modify token
  * acquisition logic. Ensure that any changes remain consistent with the interface contract.
+ *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it as a standard
+ * provider and can report the package `version`.
  */
-export class AuthProvider implements IAuthProvider {
+export class AuthProvider
+  extends BaseModuleProvider<PublicClientApplication>
+  implements IAuthProvider
+{
   /**
+   * Creates a provider that acquires tokens silently through the given MSAL client.
+   *
    * @param _client - The MSAL `PublicClientApplication` instance used for token operations.
    */
-  constructor(protected _client: PublicClientApplication) {}
+  constructor(protected _client: PublicClientApplication) {
+    super({ version, config: _client });
+  }
 
   /**
    * Retrieves the first account from the list of all accounts available in the MSAL client.

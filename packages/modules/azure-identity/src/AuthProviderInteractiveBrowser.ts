@@ -6,7 +6,9 @@ import {
 } from '@azure/identity';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IAuthProvider } from './AuthProvider.interface.js';
+import { version } from './version.js';
 
 /** Derived from the dynamic import to avoid static resolution-mode conflicts with `@azure/msal-node-extensions`. */
 type IPersistence = Awaited<
@@ -39,13 +41,21 @@ import { NoCredentialError } from './NoCredentialError.js';
  * const record = await provider.login({ request: { scopes: ['user.read'] } });
  * const token = await provider.acquireAccessToken({ request: { scopes: ['user.read'] } });
  * ```
+ *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it as a
+ * standard provider and can report the package `version`.
  */
-export class AuthProviderInteractiveBrowser implements IAuthProvider {
+export class AuthProviderInteractiveBrowser
+  extends BaseModuleProvider<InteractiveAuthOptions>
+  implements IAuthProvider
+{
   readonly #credential: InteractiveBrowserCredential;
   readonly #authRecordPersistence: IPersistence;
   #authRecord: AuthenticationRecord | undefined;
 
   /**
+   * Builds the provider around an `InteractiveBrowserCredential`; use {@link create} instead.
+   *
    * @param options - Azure AD tenant, client, redirect port, and optional browser callback.
    * @param authRecordPersistence - OS-level secure storage for the authentication record.
    * @param authenticationRecord - Previously persisted authentication record, if any.
@@ -55,6 +65,7 @@ export class AuthProviderInteractiveBrowser implements IAuthProvider {
     authRecordPersistence: IPersistence,
     authenticationRecord?: AuthenticationRecord,
   ) {
+    super({ version, config: options });
     this.#authRecordPersistence = authRecordPersistence;
     this.#authRecord = authenticationRecord;
     // Conditionally spread in a custom browser opener only when the caller provided one.

@@ -1,6 +1,8 @@
 import type { AccountInfo, AuthenticationResult } from '@azure/msal-node';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import type { IAuthProvider } from '../AuthProvider.interface.js';
+import { version } from '../version.js';
 
 /**
  * The identity {@link MockAuthProvider} signs in by default, and returns to
@@ -77,16 +79,22 @@ export interface MockAuthProviderOptions {
  * expiresOn!.getTime() < Date.now(); // true — a refresh path under test now has something to react to
  * ```
  */
-export class MockAuthProvider implements IAuthProvider {
+export class MockAuthProvider
+  extends BaseModuleProvider<MockAuthProviderOptions>
+  implements IAuthProvider
+{
   #identity: AccountInfo;
   #signedIn: boolean;
   #accessToken: string;
   #expiresOn: Date | null;
 
   /**
+   * Creates a mock provider with the given identity and token state.
+   *
    * @param options - The identity, initial signed-in state, token, and expiry to configure.
    */
   constructor(options: MockAuthProviderOptions = {}) {
+    super({ version, config: options });
     // `options.account` only overrides the fields a test names, keeping the rest of the default identity
     this.#identity = { ...defaultAccount, ...options.account };
     this.#signedIn = !options.signedOut;

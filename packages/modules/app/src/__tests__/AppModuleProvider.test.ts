@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 
 import { mockFramework } from '@equinor/fusion-framework/mock';
 import { createRouterMiddleware } from '@equinor/fusion-framework-module-http/mock';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import { enableAppModule } from '../enable-app-module';
 import type { AppModule } from '../module';
+import { version } from '../version';
 
 /**
  * Boots a full portal-shaped framework instance the same way `packages/dev-portal`'s
@@ -43,5 +45,14 @@ describe('AppModuleProvider', () => {
       appKey: 'test-app',
       displayName: 'Test App',
     });
+  });
+});
+
+describe('AppModuleProvider base provider contract', () => {
+  it('extends BaseModuleProvider and exposes the package version', async () => {
+    const fusion = await initializePortalWith();
+
+    expect(fusion.modules.app).toBeInstanceOf(BaseModuleProvider);
+    expect(String(fusion.modules.app.version)).toBe(version);
   });
 });

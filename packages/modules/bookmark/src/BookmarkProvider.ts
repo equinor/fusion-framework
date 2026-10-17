@@ -25,7 +25,7 @@ import {
 
 import { isFailureAction } from '@equinor/fusion-observable';
 
-import { SemanticVersion } from '@equinor/fusion-framework-module';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import type {
   Bookmark,
@@ -71,8 +71,13 @@ const defaultTimeout = 2 * 60 * 1000;
  * The `BookmarkProvider` uses a `BookmarkStore` to manage the state of the bookmarks, and an `IBookmarkClient` to interact with the backend API.
  *
  * The `BookmarkProvider` also supports event listeners for various bookmark-related events, such as when the current bookmark changes or when a bookmark is created, updated, or removed.
+ *
+ * Extends {@link BaseModuleProvider}, which supplies the package `version` reported to the module configurator.
  */
-export class BookmarkProvider implements IBookmarkProvider {
+export class BookmarkProvider
+  extends BaseModuleProvider<BookmarkModuleConfig>
+  implements IBookmarkProvider
+{
   /** provided configuration for the bookmark provider */
   #config: BookmarkModuleConfig;
 
@@ -156,14 +161,6 @@ export class BookmarkProvider implements IBookmarkProvider {
   getBookmarkById(id: string): Promise<Bookmark | null> {
     console.warn('getBookmarkById is deprecated, use getBookmarkAsync instead');
     return this.getBookmarkAsync(id);
-  }
-
-  /**
-   * Gets the semantic version of the bookmark provider.
-   * @returns The semantic version of the bookmark provider.
-   */
-  public get version(): SemanticVersion {
-    return new SemanticVersion(version);
   }
 
   /**
@@ -320,6 +317,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @param config - The configuration for the bookmark module, including the client, initial state, and optional parent provider.
    */
   constructor(config: BookmarkModuleConfig) {
+    super({ version, config });
     this.#config = config;
     this.#filters = config.filters ? Object.freeze({ ...config.filters }) : undefined;
 
@@ -1552,6 +1550,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    */
   dispose(): void {
     this._log?.debug('disposing BookmarkProvider');
+    super.dispose();
     this.#subscriptions.unsubscribe();
   }
 

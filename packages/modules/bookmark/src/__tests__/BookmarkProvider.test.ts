@@ -1,10 +1,13 @@
 import { throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+
 import { BookmarkProvider } from '../BookmarkProvider.js';
 import { BookmarkFlowError } from '../BookmarkFlowError.js';
 import { bookmarkActions } from '../bookmark-actions.js';
 import { BookmarkMockClient } from '../mock/index.js';
+import { version } from '../version.js';
 
 describe('BookmarkProvider filters', () => {
   it('exposes an immutable snapshot of the configured filters', () => {
@@ -159,5 +162,22 @@ describe('BookmarkFlowError', () => {
 
     equivalent.name = 'AnotherError';
     expect(BookmarkFlowError.compare(error, equivalent)).toBe(false);
+  });
+});
+
+describe('BookmarkProvider base provider contract', () => {
+  it('extends BaseModuleProvider and exposes the package version', () => {
+    const provider = new BookmarkProvider({
+      client: new BookmarkMockClient(),
+      resolve: {
+        context: async () => undefined,
+        application: async () => undefined,
+      },
+    });
+
+    expect(provider).toBeInstanceOf(BaseModuleProvider);
+    expect(String(provider.version)).toBe(version);
+
+    provider.dispose();
   });
 });
