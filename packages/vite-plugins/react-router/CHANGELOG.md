@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-react-router
 
+## 0.1.5
+
+### Patch Changes
+
+- 0ea9997: Internal: add intent comments to the DSL import scanner to satisfy `fusion-lint`. No behavior change.
+
 ## 0.1.4
 
 ### Patch Changes
