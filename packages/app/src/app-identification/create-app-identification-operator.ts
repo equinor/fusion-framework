@@ -6,6 +6,20 @@ import { toOrigin } from './to-origin.js';
 import type { AppIdentity } from './types.js';
 
 /**
+ * Checks a header value against the platform's own rules (Latin-1 only, no line breaks),
+ * so an unusual manifest string cannot make `Headers.set()` throw mid-request.
+ */
+const isValidHeader = ([name, value]: [string, string]): boolean => {
+  try {
+    new Headers([[name, value]]);
+    return true;
+  } catch {
+    // An invalid value is dropped: identification is diagnostic and must never break a request
+    return false;
+  }
+};
+
+/**
  * Creates a request operator that adds app identification headers to requests whose
  * target origin is in `allowedOrigins`.
  *
@@ -29,12 +43,17 @@ export const createAppIdentificationOperator = <T extends FetchRequest = FetchRe
   identity: AppIdentity,
   allowedOrigins: ReadonlySet<string>,
 ): ProcessOperator<T> => {
-  // Version values are optional in the manifest; sending empty headers would add noise to telemetry
+  // Empty values add telemetry noise and invalid ones would throw, so both are dropped up front
   const entries: Array<[string, string]> = [
     [appIdentificationHeaders.app, identity.appKey],
     [appIdentificationHeaders.appVersion, identity.appVersion ?? ''],
     [appIdentificationHeaders.frameworkVersion, identity.frameworkVersion ?? ''],
-  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+  ]
+    // Validate once here so the per-request path never needs to guard `Headers.set()`
+    .filter(
+      (entry): entry is [string, string] =>
+        Boolean(entry[1]) && isValidHeader([entry[0], entry[1]]),
+    );
 
   return (request: T): T | undefined => {
     const origin = toOrigin(request.uri, globalThis.location?.origin);

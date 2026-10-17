@@ -163,6 +163,20 @@ describe('createAppIdentificationOperator', () => {
     expect(headers.has(appIdentificationHeaders.frameworkVersion)).toBe(false);
   });
 
+  it('drops manifest values that are not valid header values instead of failing the request', async () => {
+    const operator = createAppIdentificationOperator(
+      { appKey: 'my-app\r\nx-injected: 1', appVersion: 'preview-🚀', frameworkVersion: '1.0.0' },
+      new Set(['https://api.example.test']),
+    );
+
+    const result = await operator(request('https://api.example.test/x'));
+    const headers = new Headers(result ? result.headers : undefined);
+
+    expect(headers.has(appIdentificationHeaders.app)).toBe(false);
+    expect(headers.has(appIdentificationHeaders.appVersion)).toBe(false);
+    expect(headers.get(appIdentificationHeaders.frameworkVersion)).toBe('1.0.0');
+  });
+
   it('ignores requests whose URI cannot be parsed', async () => {
     const operator = createAppIdentificationOperator({ appKey: 'my-app' }, new Set());
 
