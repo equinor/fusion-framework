@@ -122,6 +122,7 @@ giving you access to:
 - **`configurator.configureHttpClient(name, options)`** — register a named HTTP client with explicit base URI and scopes.
 - **`configurator.configureHttp(...)`** — low-level HTTP module configuration.
 - **`configurator.useFrameworkServiceClient(serviceName, options?)`** — register a client resolved via Fusion service discovery.
+- **`configurator.configureAppIdentification(options)`** — control the `x-fusion-app*` headers that identify the app to backend telemetry. See [App Identification Headers](docs/http-clients.md#app-identification-headers).
 
 ### Sub-path Exports
 

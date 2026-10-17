@@ -82,6 +82,7 @@ export class AppMockConfigurator<
     // deferred from AppConfigurator's own constructor (see the override below) until
     // after pinning, so endpoint-derived clients register against the pinned http module
     super._configureHttpClientsFromAppConfig();
+    super._configureAppIdentificationHeaders();
   }
 
   /**
@@ -90,6 +91,13 @@ export class AppMockConfigurator<
    * {@link AppConfigurator._configureHttpClientsFromAppConfig} itself once pinned.
    */
   protected override _configureHttpClientsFromAppConfig(): void {}
+
+  /**
+   * No-ops the base constructor's own call to this for the same reason as
+   * {@link AppMockConfigurator._configureHttpClientsFromAppConfig}; this class calls
+   * {@link AppConfigurator._configureAppIdentificationHeaders} itself once pinned.
+   */
+  protected override _configureAppIdentificationHeaders(): void {}
 
   /**
    * Registers a module configurator, redirecting registrations for a pinned module
