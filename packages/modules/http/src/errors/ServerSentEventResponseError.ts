@@ -15,6 +15,17 @@ export class ServerSentEventResponseError<
   static Name = 'ServerSentEventResponseError';
 
   /**
+   * Determines whether an unknown thrown value is a {@link ServerSentEventResponseError}.
+   *
+   * @param error - Thrown value to inspect, including values crossing application bundle boundaries.
+   * @returns True when the value structurally matches this error, regardless of which module
+   * instance constructed it.
+   */
+  public static is(error: unknown): error is ServerSentEventResponseError {
+    return HttpResponseError.is(error) && error.name === ServerSentEventResponseError.Name;
+  }
+
+  /**
    * Creates a new instance of the error.
    *
    * @param message - The error message describing the cause of the error.
