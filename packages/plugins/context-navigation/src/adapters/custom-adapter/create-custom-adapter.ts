@@ -18,7 +18,8 @@ import { toFullPath } from './to-full-path.js';
  *
  * **Selection:** The factory returns a bound adapter only when the app has
  * both generator hooks registered (checked via {@link hasCustomContextGenerators}).
- * Otherwise it returns `null`, letting lower-priority adapters (query, path) match.
+ * Explicit query routing bypasses these hooks so the declared strategy remains authoritative.
+ * Otherwise it returns `null` when hooks are absent, letting lower-priority adapters match.
  *
  * **Coordinate system:** All app hooks receive/return app-relative paths.
  * The adapter handles stripping and prepending the `/apps/{appKey}` prefix
@@ -33,7 +34,12 @@ import { toFullPath } from './to-full-path.js';
  *          or `null` to fall through to the next adapter in the resolution chain.
  */
 export function createCustomAdapter(): ContextNavigationAdapterFactory {
-  return ({ appContext, appKey }): ContextNavigationAdapter | null => {
+  return ({ appContext, appKey, routingStrategy }): ContextNavigationAdapter | null => {
+    // Explicit query routing must not interpret app route slugs as context ids.
+    if (routingStrategy === 'query') {
+      return null;
+    }
+
     // This app hasn't registered custom context hooks — let a lower-priority adapter handle it
     if (!hasCustomContextGenerators(appContext)) {
       return null;
@@ -68,8 +74,8 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
        *   preferring the app generator's output, falling back to string replacement.
        * - **No existing context:** delegates entirely to the app generator.
        *
-       * Returns `null` when the generator cannot produce a path (signals the
-       * reconciler to skip navigation).
+       * Returns `null` when the generator cannot produce a path and no existing
+       * context ID is available for the fallback replacement.
        */
       encode({
         context,
@@ -93,11 +99,9 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
 
         let generatedPath: string | undefined;
 
-        // Context already lives in the URL — prefer the generator's output, but substitute the
-        // id directly as a last resort to avoid a no-op navigation
+        // Context already lives in the URL — keep the existing fallback semantics when the
+        // generator cannot create a route.
         if (existingContextId) {
-          // Context already embedded in the URL — let the generator rewrite it, or fall back to
-          // a simple string replacement of the old id with the new one
           generatedPath =
             normalizeStringResult(generate(context, appRelativePath)) ??
             appRelativePath.replace(existingContextId, context.id);

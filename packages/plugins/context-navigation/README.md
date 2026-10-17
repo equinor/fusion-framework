@@ -50,7 +50,8 @@ Apps with custom URL shapes should omit `contextRouting` and register custom hoo
 > **path adapter** which encodes context as a path segment after the app key.
 > If the app registers custom hooks (`setContextPathExtractor` /
 > `setContextPathGenerator`), the custom adapter takes priority over the path
-> adapter regardless of the `contextRouting` value.
+> adapter for path/default routing. An explicit `contextRouting: 'query'` selects
+> the query adapter even when custom path hooks are registered.
 
 ### Custom URL shapes
 
@@ -158,7 +159,7 @@ The plugin ships with three adapters evaluated in priority order:
 
 | Adapter | URL Shape | When Selected |
 |---|---|---|
-| **custom** | App-defined (via `generatePathFromContext` / `extractContextIdFromPath` hooks) | App provides `generatePathFromContext` and/or `extractContextIdFromPath` hooks on its context provider |
+| **custom** | App-defined (via `generatePathFromContext` / `extractContextIdFromPath` hooks) | App provides custom hooks and does not declare `contextRouting: 'query'` |
 | **query** | `/apps/{appKey}/route?$contextId={id}` | App manifest declares `build.options.contextRouting: 'query'` |
 | **path** | `/apps/{appKey}/{contextId}/sub-route` | Default fallback — matches when `contextRouting` is `'path'`, `null`, or omitted |
 
