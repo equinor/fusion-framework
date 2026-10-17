@@ -28,6 +28,11 @@ export { configureModules, default } from './configure-modules.js';
 
 export { AppConfiguratorError } from './AppConfiguratorError.js';
 
+export {
+  appIdentificationHeaders,
+  type AppIdentificationOptions,
+} from './app-identification/index.js';
+
 export { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent.js';
 
 export { AppModulesInitializedEvent } from './AppModulesInitializedEvent.js';

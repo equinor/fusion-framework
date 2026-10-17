@@ -119,3 +119,40 @@ highest-priority source wins:
 This means an endpoint defined in `app.config.ts` will override a
 `configureHttpClient` call for the same name, and a session override will
 override both.
+
+## App Identification Headers
+
+Requests from the app's HTTP clients carry headers that tell backend services
+which app made the call:
+
+| Header | Value |
+|--------|-------|
+| `x-fusion-app` | `appKey` from the app manifest |
+| `x-fusion-app-version` | `build.version` from the app manifest, when present |
+| `x-fusion-framework-version` | Version of `@equinor/fusion-framework-app` |
+
+Services using `Fusion.Infrastructure.Diagnostics` record these on their request
+telemetry (`x-fusion-app` becomes the `fusion.app` tag), so traffic, errors, and
+latency can be attributed to a single app.
+
+Custom headers trigger a CORS preflight, so by default they are only sent to
+origins known to accept them: the portal origin and the hosts listed in Fusion
+service discovery. Requests to any other origin are sent unchanged. Headers set
+explicitly on a request are never overwritten.
+
+Opt in your own backend once it allows the headers in CORS, or turn
+identification off:
+
+```ts
+const initialize = configureModules((configurator) => {
+  configurator.configureAppIdentification({
+    allowedOrigins: ['https://my-backend.example.com'],
+  });
+
+  // or, to stop sending the headers entirely
+  configurator.configureAppIdentification({ enabled: false });
+});
+```
+
+Only clients created through the app's own HTTP module are tagged. Clients with
+a custom `requestHandler`, portal-level modules, and raw `fetch` calls are not.

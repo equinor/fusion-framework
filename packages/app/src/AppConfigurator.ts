@@ -20,6 +20,12 @@ import type { AppEnv, AppModules } from './types.js';
 import { AppModulesConfiguredEvent } from './AppModulesConfiguredEvent.js';
 import { AppConfiguratorError } from './AppConfiguratorError.js';
 import { deepClone, deepFreeze, type DeepImmutable } from './utils.js';
+import {
+  type AppIdentificationOptions,
+  type AppIdentificationSettings,
+  applyAppIdentificationOptions,
+  createAppIdentificationConfig,
+} from './app-identification/index.js';
 
 /**
  * Type definition for AppConfigurator constructor
@@ -90,6 +96,26 @@ export interface IAppConfigurator<
   configureHttpClient(...args: Parameters<typeof configureHttpClient>): void;
 
   /**
+   * Control the app identification headers (`x-fusion-app`, `x-fusion-app-version`,
+   * `x-fusion-framework-version`) added to requests from the app's HTTP clients.
+   *
+   * Identification is on by default, but only for requests to the portal origin and to
+   * Fusion service-discovery hosts. Use `allowedOrigins` to include other APIs (they must
+   * allow the headers in CORS), or `enabled: false` to turn identification off.
+   * Repeated calls add origins; the last `enabled` value wins.
+   *
+   * @param options - Identification options.
+   *
+   * @example
+   * ```ts
+   * configurator.configureAppIdentification({
+   *   allowedOrigins: ['https://my-backend.example.com'],
+   * });
+   * ```
+   */
+  configureAppIdentification(options: AppIdentificationOptions): void;
+
+  /**
    * Register a named HTTP client resolved through Fusion service discovery.
    *
    * The `serviceName` is looked up in the portal’s service-discovery registry at
@@ -152,6 +178,8 @@ export class AppConfigurator<
 
   #manifest: DeepImmutable<AppEnv['manifest']>;
 
+  #appIdentification: AppIdentificationSettings = { enabled: true, allowedOrigins: new Set() };
+
   /**
    * Create an application configurator with default modules and environment.
    *
@@ -168,6 +196,7 @@ export class AppConfigurator<
     super([event, http, auth]);
     this.#manifest = deepFreeze(deepClone(env.manifest));
     this._configureHttpClientsFromAppConfig();
+    this._configureAppIdentificationHeaders();
 
     this.onConfigured((configs) => {
       const configuredEvent = new AppModulesConfiguredEvent<TModules>({
@@ -207,6 +236,24 @@ export class AppConfigurator<
         defaultScopes: scopes,
       });
     }
+  }
+
+  /**
+   * Register the request operator that adds app identification headers to the app's
+   * default HTTP request handler.
+   */
+  protected _configureAppIdentificationHeaders(): void {
+    this.addConfig(
+      createAppIdentificationConfig<TRef>(
+        { appKey: this.#manifest.appKey, appVersion: this.#manifest.build?.version },
+        () => this.#appIdentification,
+      ),
+    );
+  }
+
+  /** {@inheritDoc IAppConfigurator.configureAppIdentification} */
+  public configureAppIdentification(options: AppIdentificationOptions): void {
+    this.#appIdentification = applyAppIdentificationOptions(this.#appIdentification, options);
   }
 
   /** {@inheritDoc IAppConfigurator.configureHttp} */
