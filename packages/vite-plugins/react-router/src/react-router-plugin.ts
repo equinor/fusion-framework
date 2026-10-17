@@ -134,6 +134,7 @@ function findDslImportRanges(code: string): SourceRange[] {
     }
     // Not a braced import list (e.g. an object literal or default import) — not a DSL import.
     if (openBrace < floor || code[openBrace] !== '{') {
+      // Leave this candidate in place; only braced import lists can hold DSL helpers
       continue;
     }
 
@@ -145,14 +146,17 @@ function findDslImportRanges(code: string): SourceRange[] {
     const start = keywordEnd - 'import'.length;
     // Only static `import { ... }` statements are DSL imports; `export { ... } from` is left alone.
     if (start < floor || !code.startsWith('import', start)) {
+      // Re-exports must survive so consumers of this module keep their public names
       continue;
     }
 
     // The router package also exports hooks; only imports that pull in DSL helpers are rewritten.
     if (!DSL_FUNCTION_NAME_PATTERN.test(code.slice(openBrace + 1, closeBrace))) {
+      // Hook-only imports are still needed at runtime, so they are not stripped
       continue;
     }
 
+    // Include the statement terminator so the removed range leaves valid syntax behind
     if (code[end] === ';') {
       end++;
     }
