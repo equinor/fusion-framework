@@ -140,6 +140,12 @@ origins known to accept them: the portal origin and the hosts listed in Fusion
 service discovery. Requests to any other origin are sent unchanged. Headers set
 explicitly on a request are never overwritten.
 
+Services whose URL is overridden for the session (for example pointing
+`people` at a local or team backend) are not trusted automatically; add the
+origin to `allowedOrigins` if it should be tagged. If service discovery does
+not answer within two seconds, app startup continues and only the portal origin
+and `allowedOrigins` are tagged.
+
 Opt in your own backend once it allows the headers in CORS, or turn
 identification off:
 

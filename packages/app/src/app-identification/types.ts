@@ -42,5 +42,5 @@ export type AppIdentificationSettings = {
  * The part of the service discovery provider needed to list Fusion service hosts.
  */
 export type ServiceRegistry = {
-  resolveServices(): Promise<ReadonlyArray<{ uri: string }>>;
+  resolveServices(): Promise<ReadonlyArray<{ uri: string; overridden?: boolean }>>;
 };

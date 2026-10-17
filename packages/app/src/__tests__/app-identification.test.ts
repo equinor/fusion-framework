@@ -8,6 +8,7 @@ import {
   appIdentificationHeaders,
   applyAppIdentificationOptions,
   createAppIdentificationOperator,
+  resolveAllowedOrigins,
   toOrigin,
 } from '../app-identification/index.js';
 import type { AppMockConfigurator } from '../mock/AppMockConfigurator.js';
@@ -166,6 +167,34 @@ describe('createAppIdentificationOperator', () => {
     const operator = createAppIdentificationOperator({ appKey: 'my-app' }, new Set());
 
     expect(await operator(request('not a url'))).toBeUndefined();
+  });
+});
+
+describe('resolveAllowedOrigins', () => {
+  it('falls back to configured origins when service discovery never settles', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const registry = { resolveServices: () => new Promise<never>(() => {}) };
+
+    const origins = await resolveAllowedOrigins(['https://mine.example.test'], registry, 10);
+
+    expect([...origins]).toEqual(['https://mine.example.test']);
+    expect(warn).toHaveBeenCalled();
+  });
+
+  it('skips session-overridden services unless the origin is opted in explicitly', async () => {
+    const registry = {
+      resolveServices: async () => [
+        { uri: 'https://context.fusion.test' },
+        { uri: 'https://team-api.example.test', overridden: true },
+        { uri: 'https://mine.example.test/api', overridden: true },
+      ],
+    };
+
+    const origins = await resolveAllowedOrigins(['https://mine.example.test'], registry);
+
+    expect(origins.has('https://context.fusion.test')).toBe(true);
+    expect(origins.has('https://team-api.example.test')).toBe(false);
+    expect(origins.has('https://mine.example.test')).toBe(true);
   });
 });
 
