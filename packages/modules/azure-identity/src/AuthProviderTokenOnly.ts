@@ -1,4 +1,6 @@
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IAuthProvider } from './AuthProvider.interface.js';
+import { version } from './version.js';
 
 /**
  * Authentication provider that returns a static, pre-obtained access token.
@@ -6,14 +8,21 @@ import type { IAuthProvider } from './AuthProvider.interface.js';
  * Used for CI/CD pipelines and automation where a token is supplied externally
  * (e.g. via `FUSION_TOKEN` environment variable). Login and logout are not
  * supported — the token is used as-is until it expires.
+ *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it as a
+ * standard provider and can report the package `version`.
  */
-export class AuthProviderTokenOnly implements IAuthProvider {
+export class AuthProviderTokenOnly extends BaseModuleProvider<undefined> implements IAuthProvider {
   readonly #accessToken: string;
 
   /**
+   * Creates a provider that serves the given token for every request.
+   *
    * @param token - The static access token to return from {@link acquireAccessToken}.
    */
   constructor(token: string) {
+    // The token is kept private rather than passed as `config` so it is never exposed via the base class.
+    super({ version, config: undefined });
     this.#accessToken = token;
   }
 

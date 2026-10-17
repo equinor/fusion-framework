@@ -1,9 +1,11 @@
 import { HubConnectionBuilder, type HubConnection, AbortError } from '@microsoft/signalr';
 import { Observable, shareReplay } from 'rxjs';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import type { SignalRConfig } from './SignalRModuleConfigBuilder.js';
 
 import { Topic } from './lib/Topic.js';
+import { version } from './version.js';
 
 /**
  * Public interface for the SignalR module provider.
@@ -41,15 +43,24 @@ export interface ISignalRProvider {
  * Creates and manages `@microsoft/signalr` `HubConnection` instances based on
  * the resolved {@link SignalRConfig}. Hub connections are lazily created on
  * first subscription and shared across all callers via `shareReplay`.
+ *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it
+ * as a standard provider and can report the package `version`.
  */
-export class SignalRModuleProvider implements ISignalRProvider {
+export class SignalRModuleProvider
+  extends BaseModuleProvider<SignalRConfig>
+  implements ISignalRProvider
+{
   #config: SignalRConfig;
   #hubConnections: Record<string, Observable<HubConnection>> = {};
 
   /**
+   * Creates a SignalR provider for the hubs registered in the configurator.
+   *
    * @param config - Resolved SignalR configuration containing all registered hubs
    */
   constructor(config: SignalRConfig) {
+    super({ version, config });
     this.#config = config;
   }
 

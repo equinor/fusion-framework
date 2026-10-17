@@ -1,6 +1,8 @@
 import { DefaultAzureCredential } from '@azure/identity';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 import { NoCredentialError } from './NoCredentialError.js';
+import { version } from './version.js';
 
 /**
  * Authentication provider backed by Azure Identity's `DefaultAzureCredential`.
@@ -19,14 +21,21 @@ import { NoCredentialError } from './NoCredentialError.js';
  * enableAzureIdentityAuth(configurator);
  * // framework.auth.acquireAccessToken({ request: { scopes } });
  * ```
+ *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it as a
+ * standard provider and can report the package `version`.
  */
-export class AuthProviderDefaultCredential implements IAuthProvider {
+export class AuthProviderDefaultCredential
+  extends BaseModuleProvider<undefined>
+  implements IAuthProvider
+{
   readonly #credential: DefaultAzureCredential;
 
   /**
    * Creates the provider, initializing the underlying `DefaultAzureCredential` chain.
    */
   constructor() {
+    super({ version, config: undefined });
     this.#credential = new DefaultAzureCredential();
   }
 

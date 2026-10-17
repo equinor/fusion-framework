@@ -1,6 +1,7 @@
 import { catchError, type Observable, Subscription } from 'rxjs';
 
 import type { ModuleType } from '@equinor/fusion-framework-module';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { HttpResponseError } from '@equinor/fusion-framework-module-http';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 
@@ -11,6 +12,7 @@ import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types.
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 import { WidgetManifestLoadError, WidgetConfigLoadError } from './WidgetManifestLoadError.js';
 import { Widget } from './Widget.js';
+import { version } from './version.js';
 
 /**
  * Public interface for the widget module provider.
@@ -62,7 +64,9 @@ export interface IWidgetModuleProvider {
  * for widget manifests and configurations.
  *
  * Created automatically during module initialization; see {@link module} and
- * {@link enableWidgetModule}.
+ * {@link enableWidgetModule}. Extends {@link BaseModuleProvider} so the module
+ * configurator recognises it as a standard provider and can report the
+ * package `version`.
  *
  * @example
  * ```typescript
@@ -70,7 +74,10 @@ export interface IWidgetModuleProvider {
  * widget.initialize().subscribe(result => { ... });
  * ```
  */
-export class WidgetModuleProvider implements IWidgetModuleProvider {
+export class WidgetModuleProvider
+  extends BaseModuleProvider<WidgetModuleConfig>
+  implements IWidgetModuleProvider
+{
   // Private fields
   #subscription = new Subscription();
   #config: WidgetModuleConfig;
@@ -85,6 +92,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
    */
   constructor(args: { config: WidgetModuleConfig; event?: ModuleType<EventModule> }) {
     const { config, event } = args;
+    super({ version, config });
     this.#event = event;
     this.#config = config;
   }
@@ -225,7 +233,8 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
    *
    * After disposal the provider should not be reused.
    */
-  public dispose() {
+  public dispose(): void {
+    super.dispose();
     this.#subscription.unsubscribe();
   }
 }

@@ -25,7 +25,7 @@ import { App, filterEmpty, type IApp } from './app/App.js';
 import type { AppModuleConfig } from './AppConfigurator.js';
 import type { AppBundleStateInitial } from './app/types.js';
 import type { IAppClient } from './AppClient.js';
-import { SemanticVersion } from '@equinor/fusion-framework-module';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
 /**
@@ -36,12 +36,15 @@ import { version } from './version.js';
  * {@link EventModule} is available, lifecycle events are dispatched as the
  * current app changes.
  *
+ * Extends {@link BaseModuleProvider}, which supplies the package `version`
+ * reported to the module configurator.
+ *
  * @remarks
  * Only one application can be active (`current`) at a time. Setting a new current
  * app automatically disposes the previous one. Subscribe to {@link current$} for
  * reactive updates.
  */
-export class AppModuleProvider {
+export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
   /**
    * Shallow-compares two app manifests by JSON serialization.
    *
@@ -63,14 +66,6 @@ export class AppModuleProvider {
   #subscription = new Subscription();
 
   #event?: ModuleType<EventModule>;
-
-  /**
-   * Get module version
-   * @returns The module's semantic version.
-   */
-  get version(): SemanticVersion {
-    return new SemanticVersion(version);
-  }
 
   /**
    * The current active application instance.
@@ -114,6 +109,7 @@ export class AppModuleProvider {
    */
   constructor(args: { config: AppModuleConfig; event?: ModuleType<EventModule> }) {
     const { event, config } = args;
+    super({ version, config });
 
     this.#appClient = config.client;
     this.#event = event;
@@ -275,7 +271,8 @@ export class AppModuleProvider {
   /**
    * Tears down the provider, unsubscribing from all internal observables.
    */
-  public dispose() {
+  public dispose(): void {
+    super.dispose();
     this.#subscription.unsubscribe();
   }
 }

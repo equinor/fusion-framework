@@ -1,5 +1,7 @@
 import type { AuthenticationResult } from '@azure/msal-node';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IAuthProvider } from './AuthProvider.interface.js';
+import { version } from './version.js';
 
 /**
  * Implementation of an authentication provider that supplies a static, pre-obtained access token.
@@ -9,16 +11,23 @@ import type { IAuthProvider } from './AuthProvider.interface.js';
  *
  * Login and logout operations are not supported and will always throw errors if called.
  *
+ * Extends {@link BaseModuleProvider} so the module configurator recognises it as a standard
+ * provider and can report the package `version`.
+ *
  * @see AuthProvider for silent authentication using cached accounts and MSAL flows.
  * @see AuthProviderInteractive for interactive, user-driven authentication flows.
  */
-export class AuthTokenProvider implements IAuthProvider {
+export class AuthTokenProvider extends BaseModuleProvider<undefined> implements IAuthProvider {
   #accessToken: string;
 
   /**
+   * Creates a provider that serves the given token for every request.
+   *
    * @param token - The pre-obtained access token to serve for all token requests.
    */
   constructor(token: string) {
+    // The token is kept private rather than passed as `config` so it is never exposed via the base class.
+    super({ version, config: undefined });
     this.#accessToken = token;
   }
 
