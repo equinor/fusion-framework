@@ -1,5 +1,15 @@
 # portal
 
+## 0.1.103
+
+### Patch Changes
+
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-cli@15.6.2
+
 ## 0.1.102
 
 ### Patch Changes

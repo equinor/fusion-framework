@@ -1,5 +1,38 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.7
+
+### Patch Changes
+
+- ae6dab0: Internal: bump bundled `react` and `react-dom` from 19.2.8 to 19.3.1.
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+- Updated dependencies [72f0bdc]
+- Updated dependencies [72f0bdc]
+- Updated dependencies [72f0bdc]
+- Updated dependencies [79014cd]
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-module-ag-grid@37.1.4
+  - @equinor/fusion-framework-module-app@8.2.2
+  - @equinor/fusion-framework-module-bookmark@4.1.5
+  - @equinor/fusion-framework-react@9.0.4
+  - @equinor/fusion-framework-react-components-bookmark@2.0.7
+  - @equinor/fusion-framework-react-components-people-provider@2.0.8
+  - @equinor/fusion-framework-react-module-bookmark@7.0.3
+  - @equinor/fusion-observable@9.2.5
+  - @equinor/fusion-query@7.0.7
+  - @equinor/fusion-framework-app@13.1.11
+  - @equinor/fusion-framework-dev-server@2.3.2
+  - @equinor/fusion-framework@9.0.5
+  - @equinor/fusion-framework-module-analytics@3.1.10
+  - @equinor/fusion-framework-module-feature-flag@2.1.3
+  - @equinor/fusion-framework-module-navigation@7.0.12
+  - @equinor/fusion-framework-module-services@8.1.5
+  - @equinor/fusion-framework-module-telemetry@7.2.2
+  - @equinor/fusion-framework-plugin-context-navigation@1.0.6
+
 ## 11.1.6
 
 ### Patch Changes

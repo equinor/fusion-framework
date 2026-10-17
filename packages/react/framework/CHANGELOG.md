@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.0.4
+
+### Patch Changes
+
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+
 ## 9.0.3
 
 ### Patch Changes

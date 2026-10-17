@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.31
+
+### Patch Changes
+
+- 1aeab73: Update the Vitest app-testing install guides to request the Vitest 5 browser stack required by `@equinor/fusion-framework-vitest-plugin-react-app`.
+
 ## 0.4.30
 
 ### Patch Changes
