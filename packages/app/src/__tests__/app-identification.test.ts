@@ -181,19 +181,18 @@ describe('resolveAllowedOrigins', () => {
     expect(warn).toHaveBeenCalled();
   });
 
-  it('skips session-overridden services unless the origin is opted in explicitly', async () => {
+  it('includes session-overridden services, which point at Fusion PR slots', async () => {
     const registry = {
       resolveServices: async () => [
         { uri: 'https://context.fusion.test' },
-        { uri: 'https://team-api.example.test', overridden: true },
-        { uri: 'https://mine.example.test/api', overridden: true },
+        { uri: 'https://pr-123.people.fusion.test/api', overridden: true },
       ],
     };
 
     const origins = await resolveAllowedOrigins(['https://mine.example.test'], registry);
 
     expect(origins.has('https://context.fusion.test')).toBe(true);
-    expect(origins.has('https://team-api.example.test')).toBe(false);
+    expect(origins.has('https://pr-123.people.fusion.test')).toBe(true);
     expect(origins.has('https://mine.example.test')).toBe(true);
   });
 });

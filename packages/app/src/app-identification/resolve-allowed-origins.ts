@@ -28,8 +28,8 @@ const withDeadline = <T>(promise: Promise<T>, ms: number): Promise<T> =>
  *
  * Discovery failures and lookups slower than `timeoutMs` are logged and ignored, since
  * identification is diagnostic only and must never hold up app startup. Session-overridden
- * services are skipped because their URL may point at a host outside the Fusion CORS policy;
- * an app that wants those tagged must opt the origin in explicitly.
+ * services are included: overrides point at Fusion-hosted PR slots that share the Fusion
+ * CORS policy.
  *
  * @param allowedOrigins - Origins the app opted in.
  * @param registry - Service discovery used to list Fusion service hosts, when available.
@@ -54,9 +54,9 @@ export const resolveAllowedOrigins = async (
   try {
     const services = await withDeadline(registry.resolveServices(), timeoutMs);
     // Fusion services share a CORS policy that allows any header, so their hosts are safe targets
-    for (const { uri, overridden } of services) {
-      const origin = overridden ? undefined : toOrigin(uri, base);
-      // Skip overridden URLs (not necessarily Fusion-hosted) and malformed registry entries
+    for (const { uri } of services) {
+      const origin = toOrigin(uri, base);
+      // Skip malformed registry entries rather than failing app startup over diagnostics
       if (origin) {
         origins.add(origin);
       }
