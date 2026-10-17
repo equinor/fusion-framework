@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.11
+
+### Patch Changes
+
+- 5479006: Internal: wait up to 20 seconds for mounted cookbook UI before Playwright feature assertions, cap each test at 45 seconds, probe the served SPA bootstrap module, and retain failure traces, screenshots, and HTML reports. No retries are added.
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+
 ## 5.0.10
 
 ### Patch Changes

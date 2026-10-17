@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.2.3
+
+### Patch Changes
+
+- 5479006: Internal: remove the unused services-module TypeScript project reference. It was not a workspace dependency, so parallel builds could compile the services output twice while Turbo cached it, retaining incomplete JavaScript and source maps.
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-module-http@8.1.4
+  - @equinor/fusion-framework-module@6.1.6
+  - @equinor/fusion-framework-module-telemetry@7.2.2
+
 ## 5.2.2
 
 ### Patch Changes

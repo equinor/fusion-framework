@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.2.4
+
+### Patch Changes
+
+- 72f0bdc: `AuthProvider`, `AuthProviderInteractive`, `AuthProviderDeviceCode`, `AuthTokenProvider`, and the mock `MockAuthProvider` now extend `BaseModuleProvider` and expose the package `version`, so the CLI no longer emits `ModuleConfigurator.provider.invalidBase` and `ModuleConfigurator.provider.versionMissing` warnings for the auth module. Each provider also gains a `dispose()` method. Constructor signatures are unchanged, and access tokens are not passed to the base class.
+  
+  Resolves equinor/fusion-core-tasks#2389
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+
 ## 4.2.3
 
 ### Patch Changes

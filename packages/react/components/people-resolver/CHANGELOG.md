@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.8
+
+### Patch Changes
+
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+
 ## 2.0.7
 
 ### Patch Changes

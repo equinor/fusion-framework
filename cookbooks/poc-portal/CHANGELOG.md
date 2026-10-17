@@ -1,5 +1,23 @@
 # poc-portal
 
+## 1.1.118
+
+### Patch Changes
+
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+- Updated dependencies [72f0bdc]
+- Updated dependencies [79014cd]
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-module-app@8.2.2
+  - @equinor/fusion-framework-react@9.0.4
+  - @equinor/fusion-framework-react-app@14.3.5
+  - @equinor/fusion-framework-cli@15.6.2
+  - @equinor/fusion-framework@9.0.5
+  - @equinor/fusion-framework-module-http@8.1.4
+  - @equinor/fusion-framework-module@6.1.6
+
 ## 1.1.117
 
 ### Patch Changes

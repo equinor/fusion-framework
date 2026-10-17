@@ -1,5 +1,19 @@
 # Change Log
 
+## 13.1.11
+
+### Patch Changes
+
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+- Updated dependencies [72f0bdc]
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-module-app@8.2.2
+  - @equinor/fusion-framework@9.0.5
+  - @equinor/fusion-framework-module-event@6.1.3
+  - @equinor/fusion-framework-module-http@8.1.4
+  - @equinor/fusion-framework-module@6.1.6
+  - @equinor/fusion-framework-module-telemetry@7.2.2
+
 ## 13.1.10
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.1.5
+
+### Patch Changes
+
+- 72f0bdc: Internal: `BookmarkProvider` now extends `BaseModuleProvider` instead of declaring its own `version` getter. `version` still returns the package version and the constructor signature is unchanged.
+  
+  Resolves equinor/fusion-core-tasks#2389
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+
 ## 4.1.4
 
 ### Patch Changes

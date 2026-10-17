@@ -1,5 +1,13 @@
 # Change Log
 
+## 14.0.4
+
+### Patch Changes
+
+- 72f0bdc: `SignalRModuleProvider` now extends `BaseModuleProvider` and exposes the package `version`, so enabling SignalR no longer emits `ModuleConfigurator.provider.invalidBase` and `ModuleConfigurator.provider.versionMissing` warnings. The provider also gains a `dispose()` method. The constructor signature is unchanged.
+  
+  Resolves equinor/fusion-core-tasks#2389
+
 ## 14.0.3
 
 ### Patch Changes

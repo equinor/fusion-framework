@@ -1,5 +1,20 @@
 # Change Log
 
+## 16.0.13
+
+### Patch Changes
+
+- 72f0bdc: `WidgetModuleProvider` now extends `BaseModuleProvider` and exposes the package `version`, so enabling the widget module no longer emits a `ModuleConfigurator.provider.versionMissing` warning. The constructor signature is unchanged.
+  
+  Resolves equinor/fusion-core-tasks#2389
+- Updated dependencies [79014cd]
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-observable@9.2.5
+  - @equinor/fusion-query@7.0.7
+  - @equinor/fusion-framework-module-event@6.1.3
+  - @equinor/fusion-framework-module-http@8.1.4
+  - @equinor/fusion-framework-module@6.1.6
+
 ## 16.0.12
 
 ### Patch Changes

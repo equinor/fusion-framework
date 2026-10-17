@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.16
+
+### Patch Changes
+
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.15
+  - @equinor/fusion-framework-module-ai@7.1.1
+  - @equinor/fusion-framework-module@6.1.6
+  - @equinor/fusion-imports@2.0.7
+
 ## 3.0.15
 
 ### Patch Changes

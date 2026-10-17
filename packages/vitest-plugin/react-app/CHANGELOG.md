@@ -1,5 +1,41 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 2.0.0
+
+### Major Changes
+
+- 1aeab73: Require Vitest 5 and the matching Vitest browser integrations.
+  
+  The plugin now declares `vitest@^5.0.0` and `@vitest/browser-playwright@^5.0.0` as peers, and requires `vitest-browser-react@^2.3.0` for Vitest 5 support.
+  
+  Migration: upgrade your test dependencies together before updating this plugin.
+  
+  ```sh
+  pnpm add -D vitest@^5 @vitest/browser-playwright@^5 vitest-browser-react@^2.3.0
+  ```
+  
+  Projects that must remain on Vitest 4 should stay on the previous major version of this plugin.
+
+### Patch Changes
+
+- 79014cd: Internal: centralize direct React runtime and type dependencies in a shared workspace
+  catalog. Pin React and React DOM to the same 19.3.1 runtime version to prevent
+  incompatible resolutions. Consumer-facing peer dependency ranges are unchanged.
+- Updated dependencies [72f0bdc]
+- Updated dependencies [79014cd]
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-module-app@8.2.2
+  - @equinor/fusion-framework-react@9.0.4
+  - @equinor/fusion-framework-react-module@4.0.6
+  - @equinor/fusion-framework-app@13.1.11
+  - @equinor/fusion-framework-cli@15.6.2
+  - @equinor/fusion-framework@9.0.5
+  - @equinor/fusion-framework-module-feature-flag@2.1.3
+  - @equinor/fusion-framework-module@6.1.6
+  - @equinor/fusion-framework-module-navigation@7.0.12
+  - @equinor/fusion-framework-module-telemetry@7.2.2
+  - @equinor/fusion-imports@2.0.7
+
 ## 1.0.16
 
 ### Patch Changes

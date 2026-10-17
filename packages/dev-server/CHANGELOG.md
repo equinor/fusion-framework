@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.3.2
+
+### Patch Changes
+
+- 1aeab73: Internal: upgrade the test toolchain to Vitest 5 through the shared `vitest` pnpm catalog, keeping `vitest`, `@vitest/browser-playwright`, and `vitest-browser-react` aligned for browser-mode tests. Browser tests now use Vitest 5's explicit partial-text assertions and locator matching where needed.
+- Updated dependencies [5479006]
+- Updated dependencies [1aeab73]
+  - @equinor/fusion-framework-vite-plugin-spa@5.2.3
+  - @equinor/fusion-log@2.0.7
+  - @equinor/fusion-framework-vite-plugin-api-service@2.1.2
+
 ## 2.3.1
 
 ### Patch Changes
