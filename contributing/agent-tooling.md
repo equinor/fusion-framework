@@ -12,7 +12,8 @@ content hashes.
 
 1. Install the APM CLI by following the
    [official installation guide](https://microsoft.github.io/apm/getting-started/installation/).
-2. From the repository root, restore the locked agent configuration:
+2. Use APM CLI **0.33.0**, matching the update and validation workflows. From the
+   repository root, restore the locked agent configuration:
 
    ```sh
    apm install --frozen --target copilot
@@ -36,15 +37,28 @@ pnpm verify:agent-context
 MCP configuration, and drift. `verify:agent-context` checks repository-specific agent
 instructions against the workspace.
 
+The `Agent context` workflow runs these checks for agent configuration changes once
+a PR is ready for review. It audits committed files before installation so restoring
+a missing file cannot hide a broken commit, then verifies that a frozen install
+changes no tracked files and creates no untracked agent files, and audits again.
+Automated PR workflows may require a maintainer to approve them to run.
+
 ## Update APM packages
 
-APM dependencies are pinned to Fusion Skills release tags. To upgrade:
+APM dependencies use bounded Fusion Skills release ranges (`#^1.6.3`) to allow
+compatible 1.x updates. The lockfile pins the installed revisions. To upgrade:
 
-1. Change the relevant `#vX.Y.Z` references in `apm.yml`.
-2. Regenerate the installation and lockfile:
+1. Review available updates:
 
    ```sh
-   apm install --target copilot
+   apm outdated
+   ```
+
+2. Refresh dependencies within the ranges in `apm.yml` and regenerate the installation
+   and lockfile:
+
+   ```sh
+   apm update --target copilot
    ```
 
 3. Review all changes under `.agents/`, `.github/agents/`,
@@ -56,6 +70,18 @@ copy directly. Change the dependency version in `apm.yml`, or contribute the con
 change to its source repository. Repository-owned `custom-*` skills remain under
 `.agents/skills/` and are not replaced by an APM package update.
 
-The `Update APM dependencies` GitHub Actions workflow checks for a new Fusion Skills
-release every Monday and can also be run manually. It updates all release pins together,
-regenerates the APM installation, validates it, and opens a draft pull request for review.
+The [`Update APM dependencies`](../.github/workflows/apm-update.yml) GitHub Actions
+workflow runs on weekdays (Monday-Friday) at 08:17 UTC and can also be run manually. It delegates to
+the [Fusion Skills APM Sync workflow](https://github.com/equinor/fusion-skills/blob/v1.9.0/.github/workflows/apm-sync.yml),
+pinned to `v1.9.0`, explicitly uses APM CLI `0.33.0`, and uses the
+`automation/apm-update` branch. The shared workflow
+refreshes dependencies within the declared ranges, regenerates the lockfile and
+managed agent configuration, and opens or updates a non-draft pull request.
+It does not run the audit or repository-specific context validation itself; the
+`Agent context` workflow above supplies those safeguards before an update is merged.
+
+The previous updater inherited APM `0.14.0` from the action's default. Its
+[2026-10-12 run](https://github.com/equinor/fusion-framework/actions/runs/38225101495)
+reported a successful update but left ten deployed skill directories missing.
+The explicit CLI version avoids that obsolete deployment behavior; keep it aligned
+between update and validation workflows when upgrading.
