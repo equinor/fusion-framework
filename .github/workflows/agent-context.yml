@@ -65,10 +65,16 @@ jobs:
           apm-version: '0.33.0'
           setup-only: 'true'
 
+      # equinor/fusion-skills is an internal repository, so the job token cannot clone it.
+      # APM reads the per-organization token from GITHUB_APM_PAT_EQUINOR.
       - name: Audit committed agent configuration
+        env:
+          GITHUB_APM_PAT_EQUINOR: ${{ secrets.APM_FUSION_SKILLS_TOKEN || github.token }}
         run: apm audit --ci --no-policy
 
       - name: Verify locked installation
+        env:
+          GITHUB_APM_PAT_EQUINOR: ${{ secrets.APM_FUSION_SKILLS_TOKEN || github.token }}
         run: |
           apm install --frozen --target copilot
           git diff --exit-code
@@ -80,4 +86,6 @@ jobs:
           fi
 
       - name: Audit locked installation
+        env:
+          GITHUB_APM_PAT_EQUINOR: ${{ secrets.APM_FUSION_SKILLS_TOKEN || github.token }}
         run: apm audit --ci --no-policy
