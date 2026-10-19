@@ -85,3 +85,13 @@ The previous updater inherited APM `0.14.0` from the action's default. Its
 reported a successful update but left ten deployed skill directories missing.
 The explicit CLI version avoids that obsolete deployment behavior; keep it aligned
 between update and validation workflows when upgrading.
+
+## CI access to Fusion Skills
+
+`equinor/fusion-skills` is an internal repository, so the automatic job token of this
+public repository cannot clone it. The `Agent context` and `Update APM dependencies`
+workflows pass the repository secret `APM_FUSION_SKILLS_TOKEN` to APM as
+`GITHUB_APM_PAT_EQUINOR`. The token needs read access to `equinor/fusion-skills` contents
+only. Without the secret the workflows fall back to the job token and fail with an
+authentication error during `apm audit`, `apm install` or `apm update`. Pull requests
+from forks never receive the secret, so those checks fail there by design.
