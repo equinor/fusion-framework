@@ -13,9 +13,83 @@ permissions:
   contents: write
   pull-requests: write
 
+# Local copy of equinor/fusion-skills/.github/workflows/apm-sync.yml. This repository is
+# public and cannot call that internal repository's reusable workflow (the run fails at
+# startup with "workflow was not found"), so the steps live here instead.
 jobs:
   update:
     name: Update Fusion developer profile
-    uses: equinor/fusion-skills/.github/workflows/apm-sync.yml@main
-    with:
-      pr-branch: automation/apm-update
+    runs-on: ubuntu-latest
+    env:
+      BASE_BRANCH: ${{ github.event.repository.default_branch }}
+      PR_BRANCH: automation/apm-update
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASE_BRANCH }}
+          fetch-depth: 0
+
+      - name: Require APM setup
+        run: |
+          if [ ! -f apm.yml ]; then
+            echo "::error::APM is not configured: root apm.yml is missing."
+            exit 1
+          fi
+
+      - name: Prepare update branch
+        run: |
+          git check-ref-format --branch "$PR_BRANCH"
+          if [ "$PR_BRANCH" = "$BASE_BRANCH" ]; then
+            echo "::error::The update branch must differ from the repository default branch."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git show-ref --verify --quiet "refs/remotes/origin/$PR_BRANCH"; then
+            git switch --create "$PR_BRANCH" --track "origin/$PR_BRANCH"
+            git merge --no-edit "origin/$BASE_BRANCH"
+          else
+            git switch --create "$PR_BRANCH"
+          fi
+
+      # Keep this version aligned with the APM setup in agent-context.yml.
+      - name: Update APM dependencies
+        uses: microsoft/apm-action@v1
+        with:
+          apm-version: '0.33.0'
+          update: 'true'
+
+      - name: Create or update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add --all
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(agent): update APM dependencies"
+          fi
+          if git diff --quiet "origin/$BASE_BRANCH" HEAD; then
+            echo "No APM dependency changes to propose."
+            exit 0
+          fi
+          git push origin "HEAD:refs/heads/$PR_BRANCH"
+          pr_number=$(gh pr list --state open --head "$PR_BRANCH" --base "$BASE_BRANCH" \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$pr_number" ]; then
+            echo "Updated existing pull request #$pr_number."
+            exit 0
+          fi
+          gh pr create --draft --base "$BASE_BRANCH" --head "$PR_BRANCH" \
+            --title "chore(agent): update APM dependencies" --body-file - <<'EOF'
+          **Why is this change needed?**
+          Weekly refresh of the Fusion developer agent configuration within the ranges in `apm.yml`.
+
+          **What is the new behavior?**
+          APM updated dependencies, regenerated `apm.lock.yaml`, and redeployed the managed agent configuration.
+
+          **Does this PR introduce a breaking change?**
+          No breaking changes are expected.
+
+          **Review guidance:**
+          Review the complete diff, including deployed agent files. The `Agent context` workflow audits and validates the result.
+          EOF

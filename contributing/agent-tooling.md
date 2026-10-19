@@ -71,12 +71,12 @@ change to its source repository. Repository-owned `custom-*` skills remain under
 `.agents/skills/` and are not replaced by an APM package update.
 
 The [`Update APM dependencies`](../.github/workflows/apm-update.yml) GitHub Actions
-workflow runs on weekdays (Monday-Friday) at 08:17 UTC and can also be run manually. It delegates to
-the [Fusion Skills APM Sync workflow](https://github.com/equinor/fusion-skills/blob/v1.9.0/.github/workflows/apm-sync.yml),
-pinned to `v1.9.0`, explicitly uses APM CLI `0.33.0`, and uses the
-`automation/apm-update` branch. The shared workflow
+workflow runs on weekdays (Monday-Friday) at 08:17 UTC and can also be run manually. It is a
+local copy of the [Fusion Skills APM Sync workflow](https://github.com/equinor/fusion-skills/blob/main/.github/workflows/apm-sync.yml),
+because this public repository cannot call that internal repository's reusable
+workflow. It uses APM CLI `0.33.0` and the `automation/apm-update` branch. The workflow
 refreshes dependencies within the declared ranges, regenerates the lockfile and
-managed agent configuration, and opens or updates a non-draft pull request.
+managed agent configuration, and opens or updates a draft pull request.
 It does not run the audit or repository-specific context validation itself; the
 `Agent context` workflow above supplies those safeguards before an update is merged.
 
