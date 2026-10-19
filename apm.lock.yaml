@@ -5,6 +5,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-developer
   host: github.com
+  constraint: ^1.6.3
+  resolved_tag: v1.6.3
   resolved_commit: f9b1878dba09159321dbcc0258c21764fd6e3a88
   resolved_ref: v1.6.3
   version: 1.6.3
@@ -24,6 +26,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-skill-authoring
   host: github.com
+  constraint: ^1.6.3
+  resolved_tag: v1.6.3
   resolved_commit: f9b1878dba09159321dbcc0258c21764fd6e3a88
   resolved_ref: v1.6.3
   version: unknown

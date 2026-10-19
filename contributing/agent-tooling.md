@@ -38,13 +38,20 @@ instructions against the workspace.
 
 ## Update APM packages
 
-APM dependencies are pinned to Fusion Skills release tags. To upgrade:
+APM dependencies use bounded Fusion Skills release ranges (`#^1.6.3`) to allow
+compatible 1.x updates. The lockfile pins the installed revisions. To upgrade:
 
-1. Change the relevant `#vX.Y.Z` references in `apm.yml`.
-2. Regenerate the installation and lockfile:
+1. Review available updates:
 
    ```sh
-   apm install --target copilot
+   apm outdated
+   ```
+
+2. Refresh dependencies within the ranges in `apm.yml` and regenerate the installation
+   and lockfile:
+
+   ```sh
+   apm update --target copilot
    ```
 
 3. Review all changes under `.agents/`, `.github/agents/`,
@@ -56,6 +63,11 @@ copy directly. Change the dependency version in `apm.yml`, or contribute the con
 change to its source repository. Repository-owned `custom-*` skills remain under
 `.agents/skills/` and are not replaced by an APM package update.
 
-The `Update APM dependencies` GitHub Actions workflow checks for a new Fusion Skills
-release every Monday and can also be run manually. It updates all release pins together,
-regenerates the APM installation, validates it, and opens a draft pull request for review.
+The [`Update APM dependencies`](../.github/workflows/apm-update.yml) GitHub Actions
+workflow runs every Monday at 08:00 UTC and can also be run manually. It delegates to
+the [Fusion Skills APM Sync workflow](https://github.com/equinor/fusion-skills/blob/v1.9.0/.github/workflows/apm-sync.yml),
+pinned to `v1.9.0`, and uses the `automation/apm-update` branch. The shared workflow
+refreshes dependencies within the declared ranges, regenerates the lockfile and
+managed agent configuration, and opens or updates a non-draft pull request.
+It does not run the audit or repository-specific context validation above; run both
+checks before merging an update.
