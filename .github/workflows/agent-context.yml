@@ -18,6 +18,13 @@ on:
       - .github/copilot-instructions.md
       - .github/instructions/**
       - .github/scripts/verify-agent-context.mjs
+      - .github/workflows/agent-context.yml
+      - .github/workflows/apm-update.yml
+      - .github/agents/**
+      - .agents/skills/**
+      - .vscode/mcp.json
+      - apm.yml
+      - apm.lock.yaml
       - packages/**/package.json
       - cookbooks/*/package.json
   workflow_dispatch:
@@ -51,3 +58,26 @@ jobs:
       # Reads manifests directly — no dependency install needed.
       - name: Verify agent context
         run: node .github/scripts/verify-agent-context.mjs
+
+      - name: Set up APM
+        uses: microsoft/apm-action@v1
+        with:
+          apm-version: '0.33.0'
+          setup-only: 'true'
+
+      - name: Audit committed agent configuration
+        run: apm audit --ci --no-policy
+
+      - name: Verify locked installation
+        run: |
+          apm install --frozen --target copilot
+          git diff --exit-code
+          git ls-files --others --exclude-standard -- .agents .github .vscode apm.yml apm.lock.yaml > "$RUNNER_TEMP/apm-untracked.txt"
+          if [ -s "$RUNNER_TEMP/apm-untracked.txt" ]; then
+            echo "::error::Locked installation generated uncommitted agent files"
+            cat "$RUNNER_TEMP/apm-untracked.txt"
+            exit 1
+          fi
+
+      - name: Audit locked installation
+        run: apm audit --ci --no-policy

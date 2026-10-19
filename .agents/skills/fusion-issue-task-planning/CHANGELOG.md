@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.2.1 - 2026-10-18
+
+### patch
+
+- [#285](https://github.com/equinor/fusion-skills/pull/285) [`8fa30e1`](https://github.com/equinor/fusion-skills/commit/8fa30e119d3959c4691c5e099b15bc6724e7794e) - Migrate task issue and task plan drafts to `.md.hbs` while retaining visible
+
+  blockers, acceptance-criteria traceability, and explicit publication confirmation.
+  Replace the stale cross-skill asset path with an authoring-skill handoff.
+
+  resolves equinor/fusion-core-tasks#2437
+
+## 0.2.0 - 2026-10-18
+
+### minor
+
+- [#268](https://github.com/equinor/fusion-skills/pull/268) [`02f4095`](https://github.com/equinor/fusion-skills/commit/02f4095399e20bc3e2625cb8e7ef31315a9e83b3) - Shape task issue drafts and plan summaries for human readers, following `fusion-agent-content` when it is installed.
+
+
+  - Add a "Human-first output" section: a runtime-reported banner, a quoted TL;DR (for a task, its "What to do"), prose headings, folded Details for sequence, acceptance-criteria traceability, dependency reasoning, and verification, and a folded References and evidence block last.
+  - Add `assets/task-issue-draft.md` as the human-first task issue body for `inline` mode, replacing the minimal built-in structure.
+  - Keep "Done when", blocking dependencies (a visible "Blocked by" section), decisions, and risks visible.
+
+- [#270](https://github.com/equinor/fusion-skills/pull/270) [`e3c3ab4`](https://github.com/equinor/fusion-skills/commit/e3c3ab46170f91b111f06f840b137e9212aa5980) - Plan the minimum task set, suggest nice-to-haves separately, stop duplicating child issues, and publish tasks without milestones
+
+
+  - Every planned task must map to an acceptance criterion, and together they must cover all of them; tasks that map to none become suggested nice-to-have tasks that are drafted only when the user picks them.
+  - Task "Done when" stays limited to what closes the task, with desirable extras under **Stretch goals**.
+  - Tasks are linked to the story as sub-issues only; the plan no longer suggests a parent comment or body checklist that repeats them.
+  - Task issues are published without a milestone, following the Feature-only milestone rule in `fusion-issue-authoring`.
+
+  resolves equinor/fusion-skills#266
+
 ## 0.1.6 - 2026-05-04
 
 ### patch

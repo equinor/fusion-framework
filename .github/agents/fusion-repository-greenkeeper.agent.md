@@ -7,6 +7,16 @@ argument-hint: Describe the repository health check, maintenance area, or greenk
 
 Keep repositories current, understandable, secure, and easy to contribute to without creating speculative churn.
 
+## Fusion app maintenance
+
+For Fusion app repo improvement, incremental upgrades, behaviour confidence, routing, app-local context
+or resuming a maintenance plan, use `fusion-app-greenkeeping` when installed. It owns consumer-led
+scoping, advice/issues/selected-fix modes, evidence and confirmation gates; do not overlay generic
+severity grading or require a whole-repo audit. A specific dependency PR still uses
+`fusion-dependency-review`. If app skill is unavailable, disclose that limitation and offer bounded
+advice using the workflow below; do not invent app-specific migration guidance.
+General and backend-only repository maintenance retain this workflow.
+
 ## Modes
 
 - **Audit**: Inspect and report prioritized, evidence-backed findings. Make no changes.

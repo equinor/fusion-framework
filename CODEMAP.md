@@ -302,5 +302,8 @@ This file is hand-maintained. Update it when:
 
 Run `pnpm verify:agent-context` to check it against the real workspace. CI runs the same
 check on any PR that changes a package manifest or an agent-context file.
+The `Agent context` workflow also audits committed APM files, checks that a frozen
+APM install leaves tracked and agent files unchanged, and audits the restored
+installation. It runs for ready-for-review PRs; automated PRs may need workflow approval.
 
 An inaccurate code map is worse than none — it causes agents to search anyway, and pay twice.
