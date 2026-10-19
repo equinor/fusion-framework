@@ -26,7 +26,7 @@ if (tool === 'git') {
 }
 const endpoint = args[1];
 if (args[0] === 'pr') {
-  console.log(fixture.openPrs ?? 0);
+  process.stdout.write(String(fixture.openPrs ?? 0) + '\\n');
 } else if (endpoint === 'repos/test/repo') {
   console.log('main');
 } else if (endpoint === 'repos/test/repo/git/ref/heads/main') {
