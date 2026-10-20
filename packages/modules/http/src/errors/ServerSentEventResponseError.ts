@@ -15,6 +15,23 @@ export class ServerSentEventResponseError<
   static Name = 'ServerSentEventResponseError';
 
   /**
+   * Identifies SSE response failures across application bundle boundaries.
+   *
+   * The response payload is not validated; the constructor does not expose `options.data`.
+   *
+   * @param error - Unknown thrown value.
+   * @returns Whether the value is an SSE response error with an unknown response.
+   */
+  public static override is(
+    error: unknown,
+  ): error is ServerSentEventResponseError<unknown, unknown> {
+    return (
+      error instanceof ServerSentEventResponseError ||
+      (HttpResponseError.is(error) && error.name === ServerSentEventResponseError.Name)
+    );
+  }
+
+  /**
    * Creates a new instance of the error.
    *
    * @param message - The error message describing the cause of the error.

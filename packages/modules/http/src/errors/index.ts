@@ -3,3 +3,4 @@ export * from './HttpJsonResponseError.js';
 export * from './ServerSentEventResponseError.js';
 export * from './ClientNotFoundException.js';
 export * from './MissingAccessTokenException.js';
+export * from './HttpException.js';
