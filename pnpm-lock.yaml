@@ -3713,7 +3713,7 @@ importers:
         version: 1.17.17
       nock:
         specifier: ^15.0.1
-        version: 15.0.1(supports-color@10.2.2)
+        version: 15.0.2(supports-color@10.2.2)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -11550,8 +11550,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nock@15.0.1:
-    resolution: {integrity: sha512-Mjx5Xl4t9vP13eUZPWqwwpjjXNjvhUTo1qTdryVM3+7t6Z2w6WHZ9GVZk/zQ8Ym1vbmloWaglye3cloyHAJ8FA==}
+  nock@15.0.2:
+    resolution: {integrity: sha512-kz2EsEGshxe/zw0iMMoJFqdDp3ZBju5tgLA03CepBi9R0NHckyF/UgfmoyEYt2DNFZoe8tpx1V9M187qt43WJg==}
     engines: {node: '>=20.12.1'}
 
   node-abi@3.94.0:
@@ -12280,9 +12280,6 @@ packages:
   retry@0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
-
-  rettime@0.11.11:
-    resolution: {integrity: sha512-ILJRqVWBCTlg9r42fFgwVZx1gnFAcQF8mRoMkbgQfIrjEDf9nbBFDFx00oloOa+Q869FUtaYDXZvEfnecQSCoQ==}
 
   rettime@0.11.12:
     resolution: {integrity: sha512-5ExtR1ppiDBQkVoPw5NAqdbfH4Iq2VOmQKHMtUoaFxA9bo2krzFYBtyq6K40xxbYp+2w/YOr6D+1ToF6tTN53A==}
@@ -16166,7 +16163,7 @@ snapshots:
       debug: 4.4.3(supports-color@10.2.2)
       is-node-process: 1.2.0
       outvariant: 1.4.3
-      rettime: 0.11.11
+      rettime: 0.11.12
     transitivePeerDependencies:
       - supports-color
 
@@ -18407,6 +18404,7 @@ snapshots:
       - msw
       - utf-8-validate
       - vite
+    optional: true
 
   '@vitest/browser@5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
     dependencies:
@@ -18462,6 +18460,7 @@ snapshots:
       - msw
       - utf-8-validate
       - vite
+    optional: true
 
   '@vitest/mocker@5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))':
     dependencies:
@@ -22005,7 +22004,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nock@15.0.1(supports-color@10.2.2):
+  nock@15.0.2(supports-color@10.2.2):
     dependencies:
       '@mswjs/interceptors': 0.44.0(supports-color@10.2.2)
     transitivePeerDependencies:
@@ -22832,8 +22831,6 @@ snapshots:
       axios: 1.18.0(debug@4.3.4(supports-color@10.2.2))(supports-color@10.2.2)
 
   retry@0.12.0: {}
-
-  rettime@0.11.11: {}
 
   rettime@0.11.12: {}
 
@@ -23894,7 +23891,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.6.2
-      '@vitest/browser-playwright': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/browser-playwright': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       '@vitest/ui': 5.0.4(vitest@5.0.4)
       happy-dom: 21.0.3
       jsdom: 30.1.3
