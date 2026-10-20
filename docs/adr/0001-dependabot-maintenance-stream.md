@@ -54,6 +54,10 @@ ready and squash auto-merge is enabled for that exact commit. The normal `main` 
 apply, including the required approving review and required checks, so GitHub merges the promotion
 only after a maintainer approves it.
 
+Promotion pull requests use the title `❤️‍🩹 deps: promote dependency maintenance stream` on both
+creation and refresh so maintainers can distinguish the aggregate promotion from individual
+Dependabot updates. This title intentionally uses an emoji-first format instead of a Conventional Commit prefix.
+
 After a squash promotion, maintainers reset the maintenance branch to the promoted `main` through
 the guarded maintenance workflow. Reset is rejected while pull requests still target the
 maintenance branch or while its content differs from `main`.
