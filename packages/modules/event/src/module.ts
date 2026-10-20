@@ -30,7 +30,7 @@ export type FrameworkEventModuleLoadedEvent = FrameworkEvent<
  */
 export const module: EventModule = {
   name: moduleKey,
-  disposePriority: 2,
+  disposePhase: 'events',
   configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {
     const configurator = new EventModuleConfigurator();
     const parentProvider = ref?.event;

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import { enableTelemetry } from '../enable-telemetry.js';
 import { TelemetryProvider } from '../TelemetryProvider.js';
-import { createHttpTelemetry, type HttpTelemetry } from '../create-http-telemetry.js';
+import { createHttpTelemetry, type HttpTelemetry } from '../integrations/create-http-telemetry.js';
 import type { TelemetryModule } from '../module.js';
 
 /** Selects p95 from measured samples without averaging away slow runs. */

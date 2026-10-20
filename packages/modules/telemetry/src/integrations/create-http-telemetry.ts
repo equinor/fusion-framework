@@ -1,6 +1,7 @@
-import { diagnosticExclusion } from '@equinor/fusion-framework-module';
-import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
-import { createOperationalReporter } from './create-operational-reporter.js';
+import { telemetryExportRequest } from '@equinor/fusion-framework-module';
+import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
+import type { OperationalOutcome } from '../schemas/diagnostic-context.js';
+import { createOperationalReporter } from '../utils/create-operational-reporter.js';
 
 /** Middleware-compatible integration without a runtime dependency on the HTTP module. */
 export interface HttpTelemetry {
@@ -35,12 +36,12 @@ export function createHttpTelemetry(provider: () => ITelemetryProvider | undefin
   let active = true;
   return {
     middleware: async (uri, init, next) => {
-      // Export transports exclude only their own request; unrelated concurrent traffic stays visible.
-      if (!active || diagnosticExclusion in init) {
+      // Exporter-owned requests must not recursively instrument their own telemetry delivery.
+      if (!active || telemetryExportRequest in init) {
         return next(uri, init);
       }
       const started = performance.now();
-      let outcome: 'success' | 'failure' | 'cancelled' = 'success';
+      let outcome: OperationalOutcome = 'success';
       try {
         const response = await next(uri, init);
         outcome = response.ok ? 'success' : 'failure';

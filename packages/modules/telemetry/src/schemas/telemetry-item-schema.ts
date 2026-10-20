@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { TelemetryLevel, TelemetryType } from './static.js';
+import { TelemetryLevel, TelemetryType } from '../static.js';
 import { diagnosticContext } from './diagnostic-context.js';
 
 /**
@@ -83,7 +83,3 @@ export const TelemetryMetricSchema = TelemetryItemSchema.extend({
 export const TelemetryCustomEventSchema = TelemetryEventSchema.extend({
   type: z.literal(TelemetryType.Custom),
 }).passthrough();
-
-// Re-exported from its own file to satisfy single-export-per-file while
-// preserving the public `./schemas` subpath export surface.
-export { parseTelemetryItem } from './parse-telemetry-item.js';

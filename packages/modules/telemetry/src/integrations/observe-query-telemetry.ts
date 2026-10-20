@@ -1,8 +1,16 @@
 import type { Observable, Subscription } from 'rxjs';
-import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
-import { createOperationalReporter } from './create-operational-reporter.js';
+import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
+import type { OperationalOutcome } from '../schemas/diagnostic-context.js';
+import { createOperationalReporter } from '../utils/create-operational-reporter.js';
 
-const outcomes = new Map<string, 'success' | 'failure' | 'cancelled'>([
+/**
+ * Query transactions tracked at once. Bounds memory for clients that never emit a terminal
+ * event; beyond it, new jobs are not timed and a single warning is logged.
+ */
+const PENDING_TRANSACTION_CAPACITY = 256;
+
+/** Terminal query-client events and the outcome each one records. */
+const outcomes = new Map<string, OperationalOutcome>([
   ['query_client_job_completed', 'success'],
   ['query_client_job_failed', 'failure'],
   ['query_client_job_error', 'failure'],
@@ -51,7 +59,6 @@ export function observeQueryTelemetry(
           module: 'query',
           operation: event.type === 'query_cache_hit' ? 'cache-hit' : 'cache-miss',
           outcome: 'success',
-          duration: 0,
           notification: true,
         });
         return;
@@ -67,7 +74,7 @@ export function observeQueryTelemetry(
           return;
         }
         // Opaque transaction IDs are retained only within the bounded observer lifetime.
-        if (pending.size < 256) {
+        if (pending.size < PENDING_TRANSACTION_CAPACITY) {
           pending.set(event.transaction, { requested: performance.now() });
         } else if (!reportedOverflow) {
           reportedOverflow = true;

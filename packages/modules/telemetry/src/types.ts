@@ -9,7 +9,7 @@ import type {
   TelemetryExceptionSchema,
   TelemetryMetricSchema,
   TelemetryCustomEventSchema,
-} from './schemas.js';
+} from './schemas/telemetry-item-schema.js';
 
 /**
  * Arguments passed to a {@link MetadataExtractor} when resolving metadata for a telemetry item.

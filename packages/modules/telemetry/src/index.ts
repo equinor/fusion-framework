@@ -21,6 +21,9 @@ export type {
 } from './TelemetryConfigurator.interface.js';
 
 export type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+export { TelemetryConfigurator } from './TelemetryConfigurator.js';
+export { StartupCapture } from './lib/StartupCapture.js';
+export type { StartupCaptureOptions } from './lib/StartupCapture.js';
 
 export { Measurement } from './Measurement.js';
 export type { IMeasurement } from './Measurement.interface.js';
@@ -38,12 +41,18 @@ export type {
 } from './types.js';
 
 export { enableTelemetry } from './enable-telemetry.js';
-export { createOperationalRecords } from './create-operational-records.js';
-export type { OperationalRecordArgs } from './create-operational-records.js';
-export type { DiagnosticContext, TelemetrySource } from './diagnostic-context.js';
-export { createHttpTelemetry } from './create-http-telemetry.js';
-export type { HttpTelemetry } from './create-http-telemetry.js';
-export { observeQueryTelemetry } from './observe-query-telemetry.js';
-export type { QueryDiagnosticEvent } from './observe-query-telemetry.js';
+export { createOperationalRecords } from './utils/create-operational-records.js';
+export type { OperationalRecordArgs } from './utils/create-operational-records.js';
+export { createDiagnosticContext } from './utils/create-diagnostic-context.js';
+export type { DiagnosticContextArgs } from './utils/create-diagnostic-context.js';
+export type {
+  DiagnosticContext,
+  OperationalOutcome,
+  TelemetrySource,
+} from './schemas/diagnostic-context.js';
+export { createHttpTelemetry } from './integrations/create-http-telemetry.js';
+export type { HttpTelemetry } from './integrations/create-http-telemetry.js';
+export { observeQueryTelemetry } from './integrations/observe-query-telemetry.js';
+export type { QueryDiagnosticEvent } from './integrations/observe-query-telemetry.js';
 
 export { default } from './module.js';

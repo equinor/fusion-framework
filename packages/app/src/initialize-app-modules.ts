@@ -1,7 +1,8 @@
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
-import {
-  enableTelemetry,
+import telemetry, {
+  StartupCapture,
+  TelemetryConfigurator,
   type MetadataExtractor,
 } from '@equinor/fusion-framework-module-telemetry';
 
@@ -62,23 +63,24 @@ export async function initializeAppModules<
     };
   };
 
-  // Enable telemetry collection for module configuration events
-  // attachConfiguratorEvents automatically prefixes events with configurator class name
-  const capture = enableTelemetry(configurator, {
-    attachConfiguratorEvents: true,
-    parent: fusion.modules.telemetry,
-    source: {
-      source: 'app',
-      hostId: crypto.randomUUID(),
-      appKey: args.env.manifest?.appKey,
-      appVersion: args.env.manifest?.build?.version,
-    },
-    configure: (builder) => {
-      builder.setMetadata(metadataExtractor);
-      builder.setParent(fusion.modules.telemetry);
-      // Scope telemetry to 'app' level for app-specific event filtering
-      builder.setDefaultScope(['app']);
-    },
+  const source = {
+    source: 'app',
+    hostId: crypto.randomUUID(),
+    hostName: args.env.manifest?.appKey,
+    hostVersion: args.env.manifest?.build?.version,
+  };
+  const parent = fusion.modules.telemetry;
+  // Capture startup before user code can fail; a failed startup is reported to the framework.
+  const capture = new StartupCapture(configurator, { source, parent });
+  const builder = new TelemetryConfigurator()
+    .setSource(source)
+    .setMetadata(metadataExtractor)
+    .setParent(parent)
+    .setDefaultScope(['app'])
+    .attachLifecycleItems(capture.items);
+  configurator.addConfig({
+    module: telemetry,
+    configurator: builder,
   });
 
   // Allow user configuration callback to run before module initialization
@@ -86,7 +88,7 @@ export async function initializeAppModules<
     try {
       await cb(configurator, args);
     } catch (error) {
-      capture?.fail();
+      capture.fail();
       throw error;
     }
   }

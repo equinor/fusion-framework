@@ -4,7 +4,10 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 import { WidgetConfigurator } from './WidgetConfigurator.js';
 import type { WidgetModulesInstance, WidgetModuleInitiator, WidgetEnv } from './types.js';
 import type { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
-import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import telemetry, {
+  StartupCapture,
+  TelemetryConfigurator,
+} from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Create a widget module initializer for configuring and bootstrapping widget modules.
@@ -60,26 +63,25 @@ export const configureWidgetModules =
    */
   async (args: WidgetRenderArgs<TRef, TEnv>): Promise<WidgetModulesInstance<TModules>> => {
     const configurator = new WidgetConfigurator<TModules, TRef['modules']>();
-    const capture = enableTelemetry(configurator, {
-      attachConfiguratorEvents: true,
-      source: {
-        source: 'widget',
-        hostId: crypto.randomUUID(),
-        widgetKey: args.env.manifest?.name,
-        widgetVersion: args.env.manifest?.version,
-      },
-      parent: args.fusion.modules.telemetry,
-      configure: (builder) => {
-        builder.setParent(args.fusion.modules.telemetry);
-        builder.setDefaultScope(['widget']);
-      },
+    const source = { source: 'widget', hostId: crypto.randomUUID() };
+    const parent = args.fusion.modules.telemetry;
+    // Capture startup before user code can fail; a failed startup is reported to the host's telemetry.
+    const capture = new StartupCapture(configurator, { source, parent });
+    const builder = new TelemetryConfigurator()
+      .setSource(source)
+      .setParent(parent)
+      .setDefaultScope(['widget'])
+      .attachLifecycleItems(capture.items);
+    configurator.addConfig({
+      module: telemetry,
+      configurator: builder,
     });
     // Allow callers to register modules/config before initialization runs
     if (cb) {
       try {
         await cb(configurator, args);
       } catch (error) {
-        capture?.fail();
+        capture.fail();
         throw error;
       }
     }

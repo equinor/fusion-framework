@@ -1,12 +1,15 @@
 import type { z } from 'zod';
 
 import type { TelemetryItem } from './types.js';
-import type { TelemetryExceptionSchema, TelemetryMetricSchema } from './schemas.js';
+import type {
+  TelemetryExceptionSchema,
+  TelemetryMetricSchema,
+} from './schemas/telemetry-item-schema.js';
 import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js';
 import type { Observable } from 'rxjs';
 import type { IMeasurement } from './Measurement.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
-import type { TelemetrySource } from './diagnostic-context.js';
+import type { TelemetrySource } from './schemas/diagnostic-context.js';
 
 /**
  * Interface for telemetry providers used to track and measure telemetry events.

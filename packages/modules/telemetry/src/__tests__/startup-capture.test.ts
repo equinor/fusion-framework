@@ -3,13 +3,16 @@ import { Subject } from 'rxjs';
 import { ModulesConfigurator, type ModuleEvent } from '@equinor/fusion-framework-module';
 import { TelemetryProvider } from '../TelemetryProvider.js';
 import { enableTelemetry } from '../enable-telemetry.js';
-import { LifecycleTelemetry } from '../LifecycleTelemetry.js';
+import { StartupCapture } from '../lib/StartupCapture.js';
+import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
+import type { ITelemetryConfigurator } from '../TelemetryConfigurator.interface.js';
 import { mapConfiguratorEvents } from '../utils/map-configurator-events.js';
 import type { TelemetryItem } from '../types.js';
-import type { TelemetryModule } from '../module.js';
-import type { TelemetrySource } from '../diagnostic-context.js';
+import { TelemetryLevel, TelemetryType } from '../static.js';
+import { module as telemetryModule, type TelemetryModule } from '../module.js';
+import type { TelemetrySource } from '../schemas/diagnostic-context.js';
 
-const source: TelemetrySource = { source: 'app', hostId: 'app-host', appKey: 'example' };
+const source: TelemetrySource = { source: 'app', hostId: 'app-host', hostName: 'example' };
 
 /** Creates a module whose own lifecycle does not depend on telemetry. */
 function fakeModule(name: string): {
@@ -21,14 +24,164 @@ function fakeModule(name: string): {
 }
 
 describe('safe lifecycle capture', () => {
+  it('uses a structurally compatible prepared configurator without requiring the built-in class', async () => {
+    const processItem = vi.fn();
+    const custom: ITelemetryConfigurator = {
+      createConfigAsync: vi.fn(async () => ({
+        source,
+        adapters: { test: { initialize: vi.fn(), processItem } },
+      })),
+      attachLifecycleItems: vi.fn(() => custom),
+      hasLifecycleItems: vi.fn(() => false),
+      setSource: vi.fn(() => custom),
+      setParent: vi.fn(() => custom),
+      configureAdapter: vi.fn(() => custom),
+      setAdapter: vi.fn(() => custom),
+      setMetadata: vi.fn(() => custom),
+      setDefaultScope: vi.fn(() => custom),
+      attachItems: vi.fn(() => custom),
+      setFilter: vi.fn(() => custom),
+    };
+    const config = new ModulesConfigurator();
+    config.addConfig({ module: telemetryModule, configurator: custom });
+    enableTelemetry(config, {
+      attachConfiguratorEvents: true,
+      configure: (builder) => {
+        expect(builder).toBe(custom);
+        builder.setDefaultScope(['custom']);
+      },
+    });
+    expect(custom).not.toBeInstanceOf(TelemetryConfigurator);
+    expect(custom.attachLifecycleItems).toHaveBeenCalledOnce();
+    const modules = await config.initialize<[TelemetryModule]>();
+    expect(custom.createConfigAsync).toHaveBeenCalledOnce();
+    expect(custom.setDefaultScope).toHaveBeenCalledWith(['custom']);
+    modules.telemetry.trackEvent({
+      name: 'custom',
+      level: TelemetryLevel.Information,
+      scope: [],
+    });
+    await vi.waitFor(() => expect(processItem).toHaveBeenCalledOnce());
+    await modules.dispose();
+  });
+
+  it('recovers a host startup failure to the parent without claiming exporter ownership', async () => {
+    const host = new ModulesConfigurator();
+    const fallback = vi.fn();
+    const normal = vi.fn();
+    const parent = new TelemetryProvider({
+      adapters: {
+        fallback: { fallback: true, initialize: vi.fn(), processItem: fallback },
+        normal: { initialize: vi.fn(), processItem: normal },
+      },
+    });
+    await parent.initialize();
+    const capture = new StartupCapture(host, { source, parent });
+    host.addConfig({
+      module: telemetryModule,
+      prepare: (builder) =>
+        builder
+          .setSource(source)
+          .setParent(parent)
+          .attachLifecycleItems(capture.items)
+          // The child's exporters are not configured yet when the host fails.
+          .setAdapter('owned', { initialize: vi.fn(), processItem: vi.fn() }),
+    });
+    // The host's capture is kept; enabling again must not replace it.
+    enableTelemetry(host, { attachConfiguratorEvents: true });
+    capture.fail();
+    expect(normal).toHaveBeenCalledTimes(2);
+    expect(normal.mock.calls.map(([item]) => item.diagnostic)).toEqual([
+      expect.objectContaining(source),
+      expect.objectContaining(source),
+    ]);
+    // Accepted trade-off: before a provider exists, ownership is unknown, so fallbacks also receive.
+    expect(fallback).toHaveBeenCalledTimes(2);
+    capture.fail();
+    expect(normal).toHaveBeenCalledTimes(2);
+    await parent.dispose();
+  });
+
+  it.each([true, false])('preserves custom streams with lifecycle capture %s', async (enabled) => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const config = new ModulesConfigurator();
+    const custom = new Subject<TelemetryItem>();
+    const processItem = vi.fn();
+    enableTelemetry(config, {
+      attachConfiguratorEvents: true,
+      configure: (builder) => {
+        builder.attachItems(custom);
+        builder.setAdapter('test', { initialize: vi.fn(), processItem });
+      },
+    });
+    enableTelemetry(config, { attachConfiguratorEvents: enabled });
+    const modules = await config.initialize<[TelemetryModule]>();
+    expect(processItem).toHaveBeenCalledTimes(enabled ? 2 : 0);
+    custom.next({
+      type: TelemetryType.Event,
+      name: 'custom',
+      level: TelemetryLevel.Information,
+      scope: [],
+    });
+    await vi.waitFor(() => expect(processItem).toHaveBeenCalledTimes(enabled ? 3 : 1));
+    expect(processItem.mock.calls.at(-1)?.[0].name).toBe('custom');
+    if (enabled) {
+      custom.error(new Error('private-stream-sentinel'));
+      expect(warning).toHaveBeenCalledWith('Initial telemetry stream failed');
+    }
+    await modules.dispose();
+    expect(custom.observed).toBe(false);
+    expect(
+      processItem.mock.calls.filter(([item]) => item.name === 'fusion.host.dispose.duration'),
+    ).toHaveLength(enabled ? 1 : 0);
+    expect(JSON.stringify(processItem.mock.calls)).not.toContain('private-stream-sentinel');
+    warning.mockRestore();
+  });
+
+  it('makes opt-out stop lifecycle records reaching the provider, while the host still reports a failed startup', async () => {
+    const processItem = vi.fn();
+    const parentItems = vi.fn();
+    const parent = new TelemetryProvider({
+      adapters: { parent: { initialize: vi.fn(), processItem: parentItems } },
+    });
+    await parent.initialize();
+    const host = new ModulesConfigurator();
+    const capture = new StartupCapture(host, { source, parent });
+    host.addConfig({
+      module: telemetryModule,
+      prepare: (builder) => builder.setSource(source).attachLifecycleItems(capture.items),
+    });
+    enableTelemetry(host, {
+      attachConfiguratorEvents: false,
+      configure: (builder) => {
+        builder.setAdapter('test', { initialize: vi.fn(), processItem });
+      },
+    });
+    // The opt-out is the last word; enabling again does not reattach a capture.
+    enableTelemetry(host, { attachConfiguratorEvents: true });
+    const modules = await host.initialize<[TelemetryModule]>();
+    expect(processItem).not.toHaveBeenCalled();
+    await modules.dispose();
+
+    const failing = new ModulesConfigurator();
+    const failingCapture = new StartupCapture(failing, { source, parent });
+    enableTelemetry(failing, { attachConfiguratorEvents: false });
+    failingCapture.fail();
+    expect(parentItems.mock.calls.map(([item]) => item.name)).toEqual([
+      'fusion.host.initialize.duration',
+      'fusion.host.initialize.failure',
+    ]);
+    await parent.dispose();
+  });
+
   it('keeps a usable pipeline attached through cleanup after a late startup failure', async () => {
     const processItem = vi.fn();
     const shutdown = vi.fn();
     const config = new ModulesConfigurator();
     enableTelemetry(config, {
       attachConfiguratorEvents: true,
-      source,
       configure: (builder) => {
+        builder.setSource(source);
         builder.setAdapter('test', { initialize: vi.fn(), processItem, shutdown });
       },
     });
@@ -76,9 +229,9 @@ describe('safe lifecycle capture', () => {
       const config = new ModulesConfigurator();
       enableTelemetry(config, {
         attachConfiguratorEvents: true,
-        parent,
-        source,
         configure: (builder) => {
+          builder.setSource(source);
+          builder.setParent(parent);
           if (mode === 'factory') {
             builder.configureAdapter('broken', () => {
               throw new Error('sentinel');
@@ -131,9 +284,9 @@ describe('safe lifecycle capture', () => {
     const config = new ModulesConfigurator();
     const processItem = vi.fn();
     enableTelemetry(config, {
-      source,
       attachConfiguratorEvents: true,
       configure: (builder) => {
+        builder.setSource(source);
         builder.setAdapter('test', { initialize: vi.fn(), processItem });
       },
     });
@@ -168,7 +321,7 @@ describe('safe lifecycle capture', () => {
       },
     });
     await parent.initialize();
-    new LifecycleTelemetry({ event$: events }, source, parent);
+    new StartupCapture({ event$: events }, { source, parent });
     for (let index = 0; index < 300; index++) {
       events.next({
         name: 'ModuleConfigurator.module.initialized',
@@ -199,7 +352,13 @@ describe('safe lifecycle capture', () => {
     });
     await parent.initialize();
     const config = new ModulesConfigurator();
-    enableTelemetry(config, { attachConfiguratorEvents: true, source, parent });
+    // The host owns its capture and the parent it recovers to.
+    const capture = new StartupCapture(config, { source, parent });
+    config.addConfig({
+      module: telemetryModule,
+      prepare: (builder) =>
+        builder.setSource(source).setParent(parent).attachLifecycleItems(capture.items),
+    });
     const failure = new Error('sentinel');
     config.addConfig({
       module: fakeModule('broken'),
@@ -220,7 +379,7 @@ describe('safe lifecycle capture', () => {
   it('stops capture on explicit opt-out and handles a configuration callback failure locally', () => {
     const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const events = new Subject<ModuleEvent>();
-    const capture = new LifecycleTelemetry({ event$: events }, source);
+    const capture = new StartupCapture({ event$: events }, { source });
     capture.fail();
     expect(events.observed).toBe(false);
     expect(warning).toHaveBeenCalledWith(
@@ -244,9 +403,9 @@ describe('safe lifecycle capture', () => {
     await app.initialize({ parent: root });
     const config = new ModulesConfigurator();
     enableTelemetry(config, {
-      source: { source: 'widget', hostId: 'widget-host', widgetKey: 'widget' },
       attachConfiguratorEvents: true,
       configure: (builder) => {
+        builder.setSource({ source: 'widget', hostId: 'widget-host' });
         builder.setParent(app);
       },
     });
@@ -256,7 +415,7 @@ describe('safe lifecycle capture', () => {
     expect(rootAdapter.processItem).not.toHaveBeenCalled();
     expect(normal.processItem.mock.calls[1][0]).toMatchObject({
       name: 'fusion.host.initialize.duration',
-      diagnostic: { source: 'widget', hostId: 'widget-host', widgetKey: 'widget' },
+      diagnostic: { source: 'widget', hostId: 'widget-host' },
     });
     expect(JSON.stringify(normal.processItem.mock.calls)).not.toContain('sentinel');
     await widget.dispose();

@@ -1,9 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Subject } from 'rxjs';
-import { excludeDiagnostics } from '@equinor/fusion-framework-module';
+import { markTelemetryExportRequest } from '@equinor/fusion-framework-module';
 import { TelemetryProvider } from '../TelemetryProvider.js';
-import { createHttpTelemetry } from '../create-http-telemetry.js';
-import { observeQueryTelemetry, type QueryDiagnosticEvent } from '../observe-query-telemetry.js';
+import { createHttpTelemetry } from '../integrations/create-http-telemetry.js';
+import {
+  observeQueryTelemetry,
+  type QueryDiagnosticEvent,
+} from '../integrations/observe-query-telemetry.js';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -20,7 +23,7 @@ describe('optional shared telemetry integration', () => {
     const results = await Promise.all([
       diagnostics.middleware(
         'https://secret?token=sentinel',
-        excludeDiagnostics({ method: 'POST' }),
+        markTelemetryExportRequest({ method: 'POST' }),
         next,
       ),
       diagnostics.middleware('https://secret?token=sentinel', { body: 'secret body' }, next),

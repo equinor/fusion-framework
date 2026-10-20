@@ -1,14 +1,14 @@
-import { context, trace } from '@opentelemetry/api';
-import type { TelemetrySource } from './diagnostic-context.js';
-import type { TelemetryItem, TelemetryMetric, TelemetryException } from './types.js';
-import { TelemetryLevel, TelemetryType } from './static.js';
+import type { TelemetryItem, TelemetryMetric, TelemetryException } from '../types.js';
+import { TelemetryLevel, TelemetryType } from '../static.js';
+import {
+  createDiagnosticContext,
+  type DiagnosticContextArgs,
+} from './create-diagnostic-context.js';
+import { operationalScope } from './operational-scope.js';
 
 /** Safe terminal outcome inputs; raw operation data and errors are deliberately excluded. */
-export interface OperationalRecordArgs {
-  source: TelemetrySource;
-  module: string;
-  operation: string;
-  outcome: 'success' | 'failure' | 'cancelled';
+export interface OperationalRecordArgs extends DiagnosticContextArgs {
+  /** Elapsed milliseconds; zero is a valid measurement. */
   duration: number;
 }
 
@@ -26,27 +26,12 @@ export interface OperationalRecordArgs {
  * ```
  */
 export function createOperationalRecords(args: OperationalRecordArgs): TelemetryItem[] {
-  // Static identifiers and finite measurements keep built-in schemas bounded and meaningful.
-  if (
-    !Number.isFinite(args.duration) ||
-    args.duration < 0 ||
-    !/^[a-z][a-z0-9-]*$/.test(args.module) ||
-    !/^[a-z][a-z0-9-]*$/.test(args.operation)
-  ) {
-    throw new RangeError('Invalid operational telemetry duration or static identifier');
+  // A finite, non-negative measurement keeps duration metrics meaningful; zero is valid.
+  if (!Number.isFinite(args.duration) || args.duration < 0) {
+    throw new RangeError('Invalid operational telemetry duration');
   }
-  const span = trace.getSpanContext(context.active());
   // Capture origin and existing correlation before asynchronous enrichment or relaying.
-  const diagnostic = {
-    ...args.source,
-    schemaVersion: 1 as const,
-    module: args.module,
-    operation: args.operation,
-    outcome: args.outcome,
-    occurredAt: Date.now(),
-    unit: 'ms' as const,
-    ...(span ? { traceId: span.traceId, spanId: span.spanId, traceFlags: span.traceFlags } : {}),
-  };
+  const diagnostic = createDiagnosticContext(args);
   const name = `fusion.${args.module}.${args.operation}`;
   const level = args.outcome === 'failure' ? TelemetryLevel.Error : TelemetryLevel.Information;
   const metric: TelemetryMetric = {
@@ -54,7 +39,7 @@ export function createOperationalRecords(args: OperationalRecordArgs): Telemetry
     type: TelemetryType.Metric,
     level,
     value: args.duration,
-    scope: [args.source.source, 'operational'],
+    scope: operationalScope(args.source),
     diagnostic,
   };
   // Success and cancellation do not fabricate exception records.

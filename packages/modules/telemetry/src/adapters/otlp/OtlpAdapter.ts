@@ -115,12 +115,21 @@ export class OtlpAdapter extends BaseTelemetryAdapter {
       app && typeof app === 'object' && 'key' in app && typeof app.key === 'string'
         ? app.key
         : undefined;
+    // Built-in records carry only the host's own classification, never an inferred one;
+    // custom records keep their pre-existing metadata-based inference.
+    const source = item.diagnostic ? item.diagnostic.source : appKey ? 'app' : 'framework';
     const attributes: LogAttributes = {
-      source: item.diagnostic?.source ?? (appKey ? 'app' : 'framework'),
       'fusion.telemetry.type': item.type,
       'fusion.telemetry.scope': item.scope,
-      ...(appKey ? { 'fusion.app.key': appKey } : {}),
     };
+    // Unclassified hosts export no source attribute rather than a guessed one.
+    if (source) {
+      attributes.source = source;
+    }
+    // Custom records may identify their app through inherited metadata.
+    if (appKey) {
+      attributes['fusion.app.key'] = appKey;
+    }
     // Built-in records keep their origin rather than inheriting the exporter's host.
     if (item.diagnostic) {
       // Only the strict schema's primitive context is eligible for export.
@@ -129,14 +138,6 @@ export class OtlpAdapter extends BaseTelemetryAdapter {
         if (value !== undefined) {
           attributes[`fusion.diagnostic.${key}`] = value;
         }
-      }
-      // Preserve existing collector queries using the stable app attribute.
-      if (item.diagnostic.appKey) {
-        attributes['fusion.app.key'] = item.diagnostic.appKey;
-      }
-      // Widget identity must survive intermediate app and framework relays.
-      if (item.diagnostic.widgetKey) {
-        attributes['fusion.widget.key'] = item.diagnostic.widgetKey;
       }
     }
     // OTLP attributes accept primitive values, not arbitrary application objects.

@@ -23,6 +23,8 @@ export const ModuleConfiguratorEventName = {
   HostInitializeError: `${ModuleConfiguratorEventBaseName}.host.initializeError`,
 
   ConfiguratorCreated: `${ModuleConfiguratorEventBaseName}.configurator.created`,
+  ConfiguratorPrepared: `${ModuleConfiguratorEventBaseName}.configurator.prepared`,
+  ConfiguratorPrepareError: `${ModuleConfiguratorEventBaseName}.configurator.prepareError`,
   ConfiguratorFailed: `${ModuleConfiguratorEventBaseName}.configurator.failed`,
   ModulePostConfigured: `${ModuleConfiguratorEventBaseName}.module.postConfigured`,
   ModulePostConfigureError: `${ModuleConfiguratorEventBaseName}.module.postConfigureError`,

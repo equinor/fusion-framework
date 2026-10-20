@@ -15,7 +15,12 @@ import context from '@equinor/fusion-framework-module-context';
 
 import disco from '@equinor/fusion-framework-module-service-discovery';
 import services from '@equinor/fusion-framework-module-services';
-import telemetry, { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import telemetry, {
+  enableTelemetry,
+  StartupCapture,
+  TelemetryConfigurator,
+  type ITelemetryConfigurator,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import type { FusionModules } from './types.js';
 import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
@@ -71,6 +76,7 @@ export class FrameworkConfigurator<
    * Initializes the framework with core modules (event, auth, http, service discovery,
    * services, context, and telemetry) and sets up default telemetry that includes
    * framework version metadata and 'framework' scope for all telemetry events.
+   * @param telemetryConfigurator - Prepared telemetry configuration, allowing mocks to use the same host pipeline.
    *
    * @example
    * ```typescript
@@ -78,24 +84,27 @@ export class FrameworkConfigurator<
    * // Now ready to configure additional modules
    * ```
    */
-  constructor() {
+  constructor(telemetryConfigurator: ITelemetryConfigurator = new TelemetryConfigurator()) {
     super([event, auth, http, disco, services, context, telemetry]);
 
-    // default configuration
-    enableTelemetry(this, {
-      attachConfiguratorEvents: true,
-      source: { source: 'framework', hostId: crypto.randomUUID() },
-      configure: (builder) => {
-        builder.setMetadata({
-          fusion: {
-            type: 'framework-telemetry',
-            framework: {
-              version,
-            },
+    const source = { source: 'framework', hostId: crypto.randomUUID() };
+    // Capture startup before any configuration code runs; the framework is the root host.
+    const capture = new StartupCapture(this, { source });
+    const builder = telemetryConfigurator
+      .setSource(source)
+      .setMetadata({
+        fusion: {
+          type: 'framework-telemetry',
+          framework: {
+            version,
           },
-        });
-        builder.setDefaultScope(['framework']);
-      },
+        },
+      })
+      .setDefaultScope(['framework'])
+      .attachLifecycleItems(capture.items);
+    this.addConfig({
+      module: telemetry,
+      configurator: builder,
     });
   }
 

@@ -2,10 +2,10 @@ import { createServer } from 'node:http';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http';
 import { TraceFlags } from '@opentelemetry/api';
-import { TelemetryMetricSchema } from '../schemas.js';
+import { TelemetryMetricSchema } from '../schemas/index.js';
 import { TelemetryLevel, TelemetryType } from '@equinor/fusion-framework-module-telemetry';
 import { OtlpAdapter } from '../adapters/otlp/OtlpAdapter.js';
-import { createOperationalRecords } from '../create-operational-records.js';
+import { createOperationalRecords } from '../utils/create-operational-records.js';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -41,7 +41,7 @@ describe('OtlpAdapter', () => {
         metadata: { fusion: { app: { key: 'example-app' } } },
       });
       for (const record of createOperationalRecords({
-        source: { source: 'widget', hostId: 'widget-host', widgetKey: 'collector-widget' },
+        source: { source: 'widget', hostId: 'widget-host' },
         module: 'host',
         operation: 'initialize',
         outcome: 'failure',
@@ -70,7 +70,10 @@ describe('OtlpAdapter', () => {
                       body: { stringValue: 'fusion.host.initialize.duration' },
                       attributes: expect.arrayContaining([
                         { key: 'source', value: { stringValue: 'widget' } },
-                        { key: 'fusion.widget.key', value: { stringValue: 'collector-widget' } },
+                        {
+                          key: 'fusion.diagnostic.hostId',
+                          value: { stringValue: 'widget-host' },
+                        },
                         { key: 'fusion.telemetry.value', value: { intValue: 0 } },
                       ]),
                     },
@@ -97,6 +100,34 @@ describe('OtlpAdapter', () => {
         server.closeAllConnections();
       });
     }
+  });
+
+  it('exports unclassified built-in records without inferring a source or app identity', async () => {
+    const send = vi
+      .spyOn(OTLPLogExporter.prototype, 'export')
+      .mockImplementation((_records, callback) => {
+        callback({ code: 0 });
+      });
+    const adapter = new OtlpAdapter({ url: 'http://localhost:4318/v1/logs' });
+    await adapter.initialize();
+    for (const item of createOperationalRecords({
+      source: { hostId: 'custom-host', hostName: 'custom-shell' },
+      module: 'host',
+      operation: 'initialize',
+      outcome: 'success',
+      duration: 0,
+    })) {
+      adapter.processItem(item);
+    }
+    await adapter.forceFlush();
+    const [record] = send.mock.calls[0][0];
+    expect(record.attributes).toMatchObject({
+      'fusion.diagnostic.hostId': 'custom-host',
+      'fusion.diagnostic.hostName': 'custom-shell',
+    });
+    expect(record.attributes).not.toHaveProperty('source');
+    expect(record.attributes).not.toHaveProperty('fusion.app.key');
+    await adapter.shutdown();
   });
 
   it('uses the standard OTLP exporter with app key, source, and severity', async () => {
@@ -155,7 +186,7 @@ describe('OtlpAdapter', () => {
     await adapter.shutdown();
   });
 
-  it('exports captured widget identity, zero duration, time and trace context through the SDK', async () => {
+  it('exports captured host origin, zero duration, time and trace context through the SDK', async () => {
     const send = vi
       .spyOn(OTLPLogExporter.prototype, 'export')
       .mockImplementation((_records, callback) => {
@@ -174,7 +205,6 @@ describe('OtlpAdapter', () => {
           schemaVersion: 1,
           source: 'widget',
           hostId: 'widget-host',
-          widgetKey: 'safe-widget',
           module: 'http',
           operation: 'request',
           outcome: 'success',
@@ -196,7 +226,6 @@ describe('OtlpAdapter', () => {
     expect(record.hrTime).toEqual([1_700_000_000, 123_000_000]);
     expect(record.attributes).toMatchObject({
       source: 'widget',
-      'fusion.widget.key': 'safe-widget',
       'fusion.telemetry.value': 0,
       'fusion.diagnostic.hostId': 'widget-host',
     });

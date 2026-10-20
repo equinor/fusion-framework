@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HttpClient } from '@equinor/fusion-framework-module-http/client';
-import { diagnosticExclusion } from '@equinor/fusion-framework-module';
+import { telemetryExportRequest } from '@equinor/fusion-framework-module';
 import { HttpClientExporterTransport } from '../logExporters/fusionOTLPLogExporter/HttpClientExporterTransport.js';
 
 afterEach(() => vi.unstubAllGlobals());
 
-describe('exporter diagnostic exclusion', () => {
-  it('preserves request-local exclusion through the real client without hiding simultaneous business requests', async () => {
+describe('telemetry export request ownership', () => {
+  it('identifies exports through the real client without marking simultaneous application requests', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => new Response('{}')),
@@ -14,8 +14,8 @@ describe('exporter diagnostic exclusion', () => {
     const client = new HttpClient('https://business.test');
     const exported: boolean[] = [];
     client.middlewareHandler.use(async (uri, init, next) => {
-      exported.push(diagnosticExclusion in init);
-      expect(new Headers(init.headers).has('diagnostic-exclusion')).toBe(false);
+      exported.push(telemetryExportRequest in init);
+      expect(new Headers(init.headers).has('telemetry-export-request')).toBe(false);
       return next(uri, init);
     });
     const transport = new HttpClientExporterTransport(client, 'https://collector.test/v1/logs');
