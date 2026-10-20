@@ -497,6 +497,7 @@ This command uploads and tags your app for deployment. If no bundle is provided,
 | `-m`, `--manifest` | Manifest file to use for bundling (e.g., `app.manifest.ts`) (optional).                             | `app.manifest.ts` |
 | `-t`, `--tag`      | Tag to apply to the published app (any string, commonly `latest` or `preview`).                    | `latest`          |
 | `-c`, `--config`   | Upload application config after publishing. Accepts true for default config file or a path to a specific config file. |                   |
+| `--allow-existing-version` | On a confirmed duplicate-version upload response, re-tag the exact existing bundle version instead of failing. | `false` |
 | `-d`, `--debug`    | Enable debug mode for verbose logging.                                                              | `false`           |
 | `--token`          | Authentication token for Fusion.                                                                    |                   |
 | `--tenantId`       | Azure tenant ID for authentication.                                                                 |                   |
@@ -528,6 +529,49 @@ pnpm fusion-framework-cli publish --config app.config.prod.ts --env prod
 > - The `--tag` option lets you mark the published version with any custom tag (e.g., `latest`, `preview`, `dev`, `staging`, `v1.0`) for easier deployment targeting.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If any step fails (build, upload, or tagging), an error will be logged and the process will exit with a non-zero code.
+
+#### Re-deploy an existing version
+
+Use `ffc app publish --allow-existing-version` to re-run a deployment or move a tag
+back to an older published bundle without generating another version:
+
+```sh
+# Restore latest to the exact version in a previously published artifact.
+ffc app publish --env ci --tag latest --allow-existing-version previous.bundle.zip
+
+# Restore a pull-request preview tag.
+ffc app publish --env ci --tag pr-42 --allow-existing-version app.bundle.zip
+```
+
+The option is disabled by default. Omit it to retain duplicate-version failures.
+An ordinary successful upload is unchanged when the option is enabled.
+
+Recovery requires an HTTP **409 from bundle upload** whose JSON `error` has
+`code: "ConflictError"`, `resourceIdentifier: "version"`, and
+`message: "An app build with version <version> already exists"`. The version must
+exactly match the lowercased, valid semantic version in the uploaded ZIP's
+`app-manifest.json`. The app key is the same key used for that upload, resolved
+from the bundle metadata or an explicit programmatic override. The CLI does not
+guess from the working directory, a tag, `package.json`, or a log message.
+Unknown, malformed or mismatched responses still fail.
+
+On that specific response, the CLI does not retry the upload. It tags the existing
+version with the original `--tag`, using the same initialized framework,
+authentication and `--env`. If requested, `--config` generation and publication
+still run for that version. Only after tagging and requested config publication
+succeed does the CLI report that the existing version was re-tagged.
+
+Authentication, discovery, network, validation, unrelated conflicts, tagging and
+config failures remain failures. A config failure can occur after the tag has
+already moved; publishing is not transactional. Reusing a version deploys the
+**existing** registry contents, not the newly supplied ZIP contents, and does not
+compare their bytes. Use a new version when the build contents have changed.
+
+For programmatic callers, `uploadApplication({ ..., allowExistingVersion: true })`
+returns `{ appKey, version, existingVersion: true }` only for the confirmed
+duplicate response. This result is not a completed deployment: the caller must
+still tag that version and complete any requested config publication. Successful
+new uploads retain the existing `{ appKey, version }` result shape.
 
 ### Config
 
