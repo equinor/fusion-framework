@@ -76,7 +76,9 @@ local copy of the [Fusion Skills APM Sync workflow](https://github.com/equinor/f
 because this public repository cannot call that internal repository's reusable
 workflow. It uses APM CLI `0.33.0` and the `automation/apm-update` branch. The workflow
 refreshes dependencies within the declared ranges, regenerates the lockfile and
-managed agent configuration, and opens or updates a draft pull request.
+managed agent configuration, and opens or updates a draft pull request. APM rewrites
+`generated_at` and `resolved_at` in the lockfile on every run, so a run that changes
+nothing else is discarded instead of opening a pull request.
 It does not run the audit or repository-specific context validation itself; the
 `Agent context` workflow above supplies those safeguards before an update is merged.
 
