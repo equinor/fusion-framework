@@ -1,6 +1,6 @@
 {
   "name": "portal-analytics",
-  "version": "0.4.74",
+  "version": "0.4.75",
   "description": "",
   "main": "dist/index.js",
   "type": "module",

@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 2.0.13
+
+### Patch Changes
+
+- 84f07b7: Preserve agent-browser JSON failure messages and codes, including `outcome_unknown`, so browser tool callers can inspect whether a command ran before retrying it. Prefer JSON failures over stderr diagnostics, normalize embedded line breaks into a single-line summary, and safely fall back to the process error message when captured streams are not strings.
+
 ## 2.0.12
 
 ### Patch Changes
