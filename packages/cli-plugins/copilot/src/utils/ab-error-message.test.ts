@@ -68,4 +68,56 @@ describe('abErrorMessage', () => {
   it('reports non-Error failures', () => {
     expect(abErrorMessage('Browser unavailable')).toBe('Browser unavailable');
   });
+
+  it('prefers JSON failures over stderr diagnostics and ignores non-string codes', () => {
+    // Competing diagnostics verify that the command protocol wins.
+    const failure = Object.assign(new Error('Command failed'), {
+      stdout: JSON.stringify({ success: false, error: 'Selector was not found', code: 42 }),
+      stderr: '✗ Generic failure',
+    });
+
+    expect(abErrorMessage(failure)).toBe('Selector was not found');
+  });
+
+  it.each([undefined, null, 42, Buffer.from('✗ Browser disconnected')])(
+    'falls back to the process message for non-string captured streams: %s',
+    (stream) => {
+      // Invalid stream values must not hide the usable process message.
+      const failure = Object.assign(new Error('Command failed\n✗ Timed out'), {
+        stdout: stream,
+        stderr: stream,
+      });
+
+      expect(abErrorMessage(failure)).toBe('✗ Timed out');
+    },
+  );
+
+  it('normalizes line breaks in JSON error messages and codes', () => {
+    // JSON escaping allows multiline diagnostics even when stdout occupies one line.
+    const failure = Object.assign(new Error('Command failed'), {
+      stdout: JSON.stringify({
+        success: false,
+        error: 'Inspect the page\r\n  before retrying',
+        code: 'outcome_unknown',
+      }),
+    });
+
+    expect(abErrorMessage(failure)).toBe('outcome_unknown: Inspect the page | before retrying');
+  });
+
+  it.each([
+    ['First line\r\nSecond line', 'First line | Second line'],
+    [new Error('First line\nSecond line'), 'First line | Second line'],
+  ])('normalizes line breaks in fallback messages: %s', (failure, expected) => {
+    expect(abErrorMessage(failure)).toBe(expected);
+  });
+
+  it('uses the process message when stderr contains no status diagnostics', () => {
+    // Incidental logging is not a replacement for the process failure.
+    const failure = Object.assign(new Error('Browser unavailable'), {
+      stderr: 'Debug output only',
+    });
+
+    expect(abErrorMessage(failure)).toBe('Browser unavailable');
+  });
 });

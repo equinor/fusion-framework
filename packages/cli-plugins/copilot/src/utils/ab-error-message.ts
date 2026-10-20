@@ -1,56 +1,71 @@
 /**
  * Extracts the user-facing error message from an agent-browser failure.
  *
- * Preserves failure codes from JSON stdout so callers do not retry commands
- * whose execution outcome is unknown. Otherwise strips ANSI codes from stderr
- * and returns only the diagnostic
- * lines prefixed with `✗` or `⚠`. Falls back to the first 200 characters
- * of the error message when no diagnostic lines are found.
+ * Prefers JSON failure messages and codes, including `outcome_unknown`, so callers
+ * can inspect state before retrying. Otherwise uses ANSI-free stderr diagnostics
+ * prefixed with `✗` or `⚠`, then a diagnostic in the process error message, then
+ * its first 200 characters. Joins embedded line breaks with ` | `.
  *
  * @param err - The caught error (typically from {@link ab})
  * @returns A single-line summary suitable for console output
- * @throws When JSON parsing fails for a reason other than malformed stdout.
  */
 export function abErrorMessage(err: unknown): string {
-  // Non-Error throws have no structured message to extract
-  if (!(err instanceof Error)) return String(err);
-  const e = err as Error & { stderr?: string; stdout?: string };
-  // JSON mode reports command failures on stdout, including whether retrying is unsafe.
-  if (typeof e.stdout === 'string' && e.stdout.trim()) {
-    let response: unknown;
-    try {
-      response = JSON.parse(e.stdout);
-    } catch (parseError) {
-      // Unstructured stdout is not a failure envelope; retain the original stderr/message below.
-      if (!(parseError instanceof SyntaxError)) throw parseError;
-    }
-    // Do not mistake successful JSON output or unrelated logs for the command's failure.
-    if (
-      response !== null &&
-      typeof response === 'object' &&
-      'success' in response &&
-      response.success === false &&
-      'error' in response &&
-      typeof response.error === 'string'
-    ) {
-      const code = 'code' in response && typeof response.code === 'string' ? response.code : '';
-      return code ? `${code}: ${response.error}` : response.error;
-    }
-  }
-  // Prefer the raw stderr stream when it was captured on the error
-  if (e.stderr) {
+  let message = String(err);
+
+  // Process failures carry diagnostics that take precedence over the generic message.
+  if (err instanceof Error) {
+    const stdout = 'stdout' in err ? err.stdout : undefined;
+    const stderr = 'stderr' in err && typeof err.stderr === 'string' ? err.stderr : '';
     // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping ANSI escape sequences
     const ansiPattern = /\x1B\[[0-9;]*m/g;
-    const lines = e.stderr
+    const diagnostics = stderr
       .replace(ansiPattern, '')
-      .split('\n')
-      // Keep only the diagnostic lines agent-browser prefixes with a status glyph
-      .map((l) => l.trim())
-      // Filter down to lines that look like agent-browser's own status output
-      .filter((l) => l.startsWith('✗') || l.startsWith('⚠'));
-    // Only report an assembled diagnostic summary when matching lines were found
-    if (lines.length) return lines.join(' | ');
+      .split(/\r?\n/)
+      // Status markers may be indented in captured output.
+      .map((line) => line.trim())
+      // Debug output must not obscure actionable browser diagnostics.
+      .filter((line) => line.startsWith('✗') || line.startsWith('⚠'))
+      .join(' | ');
+    const fallback = err.message.match(/[✗⚠].+/)?.[0] ?? err.message.slice(0, 200);
+
+    message = jsonFailureMessage(stdout) ?? (diagnostics || fallback);
   }
-  const match = e.message.match(/[✗⚠].+/);
-  return match ? match[0] : e.message.slice(0, 200);
+
+  return message.replace(/\s*[\r\n]+\s*/g, ' | ');
+}
+
+/**
+ * Reads only agent-browser failure envelopes; other stdout leaves stderr in control.
+ *
+ * @param stdout - Captured process output, which may not be JSON or a string.
+ * @returns The failure message with its optional code, or undefined for other output.
+ */
+function jsonFailureMessage(stdout: unknown): string | undefined {
+  // Only text output can contain the JSON command protocol.
+  if (typeof stdout !== 'string' || !stdout.trim()) return undefined;
+
+  let response: unknown;
+  try {
+    response = JSON.parse(stdout);
+  } catch (error) {
+    // Malformed command output is recoverable; unexpected parser failures are not.
+    if (!(error instanceof SyntaxError)) throw error;
+    // Plain-text stdout is expected for commands that do not use JSON mode.
+    return undefined;
+  }
+
+  // Successful responses and unrelated JSON must not override failure diagnostics.
+  if (
+    typeof response !== 'object' ||
+    response === null ||
+    !('success' in response) ||
+    response.success !== false ||
+    !('error' in response) ||
+    typeof response.error !== 'string'
+  ) {
+    return undefined;
+  }
+
+  const code = 'code' in response && typeof response.code === 'string' ? response.code : '';
+  return code ? `${code}: ${response.error}` : response.error;
 }
