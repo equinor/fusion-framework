@@ -42,10 +42,4 @@ export type {
 
 export { enableTelemetry } from './enable-telemetry.js';
 
-// Helpers are grouped by concern rather than flattened into the root; each namespace
-// mirrors the matching `/utils`, `/schemas` or `/integrations` subpath.
-export * as utils from './utils/index.js';
-export * as schemas from './schemas/index.js';
-export * as integrations from './integrations/index.js';
-
 export { default } from './module.js';

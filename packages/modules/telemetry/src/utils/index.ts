@@ -2,8 +2,7 @@
  * Utility functions for telemetry item processing and operational records.
  *
  * @remarks
- * Import from `@equinor/fusion-framework-module-telemetry/utils`, or use the `utils`
- * namespace exported from the package root.
+ * Import from `@equinor/fusion-framework-module-telemetry/utils`.
  */
 export { mapConfiguratorEvents } from './map-configurator-events.js';
 export { mergeTelemetryItem } from './merge-telemetry-item.js';
