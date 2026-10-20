@@ -76,7 +76,7 @@ export const LogReader = () => {
     fetchLogs();
   }, [fetchLogs, trackFeature]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only run on mount
+  // Fetch the initial log snapshot only on mount.
   useEffect(() => {
     fetchLogs();
   }, []);
