@@ -1,17 +1,83 @@
 # Router Cookbook
 
-This cookbook demonstrates how to set up client-side routing in your Fusion Framework application using the `@equinor/fusion-framework-react-router` package. The router integrates seamlessly with Fusion Framework's module system and provides a file-based routing approach that simplifies route management.
+This cookbook demonstrates explicit client-side routing using `@equinor/fusion-framework-react-router`. Apps own startup, navigation and the route registry; the Vite plugin compiles explicitly referenced route modules. There is no directory scan or filename-to-URL inference.
 
 ## Overview
 
-The Fusion Framework Router is built on top of React Router v7 and provides:
+The Fusion Framework Router is built on top of React Router v8 and requires React/React DOM `^19.2.7`:
 
-- **File-based routing** - Define routes by referencing component files
+- **Explicit route DSL** - Declare URLs and reference their component files
 - **Fusion Framework integration** - Automatic access to Fusion modules in loaders and components
 - **Type-safe routing** - Full TypeScript support with route handles
 - **Lazy loading** - Automatic code splitting for route components
 - **Data loading** - Built-in support for client-side data fetching
 - **Error boundaries** - Automatic error handling with custom error components
+
+## Shared middleware demonstration
+
+Open **Middleware Demo** in the sidebar (`/middleware`). The explicit registry
+places report pages beneath a shared guard layout. Its middleware creates a typed
+per-execution context, records before/after telemetry and either continues,
+redirects to the demo index, or throws to the layout's error boundary. The report
+middleware wraps the protected loader. The console's `routing-demo` entry shows:
+
+```text
+layout:before, guard, report:before, report:loader, report:after, layout:after
+```
+
+Denied and failed checks log only `layout:before, guard, layout:after`; neither
+child middleware nor the loader runs. **Next report** demonstrates that the guard
+runs again between children even when their layout stays mounted.
+
+The `access` query parameter is deliberately client-controlled demonstration
+state, **not authentication or authorization**. Production apps must query their
+configured provider and enforce access on the backend. For reusable Fusion Roles
+checks, use `requireRoles` from React App `/roles`; the generic router owns no
+authorization policy or access recovery.
+
+The manifest selects `src/routes/routes.ts` as its explicit source-only registry.
+Generation reads static `handle.route` metadata without executing page modules.
+The filename `[id]/index.tsx` does not declare a URL: `route(':id', ...)` does.
+
+Related guides:
+
+- [Middleware lifecycle, typed context and cancellation](../../packages/react/router/docs/middleware.md)
+- [Optional React App role gates](../../packages/react/router/docs/require-roles.md)
+- [Static manifest sitemaps](../../packages/react/router/docs/route-sitemap.md)
+- [React Router v8 migration](../../packages/react/router/docs/migration.md)
+
+Browser acceptance in `src/__tests__/middleware.test.tsx` uses the actual app,
+explicit registry and public navigation API, rather than a replacement test
+router. Existing route/API-mock tests retain the list/detail and error workflows.
+
+### Local acceptance evidence
+
+Run these commands from the workspace root. Start the mock service before dev or
+preview; these checks do not require live Entra credentials or a backend release.
+The evidence below is for the integration branch, **not an npm release**.
+
+```sh
+pnpm exec fusion-framework-cli mock-server cookbooks/app-react-router/src/mocks --preset fusion --port 4319 --host 127.0.0.1 --seed 1625 --no-analytics-record
+pnpm --filter @equinor/fusion-framework-cookbook-app-react-router dev --mock http://127.0.0.1:4319 --port 4317 --host 127.0.0.1
+pnpm --filter @equinor/fusion-framework-cookbook-app-react-router serve --mock http://127.0.0.1:4319 --port 4318 --host 127.0.0.1
+```
+
+| Check | Command / procedure | Recorded outcome |
+| --- | --- | --- |
+| Runtime and optional Roles regressions | `pnpm exec vitest --run --project '*cookbook-app-react-router*' --project '*react-app*' --project '*react-router*'` | 409 tests in 54 files passed, including 28 Roles middleware tests and type-test projects. |
+| Production build | `pnpm --filter @equinor/fusion-framework-cookbook-app-react-router build` | Passed. Preview also rebuilds through the cookbook's `preserve` script. |
+| Source-only sitemap | `pnpm --filter @equinor/fusion-framework-cookbook-app-react-router manifest --output /tmp/router-acceptance-manifest.json` | Nine flat tuples: the seven existing pages plus `middleware` and `middleware/reports/:id`. Checked exact paths, `id` hint and demo `access` hint. |
+| Packaging | `pnpm --filter @equinor/fusion-framework-cookbook-app-react-router exec fusion-framework-cli app pack --archive routing-acceptance.zip` | Passed; checked archive build entry and application metadata. The archive's `app-manifest.json` is build-only metadata; the sitemap is checked in the separate full manifest output above. |
+| Dev and preview navigation | Open the app URL printed by each mock-enabled server; use Middleware Demo's allow, next report, deny and failure links. | Both passed with the actual portal, app-owned navigation/basename and error views. |
+| Route HMR | While the demo index is open in dev, temporarily edit its heading, observe the changed heading without navigation, then restore it. | Passed in the browser; Vite also emitted a `js-update` for the route module. Temporary edit restored. |
+| Legacy explicit routes | `pnpm --filter @equinor/fusion-framework-cookbook-app-react-router-legacy build`; `pnpm exec tsc --project cookbooks/app-react-router-legacy/tsconfig.json --noEmit`; run its `dev` script with the same mock endpoint and navigate Home / errorElement / ErrorBoundary. | Build and typecheck passed; both loader and render error boundaries passed browser smoke tests. No legacy startup or route declarations changed. |
+| Conventions | `pnpm exec fusion-lint lint cookbooks/app-react-router`; Biome check of the modified TypeScript files | Passed. |
+| Standalone DSL cookbook typecheck | `pnpm exec tsc --project cookbooks/app-react-router/tsconfig.json --noEmit` | **Not green:** 17 existing diagnostics in old test-fixture/navigation types, error views, markdown JSX and action data. None points at the new middleware example. This remains migration acceptance work; runtime/type-test success above does not replace this check. |
+
+Migration and release communication remain tracked by
+[the upgrade task](https://github.com/equinor/fusion-core-tasks/issues/1626).
+No live-service authorization, announcement publication or released package
+version is inferred from these local results.
 
 ## How It Works
 
@@ -58,7 +124,7 @@ Routes are defined using helper functions that reference component files. This a
 
 - **Code splitting** - Each route is automatically lazy-loaded
 - **Type safety** - Route handles provide TypeScript types
-- **Organization** - Routes mirror your file structure
+- **Organization** - Group route modules by feature without deriving URLs from filenames
 
 ```typescript
 // src/pages/index.ts
@@ -1018,5 +1084,5 @@ for its dev server, so `'@fusion-api/api/products'` resolves to `/@fusion-api/ap
 
 - Explore the actual implementation in this cookbook's source files
 - Check the [package README](../../packages/react/router/README.md) for API details
-- Review React Router v7 documentation for advanced features
+- Review React Router v8 documentation for advanced features
 - Experiment with different route patterns and layouts

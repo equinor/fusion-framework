@@ -93,6 +93,6 @@ configured file is an error. Already serialized `routes` entries are preserved.
 Use `routes: []` or `routes: null` to opt out of conventional registry lookup and
 its warning. There is no folder scan or inference from page filenames.
 
-Automatic application routing is deferred to the improve-app feature. This feature
-does not change application startup or rendering: the manifest is documentation,
-not a runtime route configuration.
+Automatic application routing is outside this contract; no future feature is
+committed by this guide. Manifest generation does not change application startup
+or rendering: the manifest is documentation, not a runtime route configuration.
