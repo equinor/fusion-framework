@@ -1,8 +1,14 @@
 export { Router } from './Router.js';
+export { createMiddleware } from './create-middleware.js';
 export { routerContext } from './router-context.js';
 export { FusionRouterContextProvider } from './fusion-router-context-provider.js';
 export { useRouterContext } from './useRouterContext.js';
 export type { RouteSchemaEntry } from './routes/to-route-schema.js';
+export type {
+  MiddlewareFunction,
+  MiddlewareFunctionArgs,
+  MiddlewareNextFunction,
+} from './middleware.js';
 export type {
   ActionFunction,
   ActionFunctionArgs,
@@ -12,8 +18,10 @@ export type {
   LoaderFunction,
   LoaderFunctionArgs,
   RouteComponentProps,
+  RouteContextProvider,
   RouteNode,
   RouteObject,
+  RouteObjectLazy,
   RouterComponent,
   RouterContext,
   RouterHandle,
@@ -29,6 +37,9 @@ export {
   NavLink,
   Navigate,
   Outlet,
+  // Typed per-execution context for passing middleware results to loaders and actions.
+  RouterContextProvider,
+  createContext,
   createSearchParams,
   generatePath,
   isRouteErrorResponse,

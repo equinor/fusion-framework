@@ -1,5 +1,9 @@
-import type { RouteObject as ReactRouterRouteObject } from 'react-router';
+import type {
+  RouteObject as ReactRouterRouteObject,
+  RouterContextProvider as ReactRouterContextProvider,
+} from 'react-router';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-react-module';
+import type { MiddlewareFunction } from './middleware.js';
 
 /**
  * Utility type representing a value that may be synchronous or asynchronous.
@@ -54,7 +58,21 @@ export interface FusionRouterContext<
 }
 
 /**
+ * Per-execution React Router context provider passed to middleware, loaders and actions.
+ *
+ * This is React Router v8's own `Readonly<RouterContextProvider>`, the same type upstream uses
+ * for Data Mode `context`, so values written by middleware with `context.set(key, value)` are read
+ * with `context.get(key)` in loaders and actions of the same execution. Create keys with
+ * `createContext<T>()`.
+ */
+export type RouteContextProvider = Readonly<ReactRouterContextProvider>;
+
+/**
  * Arguments passed to data loading functions (loaders and actions).
+ *
+ * Mirrors React Router v8's Data Mode handler arguments (`request`, `url`, `pattern`, `params`,
+ * `context`) and adds `fusion`. Because every upstream property is present, loaders and actions
+ * typed with React Router's own argument types remain assignable to Fusion routes.
  *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
@@ -65,6 +83,15 @@ export type DataFunctionArgs<
 > = {
   /** A {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Fetch Request instance} which you can use to read headers (like cookies, and {@link https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams URLSearchParams} from the request. */
   request: Request;
+  /** URL of the location being navigated to or fetched. */
+  url: URL;
+  /** Matched route pattern, for example `/projects/:projectId`. */
+  pattern: string;
+  /**
+   * Per-execution context provider. Middleware of the same execution can `set` typed values
+   * that the handler reads with `get`; values are never shared between executions.
+   */
+  context: RouteContextProvider;
   /**
    * {@link https://reactrouter.com/start/framework/routing#dynamic-segments Dynamic route params} for the current route.
    * @example
@@ -266,9 +293,35 @@ export interface RouterHandle {
  * `ErrorBoundary` works exactly as in React Router (a `ComponentType` that may
  * additionally receive `error` and `fusion` props from the Fusion router).
  */
-export type RouteObject = Omit<ReactRouterRouteObject, 'handle' | 'children' | 'errorElement'> & {
+export type RouteObject = Omit<
+  ReactRouterRouteObject,
+  'handle' | 'children' | 'errorElement' | 'middleware' | 'lazy' | 'loader' | 'action'
+> & {
+  /**
+   * Route loader. The Fusion router calls it with React Router's arguments plus `fusion`.
+   * Loaders typed with React Router's own `LoaderFunction` remain assignable. The boolean form
+   * is React Router's and is passed through unchanged.
+   */
+  loader?: LoaderFunction | Extract<ReactRouterRouteObject['loader'], boolean>;
+  /**
+   * Route action. The Fusion router calls it with React Router's arguments plus `fusion`.
+   * Actions typed with React Router's own `ActionFunction` remain assignable. The boolean form
+   * is React Router's and is passed through unchanged.
+   */
+  action?: ActionFunction | Extract<ReactRouterRouteObject['action'], boolean>;
   /** Route metadata handle containing schema and custom properties */
   handle?: RouterHandle;
+  /**
+   * Client Data Mode middleware for this route, run outer route first and in array order
+   * before matched loaders and actions. The Fusion router injects `fusion` into each call.
+   * Route modules expose this as their `middleware` export.
+   */
+  middleware?: MiddlewareFunction[];
+  /**
+   * Lazily loaded route properties. Identical to React Router's `lazy`, except that a lazy
+   * `middleware` property resolves Fusion {@link MiddlewareFunction}s.
+   */
+  lazy?: RouteObjectLazy;
   /** Child routes */
   children?: RouteObject[];
   /**
@@ -280,6 +333,25 @@ export type RouteObject = Omit<ReactRouterRouteObject, 'handle' | 'children' | '
    */
   errorElement?: ErrorElement;
 };
+
+/** React Router's `lazy` definition: either a lazy function or an object of lazy properties. */
+type ReactRouterLazy = NonNullable<ReactRouterRouteObject['lazy']>;
+
+/** Object form of React Router's `lazy`, where each route property is loaded on its own. */
+type ReactRouterLazyObject = Exclude<ReactRouterLazy, (...args: never[]) => unknown>;
+
+/**
+ * `lazy` definition accepted by Fusion route objects.
+ *
+ * The function form is unchanged from React Router (it cannot return `middleware`). The object
+ * form may lazily load Fusion {@link MiddlewareFunction}s; React Router loads lazy middleware for
+ * every matched route before it runs the middleware chain, so unrelated route chunks stay lazy.
+ */
+export type RouteObjectLazy =
+  | Exclude<ReactRouterLazy, ReactRouterLazyObject>
+  | (Omit<ReactRouterLazyObject, 'middleware'> & {
+      middleware?: () => Promise<MiddlewareFunction[] | null | undefined>;
+    });
 
 /**
  * Type of route node in the route definition DSL.

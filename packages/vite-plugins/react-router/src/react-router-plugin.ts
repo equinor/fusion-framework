@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseSync, transformSync } from 'rolldown/utils';
 import type { Plugin, UserConfig } from 'vite';
 
 /**
@@ -53,15 +54,6 @@ const EXPORT_PATTERN = /export\s+const\s+\w+\s*=\s*/g;
 
 const IMPORT_STATEMENT_PATTERN = /^import\s+.*?;$/gm;
 
-// Export detection patterns
-const EXPORT_DEFAULT_PATTERN = /export\s+default|export\s*{\s*default\s*}/;
-
-const EXPORT_NAMED_PATTERN = (name: string) =>
-  new RegExp(`\\bexport\\s+(const|function|class|async\\s+function)\\s+${name}\\b`);
-
-const EXPORT_REEXPORT_PATTERN = (name: string) =>
-  new RegExp(`export\\s*{\\s*[^}]*${name}[^}]*}\\s*from`);
-
 // ============================================================================
 // Type Definitions
 // ============================================================================
@@ -74,6 +66,7 @@ interface RouteImports {
   errorElement?: string;
   hydrateFallback?: string;
   shouldRevalidate?: string;
+  middleware?: string;
   availableExports: Set<string>;
 }
 
@@ -284,8 +277,15 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
  * | `ErrorElement` | `errorElement` |
  * | `HydrateFallback` | `HydrateFallback` |
  * | `shouldRevalidate` | `shouldRevalidate` |
+ * | `middleware` | `middleware` |
  *
  * Any other named export in the file is silently ignored.
+ *
+ * @param filePath - Referenced route module path.
+ * @param currentFileId - Registry module used to resolve the route path.
+ * @param debug - Whether missing-file diagnostics are enabled.
+ * @returns Runtime export names parsed without executing the route or its imports.
+ * @throws When an existing route module cannot be read or parsed.
  */
 function getAvailableExports(filePath: string, currentFileId: string, debug: boolean): Set<string> {
   const availableExports = new Set<string>();
@@ -306,36 +306,30 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     }
 
     const fileContent = fs.readFileSync(actualPath, 'utf-8');
-
-    // Check for default export
-    if (fileContent.match(EXPORT_DEFAULT_PATTERN)) {
-      availableExports.add('default');
+    const transformed = transformSync(actualPath, fileContent, { tsconfig: false });
+    // Transform diagnostics must fail inspection rather than erase handlers from malformed source.
+    if (transformed.errors.length) {
+      throw new AggregateError(transformed.errors, 'Failed to transform route source.');
     }
-
-    // Check for named exports and re-exports
-    const exportNames = [
-      'clientLoader',
-      'action',
-      'handle',
-      'ErrorElement',
-      'HydrateFallback',
-      'shouldRevalidate',
-    ];
-    // Check each recognised export name individually, as both direct and re-export syntax are supported
-    for (const name of exportNames) {
-      // Recognise the export whether it's declared directly or re-exported from another module
-      if (
-        fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
-        fileContent.match(EXPORT_REEXPORT_PATTERN(name))
-      ) {
-        availableExports.add(name);
+    const parsed = parseSync(actualPath, transformed.code);
+    // A recovered syntax tree must never be treated as a successfully inspected module.
+    if (parsed.errors.length) {
+      throw new AggregateError(parsed.errors, 'Failed to parse transformed route source.');
+    }
+    // Module records preserve public aliases without resolving or executing imported modules.
+    for (const declaration of parsed.module.staticExports) {
+      // Default exports have a distinct record kind rather than a literal export name.
+      for (const entry of declaration.entries) {
+        const name = entry.exportName.kind === 'Default' ? 'default' : entry.exportName.name;
+        // Only runtime exports with a known public name can become handler imports.
+        if (!entry.isType && name !== null) availableExports.add(name);
       }
     }
   } catch (error) {
-    // Swallow file-read errors so a single unreadable route file doesn't fail the whole build
-    if (debug) {
-      console.warn(`[fusion:react-router] Error reading file ${filePath}:`, error);
-    }
+    throw new Error(
+      `[fusion:react-router] Failed to inspect route exports in ${filePath} (from ${currentFileId}).`,
+      { cause: error },
+    );
   }
 
   return availableExports;
@@ -398,6 +392,7 @@ function getGeneratedNames(componentName: string, availableExports: Set<string>)
     ErrorElement: 'ErrorElement',
     HydrateFallback: 'HydrateFallback',
     shouldRevalidate: 'shouldRevalidate',
+    middleware: 'middleware',
   };
 
   // Include every emitted alias so component and route-module exports share one namespace.
@@ -519,6 +514,12 @@ function buildRouteProperties(imports: RouteImports): string {
     properties.push(`shouldRevalidate: ${imports.shouldRevalidate}`);
   }
 
+  // Route-module middleware is passed through as-is; the Fusion Router adapts and runs it
+  // on React Router's middleware lifecycle, so no function bodies or policies are inspected here.
+  if (imports.middleware) {
+    properties.push(`middleware: ${imports.middleware}`);
+  }
+
   return properties.join(',\n        ');
 }
 
@@ -570,6 +571,10 @@ function generateImportStatements(
     // Only import the destructured export alias when the route file actually has it
     if (imports.shouldRevalidate) {
       importParts.push(`shouldRevalidate as ${imports.shouldRevalidate}`);
+    }
+    // Only import the destructured export alias when the route file actually has it
+    if (imports.middleware) {
+      importParts.push(`middleware as ${imports.middleware}`);
     }
 
     // Skip files that ended up with nothing to import (no recognised exports)
@@ -827,7 +832,8 @@ function insertImports(code: string, importStatements: string[]): string {
  *
  * The plugin scans source files for imports of `layout`, `index`, `route`, and `prefix`
  * from `@equinor/fusion-framework-react-router/routes`, inspects the referenced page modules
- * to discover available exports (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`),
+ * to discover available exports (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`,
+ * `HydrateFallback`, `shouldRevalidate`, `middleware`),
  * and rewrites the DSL calls into plain `RouteObject` definitions at build time.
  *
  * @param options - Optional configuration for the plugin.
@@ -939,6 +945,9 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
             shouldRevalidate: availableExports.has('shouldRevalidate')
               ? `shouldRevalidate${componentName}`
               : undefined,
+            middleware: availableExports.has('middleware')
+              ? `middleware${componentName}`
+              : undefined,
             availableExports,
           });
         });
@@ -1011,7 +1020,7 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         return transformedCode;
       } catch (error) {
         console.error('[fusion:react-router] Error during transformation:', error);
-        return code;
+        throw error;
       }
     },
   };

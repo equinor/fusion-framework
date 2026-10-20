@@ -1,12 +1,12 @@
 # @equinor/fusion-framework-react-router
 
-Opinionated React Router v7 integration for Fusion Framework applications. Rather than wiring up navigation history, basename, and request context by hand, this package does it for you and surfaces everything as a typed `fusion` object inside every loader, action, and component.
+Opinionated React Router v8 integration for Fusion Framework applications. Rather than wiring up navigation history, basename, and request context by hand, this package does it for you and surfaces everything as a typed `fusion` object inside every loader, action, and component.
 
 The package ships three things that work together:
 
 - **`Router` component** — drop-in replacement for `RouterProvider`. Reads `history` and `basename` from the Fusion navigation module and injects `fusion.modules` and `fusion.context` into every route.
 - **File-route DSL** — `layout`, `index`, `route`, and `prefix` helpers that build a `RouteObject` tree from file paths instead of raw objects. The Vite plugin transforms them into lazy-loaded data routes at build time.
-- **Route schema generation** — `toRouteSchema` converts `handle.route` metadata into a flat, machine-readable manifest. Useful for portal navigation trees and app documentation.
+- **Manifest sitemaps** — resolve an explicit registry without executing pages; see [explicit registries and manifest sitemaps](docs/route-sitemap.md). The existing `toRouteSchema` API remains available.
 
 ## Features
 
@@ -25,8 +25,9 @@ pnpm add @equinor/fusion-framework-react-router
 
 **Prerequisites**
 
-- React 18+ (`react` is a required peer dependency)
-- `react-dom` 18+ (optional peer dependency, required for browser rendering)
+- React 19.2.7 or later (`react` is a required peer dependency; React 18 is no longer supported)
+- `react-dom` 19.2.7 or later (required peer dependency)
+- Node.js 22.22.0 or later for builds and tests (required by React Router v8, which is ESM-only)
 
 All other Fusion Framework packages (`@equinor/fusion-framework-module-navigation`, `@equinor/fusion-framework-react-module`) are bundled dependencies — they install automatically.
 
@@ -195,4 +196,6 @@ The legacy `@equinor/fusion-framework-react-router/vite-plugin` entry point rema
 
 - [Migration guide — from `react-router` to Fusion router](docs/migration.md)
 - [Interop entry point](docs/interop.md)
+- [Route middleware](docs/middleware.md)
+- [Role gates with the optional Roles middleware helper](docs/require-roles.md)
 - [End-to-end cookbook](../../../cookbooks/app-react-router/)

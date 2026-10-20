@@ -652,6 +652,18 @@ export default sidebar({
               text: 'Interop Entry Point',
               link: 'interop.md',
             },
+            {
+              text: 'Route Middleware',
+              link: 'middleware.md',
+            },
+            {
+              text: 'Role-Gated Middleware',
+              link: 'require-roles.md',
+            },
+            {
+              text: 'Manifest Sitemap',
+              link: 'route-sitemap.md',
+            },
           ],
         },
         {

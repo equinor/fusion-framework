@@ -3,9 +3,8 @@ import { importConfig } from '@equinor/fusion-imports';
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import type { RuntimeEnv } from '../types.js';
-import type { RecursivePartial } from '../utils/types.js';
-import type { AppManifestFn } from './define-app-manifest.js';
-import mergeAppManifests from './merge-app-manifests.js';
+import type { AppManifestFn, AppManifestInput } from './define-app-manifest.js';
+import { resolveAppManifestInput } from './resolve-app-manifest-input.js';
 
 /**
  * Represents the export type for an application manifest, which can either be
@@ -16,7 +15,7 @@ import mergeAppManifests from './merge-app-manifests.js';
  *
  * @public
  */
-export type AppManifestExport = AppManifest | AppManifestFn;
+export type AppManifestExport = AppManifestInput | AppManifestFn;
 
 /**
  * Options for loading an application manifest file.
@@ -72,8 +71,9 @@ export const loadAppManifest = async (
     'app.manifest',
     'app.manifest.config',
   ];
+  const base: AppManifest = options?.base ?? ({} as AppManifest);
   // Use importConfig to dynamically import and resolve the manifest
-  const importResult = await importConfig<AppManifest, { default: AppManifestExport }>(
+  const importResult = await importConfig<AppManifestInput, { default: AppManifestExport }>(
     suggestions,
     {
       baseDir: env.root,
@@ -90,23 +90,19 @@ export const loadAppManifest = async (
          * @returns The resolved manifest of type T.
          */
         resolve: async (module) => {
-          const base: AppManifest = options?.base ?? ({} as AppManifest); // Use provided base or fallback to empty object
-          // If the module's default export is a function, invoke it with the environment and base manifest
-          if (typeof module.default === 'function') {
-            const result = await module.default(env, { base });
-            // Cast result to RecursivePartial<AppManifest> to handle RouteNode routes that will be serialized later
-            return mergeAppManifests(base, (result ?? {}) as RecursivePartial<AppManifest>);
-          }
-          // If the module's default export is not a function, treat it as a manifest object
-          return mergeAppManifests(base, (module.default ?? {}) as RecursivePartial<AppManifest>);
+          return typeof module.default === 'function'
+            ? ((await module.default(env, { base })) ?? {})
+            : (module.default ?? {});
         },
       },
     },
   );
+  // JSON and script manifests must both resolve pointers before serialization.
+  const manifest = await resolveAppManifestInput(importResult.config, base, env.root);
   // Return the loaded manifest, file path, and extension for further use
   // Maintainers: This return structure is used by downstream consumers to access the manifest and its metadata
   return {
-    manifest: importResult.config,
+    manifest,
     path: importResult.path,
     extension: importResult.extension,
   };

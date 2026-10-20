@@ -41,6 +41,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "rolldown": "1.2.13"
+  },
   "devDependencies": {
     "typescript": "^7.0.2",
     "vite": "^8.0.0",

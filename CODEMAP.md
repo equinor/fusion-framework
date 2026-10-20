@@ -96,14 +96,14 @@ Format: `package name` → path → role.
 | Package | Path | Role |
 | --- | --- | --- |
 | `@equinor/fusion-framework-react` | `packages/react/framework` | React framework provider and root hooks |
-| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host |
+| `@equinor/fusion-framework-react-app` | `packages/react/app` | React application host; typed middleware via `/routing`, optional role gates via `/roles` |
 | `@equinor/fusion-framework-react-module` | `packages/react/modules/module` | Hooks for consuming modules |
 | `@equinor/fusion-framework-react-module-bookmark` | `packages/react/modules/bookmark` | Bookmark hooks |
 | `@equinor/fusion-framework-react-module-context` | `packages/react/modules/context` | Context hooks |
 | `@equinor/fusion-framework-react-module-event` | `packages/react/modules/event` | Event hooks |
 | `@equinor/fusion-framework-react-module-http` | `packages/react/modules/http` | HTTP hooks |
 | `@equinor/fusion-framework-react-module-signalr` | `packages/react/modules/signalr` | SignalR hooks |
-| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL for React Router v7 |
+| `@equinor/fusion-framework-react-router` | `packages/react/router` | Type-safe route DSL and middleware definitions for React Router v8; Node-only explicit registry sitemap resolver in `src/build` |
 | `@equinor/fusion-framework-react-ag-grid` | `packages/react/ag-grid` | AG Grid React bindings |
 | `@equinor/fusion-framework-react-ag-charts` | `packages/react/ag-charts` | AG Charts React bindings |
 | `@equinor/fusion-framework-react-components-roles` | `packages/react/components/roles` | Required-role recovery UI for React hosts |
@@ -205,7 +205,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Change routing or route DSL | `packages/react/router/src`, `packages/vite-plugins/react-router/src`, `packages/modules/navigation/src` |
 | Change module registration/init | `packages/modules/module/src` |
 | Change React provider or hooks wiring | `packages/react/framework/src`, `packages/react/modules/module/src` |
-| Change app loading or manifests | `packages/modules/app/src`, `packages/app/src` |
+| Change app loading or manifests | `packages/modules/app/src`, `packages/app/src`, `packages/cli/src/lib/app`; explicit registry sitemaps in `packages/react/router/src/build` |
 | Change build/dev CLI behavior | `packages/cli/src`, `packages/vite-plugins/spa/src` |
 | Add a lint rule | `packages/linting/rules/src`, register in `packages/linting/config/src` |
 | Mock Fusion services, help, or analytics for local runs and Playwright | `packages/utils/openapi-mock-server/src/presets/fusion` (analytics in `presets/fusion/analytics`), `ffc mock-server` wiring in `packages/cli-plugins/mock-server/src` |

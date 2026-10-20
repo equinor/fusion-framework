@@ -13,6 +13,10 @@ export const pages = [
     route('people', './people/index.tsx'),
     route('error-test', './error-test/index.tsx'),
   ]),
+  prefix('middleware', [
+    index('./middleware/index.tsx'),
+    layout('./middleware/guard/index.tsx', [route('reports/:id', './middleware/report/index.tsx')]),
+  ]),
 ];
 
 export const routes = layout('./layout.tsx', pages);

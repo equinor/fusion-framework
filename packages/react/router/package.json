@@ -1,7 +1,7 @@
 {
   "name": "@equinor/fusion-framework-react-router",
   "version": "2.4.6",
-  "description": "DSL API for defining React Router v7 routes with type safety",
+  "description": "DSL API for defining React Router v8 routes with type safety",
   "main": "dist/esm/index.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
@@ -17,6 +17,10 @@
     "./schema": {
       "import": "./dist/esm/routes/to-route-schema.js",
       "types": "./dist/types/routes/to-route-schema.d.ts"
+    },
+    "./build": {
+      "import": "./dist/esm/build/index.js",
+      "types": "./dist/types/build/index.d.ts"
     },
     "./vite-plugin": {
       "import": "./dist/esm/vite-plugin/index.js",
@@ -62,10 +66,12 @@
     "@equinor/fusion-framework-react-module": "workspace:^",
     "@equinor/fusion-framework-vite-plugin-react-router": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
-    "react-router": "^7.18.0"
+    "acorn": "^8.18.0",
+    "esbuild": "^0.28.1",
+    "react-router": "^8.4.0"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.18.0",
+    "@react-router/dev": "^8.4.0",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "happy-dom": "^20.8.4",
@@ -76,15 +82,12 @@
     "vitest": "catalog:vitest"
   },
   "peerDependencies": {
-    "@types/react": "^18.0.0 || ^19.0.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "@types/react": "^19.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "peerDependenciesMeta": {
     "@types/react": {
-      "optional": true
-    },
-    "react-dom": {
       "optional": true
     }
   }

@@ -51,6 +51,24 @@ describe('resolvePageRoute', () => {
 });
 
 describe('createNamespaceRouteMap', () => {
+  it.each(['middleware', 'require-roles'])(
+    'maps the routing %s guide to an actual publication wrapper',
+    (name) => {
+      const repoRoot = path.resolve(import.meta.dirname, '../../../..');
+      const routeMaps = createNamespaceRouteMap(path.join(repoRoot, 'vue-press/src'), repoRoot);
+      const route = `/modules/react/router/${name}.html`;
+
+      expect(routeMaps.exact[`packages/react/router/docs/${name}.md`]).toBe(route);
+      expect(
+        rewriteNamespaceHref(
+          `/fusion-framework/modules/react/router/docs/${name}.html`,
+          routeMaps,
+          '/fusion-framework/',
+        ),
+      ).toBe(`/fusion-framework${route}`);
+    },
+  );
+
   it('discovers exact wrappers and explicit aggregate-directory links', () => {
     const { repoRoot, sourceDir } = createRepositoryFixture();
     writeFixture(

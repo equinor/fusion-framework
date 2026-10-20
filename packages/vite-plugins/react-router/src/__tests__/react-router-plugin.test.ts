@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import fs from 'node:fs';
 import path from 'node:path';
 import { reactRouterPlugin } from '../react-router-plugin';
 
@@ -34,6 +35,10 @@ describe('reactRouterPlugin', () => {
     plugin = reactRouterPlugin({ debug: false }) as unknown as ReactRouterPlugin;
     // Set root to the package root (parent of src)
     plugin.config({ root: path.resolve(__dirname, '../..') });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should transform a simple route() call to RouteObject', () => {
@@ -147,6 +152,121 @@ describe('reactRouterPlugin', () => {
 
     // Normalize whitespace for comparison
     expect(normalizeCode(transformResult)).toBe(normalizeCode(expected));
+  });
+
+  it('should wire route-module middleware exports next to existing route exports', () => {
+    const inputCode = [
+      `import { layout, route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = layout('./mocks/pages/GuardedLayout.tsx', [`,
+      `  route('guarded', './mocks/pages/GuardedPage.tsx'),`,
+      `]);`,
+    ].join('\n');
+
+    const transformResult = plugin.transform(inputCode, testFileId);
+
+    const expected = [
+      `import React from 'react';`,
+      `import { useLoaderData, useActionData, useRouteError, useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
+      `import { default as GuardedLayout, middleware as middlewareGuardedLayout } from './mocks/pages/GuardedLayout.tsx';`,
+      `import {`,
+      `    default as GuardedPage,`,
+      `    clientLoader as clientLoaderGuardedPage,`,
+      `    action as actionGuardedPage,`,
+      `    handle as handleGuardedPage,`,
+      `    middleware as middlewareGuardedPage`,
+      `} from './mocks/pages/GuardedPage.tsx';`,
+      `export const routes = [{`,
+      `  Component: GuardedLayout,`,
+      `  middleware: middlewareGuardedLayout,`,
+      `  children: [{`,
+      `    path: 'guarded',`,
+      `    Component: GuardedPage,`,
+      `    loader: clientLoaderGuardedPage,`,
+      `    action: actionGuardedPage,`,
+      `    handle: handleGuardedPage,`,
+      `    middleware: middlewareGuardedPage`,
+      `  },`,
+      `  ]`,
+      `}];`,
+    ].join('\n');
+
+    // Middleware is imported as a plain module export; no function body or policy is inlined.
+    expect(normalizeCode(transformResult)).toBe(normalizeCode(expected));
+  });
+
+  it('should not add middleware to route modules without a middleware export', () => {
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route(':id', './mocks/pages/UserDetailPage.tsx');`,
+    ].join('\n');
+
+    expect(plugin.transform(inputCode, testFileId)).not.toContain('middleware');
+  });
+
+  it.each([
+    'const middleware = []; export { middleware };',
+    'const guards = []; export { guards as middleware };',
+    'const guards = []; const handle = {}; export { handle, guards as middleware };',
+    'const guards = []; export { /* route guards */ guards as middleware };',
+    'const guards = []; export { guards as "middleware" };',
+    'export { guards as middleware } from "./guards";',
+    'export { "route-guards" as middleware } from "./guards";',
+    "export { 'route-guards' as middleware } from './guards';",
+    'const guards = []; export { /* braces { } */ guards as middleware };',
+    'throw new Error("Do not execute"); const guards = []; export { guards as middleware };',
+    'type Guard = () => void; const guards: Guard[] = []; export { guards as middleware }; export default () => <div />;',
+    'namespace Guards { export const values = []; } export const middleware = Guards.values;',
+    'export * as middleware from "./guards";',
+  ])('wires named middleware export clauses: %s', (source) => {
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(source);
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route('guarded', './mocks/pages/GuardedPage.tsx');`,
+    ].join('\n');
+
+    const result = plugin.transform(inputCode, testFileId);
+
+    expect(result).toContain('middleware as middlewareGuardedPage');
+    expect(result).toContain('middleware: middlewareGuardedPage');
+  });
+
+  it.each([
+    'const middleware = []; export { middleware as guards };',
+    'export { middleware as guards } from "./guards";',
+    'export type { middleware } from "./types";',
+    'export { type middleware } from "./types";',
+    'export { othermiddleware } from "./guards";',
+    '// export { middleware };',
+    '/* export { middleware }; */',
+    'const example = "export { middleware };";',
+    "const example = 'export { middleware };';",
+    'const example = `export { middleware };`;',
+    'const example = /export { middleware }/;',
+    '// export const middleware = [];',
+    'const example = "export function middleware() {}";',
+    'interface middleware {} export { middleware };',
+    'type middleware = []; export { middleware };',
+    'export declare const middleware: unknown[];',
+  ])('does not invent middleware exports from other names or types: %s', (source) => {
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(source);
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route('guarded', './mocks/pages/GuardedPage.tsx');`,
+    ].join('\n');
+
+    expect(plugin.transform(inputCode, testFileId)).not.toContain('middleware');
+  });
+
+  it('fails explicitly when route exports cannot be parsed', () => {
+    vi.spyOn(fs, 'readFileSync').mockReturnValue('export const middleware = [;');
+    const inputCode = [
+      `import { route } from '@equinor/fusion-framework-react-router/routes';`,
+      `export const routes = route('guarded', './mocks/pages/GuardedPage.tsx');`,
+    ].join('\n');
+
+    expect(() => plugin.transform(inputCode, testFileId)).toThrow(
+      'Failed to inspect route exports',
+    );
   });
 
   it('should generate distinct identifiers for directory-based (fs-routing) index.tsx files under different parent directories', () => {
