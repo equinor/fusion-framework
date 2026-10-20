@@ -109,7 +109,7 @@ What is happening here:
 | `@equinor/fusion-framework-module-http/client` | `HttpClient`, `HttpClientMsal`, and client-related types |
 | `@equinor/fusion-framework-module-http/operators` | `HttpRequestHandler`, `HttpResponseHandler`, `ProcessOperators`, `capitalizeRequestMethodOperator`, `requestValidationOperator`, `sseMap`, and operator types |
 | `@equinor/fusion-framework-module-http/selectors` | `jsonSelector`, `blobSelector`, `createSseSelector`, `ResponseSelector`, and SSE selector types |
-| `@equinor/fusion-framework-module-http/errors` | `HttpResponseError`, `HttpJsonResponseError`, and `ServerSentEventResponseError` |
+| `@equinor/fusion-framework-module-http/errors` | `HttpException`, `ClientNotFoundException`, `HttpResponseError`, `HttpJsonResponseError`, `ServerSentEventResponseError`, and `MissingAccessTokenException` |
 
 For most teams, the top-level package plus the `selectors` or `operators` subpaths are enough.
 
@@ -128,6 +128,7 @@ MSAL scope behavior is part of client configuration:
 - `defaultScopes` belong to the configured client
 - per-request `scopes` are appended to `defaultScopes`
 - token acquisition only happens when the auth module is available and the final scope list is non-empty
+- scoped requests reject with `MissingAccessTokenException` before fetch if no auth module or access token is available; unscoped requests are unchanged
 
 See [Client Configuration](docs/client-configuration.md) for configuration options, `onCreate`, direct module integration, custom client classes, ad-hoc clients, and `ClientNotFoundException` behavior.
 
@@ -186,12 +187,61 @@ See [Server-Sent Events](docs/server-sent-events.md) for `sse$()` usage, event f
 
 | Error | When it is used |
 | --- | --- |
+| `HttpException` | Shared base for all HTTP module errors below |
 | `ClientNotFoundException` | `createClient(name)` is called with a key that is neither configured nor an absolute `http:` or `https:` URL |
+| `MissingAccessTokenException` | Scoped requests cannot acquire an access token, including when no auth module is registered |
 | `HttpResponseError` | Generic response or selector failure, including synchronous selector execution failures |
 | `HttpJsonResponseError` | JSON parsing failures or non-OK JSON responses |
 | `ServerSentEventResponseError` | Invalid SSE responses such as non-OK status, unreadable body, or wrong content type |
 
 Native fetch errors can still surface as well, including abort and network failures.
+
+### Handle errors across bundles
+
+All HTTP module error classes expose `.is(error)` guards for unknown thrown values.
+Use these instead of `instanceof` when a host and application may bundle separate copies:
+
+```typescript
+import {
+  HttpException,
+  MissingAccessTokenException,
+} from '@equinor/fusion-framework-module-http/errors';
+
+try {
+  await client.json('/items', { scopes: ['api.read'] });
+} catch (error) {
+  if (MissingAccessTokenException.is(error)) {
+    console.error('Sign in before retrying the scoped request.');
+  } else if (HttpException.is(error)) {
+    console.error(error.message);
+  }
+  throw error;
+}
+```
+
+`HttpException.is` checks the stable `type: 'HttpException'` discriminator and standard
+error fields. Concrete guards also recognize their error names; response guards require
+a `response` field. `HttpResponseError.is` accepts `HttpJsonResponseError` and
+`ServerSentEventResponseError` as well. Local subclasses retain `instanceof` recognition;
+foreign custom subclasses with changed names are recognized only by `HttpException.is`.
+
+These are structural guards, not authenticity or payload validators. Response guards narrow
+`response` to `unknown`, and `HttpJsonResponseError.is` also leaves `data` as `unknown`.
+Validate those payloads separately before using them. SSE errors still do not expose a
+`data` field, even when constructed with `options.data`.
+
+### Migrate error handling
+
+`ClientNotFoundException`, `MissingAccessTokenException`, and `HttpResponseError` now
+extend `HttpException` instead of directly extending `Error`. They remain `Error` instances;
+JSON and SSE errors still extend `HttpResponseError`. Constructors, messages, causes,
+response identity, and JSON data are unchanged.
+
+`ClientNotFoundException.name` and `HttpResponseError.name` now identify their concrete
+classes instead of inheriting `'Error'`. Replace checks for `error.name === 'Error'` or
+exact prototype equality with the appropriate `.is(error)` guard. The other concrete
+names are unchanged. Older bundle copies without the new discriminator do not pass
+cross-bundle guards; upgrade both host and application copies.
 
 ## Testing
 

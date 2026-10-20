@@ -12,6 +12,22 @@ export class HttpJsonResponseError<
   TResponse = Response,
 > extends HttpResponseError<TResponse> {
   static Name = 'HttpJsonResponseError';
+
+  /**
+   * Identifies JSON response failures across application bundle boundaries.
+   *
+   * Neither the response nor optional JSON data is validated by this guard.
+   *
+   * @param error - Unknown thrown value.
+   * @returns Whether the value is a JSON response error with unknown response and data.
+   */
+  public static override is(error: unknown): error is HttpJsonResponseError<unknown, unknown> {
+    return (
+      error instanceof HttpJsonResponseError ||
+      (HttpResponseError.is(error) && error.name === HttpJsonResponseError.Name)
+    );
+  }
+
   /** The parsed JSON data associated with the error response, if any. */
   public readonly data?: TType;
 
