@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.8
+
+### Patch Changes
+
+- 84f07b7: Internal: use explicit IPv4 loopback addresses for Playwright application listeners, readiness checks, API proxies, and mock clients so Windows tests do not depend on ambiguous `localhost` address-family resolution.
+
 ## 0.0.7
 
 ### Patch Changes

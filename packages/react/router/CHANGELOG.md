@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.7
+
+### Patch Changes
+
+- 84f07b7: Internal: bump the resolved `happy-dom` test dependency from `20.14.6` to `21.0.3`.
+
 ## 2.4.6
 
 ### Patch Changes

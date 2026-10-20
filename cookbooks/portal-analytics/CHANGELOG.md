@@ -1,5 +1,14 @@
 # portal-analytics
 
+## 0.4.75
+
+### Patch Changes
+
+- 84f07b7: Internal: replace ineffective hook-dependency lint suppressions with intent comments, preserving the existing query and initial log-fetch behavior.
+- Updated dependencies [84f07b7]
+  - @equinor/fusion-framework-react-router@2.4.7
+  - @equinor/fusion-framework-react-app@14.3.6
+
 ## 0.4.74
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.0.12
+
+### Patch Changes
+
+- 84f07b7: Internal: use explicit IPv4 loopback addresses for Playwright application listeners, readiness checks, API proxies, and mock clients so Windows tests do not depend on ambiguous `localhost` address-family resolution.
+- 84f07b7: Internal: replace ineffective hook-dependency lint suppressions with intent comments, preserving the existing query and initial log-fetch behavior.
+
 ## 5.0.11
 
 ### Patch Changes
