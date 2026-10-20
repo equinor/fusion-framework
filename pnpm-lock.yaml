@@ -1805,6 +1805,9 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+      vitest:
+        specifier: catalog:vitest
+        version: 5.0.4(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(happy-dom@21.0.3)(jsdom@30.1.3)(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))
 
   packages/cli-plugins/mock-server:
     dependencies:
@@ -18412,7 +18415,6 @@ snapshots:
       - msw
       - utf-8-validate
       - vite
-    optional: true
 
   '@vitest/browser@5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)':
     dependencies:
@@ -18468,7 +18470,6 @@ snapshots:
       - msw
       - utf-8-validate
       - vite
-    optional: true
 
   '@vitest/mocker@5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))':
     dependencies:
@@ -23908,7 +23909,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.6.2
-      '@vitest/browser-playwright': 5.0.4(msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
+      '@vitest/browser-playwright': 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.4(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.105.2)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       '@vitest/ui': 5.0.4(vitest@5.0.4)
       happy-dom: 21.0.3
       jsdom: 30.1.3
