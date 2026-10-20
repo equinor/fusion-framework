@@ -109,7 +109,7 @@ What is happening here:
 | `@equinor/fusion-framework-module-http/client` | `HttpClient`, `HttpClientMsal`, and client-related types |
 | `@equinor/fusion-framework-module-http/operators` | `HttpRequestHandler`, `HttpResponseHandler`, `ProcessOperators`, `capitalizeRequestMethodOperator`, `requestValidationOperator`, `sseMap`, and operator types |
 | `@equinor/fusion-framework-module-http/selectors` | `jsonSelector`, `blobSelector`, `createSseSelector`, `ResponseSelector`, and SSE selector types |
-| `@equinor/fusion-framework-module-http/errors` | `HttpResponseError`, `HttpJsonResponseError`, and `ServerSentEventResponseError` |
+| `@equinor/fusion-framework-module-http/errors` | `HttpResponseError`, `HttpJsonResponseError`, `ServerSentEventResponseError`, and `MissingAccessTokenException` |
 
 For most teams, the top-level package plus the `selectors` or `operators` subpaths are enough.
 
@@ -128,6 +128,7 @@ MSAL scope behavior is part of client configuration:
 - `defaultScopes` belong to the configured client
 - per-request `scopes` are appended to `defaultScopes`
 - token acquisition only happens when the auth module is available and the final scope list is non-empty
+- scoped requests reject with `MissingAccessTokenException` before fetch if no auth module or access token is available; unscoped requests are unchanged
 
 See [Client Configuration](docs/client-configuration.md) for configuration options, `onCreate`, direct module integration, custom client classes, ad-hoc clients, and `ClientNotFoundException` behavior.
 

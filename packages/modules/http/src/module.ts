@@ -15,6 +15,8 @@ import type {
 
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 
+import { MissingAccessTokenException } from './errors/index.js';
+
 /**
  * Defines the type for the HTTP module, which includes:
  * - The module name: 'http'
@@ -43,8 +45,8 @@ export type HttpMsalModule = Module<
  * Default HTTP module definition for Fusion Framework applications.
  *
  * The module uses `HttpClientMsal` as the default client implementation and,
- * when the auth module is available, installs a request handler that can acquire
- * bearer tokens for scoped requests.
+ * installs a request handler that acquires bearer tokens for scoped requests.
+ * Scoped requests fail before reaching the network when no token is available.
  */
 export const module: HttpMsalModule = {
   name: 'http',
@@ -64,7 +66,8 @@ export const module: HttpMsalModule = {
    *
    * This function is responsible for setting up the default HTTP request handler
    * to acquire an access token from MSAL and attach it to the request headers
-   * when the request includes scopes.
+   * when the request includes scopes. Scoped requests reject with
+   * {@link MissingAccessTokenException} if no auth module or access token is available.
    *
    * @param config - The module configuration.
    * @param hasModule - A function to check if a module is available.
@@ -77,26 +80,25 @@ export const module: HttpMsalModule = {
     requireInstance,
   }): Promise<HttpClientProvider<HttpClientMsal>> => {
     const httpProvider = new HttpClientProvider(config);
-    // wire up an MSAL bearer-token handler only when the auth module is registered
-    if (hasModule('auth')) {
-      const authProvider = await requireInstance('auth');
-      httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
-        const { scopes = [] } = request;
-        // only attempt to acquire a token when the request actually declares scopes
-        if (scopes.length) {
-          /** TODO(#5143): should be try catch, check caller for handling */
-          const accessToken = await authProvider.acquireAccessToken({
-            request: { scopes },
-          });
-          // without a token there's nothing to attach, fall through to the default request
-          if (accessToken) {
-            const headers = new Headers(request.headers);
-            headers.set('Authorization', `Bearer ${accessToken}`);
-            return { ...request, headers };
-          }
+    const authProvider = hasModule('auth') ? await requireInstance('auth') : undefined;
+    httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
+      const { scopes = [] } = request;
+      // Unscoped requests retain their existing anonymous or caller-supplied authentication.
+      if (scopes.length) {
+        const accessToken = await authProvider?.acquireAccessToken({
+          request: { scopes },
+        });
+        // Declaring scopes requires MSAL authentication, not an anonymous fallback.
+        if (!accessToken) {
+          throw new MissingAccessTokenException(
+            `Cannot send scoped request: no access token available for [${scopes.join(', ')}]`,
+          );
         }
-      });
-    }
+        const headers = new Headers(request.headers);
+        headers.set('Authorization', `Bearer ${accessToken}`);
+        return { ...request, headers };
+      }
+    });
     return httpProvider;
   },
 };
