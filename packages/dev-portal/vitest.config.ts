@@ -11,6 +11,7 @@ export default defineProject({
       '@equinor/eds-tokens',
       '@equinor/eds-utils',
       '@equinor/fusion-react-context-selector',
+      '@equinor/fusion-wc-chip',
       '@equinor/fusion-wc-person',
       'chalk',
       'react/jsx-dev-runtime',
