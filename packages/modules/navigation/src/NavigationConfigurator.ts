@@ -183,6 +183,8 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
   public setTelemetry(
     telemetryOrCallback: ITelemetryProvider | ConfigBuilderCallback<ITelemetryProvider> | undefined,
   ): this {
+    // Automatic host wiring stays on by default; any explicit choice, including
+    // `undefined` to opt out, replaces it so host telemetry is never connected twice.
     this._set('autoTelemetry', false);
     const fn =
       typeof telemetryOrCallback === 'function'

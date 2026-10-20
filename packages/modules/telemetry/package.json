@@ -17,6 +17,10 @@
       "import": "./dist/esm/utils/index.js",
       "types": "./dist/types/utils/index.d.ts"
     },
+    "./integrations": {
+      "import": "./dist/esm/integrations/index.js",
+      "types": "./dist/types/integrations/index.d.ts"
+    },
     "./adapter": {
       "import": "./dist/esm/adapters/index.js",
       "types": "./dist/types/adapters/index.d.ts"

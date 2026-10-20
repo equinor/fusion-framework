@@ -186,7 +186,7 @@ telemetry initialization or subscribe to business execution a second time.
 import {
   createHttpTelemetry,
   observeQueryTelemetry,
-} from '@equinor/fusion-framework-module-telemetry';
+} from '@equinor/fusion-framework-module-telemetry/integrations';
 
 const diagnostics = createHttpTelemetry(() => modules.telemetry);
 httpClient.middlewareHandler.use(diagnostics.middleware);
@@ -237,11 +237,11 @@ module, operation and source kind as static kebab-case identifiers, and capture
 occurrence time and the active OpenTelemetry span immediately.
 
 ```ts
+import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 import {
   createDiagnosticContext,
   createOperationalRecords,
-  TelemetryLevel,
-} from '@equinor/fusion-framework-module-telemetry';
+} from '@equinor/fusion-framework-module-telemetry/utils';
 
 const source = telemetry.source;
 if (source) {

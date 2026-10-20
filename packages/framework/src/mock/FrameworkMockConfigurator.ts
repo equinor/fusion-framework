@@ -87,7 +87,7 @@ export class FrameworkMockConfigurator<
    */
   constructor() {
     const telemetry = new TelemetryMockConfigurator();
-    super(telemetry);
+    super({ telemetry });
 
     // Pinning up front — rather than waiting for an accessor to be read — is
     // what replaces the modules `FrameworkConfigurator`'s own constructor

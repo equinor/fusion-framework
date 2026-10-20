@@ -41,18 +41,11 @@ export type {
 } from './types.js';
 
 export { enableTelemetry } from './enable-telemetry.js';
-export { createOperationalRecords } from './utils/create-operational-records.js';
-export type { OperationalRecordArgs } from './utils/create-operational-records.js';
-export { createDiagnosticContext } from './utils/create-diagnostic-context.js';
-export type { DiagnosticContextArgs } from './utils/create-diagnostic-context.js';
-export type {
-  DiagnosticContext,
-  OperationalOutcome,
-  TelemetrySource,
-} from './schemas/diagnostic-context.js';
-export { createHttpTelemetry } from './integrations/create-http-telemetry.js';
-export type { HttpTelemetry } from './integrations/create-http-telemetry.js';
-export { observeQueryTelemetry } from './integrations/observe-query-telemetry.js';
-export type { QueryDiagnosticEvent } from './integrations/observe-query-telemetry.js';
+
+// Helpers are grouped by concern rather than flattened into the root; each namespace
+// mirrors the matching `/utils`, `/schemas` or `/integrations` subpath.
+export * as utils from './utils/index.js';
+export * as schemas from './schemas/index.js';
+export * as integrations from './integrations/index.js';
 
 export { default } from './module.js';

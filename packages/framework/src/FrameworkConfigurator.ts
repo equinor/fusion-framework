@@ -27,6 +27,17 @@ import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
 import { version } from './version.js';
 
 /**
+ * Options for creating a {@link FrameworkConfigurator}.
+ */
+export interface FrameworkConfiguratorOptions {
+  /**
+   * Telemetry configuration builder the framework host should configure, for example a
+   * mock builder in tests. Defaults to a new `TelemetryConfigurator`.
+   */
+  telemetry?: ITelemetryConfigurator;
+}
+
+/**
  * Configurator that registers and wires the core Fusion Framework modules.
  *
  * Extend `FrameworkConfigurator` to declare which modules (authentication,
@@ -76,7 +87,7 @@ export class FrameworkConfigurator<
    * Initializes the framework with core modules (event, auth, http, service discovery,
    * services, context, and telemetry) and sets up default telemetry that includes
    * framework version metadata and 'framework' scope for all telemetry events.
-   * @param telemetryConfigurator - Prepared telemetry configuration, allowing mocks to use the same host pipeline.
+   * @param options - Optional host setup; see {@link FrameworkConfiguratorOptions}.
    *
    * @example
    * ```typescript
@@ -84,13 +95,13 @@ export class FrameworkConfigurator<
    * // Now ready to configure additional modules
    * ```
    */
-  constructor(telemetryConfigurator: ITelemetryConfigurator = new TelemetryConfigurator()) {
+  constructor(options?: FrameworkConfiguratorOptions) {
     super([event, auth, http, disco, services, context, telemetry]);
 
     const source = { source: 'framework', hostId: crypto.randomUUID() };
     // Capture startup before any configuration code runs; the framework is the root host.
     const capture = new StartupCapture(this, { source });
-    const builder = telemetryConfigurator
+    const builder = (options?.telemetry ?? new TelemetryConfigurator())
       .setSource(source)
       .setMetadata({
         fusion: {
