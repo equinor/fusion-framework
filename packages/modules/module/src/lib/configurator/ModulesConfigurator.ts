@@ -34,6 +34,7 @@ type QualifiedPostInitCallback = ((instance: any) => void | Promise<void>) & {
 import type { FrameworkPluginCallback, FrameworkPluginTeardown } from '../plugin/index.js';
 
 import { runConfigurePhase } from './phases/run-configure-phase.js';
+import { runPreparePhase } from './phases/run-prepare-phase.js';
 import { runInitializePhase } from './phases/run-initialize-phase.js';
 import { runPostInitializePhase } from './phases/run-post-initialize-phase.js';
 import { runPluginPhase } from './phases/run-plugin-phase.js';
@@ -44,7 +45,7 @@ import { ModuleConfiguratorEventName } from './module-configurator-event-name.js
 /**
  * Core orchestrator that drives the module lifecycle in Fusion Framework.
  *
- * `ModulesConfigurator` manages the full **configure → post-configure → initialize →
+ * `ModulesConfigurator` manages the full **prepare → configure → post-configure → initialize →
  * post-initialize → plugin → dispose** pipeline for a set of modules. Consumers
  * register modules via {@link addConfig} or {@link configure}, then call
  * {@link initialize} to produce a sealed {@link ModulesInstance} whose properties
@@ -54,6 +55,7 @@ import { ModuleConfiguratorEventName } from './module-configurator-event-name.js
  *
  * | # | Phase | Entry point | Description |
  * |---|-------|-------------|-------------|
+ * | 0 | **Prepare** | `addConfig` | Opt-in synchronous preparation runs during registration, before startup callbacks can fail. |
  * | 1 | **Configure** | `_configure` | Each module's `configure()` factory creates a config builder; registered callbacks mutate it. |
  * | 2 | **Post-configure** | `_postConfigure` (inside `_configure`) | `postConfigure()` hooks and `onConfigured` callbacks run. |
  * | 3 | **Initialize** | `_initialize` | Modules are initialized concurrently; cross-module dependencies are resolved through `requireInstance`. |
@@ -111,8 +113,10 @@ export class ModulesConfigurator<
   // configuration before telemetry is wired up.
   // Memory bound: ~24 KB at ~240 bytes/event × 100 events.
   #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>(100);
-  #disposal?: Promise<void>;
-  #partialInstances: Record<string, unknown> = {};
+  /** Shared disposal per initialized instance, so repeated calls join instead of re-running hooks. */
+  #disposals = new WeakMap<object, Promise<void>>();
+  /** Builders supplied or created during preparation, keyed by their exact module descriptor. */
+  #configurators = new Map<AnyModule, unknown>();
 
   /**
    * Stream of lifecycle events emitted while modules are configured, initialized,
@@ -254,16 +258,24 @@ export class ModulesConfigurator<
    *
    * Adds the module to the known module set and registers the optional
    * `configure`, `afterConfig`, and `afterInit` callbacks into their
-   * respective lifecycle phase arrays.
+   * respective lifecycle phase arrays. An optional `prepare` callback runs
+   * synchronously during registration against the same builder.
    *
    * @param config - The module configurator descriptor to register.
    * @template T - The module type being registered.
    * @template TConfig - The resolved configuration type for the module.
+   * @throws Rethrows preparation failures; async preparation and unprepared ordinary factories are rejected.
    */
   public addConfig<T extends AnyModule, TConfig = ModuleConfigType<T>>(
     config: IModuleConfigurator<T, TRef, TConfig>,
   ): void {
     const { module, afterConfig, afterInit, configure } = config;
+    // Prepare before touching registration state, so a failed preparation changes nothing.
+    const prepared = runPreparePhase({
+      registration: config,
+      configurators: this.#configurators,
+      registerEvent: (event) => this._registerEvent(event),
+    });
     // Find an existing descriptor so re-registering a name can replace all of its lifecycle hooks.
     const existingModule = Array.from(this._modules).find((m) => m.name === module.name);
 
@@ -276,6 +288,7 @@ export class ModulesConfigurator<
       // multiple named clients without clobbering each other.
       if (existingModule !== module) {
         this._removeModuleCallbacks(module.name);
+        this.#configurators.delete(existingModule);
         const modules = Array.from(this._modules)
           // Preserve every descriptor while substituting the newly registered module.
           .map((m) => (m.name === module.name ? module : m));
@@ -283,6 +296,11 @@ export class ModulesConfigurator<
       }
     } else {
       this._modules.add(module);
+    }
+
+    // Commit the prepared builder only once the registration itself is in place.
+    if (prepared) {
+      this.#configurators.set(module, prepared.configurator);
     }
 
     this._registerEvent({
@@ -427,13 +445,14 @@ export class ModulesConfigurator<
     ref?: R,
   ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
     const start = performance.now();
+    const instances: Record<string, unknown> = {};
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.HostInitializeStarted,
       message: 'Starting host initialization',
     });
     try {
-      const instance = await this._initializeModules<T, R>(ref);
+      const instance = await this._initializeModules<T, R>(instances, ref);
       this._registerEvent({
         level: ModuleEventLevel.Information,
         name: ModuleConfiguratorEventName.HostInitialized,
@@ -449,11 +468,11 @@ export class ModulesConfigurator<
         metric: performance.now() - start,
         error,
       });
-      // Initialization owns partial providers even when no module map can be returned.
+      // Rollback owns the same provider map as this attempt, even when startup cannot return it.
       try {
         // Never call disposal hooks for modules that did not produce a provider.
-        const initializedModules = this.modules.filter(
-          (module) => module.name in this.#partialInstances,
+        const initializedModules = this.modules.filter((module) =>
+          Object.hasOwn(instances, module.name),
         );
         await runDisposePhase(
           {
@@ -462,12 +481,12 @@ export class ModulesConfigurator<
             event$: this.#event$,
             pluginTeardowns: this._pluginTeardowns,
           },
-          this.#partialInstances,
+          instances,
           ref,
         );
       } catch {
         // Cleanup health is secondary; callers must receive the original startup rejection.
-        console.warn('Partial module initialization cleanup failed');
+        console.warn('Module initialization rollback failed');
       }
       throw error;
     }
@@ -475,12 +494,14 @@ export class ModulesConfigurator<
 
   /**
    * Runs initialization inside the host diagnostic boundary.
+   * @param instances - Attempt-owned provider map shared by initialization and rollback.
    * @param ref - Reference forwarded to module lifecycle hooks.
    * @returns The sealed module map.
    * @template T - Additional modules in the resulting instance.
    * @template R - Reference type accepted by this host.
    */
   private async _initializeModules<T, R extends TRef>(
+    instances: Record<string, unknown>,
     ref?: R,
   ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
     const configStart = performance.now();
@@ -503,7 +524,7 @@ export class ModulesConfigurator<
     });
 
     const instanceStart = performance.now();
-    const instance = await this._initialize<T, R>(config, ref);
+    const instance = await this._initialize<T, R>(config, ref, instances);
     const instanceLoadTime = Math.round(performance.now() - instanceStart);
 
     // Build a comma-separated module name list for telemetry properties
@@ -591,6 +612,7 @@ export class ModulesConfigurator<
     return runConfigurePhase(
       {
         modules: this.modules,
+        configurators: this.#configurators,
         configs: this._configs,
         afterConfiguration: this._afterConfiguration,
         afterInit: this._afterInit,
@@ -610,6 +632,7 @@ export class ModulesConfigurator<
    *
    * @param config - The merged module config map from the configure phase.
    * @param ref - Optional reference forwarded to each module's `initialize` call.
+   * @param instances - Attempt-owned provider map; forward to `super` when overriding to preserve rollback ownership.
    * @returns A promise resolving to the sealed map of initialized module providers.
    * @template T - Additional modules to merge into the instance type.
    * @template R - The reference type. Defaults to `TRef`.
@@ -618,18 +641,41 @@ export class ModulesConfigurator<
   protected async _initialize<T, R = TRef>(
     config: ModulesConfigType<CombinedModules<T, TModules>>,
     ref?: R,
+    instances: Record<string, unknown> = {},
   ): Promise<ModulesInstanceType<CombinedModules<T, TModules>>> {
     return runInitializePhase(
       {
         modules: this.modules,
         registerEvent: this._registerEvent.bind(this),
-        onInstance: (name, instance) => {
-          this.#partialInstances[name] = instance;
+        instances,
+        onLateProvider: (module, provider) => {
+          void ModulesConfigurator.#disposeLateProvider(module, provider, ref);
         },
       },
       config,
       ref,
     );
+  }
+
+  /**
+   * Disposes a provider that finished initializing after startup already rejected.
+   * The rollback has completed the event stream by then, so failures are only logged.
+   * @param module - Module whose initializer resolved after the rejection.
+   * @param provider - The late provider to dispose.
+   * @param ref - Reference forwarded to the module dispose hook.
+   * @returns A promise resolving once the dispose hook has settled.
+   */
+  static async #disposeLateProvider(
+    module: AnyModule,
+    provider: unknown,
+    ref: unknown,
+  ): Promise<void> {
+    try {
+      await module.dispose?.({ ref, modules: { [module.name]: provider }, instance: provider });
+    } catch {
+      // Startup already rejected with the original error; a late cleanup failure must not surface.
+      console.warn('Module initialization rollback failed');
+    }
   }
 
   /**
@@ -701,17 +747,23 @@ export class ModulesConfigurator<
    * @returns A promise resolving when all modules have been disposed.
    */
   public dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void> {
-    this.#disposal ??= runDisposePhase(
-      {
-        modules: this.modules,
-        registerEvent: this._registerEvent.bind(this),
-        // ReplaySubject extends Subject — dispose only needs .complete() which both have.
-        event$: this.#event$,
-        pluginTeardowns: this._pluginTeardowns,
-      },
-      instance,
-      ref,
-    );
-    return this.#disposal;
+    // Idempotence belongs to each initialized instance; another instance must still be disposed.
+    let disposal = this.#disposals.get(instance);
+    // First disposal of this instance starts teardown; later calls join it.
+    if (!disposal) {
+      disposal = runDisposePhase(
+        {
+          modules: this.modules,
+          registerEvent: this._registerEvent.bind(this),
+          // ReplaySubject extends Subject — dispose only needs .complete() which both have.
+          event$: this.#event$,
+          pluginTeardowns: this._pluginTeardowns,
+        },
+        instance,
+        ref,
+      );
+      this.#disposals.set(instance, disposal);
+    }
+    return disposal;
   }
 }

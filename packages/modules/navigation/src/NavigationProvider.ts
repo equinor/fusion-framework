@@ -14,7 +14,7 @@ import type { History, NavigateOptions, NavigationUpdate, Path, To } from './lib
 import {
   TelemetryLevel,
   TelemetryScope,
-  createOperationalRecords,
+  createDiagnosticContext,
   type ITelemetryProvider,
 } from '@equinor/fusion-framework-module-telemetry';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
@@ -260,6 +260,7 @@ export class NavigationProvider
       );
     }
 
+    // Clean up history instance when provider is disposed
     this._addTeardown(() => this.#history[Symbol.dispose]());
   }
 
@@ -286,14 +287,14 @@ export class NavigationProvider
     }
     try {
       const source = this.#telemetry?.source;
+      // Hosts with identity get a safe envelope; custom providers without one receive the event as-is.
       const diagnostic = source
-        ? createOperationalRecords({
+        ? createDiagnosticContext({
             source,
             module: 'navigation',
             operation: 'notification',
             outcome: 'success',
-            duration: 0,
-          })[0].diagnostic
+          })
         : undefined;
       this.#telemetry?.trackEvent({ ...item, diagnostic });
     } catch {

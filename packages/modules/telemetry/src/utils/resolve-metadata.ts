@@ -6,7 +6,7 @@ import type { MetadataExtractor, MetadataExtractorArgs, TelemetryItem } from '..
 import { merge, of, type Observable } from 'rxjs';
 import { catchError, defaultIfEmpty, first, map } from 'rxjs/operators';
 import { mergeTelemetryItem } from './merge-telemetry-item.js';
-import { TelemetryExceptionSchema } from '../schemas.js';
+import { TelemetryExceptionSchema } from '../schemas/telemetry-item-schema.js';
 
 /**
  * Resolves metadata from a {@link MetadataExtractor} into an observable stream.

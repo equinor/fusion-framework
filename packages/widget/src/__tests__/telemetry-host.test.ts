@@ -15,7 +15,7 @@ const env = {
 };
 
 describe('widget host telemetry', () => {
-  it('forwards widget lifecycle with widget identity and respects explicit exporters', async () => {
+  it('forwards widget lifecycle without manifest identity and respects explicit exporters', async () => {
     const inherited = vi.fn();
     const explicit = vi.fn();
     const fusion = await mockFramework((config) => {
@@ -42,10 +42,13 @@ describe('widget host telemetry', () => {
       expect(explicit).toHaveBeenCalledWith(
         expect.objectContaining({
           name: 'fusion.host.initialize.duration',
-          diagnostic: expect.objectContaining({ source: 'widget', widgetKey: 'telemetry-widget' }),
+          diagnostic: expect.objectContaining({ source: 'widget', hostId: expect.any(String) }),
         }),
       ),
     );
+    const exported = JSON.stringify(explicit.mock.calls);
+    expect(exported).not.toContain(env.manifest.name);
+    expect(exported).not.toContain(env.manifest.version);
     expect(inherited.mock.calls.some(([item]) => item.diagnostic?.source === 'widget')).toBe(false);
     await widget.dispose();
     await fusion.modules.dispose();

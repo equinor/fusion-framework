@@ -24,8 +24,13 @@ export interface InitializePhaseContext {
   modules: AnyModule[];
   /** Emits a structured lifecycle event into the configurator's event stream. */
   registerEvent: (event: ModuleEvent) => void;
-  /** Retains successful providers for cleanup if another initializer fails. */
-  onInstance?: (name: string, instance: unknown) => void;
+  /** Fresh provider map owned by this attempt, shared by the result and startup rollback. */
+  instances?: Record<string, unknown>;
+  /**
+   * Receives providers that finish initializing after the phase already rejected.
+   * Startup does not wait for slow siblings, so their cleanup is handed off here.
+   */
+  onLateProvider?: (module: AnyModule, provider: unknown) => void;
 }
 
 /**

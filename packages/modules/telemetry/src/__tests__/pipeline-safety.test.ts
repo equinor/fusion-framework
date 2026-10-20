@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { NEVER, Subject, of, throwError } from 'rxjs';
 import { TelemetryProvider } from '../TelemetryProvider.js';
 import { BaseTelemetryAdapter } from '../TelemetryAdapter.js';
-import { createOperationalRecords } from '../create-operational-records.js';
+import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
+import { createOperationalRecords } from '../utils/create-operational-records.js';
+import { diagnosticContext } from '../schemas/diagnostic-context.js';
 import type { TelemetryItem } from '../types.js';
 
 afterEach(() => {
@@ -10,10 +12,32 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+/**
+ * Settles a provider operation while timers are faked: outcomes are flow actions delivered
+ * on the async scheduler, so pending timers must be advanced.
+ */
+async function settle<T>(operation: Promise<T>): Promise<T> {
+  let settled = false;
+  operation.then(
+    () => {
+      settled = true;
+    },
+    () => {
+      settled = true;
+    },
+  );
+  // Each step may schedule the next outcome; advance in 1 ms steps, since zero-length advances
+  // do not fire scheduler work queued from inside another scheduled callback.
+  for (let step = 0; step < 20 && !settled; step++) {
+    await vi.advanceTimersByTimeAsync(1);
+  }
+  return operation;
+}
+
 /** Creates a safe record without dependencies on a host runtime. */
 function record(): TelemetryItem {
   return createOperationalRecords({
-    source: { source: 'widget', hostId: 'host', widgetKey: 'safe-widget' },
+    source: { source: 'widget', hostId: 'host' },
     module: 'http',
     operation: 'request',
     outcome: 'success',
@@ -22,6 +46,70 @@ function record(): TelemetryItem {
 }
 
 describe('telemetry pipeline failure isolation', () => {
+  it.each(['widgetKey', 'widgetVersion'])('rejects removed widget identity field %s', (field) => {
+    const result = diagnosticContext.safeParse({
+      ...record().diagnostic,
+      [field]: 'widget-manifest-sentinel',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('emits unclassified records without assuming a host kind', () => {
+    const [metric] = createOperationalRecords({
+      source: { hostId: 'host', hostName: 'custom-shell', hostVersion: '1.2.3' },
+      module: 'host',
+      operation: 'initialize',
+      outcome: 'success',
+      duration: 0,
+    });
+    expect(diagnosticContext.safeParse(metric.diagnostic).success).toBe(true);
+    expect(metric.diagnostic).not.toHaveProperty('source');
+    expect(metric.diagnostic).toMatchObject({ hostName: 'custom-shell', hostVersion: '1.2.3' });
+    expect(metric.scope).toEqual(['operational']);
+  });
+
+  it.each(['appKey', 'appVersion'])(
+    'rejects host-specific field %s in the generic envelope',
+    (field) => {
+      const result = diagnosticContext.safeParse({ ...record().diagnostic, [field]: 'value' });
+      expect(result.success).toBe(false);
+    },
+  );
+
+  it('accepts host-defined source kinds beyond the built-in hosts', () => {
+    const [metric] = createOperationalRecords({
+      source: { source: 'portal-shell', hostId: 'host' },
+      module: 'host',
+      operation: 'initialize',
+      outcome: 'success',
+      duration: 0,
+    });
+    expect(diagnosticContext.safeParse(metric.diagnostic).success).toBe(true);
+    expect(metric).toMatchObject({ scope: ['portal-shell', 'operational'] });
+    expect(() =>
+      new TelemetryConfigurator().setSource({ source: 'portal-shell', hostId: 'host' }),
+    ).not.toThrow();
+  });
+
+  it.each(['', 'Portal', 'https://example.com/user', 'user name', 'a/b'])(
+    'rejects source kind %j that could carry dynamic data',
+    (source) => {
+      expect(() =>
+        createOperationalRecords({
+          source: { source, hostId: 'host' },
+          module: 'host',
+          operation: 'initialize',
+          outcome: 'success',
+          duration: 0,
+        }),
+      ).toThrow(RangeError);
+      expect(diagnosticContext.safeParse({ ...record().diagnostic, source }).success).toBe(false);
+      expect(() => new TelemetryConfigurator().setSource({ source, hostId: 'host' })).toThrow(
+        RangeError,
+      );
+    },
+  );
+
   it('shares initialization even when an adapter calls back into the provider synchronously', async () => {
     let provider: TelemetryProvider;
     const initialize = vi.fn(async () => {
@@ -131,12 +219,13 @@ describe('telemetry pipeline failure isolation', () => {
       metadata,
       adapters: { test: { initialize: vi.fn(), processItem } },
     });
-    await provider.initialize();
+    await settle(provider.initialize());
     provider.track(record());
     expect(metadata.observed).toBe(true);
     const disposal = provider.dispose();
+    // Built-in enrichment drains at its deadline; the disposal outcome follows on the scheduler.
     await vi.advanceTimersByTimeAsync(1_000);
-    await disposal;
+    await settle(disposal);
     expect(metadata.observed).toBe(false);
     expect(processItem).toHaveBeenCalledTimes(1);
     metadata.next({});
@@ -178,7 +267,7 @@ describe('telemetry pipeline failure isolation', () => {
     expect(processItem).toHaveBeenCalledTimes(1);
     const [item] = processItem.mock.calls[0];
     expect(item.diagnostic.source).toBe('widget');
-    expect(item.diagnostic.widgetKey).toBe('safe-widget');
+    expect(item.diagnostic.hostId).toBe('host');
     expect(JSON.stringify(item)).not.toContain('sentinel');
     expect(item.metadata).toBeUndefined();
     await provider.dispose();
@@ -224,12 +313,12 @@ describe('telemetry pipeline failure isolation', () => {
       metadata: NEVER,
       adapters: { test: { initialize: vi.fn(), processItem } },
     });
-    await provider.initialize();
+    await settle(provider.initialize());
     for (let index = 0; index < 257; index++) provider.track(record());
     expect(processItem).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(1_000);
     expect(processItem).toHaveBeenCalledTimes(257);
-    await provider.dispose();
+    await settle(provider.dispose());
   });
 
   it('waits for supported async processing before adapter shutdown', async () => {

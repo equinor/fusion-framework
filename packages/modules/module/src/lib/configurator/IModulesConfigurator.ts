@@ -16,7 +16,7 @@ import type { FrameworkPluginCallback } from '../plugin/index.js';
 /**
  * Contract for the top-level module orchestrator in Fusion Framework.
  *
- * `IModulesConfigurator` defines the full configure → initialize → dispose
+ * `IModulesConfigurator` defines the full prepare → configure → initialize → dispose
  * lifecycle for a set of modules. Implement or extend this interface to
  * control how modules are registered, configured, initialized, and torn down.
  *
@@ -48,6 +48,8 @@ export interface IModulesConfigurator<
    *
    * Adds the module to the known module set and registers optional
    * `configure`, `afterConfig`, and `afterInit` lifecycle callbacks.
+   * An optional `prepare` callback completes synchronously during registration;
+   * it requires a supplied builder or an opt-in `module.prepare` factory.
    *
    * @param config - The module configurator descriptor to register.
    * @template T - The module type being registered.
@@ -55,6 +57,7 @@ export interface IModulesConfigurator<
    *   Declared at the method level so TypeScript evaluates the default after inferring `T`,
    *   giving the `configure` callback its correct contextual parameter type without
    *   requiring an explicit annotation.
+   * @throws Rethrows preparation failures; asynchronous preparation is unsupported.
    */
   addConfig<T extends AnyModule, TConfig = ModuleConfigType<T>>(
     config: IModuleConfigurator<T, TRef, TConfig>,

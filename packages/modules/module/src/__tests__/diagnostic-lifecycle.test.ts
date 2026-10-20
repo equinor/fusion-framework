@@ -1,9 +1,37 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ModulesConfigurator } from '../lib/configurator/ModulesConfigurator.js';
-import { diagnosticExclusion } from '../diagnostic-exclusion.js';
-import { excludeDiagnostics } from '../exclude-diagnostics.js';
+import { telemetryExportRequest } from '../utils/telemetry-export-request.js';
+import { markTelemetryExportRequest } from '../utils/mark-telemetry-export-request.js';
+import { ModuleEventLevel, type ModuleEvent } from '../types.js';
+import { ModuleConfiguratorEventName } from '../lib/configurator/module-configurator-event-name.js';
 
 describe('diagnostic lifecycle ownership', () => {
+  it('does not dispose providers owned by an earlier initialization attempt', async () => {
+    const config = new ModulesConfigurator();
+    const provider = {};
+    const failure = new Error('later attempt failed');
+    const dispose = vi.fn();
+    config.addConfig({
+      module: {
+        name: 'resource',
+        initialize: vi
+          .fn<() => Promise<object>>()
+          .mockResolvedValueOnce(provider)
+          .mockRejectedValueOnce(failure),
+        dispose,
+      },
+    });
+
+    const modules = await config.initialize();
+    await expect(config.initialize()).rejects.toBe(failure);
+    expect(dispose).not.toHaveBeenCalled();
+
+    await modules.dispose();
+    expect(dispose).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ instance: provider }),
+    );
+  });
+
   it('cleans up early and late successful providers after another initializer fails', async () => {
     const config = new ModulesConfigurator();
     const early = vi.fn();
@@ -31,25 +59,52 @@ describe('diagnostic lifecycle ownership', () => {
     });
     await expect(config.initialize()).rejects.toBe(failure);
     expect(early).toHaveBeenCalledTimes(1);
-    expect(late).toHaveBeenCalledTimes(1);
+    // Late providers are cleaned up after startup has already rejected.
+    await vi.waitFor(() => expect(late).toHaveBeenCalledTimes(1));
   });
 
-  it('keeps diagnostic sinks live until business teardown and waits for all groups', async () => {
+  it('rejects on the first failure even when a sibling initializer never settles', async () => {
+    const config = new ModulesConfigurator();
+    const failure = new Error('original');
+    config.addConfig({
+      module: { name: 'pending', initialize: () => new Promise<never>(() => {}) },
+    });
+    config.addConfig({
+      module: {
+        name: 'broken',
+        initialize: async () => {
+          throw failure;
+        },
+      },
+    });
+    await expect(config.initialize()).rejects.toBe(failure);
+  });
+
+  it('disposes fixed phases in order, with concurrent default hooks and one host boundary', async () => {
     const order: string[] = [];
     const config = new ModulesConfigurator();
-    for (const [name, priority] of [
-      ['event', 2],
-      ['telemetry', 1],
-      ['business', 0],
+    config.event$.subscribe((event) => {
+      if (
+        event.name ===
+        `${ModulesConfigurator.className}::${ModuleConfiguratorEventName.ModulesDisposed}`
+      ) {
+        order.push('default-complete');
+      }
+    });
+    for (const definition of [
+      { name: 'event', disposePhase: 'events' },
+      { name: 'telemetry', disposePhase: 'diagnostics' },
+      { name: 'implicit-default' },
+      { name: 'explicit-default', disposePhase: 'default' },
     ] as const) {
       config.addConfig({
         module: {
-          name,
-          disposePriority: priority,
+          ...definition,
           initialize: () => ({}),
           dispose: async () => {
+            order.push(`${definition.name}:start`);
             await Promise.resolve();
-            order.push(name);
+            order.push(`${definition.name}:end`);
           },
         },
       });
@@ -58,14 +113,137 @@ describe('diagnostic lifecycle ownership', () => {
     const first = modules.dispose();
     expect(modules.dispose()).toBe(first);
     await first;
-    expect(order).toEqual(['business', 'telemetry', 'event']);
+    expect(order).toEqual([
+      'implicit-default:start',
+      'explicit-default:start',
+      'implicit-default:end',
+      'explicit-default:end',
+      'default-complete',
+      'telemetry:start',
+      'telemetry:end',
+      'event:start',
+      'event:end',
+    ]);
   });
 
-  it('marks only the exporter request and retains the marker through option copies', () => {
+  it('shares repeated disposal per instance without skipping another initialized instance', async () => {
+    const config = new ModulesConfigurator();
+    const dispose = vi.fn();
+    config.addConfig({
+      module: { name: 'resource', initialize: () => ({}), dispose },
+    });
+    const first = await config.initialize();
+    const second = await config.initialize();
+    const disposal = first.dispose();
+    expect(first.dispose()).toBe(disposal);
+    await disposal;
+    await second.dispose();
+    expect(dispose).toHaveBeenCalledTimes(2);
+  });
+
+  it('continues through failed default and diagnostic teardown before disposing events', async () => {
+    const order: string[] = [];
+    const config = new ModulesConfigurator();
+    const events: ModuleEvent[] = [];
+    config.event$.subscribe((event) => events.push(event));
+    for (const definition of [
+      { name: 'event', disposePhase: 'events' },
+      { name: 'telemetry', disposePhase: 'diagnostics' },
+      { name: 'ordinary', disposePhase: 'default' },
+    ] as const) {
+      config.addConfig({
+        module: {
+          ...definition,
+          initialize: () => ({}),
+          dispose: async () => {
+            await Promise.resolve();
+            order.push(definition.name);
+            if (definition.name !== 'event') throw new Error('teardown failed');
+          },
+        },
+      });
+    }
+    const modules = await config.initialize();
+    await expect(modules.dispose()).resolves.toBeUndefined();
+    expect(order).toEqual(['ordinary', 'telemetry', 'event']);
+    expect(
+      events.filter(
+        (event) =>
+          event.name ===
+          `${ModulesConfigurator.className}::${ModuleConfiguratorEventName.ModuleDisposeError}`,
+      ),
+    ).toHaveLength(2);
+    expect(
+      events.filter(
+        (event) =>
+          event.name ===
+          `${ModulesConfigurator.className}::${ModuleConfiguratorEventName.ModulesDisposed}`,
+      ),
+    ).toEqual([
+      expect.objectContaining({
+        level: ModuleEventLevel.Warning,
+        properties: expect.objectContaining({ failed: true }),
+      }),
+    ]);
+  });
+
+  it.each(['after-events', Number.NaN, 2])(
+    'reports invalid runtime phase %s and still cleans up the provider during default teardown',
+    async (phase) => {
+      const order: string[] = [];
+      const events: ModuleEvent[] = [];
+      const config = new ModulesConfigurator();
+      config.event$.subscribe((event) => events.push(event));
+      const invalid = {
+        name: 'invalid',
+        initialize: () => ({}),
+        dispose: () => {
+          order.push('invalid');
+        },
+      };
+      Reflect.set(invalid, 'disposePhase', phase);
+      config.addConfig({
+        module: {
+          name: 'event',
+          disposePhase: 'events',
+          initialize: () => ({}),
+          dispose: () => {
+            order.push('event');
+          },
+        },
+      });
+      config.addConfig({ module: invalid });
+      const modules = await config.initialize();
+      await modules.dispose();
+      expect(order).toEqual(['invalid', 'event']);
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          name: `${ModulesConfigurator.className}::${ModuleConfiguratorEventName.ModulesDispose}`,
+          level: ModuleEventLevel.Warning,
+          error: expect.any(TypeError),
+          properties: { moduleName: 'invalid' },
+        }),
+      );
+      expect(
+        events.filter(
+          (event) =>
+            event.name ===
+            `${ModulesConfigurator.className}::${ModuleConfiguratorEventName.ModulesDisposed}`,
+        ),
+      ).toEqual([
+        expect.objectContaining({
+          level: ModuleEventLevel.Warning,
+          properties: expect.objectContaining({ failed: true }),
+        }),
+      ]);
+    },
+  );
+
+  it('identifies only the telemetry export request and retains ownership through option copies', () => {
     const original = { method: 'POST', body: 'payload' };
-    const marked = excludeDiagnostics(original);
-    expect(diagnosticExclusion in original).toBe(false);
-    expect({ ...marked }[diagnosticExclusion]).toBe(true);
+    const marked = markTelemetryExportRequest(original);
+    expect(telemetryExportRequest in original).toBe(false);
+    expect({ ...marked }[telemetryExportRequest]).toBe(true);
     expect(JSON.stringify(marked)).toBe(JSON.stringify(original));
   });
 });

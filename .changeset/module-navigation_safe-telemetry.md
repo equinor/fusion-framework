@@ -1,10 +1,12 @@
 ---
-"@equinor/fusion-framework-module-navigation": major
+"@equinor/fusion-framework-module-navigation": minor
 ---
 
 Connect available host telemetry after initialization without adding a startup
 dependency. Explicit `setTelemetry(provider)` and `setTelemetry(undefined)` continue
-to take precedence. Automatic wiring excludes per-action debug chatter.
+to take precedence. Automatic wiring excludes per-action debug chatter. Custom
+navigation providers opt in through the optional `INavigationProvider.connectTelemetry`
+method; the module no longer checks for the concrete `NavigationProvider` class.
 
 **Migration:** navigation telemetry no longer exposes locations, previous locations,
 route state or raw action payloads. Detailed explicit-provider action events use

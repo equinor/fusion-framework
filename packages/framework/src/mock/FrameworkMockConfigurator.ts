@@ -19,7 +19,7 @@ import {
 import servicesModule, { type IApiConfigurator } from '@equinor/fusion-framework-module-services';
 import {
   telemetryMockModule,
-  type TelemetryMockConfigurator,
+  TelemetryMockConfigurator,
 } from '@equinor/fusion-framework-module-telemetry/mock';
 
 import { FrameworkConfigurator } from '../FrameworkConfigurator.js';
@@ -86,7 +86,8 @@ export class FrameworkMockConfigurator<
    * Creates a framework configurator backed by the built-in mock modules.
    */
   constructor() {
-    super();
+    const telemetry = new TelemetryMockConfigurator();
+    super(telemetry);
 
     // Pinning up front — rather than waiting for an accessor to be read — is
     // what replaces the modules `FrameworkConfigurator`'s own constructor
@@ -96,7 +97,7 @@ export class FrameworkMockConfigurator<
     this._pin(httpModule);
     this._pin(servicesModule);
     this._pin(contextMockModule);
-    this._pin(telemetryMockModule);
+    this.#configurators.set(telemetryMockModule.name, telemetry);
   }
 
   /**
@@ -106,9 +107,8 @@ export class FrameworkMockConfigurator<
    * @remarks
    * The module system otherwise builds a fresh configurator from its own
    * `configure` factory during the configure phase — too late for a test to
-   * reach, and a new instance on every call besides. This replaces that
-   * factory with one that always returns the same instance, and registers the
-   * result under the module's own name.
+   * reach, and a new instance on every call besides. Prepared registration
+   * supplies that exact builder without replacing the module's factory.
    *
    * A subclass registering a module supplied through {@link TModules} uses
    * this the same way `.msal` and `.serviceDiscovery` do, to expose its own
@@ -147,7 +147,7 @@ export class FrameworkMockConfigurator<
       );
     }
     this.#configurators.set(module.name, instance);
-    this.addConfig({ module: { ...module, configure: () => instance } as TModule });
+    this.addConfig({ module, configurator: instance });
   }
 
   /**

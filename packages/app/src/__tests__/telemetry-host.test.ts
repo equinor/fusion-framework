@@ -31,7 +31,7 @@ describe('app host telemetry', () => {
       expect(processItem).toHaveBeenCalledWith(
         expect.objectContaining({
           name: 'fusion.host.initialize.duration',
-          diagnostic: expect.objectContaining({ source: 'app', appKey: 'telemetry-app' }),
+          diagnostic: expect.objectContaining({ source: 'app', hostName: 'telemetry-app' }),
         }),
       ),
     );
