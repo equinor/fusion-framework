@@ -31,8 +31,8 @@ initialization, disposal and health reporting run as `FlowSubject` flows; the
 `vi.advanceTimersByTimeAsync`) to settle them.
 
 Export `createDiagnosticContext` for notifications without a measured duration,
-alongside `createOperationalRecords` for measured outcomes, from the `/utils` sub-path
-and the root `utils` namespace; the shared `OperationalOutcome` type is exported from
+alongside `createOperationalRecords` for measured outcomes, from the `/utils` sub-path;
+the shared `OperationalOutcome` type is exported from
 `/schemas`. Both validate module, operation and source kind as static
 kebab-case identifiers; the diagnostic schema enforces the same rule.
 
@@ -51,7 +51,7 @@ bounded and shutdown awaits owned asynchronous work. Failed explicit exporters d
 activate ancestor fallback adapters.
 
 Add optional `createHttpTelemetry` and `observeQueryTelemetry` integrations, exported
-from the new `/integrations` sub-path and the root `integrations` namespace, with
+from the new `/integrations` sub-path, with
 request-local export exclusions and separate scheduling/execution/cache semantics.
 See the package's operational telemetry guide for schemas, limits and migration details.
 

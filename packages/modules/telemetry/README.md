@@ -179,7 +179,9 @@ without the optional `fallback` property retain their existing behavior.
 | `TelemetryEvent` / `TelemetryException` / `TelemetryMetric` / `TelemetryCustomEvent` | Types | Specialised item types inferred from Zod schemas. |
 | `TelemetryConfigurator` | Class | Configuration builder hosts prepare before initialization. |
 | `StartupCapture` | Class | Captures a host's startup lifecycle before any provider exists. |
-| `utils` / `schemas` / `integrations` | Namespaces | Same exports as the matching sub-paths below. |
+
+Operational helpers are not re-exported from the root; import them from the
+`/utils`, `/schemas` and `/integrations` sub-paths below.
 
 ### Sub-path exports
 
