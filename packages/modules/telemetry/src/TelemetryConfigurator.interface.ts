@@ -3,6 +3,7 @@ import type { MetadataExtractor, TelemetryItem } from './types.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
 import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
+import type { TelemetrySource } from './diagnostic-context.js';
 
 /**
  * Configuration options for setting up telemetry within the application.
@@ -16,6 +17,9 @@ import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
  * @property relayFilter - Optional filter function to determine which telemetry items should be relayed to parent providers.
  */
 export type TelemetryConfig = {
+  source?: TelemetrySource;
+  /** Retains explicit exporter ownership even when its factory cannot create an adapter. */
+  ownsExport?: boolean;
   adapters?: Record<string, ITelemetryAdapter>;
   parent?: ITelemetryProvider;
   metadata?: MetadataExtractor;
@@ -35,6 +39,12 @@ export type TelemetryConfig = {
  * @interface ITelemetryConfigurator
  */
 export interface ITelemetryConfigurator {
+  /**
+   * Sets the origin for built-in diagnostics without depending on dynamic metadata.
+   * @param source - Lifecycle-local identity supplied by the host.
+   * @returns This configurator.
+   */
+  setSource(source: TelemetrySource): this;
   /**
    * Sets the parent telemetry provider for hierarchical telemetry propagation.
    *

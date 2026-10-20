@@ -2,7 +2,12 @@ import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module } from './module.js';
 import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface.js';
-import { mapConfiguratorEvents } from './utils/map-configurator-events.js';
+import { LifecycleTelemetry } from './LifecycleTelemetry.js';
+import type { TelemetrySource } from './diagnostic-context.js';
+import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+import { TelemetryConfigurator } from './TelemetryConfigurator.js';
+
+const captures = new WeakMap<object, LifecycleTelemetry>();
 
 /**
  * Enables telemetry for a given module configurator.
@@ -11,6 +16,7 @@ import { mapConfiguratorEvents } from './utils/map-configurator-events.js';
  * @param options - Optional configuration for telemetry setup.
  * @param options.attachConfiguratorEvents - If true, attaches configurator events to the telemetry builder.
  * @param options.configure - An optional callback to further configure the telemetry builder. Can be synchronous or asynchronous.
+ * @returns The lifecycle capture, when enabled, for reporting failures in host configuration callbacks.
  *
  * @remarks
  * This function adds telemetry configuration to the provided configurator. It supports attaching configurator events
@@ -18,8 +24,7 @@ import { mapConfiguratorEvents } from './utils/map-configurator-events.js';
  *
  * @remarks
  * `attachConfiguratorEvents` allows for the automatic attachment of configurator events to the telemetry builder,
- * ensuring that relevant events are captured and processed. __NOTE__ if the configurator crashes before the telemetry
- * builder is fully initialized, some events may be missed.
+ * capturing safe terminal outcomes immediately with bounded buffering before a provider exists.
  *
  * @example
  * ```typescript
@@ -41,16 +46,43 @@ export const enableTelemetry = (
   configurator: IModulesConfigurator<any, any>,
   options?: {
     attachConfiguratorEvents?: boolean;
+    source?: TelemetrySource;
+    parent?: ITelemetryProvider;
     // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
     configure?: (configurator: ITelemetryConfigurator, ref?: any) => void | Promise<void>;
   },
-): void => {
+): LifecycleTelemetry | undefined => {
+  let capture = captures.get(configurator);
+  const source = capture?.source ??
+    options?.source ?? { source: 'framework' as const, hostId: crypto.randomUUID() };
+  // Explicit opt-out also releases any capture installed by a host's default configuration.
+  if (options?.attachConfiguratorEvents === false) {
+    capture?.stop();
+    captures.delete(configurator);
+    capture = undefined;
+  } else if (options?.attachConfiguratorEvents && !capture) {
+    capture = new LifecycleTelemetry(configurator, source, options.parent);
+    captures.set(configurator, capture);
+  }
   configurator.addConfig({
     module,
     configure: async (builder, ref) => {
+      const activeCapture = captures.get(configurator);
+      // Custom configurators retain the public interface without requiring bootstrap internals.
+      if (activeCapture && builder instanceof TelemetryConfigurator) {
+        builder.setLifecycleCapture(activeCapture);
+      }
+      // Repeated enables share the original origin instead of generating unrelated host identities.
+      if (options?.source || options?.attachConfiguratorEvents) {
+        builder.setSource(source);
+      }
+      // Absence here leaves later explicit setParent(undefined) decisions untouched.
+      if (options?.parent) {
+        builder.setParent(options.parent);
+      }
       // Attach configurator events to the telemetry builder only when opted in
-      if (options?.attachConfiguratorEvents) {
-        builder.attachItems(mapConfiguratorEvents(configurator));
+      if (activeCapture) {
+        builder.attachItems(activeCapture.items);
       }
       // Run the caller-supplied configure callback when one was provided
       if (options?.configure) {
@@ -58,4 +90,5 @@ export const enableTelemetry = (
       }
     },
   });
+  return capture;
 };

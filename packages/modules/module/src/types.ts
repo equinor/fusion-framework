@@ -50,6 +50,11 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    * uniq name of module, used as attribute name on module instances
    */
   name: TKey;
+  /**
+   * Teardown group; lower groups finish before higher groups start.
+   * Defaults to zero. Diagnostic sinks can remain alive until business teardown completes.
+   */
+  disposePriority?: number;
 
   /**
    * _[optional]_

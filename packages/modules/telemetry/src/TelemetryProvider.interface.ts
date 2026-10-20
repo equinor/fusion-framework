@@ -6,6 +6,7 @@ import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js'
 import type { Observable } from 'rxjs';
 import type { IMeasurement } from './Measurement.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
+import type { TelemetrySource } from './diagnostic-context.js';
 
 /**
  * Interface for telemetry providers used to track and measure telemetry events.
@@ -35,6 +36,8 @@ import type { ITelemetryAdapter } from './TelemetryAdapter.js';
  * - `TelemetryScope.Framework` - Reserved for internal use only (framework development)
  */
 export interface ITelemetryProvider {
+  /** Origin available to optional operational integrations; custom providers may omit it. */
+  readonly source?: TelemetrySource;
   items: Observable<TelemetryItem>;
   /**
    * Releases provider resources and awaits pending exports when supported.

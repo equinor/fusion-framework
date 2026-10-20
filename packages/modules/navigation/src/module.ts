@@ -61,6 +61,12 @@ export const module: NavigationModule = {
     const config = await init.config.createConfigAsync(init);
     return new NavigationProvider({ version, config });
   },
+  postInitialize: async ({ instance, modules }) => {
+    // Mock and custom navigation providers need not implement automatic telemetry connection.
+    if (instance instanceof NavigationProvider) {
+      instance.connectTelemetry(modules.telemetry);
+    }
+  },
   /**
    * Disposes of the navigation module instance.
    *

@@ -83,6 +83,8 @@ export class FrameworkConfigurator<
 
     // default configuration
     enableTelemetry(this, {
+      attachConfiguratorEvents: true,
+      source: { source: 'framework', hostId: crypto.randomUUID() },
       configure: (builder) => {
         builder.setMetadata({
           fusion: {

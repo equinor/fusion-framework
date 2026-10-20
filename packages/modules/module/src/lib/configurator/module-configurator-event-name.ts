@@ -18,6 +18,9 @@ export const ModuleConfiguratorEventName = {
   InitializeConfigLoaded: `${ModuleConfiguratorEventBaseName}.config.loaded`,
   InitializeInstanceInitialized: `${ModuleConfiguratorEventBaseName}.instance.initialized`,
   Initialize: `${ModuleConfiguratorEventBaseName}.initialize.complete`,
+  HostInitializeStarted: `${ModuleConfiguratorEventBaseName}.host.initializeStarted`,
+  HostInitialized: `${ModuleConfiguratorEventBaseName}.host.initialized`,
+  HostInitializeError: `${ModuleConfiguratorEventBaseName}.host.initializeError`,
 
   ConfiguratorCreated: `${ModuleConfiguratorEventBaseName}.configurator.created`,
   ConfiguratorFailed: `${ModuleConfiguratorEventBaseName}.configurator.failed`,

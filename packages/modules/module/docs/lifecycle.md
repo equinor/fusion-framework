@@ -124,6 +124,22 @@ Dispose is **not** called automatically. It is your responsibility to call `conf
 
 The framework first runs plugin teardowns returned by `registerPlugin` callbacks. It then calls `module.dispose({ instance, modules, ref })` for each registered module. This is the right place to cancel subscriptions, close WebSocket connections, clear caches, and release any other resources the provider holds.
 
+Disposal is concurrent within ascending `disposePriority` groups. The default is `0`;
+telemetry uses `1` so business teardown outcomes are delivered before exporter flush,
+and the event module uses `2` so out-of-band health reporting remains available.
+Repeated disposal joins the same promise rather than rerunning hooks. The host's
+terminal disposal measurement ends after business/plugin teardown and excludes
+diagnostic sink shutdown.
+
+When initialization fails, outstanding initializers are joined and successfully
+created providers are disposed in the same order, including late successes. The
+original startup rejection is preserved. Module authors still need to bound their
+own asynchronous work; the framework cannot forcibly cancel arbitrary promises.
+
+Export transports using the shared HTTP client can attach the request-local
+`excludeDiagnostics(init)` marker from `@equinor/fusion-framework-module` to prevent
+instrumenting the diagnostic request itself. The marker is not an HTTP header.
+
 `BaseModuleProvider` exposes a `subscription: Subscription` property (RxJS `Subscription`) that collects disposables. Adding to `this.subscription` inside `initialize` means they are automatically cleaned up when the provider's `dispose()` method is called — you do not need to track them separately.
 
 ```typescript

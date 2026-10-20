@@ -4,6 +4,7 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 import { WidgetConfigurator } from './WidgetConfigurator.js';
 import type { WidgetModulesInstance, WidgetModuleInitiator, WidgetEnv } from './types.js';
 import type { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Create a widget module initializer for configuring and bootstrapping widget modules.
@@ -59,9 +60,28 @@ export const configureWidgetModules =
    */
   async (args: WidgetRenderArgs<TRef, TEnv>): Promise<WidgetModulesInstance<TModules>> => {
     const configurator = new WidgetConfigurator<TModules, TRef['modules']>();
+    const capture = enableTelemetry(configurator, {
+      attachConfiguratorEvents: true,
+      source: {
+        source: 'widget',
+        hostId: crypto.randomUUID(),
+        widgetKey: args.env.manifest?.name,
+        widgetVersion: args.env.manifest?.version,
+      },
+      parent: args.fusion.modules.telemetry,
+      configure: (builder) => {
+        builder.setParent(args.fusion.modules.telemetry);
+        builder.setDefaultScope(['widget']);
+      },
+    });
     // Allow callers to register modules/config before initialization runs
     if (cb) {
-      await Promise.resolve(cb(configurator, args));
+      try {
+        await cb(configurator, args);
+      } catch (error) {
+        capture?.fail();
+        throw error;
+      }
     }
     // The generic TModules type is erased through initialize(); restore it for the return type
     const modules = (await configurator.initialize(

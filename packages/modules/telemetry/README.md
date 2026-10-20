@@ -4,6 +4,10 @@ Unified telemetry module for the Fusion Framework. Provides a consistent API for
 
 ## Features
 
+For framework, app and widget lifecycle diagnostics, routing guarantees, safe metadata,
+optional HTTP/query integration, and migration guidance, see
+[Operational telemetry](./docs/operational-telemetry.md).
+
 - **Adapter-based architecture** — ship with Console and Application Insights adapters, or build your own by extending `BaseTelemetryAdapter`.
 - **Hierarchical providers** — child providers relay telemetry to a parent, with automatic metadata merging.
 - **Zod-validated schemas** — every telemetry item is parsed and validated at runtime.
@@ -223,7 +227,8 @@ The telemetry module is configured through `ITelemetryConfigurator`, which provi
 | `setAdapter(id, adapter)` | Register a telemetry adapter. |
 | `configureAdapter(id, fn)` | Register an adapter via async factory. |
 | `setMetadata(extractor)` | Attach a metadata extractor (value, function, or observable). |
-| `setDefaultScope(scope)` | Set the default scope array applied to all items. |
+| `setDefaultScope(scope)` | Set the default scope array for custom items; built-in operational records keep their captured scope. |
+| `setSource(source)` | Supply the composition root's framework, app or widget origin. Standard hosts set this automatically. |
 | `setParent(provider)` | Set a parent provider for hierarchical relay. |
 | `attachItems(items$)` | Pipe an observable stream of items into the provider. |
 | `setFilter(filter)` | Set adapter and/or relay filter functions. |
