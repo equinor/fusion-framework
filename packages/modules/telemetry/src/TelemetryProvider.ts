@@ -1,4 +1,14 @@
-import { from, type ObservableInput, Subject, type Observable, type Subscription } from 'rxjs';
+import {
+  catchError,
+  defer,
+  from,
+  of,
+  timeout,
+  type ObservableInput,
+  Subject,
+  Subscription,
+  type Observable,
+} from 'rxjs';
 import type { z } from 'zod';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
@@ -22,6 +32,7 @@ import { Measurement } from './Measurement.js';
 import { mergeTelemetryItem } from './utils/merge-telemetry-item.js';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { applyMetadata } from './utils/resolve-metadata.js';
+import type { TelemetrySource } from './diagnostic-context.js';
 
 /**
  * Provides telemetry tracking, event dispatching, and adapter integration for application instrumentation.
@@ -59,6 +70,18 @@ export class TelemetryProvider
 
   #initialized = false;
   #disposal?: Promise<void>;
+  #initialization?: Promise<void>;
+  #closed = false;
+  #disposing = false;
+  #metadataSubscriptions = new Subscription();
+  #builtInMetadata = new Set<Subscription>();
+  #processing = new Set<Promise<void>>();
+  #pendingByAdapter = new Map<string, number>();
+  #failures = new Map<string, number>();
+  #pendingMetadata = 0;
+  /** Immutable composition-root origin used by optional infrastructure reporters. */
+  readonly source: TelemetrySource;
+  #ownsExport: boolean;
 
   #adapters: Record<string, ITelemetryAdapter> = {};
   #handledByChild = new WeakSet<TelemetryItem>();
@@ -116,6 +139,12 @@ export class TelemetryProvider
     this.#defaultScope = config?.defaultScope ?? [];
     this.#eventProvider = deps?.event;
     this.#filters = config?.filter;
+    this.source = Object.freeze(
+      config.source ?? { source: 'framework', hostId: crypto.randomUUID() },
+    );
+    // Configuration, not delivery success, determines inherited fallback suppression.
+    this.#ownsExport =
+      config.ownsExport ?? Object.values(this.#adapters).some((adapter) => !adapter.fallback);
   }
 
   /**
@@ -133,7 +162,23 @@ export class TelemetryProvider
    * @param args.initialItems - Optional observable of initial telemetry items to process
    * @returns A promise that resolves when initialization is complete
    */
-  public async initialize(args?: {
+  public initialize(args?: {
+    parent?: ITelemetryProvider;
+    initialItems?: ObservableInput<TelemetryItem>;
+  }): Promise<void> {
+    // A disposed provider must not reconnect exporters or event subscriptions.
+    if (this.#closed) {
+      return Promise.reject(new Error('Cannot initialize disposed telemetry'));
+    }
+    this.#initialization ??= Promise.resolve().then(() => this._initialize(args));
+    return this.#initialization;
+  }
+
+  /**
+   * Connects a provider once so repeated initialization joins the same work.
+   * @param args - Optional parent and startup stream.
+   */
+  protected async _initialize(args?: {
     parent?: ITelemetryProvider;
     initialItems?: ObservableInput<TelemetryItem>;
   }): Promise<void> {
@@ -144,6 +189,10 @@ export class TelemetryProvider
 
     // Initialize all adapters that support async initialization
     await this._initializeAdapters();
+    // Disposal may have been requested while an asynchronous exporter initialized.
+    if (this.#closed) {
+      return;
+    }
 
     // Connect adapters to the telemetry items, processing each item as it is emitted
     this._addTeardown(this._connectAdapters());
@@ -159,8 +208,9 @@ export class TelemetryProvider
     // Handle initial telemetry items if provided
     if (initialItems) {
       this._addTeardown(
-        from(initialItems).subscribe((item) => {
-          this.track(item);
+        from(initialItems).subscribe({
+          next: (item) => this.track(item),
+          error: () => this._dispatchError(new Error('Initial telemetry stream failed')),
         }),
       );
     }
@@ -189,9 +239,27 @@ export class TelemetryProvider
     if (this.#disposal) {
       return this.#disposal;
     }
-    super.dispose();
     // Defer adapter callbacks until the shared promise is assigned, including reentrant disposal.
+    this.#disposing = true;
     this.#disposal = Promise.resolve().then(async () => {
+      await Promise.allSettled([this.#initialization]);
+      // Built-in enrichment has a deadline; retain terminal teardown records before flushing.
+      await Promise.all(
+        [...this.#builtInMetadata].map(
+          (subscription) => new Promise<void>((resolve) => subscription.add(resolve)),
+        ),
+      );
+      this.#closed = true;
+      this.#metadataSubscriptions.unsubscribe();
+      super.dispose();
+      await Promise.allSettled(this.#processing);
+      // Repeated failures stay visible without emitting one event per failed record.
+      for (const [failure, count] of this.#failures) {
+        // A single occurrence was already reported; summarize only repeated failures.
+        if (count > 1) {
+          console.warn('Telemetry pipeline failure summary', { failure, count });
+        }
+      }
       // Shut down all exporters even when one rejects or throws synchronously.
       const results = await Promise.allSettled(
         Object.entries(this.#adapters).map(async ([identifier, adapter]) => {
@@ -230,8 +298,8 @@ export class TelemetryProvider
     // Initialize all adapters, do it in parallel
     const adapterEntries = Object.entries(this.#adapters);
     // Kick off every adapter's initialize() concurrently
-    const initializationPromises = adapterEntries.map(([_identifier, adapter]) =>
-      adapter.initialize(),
+    const initializationPromises = adapterEntries.map(
+      async ([_identifier, adapter]) => await adapter.initialize(),
     );
 
     // Wait for all adapters to settle (either resolve or reject)
@@ -242,11 +310,7 @@ export class TelemetryProvider
       // Only rejected adapters need an error dispatched; fulfilled ones need no action
       if (result.status === 'rejected') {
         const [identifier] = adapterEntries[index];
-        this._dispatchError(
-          new Error(`Failed to initialize telemetry adapter "${identifier}"`, {
-            cause: result.reason,
-          }),
-        );
+        this._dispatchError(new Error(`Failed to initialize telemetry adapter "${identifier}"`));
       }
     }
   }
@@ -269,7 +333,13 @@ export class TelemetryProvider
     return this.#items.subscribe((item) => {
       const { adapter: adapterFilter } = this.#filters ?? {};
       // Apply adapter filter if configured - skip item if filter returns false
-      if (adapterFilter && !adapterFilter(item)) {
+      try {
+        // A host-level adapter filter intentionally rejects delivery without enabling fallback.
+        if (adapterFilter && !adapterFilter(item)) {
+          return;
+        }
+      } catch {
+        this._dispatchError(new Error('Telemetry adapter filter failed'));
         return;
       }
 
@@ -280,15 +350,40 @@ export class TelemetryProvider
           // Keep application-owned records out of parent fallback exporters.
           continue;
         }
+        // A slow exporter cannot consume a healthy sibling exporter's processing capacity.
+        if ((this.#pendingByAdapter.get(identifier) ?? 0) >= 256) {
+          this._dispatchError(new Error('Telemetry adapter processing capacity exceeded'));
+          // Keep attempting sibling adapters even when this destination is saturated.
+          continue;
+        }
         try {
           // Let the adapter process the telemetry item
-          Promise.resolve(adapter.processItem(item));
-        } catch (error) {
+          const result = adapter.processItem(item);
+          // Only asynchronous processing needs shutdown ownership and bounded pending capacity.
+          if (result) {
+            this.#pendingByAdapter.set(
+              identifier,
+              (this.#pendingByAdapter.get(identifier) ?? 0) + 1,
+            );
+            const pending = Promise.resolve(result)
+              .catch(() => {
+                this._dispatchError(
+                  new Error(`Failed to process telemetry item with adapter "${identifier}"`),
+                );
+              })
+              .finally(() => {
+                this.#processing.delete(pending);
+                this.#pendingByAdapter.set(
+                  identifier,
+                  (this.#pendingByAdapter.get(identifier) ?? 1) - 1,
+                );
+              });
+            this.#processing.add(pending);
+          }
+        } catch {
           // If processing fails, dispatch an error event
           this._dispatchError(
-            new Error(`Failed to process telemetry item with adapter "${identifier}"`, {
-              cause: error,
-            }),
+            new Error(`Failed to process telemetry item with adapter "${identifier}"`),
           );
         }
       }
@@ -310,18 +405,21 @@ export class TelemetryProvider
     return this.#items.subscribe((item) => {
       const { relay: relayFilter } = this.#filters ?? {};
       // Apply relay filter if configured - skip item if filter returns false
-      if (relayFilter && !relayFilter(item)) {
-        return;
-      }
-      // Older/custom providers retain the original track-only relay contract.
-      if (target.trackRelayed) {
-        // Carry exporter ownership across intermediate providers without changing record metadata.
-        const hasAdapters =
-          this.#handledByChild.has(item) ||
-          Object.values(this.#adapters).some((adapter) => !adapter.fallback);
-        target.trackRelayed(item, hasAdapters);
-      } else {
-        target.track(item);
+      try {
+        // Reject intentionally filtered records without changing export ownership.
+        if (relayFilter && !relayFilter(item)) {
+          return;
+        }
+        // New providers preserve ownership; legacy parents retain their track-only contract.
+        if (target.trackRelayed) {
+          // Carry exporter ownership across intermediate providers without changing record metadata.
+          const hasAdapters = this.#handledByChild.has(item) || this.#ownsExport;
+          target.trackRelayed(item, hasAdapters);
+        } else {
+          target.track(item);
+        }
+      } catch {
+        this._dispatchError(new Error('Telemetry parent relay failed'));
       }
     });
   }
@@ -335,8 +433,13 @@ export class TelemetryProvider
   protected _dispatchEntityEvent(item: TelemetryItem): void {
     // Only dispatch when an event provider is configured
     if (this.#eventProvider) {
-      // Wrap the telemetry item in a TelemetryEvent and dispatch it
-      this.#eventProvider.dispatchEvent(new TelemetryEvent(item, this));
+      try {
+        Promise.resolve(this.#eventProvider.dispatchEvent(new TelemetryEvent(item, this))).catch(
+          () => this._dispatchError(new Error('Telemetry event dispatch failed')),
+        );
+      } catch {
+        this._dispatchError(new Error('Telemetry event dispatch failed'));
+      }
     }
   }
 
@@ -347,9 +450,24 @@ export class TelemetryProvider
    * @protected
    */
   protected _dispatchError(error: Error): void {
-    // Only dispatch when an event provider is configured
-    if (this.#eventProvider) {
-      this.#eventProvider.dispatchEvent(new TelemetryErrorEvent(error, this));
+    const count = (this.#failures.get(error.message) ?? 0) + 1;
+    this.#failures.set(error.message, count);
+    // First occurrence is actionable; repeats are counted for one teardown summary.
+    if (count !== 1) {
+      return;
+    }
+    // The event bus is an out-of-band health sink, never an automatic telemetry exporter.
+    if (this.#eventProvider && !this.#closed) {
+      try {
+        Promise.resolve(
+          this.#eventProvider.dispatchEvent(new TelemetryErrorEvent(error, this)),
+        ).catch(() => console.warn('Telemetry health event delivery failed'));
+      } catch {
+        // A failed health channel must remain visible without recursively dispatching another event.
+        console.warn('Telemetry health event delivery failed');
+      }
+    } else {
+      console.warn(error.message);
     }
   }
 
@@ -403,34 +521,101 @@ export class TelemetryProvider
    *
    * @protected
    */
-  protected async _track(
-    item: z.input<typeof TelemetryItemSchema>,
-    handledByChild = false,
-  ): Promise<void> {
+  protected _track(item: z.input<typeof TelemetryItemSchema>, handledByChild = false): void {
+    // Stop accepting records before flushing, while allowing already-owned enrichment to settle.
+    if (this.#closed || this.#disposing) {
+      return;
+    }
     const mergedItem = mergeTelemetryItem(item, {
-      scope: this.#defaultScope,
+      scope: item.diagnostic ? undefined : this.#defaultScope,
     });
+    // Snapshot before invoking consumer metadata; neither enrichment nor adapters may rewrite origin.
+    const diagnostic = mergedItem.diagnostic
+      ? Object.freeze({ ...mergedItem.diagnostic })
+      : undefined;
+    const operational = diagnostic
+      ? {
+          ...mergedItem,
+          diagnostic,
+          metadata: undefined,
+          scope: [...mergedItem.scope],
+          properties: mergedItem.properties ? { ...mergedItem.properties } : undefined,
+        }
+      : undefined;
+    // Immutable built-in envelopes keep one adapter from contaminating sibling or parent delivery.
+    if (operational) {
+      Object.freeze(operational.scope);
+      Object.freeze(operational.properties);
+      Object.freeze(operational);
+    }
+    const emit = (nextItem: TelemetryItem): void => {
+      // Dynamic metadata is consumer-controlled; built-in records export only their safe envelope.
+      const record = operational ?? nextItem;
+      // Ownership must follow the enriched object identity across asynchronous parent relays.
+      if (handledByChild) {
+        this.#handledByChild.add(record);
+      }
+      // Late custom metadata emissions cannot revive a completed provider.
+      if (!this.#closed) {
+        this.#items.next(record);
+      }
+    };
 
     // Skip metadata application for TelemetryMetadataError items to prevent infinite recursion
     if (this.#metadata && mergedItem.name !== TelemetryItemNames.MetadataError) {
-      applyMetadata(this.#metadata, {
-        modules: this.#modules,
-        item: mergedItem,
-      }).subscribe((nextItem) => {
-        // Async metadata resolution creates new objects; retain ownership on the emitted record.
-        if (handledByChild) {
-          this.#handledByChild.add(nextItem);
-        }
-        // Emit the item after applying metadata
-        this.#items.next(nextItem);
+      // Bounded built-in enrichment degrades to the safe original instead of dropping the outcome.
+      if (diagnostic && this.#pendingMetadata >= 256) {
+        this._dispatchError(new Error('Built-in telemetry metadata capacity exceeded'));
+        emit(mergedItem);
+        return;
+      }
+      this.#pendingMetadata++;
+      let metadata$ = defer(() =>
+        applyMetadata(this.#metadata, {
+          modules: this.#modules,
+          item: mergedItem,
+        }),
+      );
+      // Custom records retain their legacy timing; built-in outcomes have a finite enrichment deadline.
+      if (diagnostic) {
+        // Timeout cancels the metadata source before replaying the original safe record.
+        metadata$ = metadata$.pipe(timeout({ first: 1_000 }));
+      }
+      // Failure recovery preserves the terminal outcome even when metadata throws or times out.
+      const subscription = metadata$
+        .pipe(
+          catchError(() => {
+            this._dispatchError(new Error('Telemetry metadata resolution failed'));
+            return of(mergedItem);
+          }),
+        )
+        .subscribe({
+          next: (nextItem) => {
+            // Raw enrichment errors are health failures, not exportable built-in exceptions.
+            if (diagnostic && nextItem.name === TelemetryItemNames.MetadataError) {
+              this._dispatchError(new Error('Telemetry metadata resolution failed'));
+              return;
+            }
+            emit(nextItem);
+          },
+          error: () => {
+            this._dispatchError(new Error('Telemetry metadata resolution failed'));
+            emit(mergedItem);
+          },
+        });
+      this.#metadataSubscriptions.add(subscription);
+      // Only live bounded enrichment participates in the shutdown wait.
+      if (diagnostic && !subscription.closed) {
+        this.#builtInMetadata.add(subscription);
+      }
+      subscription.add(() => {
+        this.#pendingMetadata--;
+        this.#builtInMetadata.delete(subscription);
+        this.#metadataSubscriptions.remove(subscription);
       });
     } else {
       // Providers without metadata still need the same fallback precedence.
-      if (handledByChild) {
-        this.#handledByChild.add(mergedItem);
-      }
-      // If no metadata extractor is provided or item is TelemetryMetadataError, emit directly
-      this.#items.next(mergedItem);
+      emit(mergedItem);
     }
   }
 

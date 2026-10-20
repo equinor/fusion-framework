@@ -24,6 +24,8 @@ export interface InitializePhaseContext {
   modules: AnyModule[];
   /** Emits a structured lifecycle event into the configurator's event stream. */
   registerEvent: (event: ModuleEvent) => void;
+  /** Retains successful providers for cleanup if another initializer fails. */
+  onInstance?: (name: string, instance: unknown) => void;
 }
 
 /**

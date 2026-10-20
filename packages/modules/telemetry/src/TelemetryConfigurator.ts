@@ -1,6 +1,7 @@
-import { from, type ObservableInput } from 'rxjs';
+import { EMPTY, defer, from, of, type ObservableInput } from 'rxjs';
 import {
   concatMap,
+  catchError,
   defaultIfEmpty,
   filter,
   last,
@@ -21,6 +22,8 @@ import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import { toObservable } from '@equinor/fusion-observable';
 import { mergeMetadata } from './utils/merge-telemetry-item.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
+import type { TelemetrySource } from './diagnostic-context.js';
+import type { LifecycleTelemetry } from './LifecycleTelemetry.js';
 
 /**
  * Configures telemetry settings for the application.
@@ -52,6 +55,11 @@ export class TelemetryConfigurator
 {
   #adaptersCallbacks: Record<string, ConfigBuilderCallback<ITelemetryAdapter>> = {};
   #metadata: Array<TelemetryConfig['metadata']> = [];
+  #capture?: LifecycleTelemetry;
+  #parent?: ITelemetryProvider;
+  #ownership = new Map<string, boolean>();
+  #failedFactories = new Set<string>();
+  #relay?: (item: import('./types.js').TelemetryItem) => boolean;
 
   /**
    * Creates a new `TelemetryConfigurator` and wires up the async adapter
@@ -68,9 +76,14 @@ export class TelemetryConfigurator
         return from(Object.entries(this.#adaptersCallbacks)).pipe(
           mergeMap(([identifier, adapterFn]) =>
             // Drop adapters whose factory resolved to a falsy value
-            from(adapterFn(args)).pipe(
+            defer(() => from(adapterFn(args))).pipe(
               filter((adapter): adapter is ITelemetryAdapter => !!adapter),
               map((adapter) => [identifier, adapter] as const),
+              catchError(() => {
+                this.#failedFactories.add(identifier);
+                console.warn('Telemetry adapter factory failed');
+                return EMPTY;
+              }),
             ),
           ),
           scan(
@@ -94,6 +107,7 @@ export class TelemetryConfigurator
         from(metadataItems).pipe(
           concatMap((metadata) => toObservable(metadata, ...args)),
           scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
+          defaultIfEmpty({}),
           last(),
           shareReplay({ bufferSize: 1, refCount: true }),
         );
@@ -108,7 +122,10 @@ export class TelemetryConfigurator
    * @returns The current instance of the configurator for method chaining.
    */
   public setAdapter(identifier: string, adapter: ITelemetryAdapter): this {
-    return this.configureAdapter(identifier, async () => adapter);
+    this.configureAdapter(identifier, async () => adapter);
+    this.#ownership.set(identifier, !adapter.fallback);
+    this.#updateFallback();
+    return this;
   }
 
   /**
@@ -123,6 +140,8 @@ export class TelemetryConfigurator
     adapterFn: ConfigBuilderCallback<ITelemetryAdapter>,
   ): this {
     this.#adaptersCallbacks[identifier] = adapterFn;
+    this.#ownership.set(identifier, true);
+    this.#updateFallback();
     return this;
   }
 
@@ -158,7 +177,15 @@ export class TelemetryConfigurator
    * @returns The current instance for method chaining.
    */
   public setParent(parent: ITelemetryProvider | undefined): this {
+    this.#parent = parent;
+    this.#updateFallback();
     this._set('parent', parent);
+    return this;
+  }
+
+  /** @inheritdoc */
+  public setSource(source: TelemetrySource): this {
+    this._set('source', { ...source });
     return this;
   }
 
@@ -184,7 +211,45 @@ export class TelemetryConfigurator
   public setFilter(
     filter: ConfigBuilderCallback<TelemetryConfig['filter']> | TelemetryConfig['filter'],
   ): this {
+    this.#relay = typeof filter === 'function' ? () => false : filter?.relay;
+    this.#updateFallback();
     this._set('filter', filter);
     return this;
+  }
+
+  /**
+   * Connects bootstrap routing to later explicit child configuration.
+   * @param capture - Early lifecycle owner installed by the host.
+   * @internal
+   */
+  public setLifecycleCapture(capture: LifecycleTelemetry): void {
+    this.#capture = capture;
+  }
+
+  /**
+   * Finalizes exporter ownership after all factories have settled.
+   * @param config - Resolved exporter, filter and parent settings.
+   * @returns Configuration retaining explicit ownership even when an exporter factory failed.
+   */
+  protected override _processConfig(
+    config: Partial<TelemetryConfig>,
+  ): ObservableInput<TelemetryConfig> {
+    // Successfully resolved non-fallback adapters establish local export ownership.
+    const ownsExport =
+      Object.values(config.adapters ?? {}).some((adapter) => !adapter.fallback) ||
+      // Failed explicit factories must not silently activate an ancestor's development exporter.
+      [...this.#failedFactories].some((identifier) => this.#ownership.get(identifier));
+    this.#capture?.configureFallback(config.parent, ownsExport, config.filter?.relay);
+    return of({ ...config, ownsExport });
+  }
+
+  /** Never lets a failed bootstrap bypass an explicit exporter or parent/relay decision. */
+  #updateFallback(): void {
+    // Bootstrap delivery uses the same configured ownership before factories have resolved.
+    this.#capture?.configureFallback(
+      this.#parent,
+      [...this.#ownership.values()].some(Boolean),
+      this.#relay,
+    );
   }
 }

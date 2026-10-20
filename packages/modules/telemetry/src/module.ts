@@ -44,6 +44,7 @@ export type TelemetryModule = Module<
  */
 export const module = {
   name: 'telemetry',
+  disposePriority: 1,
   configure: () => new TelemetryConfigurator(),
   initialize: async (args): Promise<ITelemetryProvider> => {
     const config = await (args.config as TelemetryConfigurator).createConfigAsync(args);

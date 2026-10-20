@@ -26,6 +26,7 @@ import type { AppModulesInstance, AppEnv } from './types.js';
  * @template TRef - The parent Fusion instance type.
  * @template TEnv - The application environment descriptor.
  * @template TConfigurator - The (real or mock) `AppConfigurator` subclass driving the pipeline.
+ * @throws Rethrows the original host configuration or module initialization error.
  */
 export async function initializeAppModules<
   TModules extends Array<AnyModule> | never,
@@ -63,8 +64,15 @@ export async function initializeAppModules<
 
   // Enable telemetry collection for module configuration events
   // attachConfiguratorEvents automatically prefixes events with configurator class name
-  enableTelemetry(configurator, {
+  const capture = enableTelemetry(configurator, {
     attachConfiguratorEvents: true,
+    parent: fusion.modules.telemetry,
+    source: {
+      source: 'app',
+      hostId: crypto.randomUUID(),
+      appKey: args.env.manifest?.appKey,
+      appVersion: args.env.manifest?.build?.version,
+    },
     configure: (builder) => {
       builder.setMetadata(metadataExtractor);
       builder.setParent(fusion.modules.telemetry);
@@ -75,7 +83,12 @@ export async function initializeAppModules<
 
   // Allow user configuration callback to run before module initialization
   if (cb) {
-    await Promise.resolve(cb(configurator, args));
+    try {
+      await cb(configurator, args);
+    } catch (error) {
+      capture?.fail();
+      throw error;
+    }
   }
   // Type cast is safe because AppConfigurator.initialize() returns the exact module
   // instance that was registered and configured above. The intermediate 'unknown'

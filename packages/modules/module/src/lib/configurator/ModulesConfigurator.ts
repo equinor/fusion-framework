@@ -111,6 +111,8 @@ export class ModulesConfigurator<
   // configuration before telemetry is wired up.
   // Memory bound: ~24 KB at ~240 bytes/event × 100 events.
   #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>(100);
+  #disposal?: Promise<void>;
+  #partialInstances: Record<string, unknown> = {};
 
   /**
    * Stream of lifecycle events emitted while modules are configured, initialized,
@@ -419,8 +421,66 @@ export class ModulesConfigurator<
    * @returns A promise resolving to the sealed, initialized module instance.
    * @template T - Additional modules to merge into the instance type.
    * @template R - The reference type, narrowed to `TRef`.
+   * @throws Rethrows the original configuration or initialization error after partial cleanup.
    */
   public async initialize<T, R extends TRef = TRef>(
+    ref?: R,
+  ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
+    const start = performance.now();
+    this._registerEvent({
+      level: ModuleEventLevel.Debug,
+      name: ModuleConfiguratorEventName.HostInitializeStarted,
+      message: 'Starting host initialization',
+    });
+    try {
+      const instance = await this._initializeModules<T, R>(ref);
+      this._registerEvent({
+        level: ModuleEventLevel.Information,
+        name: ModuleConfiguratorEventName.HostInitialized,
+        message: 'Host initialized',
+        metric: performance.now() - start,
+      });
+      return instance;
+    } catch (error) {
+      this._registerEvent({
+        level: ModuleEventLevel.Error,
+        name: ModuleConfiguratorEventName.HostInitializeError,
+        message: 'Host initialization failed',
+        metric: performance.now() - start,
+        error,
+      });
+      // Initialization owns partial providers even when no module map can be returned.
+      try {
+        // Never call disposal hooks for modules that did not produce a provider.
+        const initializedModules = this.modules.filter(
+          (module) => module.name in this.#partialInstances,
+        );
+        await runDisposePhase(
+          {
+            modules: initializedModules,
+            registerEvent: this._registerEvent.bind(this),
+            event$: this.#event$,
+            pluginTeardowns: this._pluginTeardowns,
+          },
+          this.#partialInstances,
+          ref,
+        );
+      } catch {
+        // Cleanup health is secondary; callers must receive the original startup rejection.
+        console.warn('Partial module initialization cleanup failed');
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Runs initialization inside the host diagnostic boundary.
+   * @param ref - Reference forwarded to module lifecycle hooks.
+   * @returns The sealed module map.
+   * @template T - Additional modules in the resulting instance.
+   * @template R - Reference type accepted by this host.
+   */
+  private async _initializeModules<T, R extends TRef>(
     ref?: R,
   ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
     const configStart = performance.now();
@@ -563,6 +623,9 @@ export class ModulesConfigurator<
       {
         modules: this.modules,
         registerEvent: this._registerEvent.bind(this),
+        onInstance: (name, instance) => {
+          this.#partialInstances[name] = instance;
+        },
       },
       config,
       ref,
@@ -637,8 +700,8 @@ export class ModulesConfigurator<
    * @param ref - Optional reference forwarded to module dispose hooks.
    * @returns A promise resolving when all modules have been disposed.
    */
-  public async dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void> {
-    return runDisposePhase(
+  public dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void> {
+    this.#disposal ??= runDisposePhase(
       {
         modules: this.modules,
         registerEvent: this._registerEvent.bind(this),
@@ -649,5 +712,6 @@ export class ModulesConfigurator<
       instance,
       ref,
     );
+    return this.#disposal;
   }
 }

@@ -38,5 +38,12 @@ export type {
 } from './types.js';
 
 export { enableTelemetry } from './enable-telemetry.js';
+export { createOperationalRecords } from './create-operational-records.js';
+export type { OperationalRecordArgs } from './create-operational-records.js';
+export type { DiagnosticContext, TelemetrySource } from './diagnostic-context.js';
+export { createHttpTelemetry } from './create-http-telemetry.js';
+export type { HttpTelemetry } from './create-http-telemetry.js';
+export { observeQueryTelemetry } from './observe-query-telemetry.js';
+export type { QueryDiagnosticEvent } from './observe-query-telemetry.js';
 
 export { default } from './module.js';

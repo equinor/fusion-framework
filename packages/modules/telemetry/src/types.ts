@@ -108,5 +108,5 @@ export type TelemetryCustomEvent = z.infer<typeof TelemetryCustomEventSchema>;
  */
 export interface TelemetryAdapter {
   readonly identifier: string;
-  processItem(item: TelemetryItem): void;
+  processItem(item: TelemetryItem): void | Promise<void>;
 }
