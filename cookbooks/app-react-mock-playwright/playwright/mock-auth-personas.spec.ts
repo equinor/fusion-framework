@@ -1,9 +1,9 @@
 import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
 import { expect, test } from '@playwright/test';
 
-const APP_ORIGIN = 'http://localhost:3000';
+const APP_ORIGIN = 'http://127.0.0.1:3000';
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright';
-const mockAuth = createMockAuth('http://localhost:4010');
+const mockAuth = createMockAuth('http://127.0.0.1:4010');
 
 test('isolates authorization personas between browser contexts', async ({ browser }) => {
   const normalContext = await browser.newContext({ baseURL: APP_ORIGIN });

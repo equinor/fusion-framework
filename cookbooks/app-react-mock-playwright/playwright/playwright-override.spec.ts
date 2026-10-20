@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const MOCK_SERVER_URL = 'http://localhost:4010';
+const MOCK_SERVER_URL = 'http://127.0.0.1:4010';
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright';
 const PEOPLE_PATH = `${APP_PATH}/people`;
 

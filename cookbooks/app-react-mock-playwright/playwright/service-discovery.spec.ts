@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const MOCK_SERVER_URL = 'http://localhost:4010';
+const MOCK_SERVER_URL = 'http://127.0.0.1:4010';
 
 test('supports merged, added, and direct-only mock services', async ({ request }) => {
   const discoveryResponse = await request.get(`${MOCK_SERVER_URL}/@fusion-mock/discovery`);
