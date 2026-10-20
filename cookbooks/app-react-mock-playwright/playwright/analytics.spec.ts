@@ -2,8 +2,8 @@ import { createMockAnalytics, createMockAuth } from '@equinor/fusion-openapi-moc
 import type { AnalyticsEventRow } from '@equinor/fusion-openapi-mock-server/presets/fusion';
 import { expect, test } from '@playwright/test';
 
-const MOCK_SERVER = 'http://localhost:4010';
-const APP_ORIGIN = 'http://localhost:3000';
+const MOCK_SERVER = 'http://127.0.0.1:4010';
+const APP_ORIGIN = 'http://127.0.0.1:3000';
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright';
 const ANALYTICS_PATH = `${APP_PATH}/analytics`;
 

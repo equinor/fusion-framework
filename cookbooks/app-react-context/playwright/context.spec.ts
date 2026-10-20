@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 const PROJECT_ID = '11111111-1111-4111-8111-111111111111';
 const APP_PATH = `/apps/fusion-framework-cookbook-app-react-context/${PROJECT_ID}`;
-const CONTEXT_SERVICE_URL = 'http://localhost:4011/context';
+const CONTEXT_SERVICE_URL = 'http://127.0.0.1:4011/context';
 
 /**
  * Separates cold portal/auth/app startup from context data assertions.

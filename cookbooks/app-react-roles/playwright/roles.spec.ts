@@ -2,7 +2,7 @@ import { createMockAuth } from '@equinor/fusion-openapi-mock-server';
 import { expect, test, type Page } from '@playwright/test';
 
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-roles';
-const MOCK_SERVER_URL = 'http://localhost:4012';
+const MOCK_SERVER_URL = 'http://127.0.0.1:4012';
 const mockAuth = createMockAuth(MOCK_SERVER_URL);
 
 /**
