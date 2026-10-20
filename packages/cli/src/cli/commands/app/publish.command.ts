@@ -27,6 +27,7 @@ import { createEnvOption } from '../../options/create-env-option.js';
  * - Supports specifying environment, manifest file, and tag.
  * - Debug mode and authentication options are supported.
  * - Supports `--snapshot` flag to publish with a snapshot version without modifying package.json.
+ * - Supports `--allow-existing-version` to re-tag an exact existing bundle version on a duplicate upload response.
  *
  * Usage:
  *   $ ffc app publish [bundle] [options]
@@ -117,6 +118,11 @@ export const command = withAuthOptions(
       '-c, --config [path]',
       'Upload application config after publishing. Accepts true for default config file or a path to a specific config file.',
     )
+    .option(
+      '--allow-existing-version',
+      'Re-tag the exact bundle version when upload reports that version already exists. Other failures still fail.',
+      false,
+    )
     .argument('[bundle]', 'Path to the app bundle to upload')
     .action(async (bundle, options) => {
       const log = new ConsoleLogger('app:publish', {
@@ -182,11 +188,17 @@ export const command = withAuthOptions(
         log,
         framework,
         fileOrBundle: archive,
+        allowExistingVersion: options.allowExistingVersion,
       }).catch((error) => {
         log.error('😢 Failed to upload bundle:', error);
         process.exit(1);
       });
-      log.succeed('🚀 Upload completed');
+      // Report upload completion differently when the bundle already existed.
+      if (uploadResult.existingVersion) {
+        log.info('Bundle version already exists; proceeding to tagging.');
+      } else {
+        log.succeed('🚀 Upload completed');
+      }
       log.debug('Upload result:', uploadResult);
 
       // Tag the uploaded application version
@@ -228,6 +240,13 @@ export const command = withAuthOptions(
           log.error('😢 Failed to upload config:', error);
           process.exit(1);
         }
+      }
+
+      // Claim recovery only after tagging and any requested config publication succeed.
+      if (uploadResult.existingVersion) {
+        log.info(
+          `Existing application version ${uploadResult.appKey}@${uploadResult.version} was re-tagged "${options.tag}" in environment "${options.env}".`,
+        );
       }
     }),
 );

@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 import AdmZip from 'adm-zip';
+import { valid } from 'semver';
+import { z } from 'zod';
 
 import type { FusionFramework } from './fusion-env.js';
 import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
@@ -12,6 +14,14 @@ import {
   formatAuthError,
   formatTokenAcquisitionError,
 } from './utils/index.js';
+
+const uploadErrorSchema = z.object({
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    resourceIdentifier: z.string().optional(),
+  }),
+});
 
 /**
  * Logs a user-friendly error for the given HTTP status and exits the process.
@@ -67,6 +77,7 @@ function handleUploadError(response: Response, name: string, log?: ConsoleLogger
  * @property appKey - Optional application key to override bundle metadata.
  * @property framework - The FusionFramework instance used for service discovery and requests.
  * @property log - Optional logger for outputting progress and debug information.
+ * @property allowExistingVersion - Reuse the exact bundle version only on a structured duplicate-version upload conflict.
  *
  * @public
  */
@@ -75,6 +86,7 @@ type UploadApplicationOptions = {
   appKey?: string;
   framework: FusionFramework;
   log?: ConsoleLogger;
+  allowExistingVersion?: boolean;
 };
 
 /**
@@ -85,7 +97,7 @@ type UploadApplicationOptions = {
  * for common failure scenarios, including HTTP status codes and bundle reading issues.
  *
  * @param opt - Options for bundle file, app key, framework, and logger.
- * @returns The response from the app service, or an empty object if the response cannot be parsed.
+ * @returns The uploaded app identity, or the bundle identity marked `existingVersion` on an opted-in duplicate response. Existing versions must still be tagged by the caller.
  * @throws If bundle reading or upload fails, or if the app service returns an error status.
  * @public
  */
@@ -94,6 +106,7 @@ export const uploadApplication = async (
 ): Promise<{
   appKey: string;
   version: string;
+  existingVersion?: true;
 }> => {
   const { log, framework } = opt;
 
@@ -143,19 +156,50 @@ export const uploadApplication = async (
 
     // Handle non-OK responses with detailed error logging
     if (!response.ok) {
+      let uploadError: z.infer<typeof uploadErrorSchema> | undefined;
       try {
-        const { error } = await response.json();
-        log?.debug('Error:', error);
-        // Surface the service's error message when the response body includes one
-        if (error.message) {
+        const parsed = uploadErrorSchema.safeParse(await response.json());
+        // Recovery requires a recognized service error shape; malformed payloads fail closed.
+        if (parsed.success) {
+          uploadError = parsed.data;
+          const { error } = uploadError;
+          log?.debug('Error:', error);
           log?.warn(
             chalk.red(`🤯 error: ${error.code}\n`),
             chalk.yellowBright(error.message),
             '\n',
           );
+        } else {
+          log?.debug('Unrecognized upload error response:', parsed.error);
         }
-      } catch (_e) {
-        log?.debug('Error:', response.statusText);
+      } catch (error) {
+        log?.debug('Failed to parse upload error response:', error);
+      }
+
+      // Recovery is scoped to the upload endpoint's version resource, never a generic 409.
+      if (
+        opt.allowExistingVersion === true &&
+        response.status === 409 &&
+        uploadError?.error.code === 'ConflictError' &&
+        uploadError.error.resourceIdentifier === 'version'
+      ) {
+        const manifestEntry = bundle.getEntry('app-manifest.json');
+        // The manifest is the authoritative version source for this uploaded bundle.
+        if (!manifestEntry) {
+          throw new Error('Cannot recover existing version: app-manifest.json is missing');
+        }
+        const manifest = z
+          .object({ version: z.string().refine((value) => valid(value) !== null) })
+          .parse(JSON.parse(manifestEntry.getData().toString()));
+        const version = manifest.version.toLowerCase();
+        // Do not infer an application identity when bundle metadata is incomplete.
+        if (typeof appKey !== 'string' || !appKey.trim()) {
+          throw new Error('Cannot recover existing version: application key is missing');
+        }
+        // Only the exact duplicate-version response is safe to reinterpret as success.
+        if (uploadError.error.message === `An app build with version ${version} already exists`) {
+          return { appKey, version, existingVersion: true };
+        }
       }
 
       // Handle specific HTTP status codes — logs and exits, never throws
