@@ -84,6 +84,9 @@ export class HttpClientExporterTransport implements IExporterTransport {
     try {
       const response = await this.httpClient.fetch(
         this.path,
+        // Mark the request as telemetry delivery so HTTP instrumentation skips it;
+        // otherwise every export would record a request that is exported in turn, an
+        // endless feedback loop. The marker is per request, so app traffic stays observed.
         markTelemetryExportRequest({
           method: 'POST',
           body: new Blob([data.slice().buffer], { type: 'application/json' }),

@@ -14,9 +14,9 @@ import type { History, NavigateOptions, NavigationUpdate, Path, To } from './lib
 import {
   TelemetryLevel,
   TelemetryScope,
-  createDiagnosticContext,
   type ITelemetryProvider,
 } from '@equinor/fusion-framework-module-telemetry';
+import { createDiagnosticContext } from '@equinor/fusion-framework-module-telemetry/utils';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import { NavigatedEvent } from './NavigatedEvent.js';
 import type { BaseHistory } from './lib/index.js';

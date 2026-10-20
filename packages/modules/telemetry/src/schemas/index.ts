@@ -12,3 +12,8 @@ export {
   TelemetryCustomEventSchema,
 } from './telemetry-item-schema.js';
 export { parseTelemetryItem } from '../parse-telemetry-item.js';
+export type {
+  DiagnosticContext,
+  OperationalOutcome,
+  TelemetrySource,
+} from './diagnostic-context.js';

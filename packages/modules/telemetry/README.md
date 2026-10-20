@@ -177,6 +177,9 @@ without the optional `fallback` property retain their existing behavior.
 | `TelemetryScope` | Enum | `Framework`, `Application`. |
 | `TelemetryItem` | Type | Zod-inferred base telemetry item shape. |
 | `TelemetryEvent` / `TelemetryException` / `TelemetryMetric` / `TelemetryCustomEvent` | Types | Specialised item types inferred from Zod schemas. |
+| `TelemetryConfigurator` | Class | Configuration builder hosts prepare before initialization. |
+| `StartupCapture` | Class | Captures a host's startup lifecycle before any provider exists. |
+| `utils` / `schemas` / `integrations` | Namespaces | Same exports as the matching sub-paths below. |
 
 ### Sub-path exports
 
@@ -185,8 +188,9 @@ without the optional `fallback` property retain their existing behavior.
 | `/adapter` | `BaseTelemetryAdapter`, `ITelemetryAdapter` | Base class and interface for building custom adapters. |
 | `/console-adapter` | `ConsoleAdapter` | Console-based adapter with colour-coded output. |
 | `/application-insights-adapter` | `ApplicationInsightsAdapter` | Microsoft Application Insights adapter. |
-| `/schemas` | `parseTelemetryItem`, schema objects | Zod schemas and a parser for telemetry items. |
-| `/utils` | `mapConfiguratorEvents`, `mergeTelemetryItem`, `applyMetadata` | Internal helpers for metadata merging and event mapping. |
+| `/schemas` | `parseTelemetryItem`, schema objects, `DiagnosticContext` | Zod schemas, a parser for telemetry items, and the diagnostic envelope types. |
+| `/utils` | `createOperationalRecords`, `createDiagnosticContext`, `mergeTelemetryItem` | Operational record builders and helpers for metadata merging and event mapping. |
+| `/integrations` | `createHttpTelemetry`, `observeQueryTelemetry` | Optional HTTP and query operational instrumentation. |
 | `/mock` | `enableTelemetryMock`, `MockTelemetryAdapter` | In-process telemetry recorder for deterministic tests. |
 
 ## Testing

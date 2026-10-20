@@ -31,8 +31,9 @@ initialization, disposal and health reporting run as `FlowSubject` flows; the
 `vi.advanceTimersByTimeAsync`) to settle them.
 
 Export `createDiagnosticContext` for notifications without a measured duration,
-alongside `createOperationalRecords` for measured outcomes, and the shared
-`OperationalOutcome` type. Both validate module, operation and source kind as static
+alongside `createOperationalRecords` for measured outcomes, from the `/utils` sub-path
+and the root `utils` namespace; the shared `OperationalOutcome` type is exported from
+`/schemas`. Both validate module, operation and source kind as static
 kebab-case identifiers; the diagnostic schema enforces the same rule.
 
 **Migration:** dashboards using raw configurator names must query
@@ -49,7 +50,8 @@ relay failures are isolated and reported out of band. Enrichment and processing 
 bounded and shutdown awaits owned asynchronous work. Failed explicit exporters do not
 activate ancestor fallback adapters.
 
-Add optional `createHttpTelemetry` and `observeQueryTelemetry` integrations with
+Add optional `createHttpTelemetry` and `observeQueryTelemetry` integrations, exported
+from the new `/integrations` sub-path and the root `integrations` namespace, with
 request-local export exclusions and separate scheduling/execution/cache semantics.
 See the package's operational telemetry guide for schemas, limits and migration details.
 
