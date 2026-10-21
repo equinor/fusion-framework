@@ -70,9 +70,10 @@ export class StartupCapture {
   constructor(host: Pick<IModulesConfigurator, 'event$'>, options: StartupCaptureOptions = {}) {
     this.#options = { ...options, source: options.source ?? { hostId: crypto.randomUUID() } };
     this.items = new Observable((subscriber) => {
-      // Join live delivery first, so nothing captured while the buffer drains is lost.
-      const live = this.#live.subscribe(subscriber);
       const closed = this.#status === 'closed';
+      // Join live delivery first, so nothing captured while the buffer drains is lost. A closed
+      // capture's live subject is complete and would end the subscriber before the drain.
+      const live = closed ? undefined : this.#live.subscribe(subscriber);
       // A capture that already closed stays closed; an active one now forwards live.
       if (!closed) {
         this.#status = 'live';
@@ -91,7 +92,7 @@ export class StartupCapture {
         subscriber.complete();
       }
       return () => {
-        live.unsubscribe();
+        live?.unsubscribe();
         this.#close();
       };
     });

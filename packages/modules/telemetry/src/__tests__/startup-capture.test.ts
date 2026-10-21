@@ -33,6 +33,7 @@ describe('safe lifecycle capture', () => {
       })),
       attachLifecycleItems: vi.fn(() => custom),
       hasLifecycleItems: vi.fn(() => false),
+      setLifecycleItemsEnabled: vi.fn(() => custom),
       setSource: vi.fn(() => custom),
       setParent: vi.fn(() => custom),
       configureAdapter: vi.fn(() => custom),
@@ -157,8 +158,6 @@ describe('safe lifecycle capture', () => {
         builder.setAdapter('test', { initialize: vi.fn(), processItem });
       },
     });
-    // The opt-out is the last word; enabling again does not reattach a capture.
-    enableTelemetry(host, { attachConfiguratorEvents: true });
     const modules = await host.initialize<[TelemetryModule]>();
     expect(processItem).not.toHaveBeenCalled();
     await modules.dispose();
@@ -172,6 +171,32 @@ describe('safe lifecycle capture', () => {
       'fusion.host.initialize.failure',
     ]);
     await parent.dispose();
+  });
+
+  it('restores the host capture when a later call enables lifecycle records again', async () => {
+    const processItem = vi.fn();
+    const host = new ModulesConfigurator();
+    const capture = new StartupCapture(host, { source });
+    host.addConfig({
+      module: telemetryModule,
+      prepare: (builder) => builder.setSource(source).attachLifecycleItems(capture.items),
+    });
+    enableTelemetry(host, {
+      attachConfiguratorEvents: false,
+      configure: (builder) => {
+        builder.setAdapter('test', { initialize: vi.fn(), processItem });
+      },
+    });
+    // The last call wins, and it restores the host's own capture rather than creating another.
+    enableTelemetry(host, { attachConfiguratorEvents: true });
+    const modules = await host.initialize<[TelemetryModule]>();
+    expect(processItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'fusion.host.initialize.duration',
+        diagnostic: expect.objectContaining(source),
+      }),
+    );
+    await modules.dispose();
   });
 
   it('keeps a usable pipeline attached through cleanup after a late startup failure', async () => {
@@ -278,6 +303,43 @@ describe('safe lifecycle capture', () => {
     expect(JSON.stringify(items)).not.toContain('secret');
     subscription.unsubscribe();
     expect(events.observed).toBe(false);
+  });
+
+  it.each([undefined, null, false, 0, ''])(
+    'classifies an error boundary with rejection reason %s as a failure',
+    (reason) => {
+      const events = new Subject<ModuleEvent>();
+      const names: string[] = [];
+      const subscription = mapConfiguratorEvents({ event$: events }, source).subscribe((item) =>
+        names.push(item.name),
+      );
+      events.next({
+        name: 'Host::ModuleConfigurator.host.initializeError',
+        level: 3,
+        metric: 1,
+        message: 'failed',
+        error: reason,
+      });
+      expect(names).toEqual(['fusion.host.initialize.duration', 'fusion.host.initialize.failure']);
+      subscription.unsubscribe();
+    },
+  );
+
+  it('drains the buffer to a consumer that subscribes after the host stream completed', () => {
+    const events = new Subject<ModuleEvent>();
+    const capture = new StartupCapture({ event$: events }, { source });
+    events.next({
+      name: 'Host::ModuleConfigurator.host.initialized',
+      level: 1,
+      metric: 1,
+      message: 'initialized',
+    });
+    events.complete();
+    const names: string[] = [];
+    const complete = vi.fn();
+    capture.items.subscribe({ next: (item) => names.push(item.name), complete });
+    expect(names).toEqual(['fusion.host.initialize.duration']);
+    expect(complete).toHaveBeenCalledOnce();
   });
 
   it('captures more than 100 early lifecycle events without relying on generic replay', async () => {

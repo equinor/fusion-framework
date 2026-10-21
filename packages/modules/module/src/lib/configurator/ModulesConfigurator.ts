@@ -173,10 +173,15 @@ export class ModulesConfigurator<
    * Teardown callbacks returned by registered plugins.
    *
    * Consumed during dispose and cleared after execution so repeated dispose calls
-   * do not run plugin cleanup more than once.
+   * do not run plugin cleanup more than once. Initialization now records teardowns per
+   * instance; this list only collects those from `_registerPlugins` overrides that do not
+   * forward the attempt's list.
    * @protected
    */
   protected _pluginTeardowns: FrameworkPluginTeardown[] = [];
+
+  /** Plugin teardowns owned by each initialized instance, so disposing one never tears down another. */
+  #instanceTeardowns = new WeakMap<object, FrameworkPluginTeardown[]>();
 
   /**
    * Set of all registered module descriptors.
@@ -446,13 +451,15 @@ export class ModulesConfigurator<
   ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
     const start = performance.now();
     const instances: Record<string, unknown> = {};
+    // Plugin cleanup belongs to this attempt, so rollback never drains another instance's.
+    const teardowns: FrameworkPluginTeardown[] = [];
     this._registerEvent({
       level: ModuleEventLevel.Debug,
       name: ModuleConfiguratorEventName.HostInitializeStarted,
       message: 'Starting host initialization',
     });
     try {
-      const instance = await this._initializeModules<T, R>(instances, ref);
+      const instance = await this._initializeModules<T, R>(instances, teardowns, ref);
       this._registerEvent({
         level: ModuleEventLevel.Information,
         name: ModuleConfiguratorEventName.HostInitialized,
@@ -479,7 +486,7 @@ export class ModulesConfigurator<
             modules: initializedModules,
             registerEvent: this._registerEvent.bind(this),
             event$: this.#event$,
-            pluginTeardowns: this._pluginTeardowns,
+            pluginTeardowns: teardowns,
           },
           instances,
           ref,
@@ -495,6 +502,7 @@ export class ModulesConfigurator<
   /**
    * Runs initialization inside the host diagnostic boundary.
    * @param instances - Attempt-owned provider map shared by initialization and rollback.
+   * @param teardowns - Attempt-owned plugin teardowns shared by rollback and disposal.
    * @param ref - Reference forwarded to module lifecycle hooks.
    * @returns The sealed module map.
    * @template T - Additional modules in the resulting instance.
@@ -502,6 +510,7 @@ export class ModulesConfigurator<
    */
   private async _initializeModules<T, R extends TRef>(
     instances: Record<string, unknown>,
+    teardowns: FrameworkPluginTeardown[],
     ref?: R,
   ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
     const configStart = performance.now();
@@ -568,7 +577,10 @@ export class ModulesConfigurator<
         dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
       }),
     );
-    await this._registerPlugins<T, R>(modules, ref);
+    // The shorthand disposes the raw instance; callers dispose the sealed map. Both own the list.
+    this.#instanceTeardowns.set(instance, teardowns);
+    this.#instanceTeardowns.set(modules, teardowns);
+    await this._registerPlugins<T, R>(modules, ref, teardowns);
 
     return modules;
   }
@@ -717,6 +729,8 @@ export class ModulesConfigurator<
    *
    * @param instance - The sealed module instance from the initialize phase.
    * @param ref - Optional reference forwarded to each plugin callback.
+   * @param teardowns - Attempt-owned teardown list; forward to `super` when overriding so
+   *   disposing this instance runs only its own plugin cleanup.
    * @template T - Additional modules to merge into the instance type.
    * @template R - The reference type, narrowed to `TRef`.
    * @protected
@@ -724,11 +738,12 @@ export class ModulesConfigurator<
   protected async _registerPlugins<T, R extends TRef = TRef>(
     instance: ModulesInstanceType<CombinedModules<T, TModules>>,
     ref?: R,
+    teardowns: FrameworkPluginTeardown[] = this._pluginTeardowns,
   ): Promise<void> {
     return runPluginPhase(
       {
         plugins: this._plugins,
-        teardowns: this._pluginTeardowns,
+        teardowns,
         registerEvent: this._registerEvent.bind(this),
       },
       instance,
@@ -751,13 +766,18 @@ export class ModulesConfigurator<
     let disposal = this.#disposals.get(instance);
     // First disposal of this instance starts teardown; later calls join it.
     if (!disposal) {
+      // Own teardowns first; the shared list only holds those from non-forwarding overrides.
+      const pluginTeardowns = [
+        ...(this.#instanceTeardowns.get(instance)?.splice(0) ?? []),
+        ...this._pluginTeardowns.splice(0),
+      ];
       disposal = runDisposePhase(
         {
           modules: this.modules,
           registerEvent: this._registerEvent.bind(this),
           // ReplaySubject extends Subject — dispose only needs .complete() which both have.
           event$: this.#event$,
-          pluginTeardowns: this._pluginTeardowns,
+          pluginTeardowns,
         },
         instance,
         ref,

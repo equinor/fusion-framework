@@ -382,7 +382,8 @@ export class TelemetryProviderState {
     }
     this.#connections.add(this.#records.subscribe(({ item }) => this.#dispatchEvent(item)));
     // Keep subscriptions independent so a failed custom stream cannot terminate host lifecycle capture.
-    if (this.#config.lifecycleItems$) {
+    // A disabled capture stays attached but unconsumed, so the host can still recover it on failure.
+    if (this.#config.lifecycleItems$ && this.#config.lifecycleItemsEnabled !== false) {
       // The provider is the authority on host identity once it exists.
       this.#connections.add(
         this.#track(from(this.#config.lifecycleItems$).pipe(map((item) => this.#stamp(item)))),

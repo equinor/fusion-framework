@@ -19,8 +19,9 @@ parent without exporter ownership. Exporter ownership is declared configuration:
 `setAdapter` with a non-fallback adapter or any `configureAdapter` factory owns
 delivery, even if the factory later fails. `enableTelemetry` captures a plain
 configurator's lifecycle unless its host already does; `attachConfiguratorEvents: false`
-stops lifecycle records reaching the provider (the last call wins) but not the host's
-own failure reporting. Custom stream errors are reported without stopping the
+stops lifecycle records reaching the provider without detaching the host's capture, so a
+later `true` restores it (the last call wins); the host's own failure reporting continues.
+Custom stream errors are reported without stopping the
 independently owned lifecycle subscription.
 
 `TelemetryProvider` is now a thin facade over a `TelemetryProviderState` engine whose

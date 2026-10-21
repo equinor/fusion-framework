@@ -12,6 +12,8 @@ interface TerminalBoundary {
   operation: 'initialize' | 'dispose';
   /** Module boundaries are attributed to the module; others to the host itself. */
   perModule: boolean;
+  /** Error boundaries always fail, even when the rejection reason itself is falsy. */
+  failure: boolean;
 }
 
 /**
@@ -19,13 +21,34 @@ interface TerminalBoundary {
  * configuration chatter, is dropped rather than projected.
  */
 const terminalBoundaries: ReadonlyMap<string, TerminalBoundary> = new Map([
-  [ModuleConfiguratorEventName.ModuleInitialized, { operation: 'initialize', perModule: true }],
-  [ModuleConfiguratorEventName.ModuleInitializeError, { operation: 'initialize', perModule: true }],
-  [ModuleConfiguratorEventName.ModuleDisposed, { operation: 'dispose', perModule: true }],
-  [ModuleConfiguratorEventName.ModuleDisposeError, { operation: 'dispose', perModule: true }],
-  [ModuleConfiguratorEventName.HostInitialized, { operation: 'initialize', perModule: false }],
-  [ModuleConfiguratorEventName.HostInitializeError, { operation: 'initialize', perModule: false }],
-  [ModuleConfiguratorEventName.ModulesDisposed, { operation: 'dispose', perModule: false }],
+  [
+    ModuleConfiguratorEventName.ModuleInitialized,
+    { operation: 'initialize', perModule: true, failure: false },
+  ],
+  [
+    ModuleConfiguratorEventName.ModuleInitializeError,
+    { operation: 'initialize', perModule: true, failure: true },
+  ],
+  [
+    ModuleConfiguratorEventName.ModuleDisposed,
+    { operation: 'dispose', perModule: true, failure: false },
+  ],
+  [
+    ModuleConfiguratorEventName.ModuleDisposeError,
+    { operation: 'dispose', perModule: true, failure: true },
+  ],
+  [
+    ModuleConfiguratorEventName.HostInitialized,
+    { operation: 'initialize', perModule: false, failure: false },
+  ],
+  [
+    ModuleConfiguratorEventName.HostInitializeError,
+    { operation: 'initialize', perModule: false, failure: true },
+  ],
+  [
+    ModuleConfiguratorEventName.ModulesDisposed,
+    { operation: 'dispose', perModule: false, failure: false },
+  ],
 ]);
 
 /**
@@ -71,8 +94,8 @@ export const mapConfiguratorEvents = (
         source: typeof source === 'function' ? source() : source,
         module,
         operation: boundary.operation,
-        // Host disposal isolates module failures, so it reports them through `failed`.
-        outcome: event.error || event.properties?.failed ? 'failure' : 'success',
+        // Error boundaries fail by kind; host disposal isolates module failures and reports `failed`.
+        outcome: boundary.failure || event.properties?.failed ? 'failure' : 'success',
         duration: event.metric,
       });
     }),

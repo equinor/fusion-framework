@@ -7,7 +7,9 @@ exported `ModuleDisposePhase`, so ordinary module teardown completes before diag
 sinks flush, without arbitrary numeric priorities.
 Retain concurrent disposal within each phase. Repeated disposal of one initialized
 instance shares a single teardown; disposing another instance from the same
-configurator still runs its own hooks. Infrastructure
+configurator still runs its own hooks. Plugin teardowns are owned by the instance that
+registered them, so disposing one instance or rolling back a failed attempt never runs
+another instance's plugin cleanup. Infrastructure
 phases are reserved for diagnostic/event providers, not ordinary module dependency ordering.
 Emit measured host/module lifecycle outcomes. A failed startup still rejects with the
 first failure without waiting for slower initializers; providers that succeeded are

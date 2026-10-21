@@ -91,7 +91,9 @@ import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 enableTelemetry(configurator, { attachConfiguratorEvents: false });
 ```
 
-The opt-out is configuration, and the last call wins. It does not stop the host's own
+The opt-out is configuration, and the last call wins: it disables delivery through
+`setLifecycleItemsEnabled(false)` but keeps the host's capture attached, so a later
+`attachConfiguratorEvents: true` restores it. It does not stop the host's own
 startup capture: if startup fails before a provider exists, the host still reports the
 sanitized failure records to its parent.
 
