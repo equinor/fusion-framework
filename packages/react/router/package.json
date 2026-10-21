@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-router",
-  "version": "2.4.6",
+  "version": "2.4.7",
   "description": "DSL API for defining React Router v7 routes with type safety",
   "main": "dist/esm/index.js",
   "type": "module",
@@ -68,7 +68,7 @@
     "@react-router/dev": "^7.18.0",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
-    "happy-dom": "^20.8.4",
+    "happy-dom": "^21.0.1",
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "typescript": "^7.0.2",

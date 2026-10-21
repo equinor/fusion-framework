@@ -26,7 +26,7 @@ if (tool === 'git') {
 }
 const endpoint = args[1];
 if (args[0] === 'pr') {
-  console.log(fixture.openPrs ?? 0);
+  process.stdout.write(String(fixture.openPrs ?? 0) + '\\n');
 } else if (endpoint === 'repos/test/repo') {
   console.log('main');
 } else if (endpoint === 'repos/test/repo/git/ref/heads/main') {
@@ -384,3 +384,76 @@ test('sync does not request promotion when the update is already on main', () =>
     assert.equal(git('rev-parse', 'origin/maintenance/dependencies'), git('rev-parse', 'main'));
   });
 });
+
+for (const existingPr of [false, true]) {
+  test(`promotion ${existingPr ? 'refresh' : 'creation'} uses the recognizable emoji title`, () => {
+    const directory = mkdtempSync(join(tmpdir(), 'maintenance-promotion-test-'));
+    const callsPath = join(directory, 'calls.jsonl');
+    writeFileSync(callsPath, '');
+    const mock = `#!${process.execPath}
+import { appendFileSync } from 'node:fs';
+const args = process.argv.slice(2);
+const tool = process.argv[1].endsWith('/gh') ? 'gh' : 'git';
+appendFileSync(process.env.CALLS_PATH, JSON.stringify({ tool, args }) + '\\n');
+if (tool === 'git') {
+  if (args[0] === 'fetch') process.exit(0);
+  if (args[0] === 'diff') process.exit(1);
+  if (args[0] === 'log') { console.log('- dependency update'); process.exit(0); }
+  if (args[0] === 'rev-parse') { console.log('maintenance-sha'); process.exit(0); }
+} else {
+  if (args[0] === 'api' && args[1] === 'repos/test/repo') {
+    console.log('main'); process.exit(0);
+  }
+  if (args[0] === 'pr' && args[1] === 'list') {
+    console.log(process.env.EXISTING_PR === 'true' ? '5737' : ''); process.exit(0);
+  }
+  if (args[0] === 'pr' && args[1] === 'create') {
+    console.log('https://github.com/test/repo/pull/5737'); process.exit(0);
+  }
+  if (args[0] === 'api' && args[1] === '--method' && args[2] === 'PATCH') process.exit(0);
+  if (args[0] === 'pr' && ['merge', 'ready'].includes(args[1])) process.exit(0);
+}
+console.error('Unexpected command', tool, args);
+process.exit(1);
+`;
+    try {
+      for (const tool of ['gh', 'git']) {
+        writeFileSync(join(directory, tool), mock, { mode: 0o755 });
+      }
+      const result = spawnSync(
+        'bash',
+        [new URL('../actions/dependabot-promotion-pr/promote-pr.sh', import.meta.url).pathname],
+        {
+          encoding: 'utf8',
+          env: {
+            ...process.env,
+            PATH: `${directory}:${process.env.PATH}`,
+            RUNNER_TEMP: directory,
+            REPOSITORY: 'test/repo',
+            MAINTENANCE_BRANCH: 'maintenance/dependencies',
+            VALIDATED: 'false',
+            EXISTING_PR: String(existingPr),
+            CALLS_PATH: callsPath,
+            GITHUB_OUTPUT: join(directory, 'output'),
+            GITHUB_STEP_SUMMARY: join(directory, 'summary'),
+          },
+        },
+      );
+      assert.equal(result.status, 0, result.stderr);
+      const calls = readFileSync(callsPath, 'utf8').trim().split('\n').map(JSON.parse);
+      const title = '❤️‍🩹 deps: promote dependency maintenance stream';
+      const write = calls.find(
+        ({ tool, args }) =>
+          tool === 'gh' && (existingPr ? args.includes('PATCH') : args[1] === 'create'),
+      );
+      assert.ok(write, 'promotion must create or update the pull request');
+      if (existingPr) {
+        assert.ok(write.args.includes(`title=${title}`));
+      } else {
+        assert.equal(write.args[write.args.indexOf('--title') + 1], title);
+      }
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+}

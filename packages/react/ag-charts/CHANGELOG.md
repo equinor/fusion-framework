@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-charts
 
+## 15.0.5
+
+### Patch Changes
+
+- 84f07b7: Internal: bump `ag-charts-react` and `ag-charts-enterprise` from the 14.1 release line to 14.2.0.
+
 ## 15.0.4
 
 ### Patch Changes

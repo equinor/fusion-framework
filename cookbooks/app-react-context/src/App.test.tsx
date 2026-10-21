@@ -30,6 +30,12 @@ const discipline: ContextItem = {
   value: {},
   title: 'Discipline A',
 };
+const orgChart: ContextItem = {
+  id: 'orgchart-a',
+  type: { id: 'OrgChart' },
+  value: {},
+  title: 'Raia',
+};
 
 /**
  * Composes the cookbook's real `configure` with `enableContextMock`, which
@@ -172,6 +178,48 @@ describe('with a parent framework context', () => {
     await act(() => parentContext.setCurrentContextByIdAsync(facility.id));
 
     await vi.waitFor(() => expect(currentPre.textContent).toContain('facility-a'));
+
+    await unmount();
+  });
+});
+
+describe('when the parent re-emits an unsupported context with the same ID', () => {
+  test.override('configureApp', { injected: true }, () =>
+    withSeededContext((mock) => {
+      mock.addConfigBuilder((builder) => {
+        builder.setContextType(['ProjectMaster']);
+      });
+      mock.setContexts([orgChart, project]);
+      mock.setRelatedContexts(orgChart.id, [project]);
+    }),
+  );
+  test.override('fusion', async ({ appEnv }) =>
+    mockFramework<[AppModule, ContextModule]>((configurator) => {
+      enableAppManifestMock(configurator, appEnv);
+      enableContextMock(configurator, (mock) => {
+        mock.setCurrentContext(orgChart);
+      });
+    }),
+  );
+
+  test('resolves the child context to its configured type', async ({ render, app, fusion }) => {
+    const { getByRole, unmount } = await render(<App />);
+    const currentPre = getByRole('heading', { name: /current context/i }).element()
+      .nextElementSibling as HTMLElement;
+    const appContext = (app as AppModulesInstance<[ContextModule]>).context;
+    const parentContext = (fusion.modules as FusionModulesInstance<[ContextModule]>).context;
+
+    await act(() =>
+      appContext.setCurrentContextAsync(orgChart, { validate: false, resolve: false }),
+    );
+    await vi.waitFor(() => expect(currentPre.textContent).toContain(orgChart.id));
+
+    await act(() => parentContext.setCurrentContextAsync({ ...orgChart, title: 'Raia updated' }));
+
+    await vi.waitFor(() => {
+      expect(currentPre.textContent).toContain(project.id);
+      expect(currentPre.textContent).toContain('ProjectMaster');
+    });
 
     await unmount();
   });

@@ -21,7 +21,7 @@ export const useRelatedContext = (
   const { currentContext } = useModuleCurrentContext();
   const provider = useAppModule<ContextModule>('context');
   return useObservableState(
-    // biome-ignore lint/correctness/useExhaustiveDependencies: changing type should not trigger rerender
+    // Keep type changes from triggering a new related-context query.
     useMemo(() => {
       // Avoid querying related context until a current context item exists.
       if (!currentContext) return EMPTY;

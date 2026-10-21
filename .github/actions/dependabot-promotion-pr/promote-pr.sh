@@ -12,6 +12,7 @@ if git diff --quiet "origin/${default_branch}" "$maintenance_ref"; then
 fi
 
 report="$RUNNER_TEMP/dependabot-promotion.md"
+pr_title='❤️‍🩹 deps: promote dependency maintenance stream'
 cat > "$report" <<'EOF'
 **Why is this change needed?**
 
@@ -102,7 +103,7 @@ if [[ -z "$pr_number" ]]; then
       --base "$default_branch" \
       --head "$MAINTENANCE_BRANCH" \
       --draft \
-      --title 'chore(deps): promote dependency maintenance stream' \
+      --title "$pr_title" \
       --body-file "$report"
   )"
   pr_number="${pr_url##*/}"
@@ -112,7 +113,7 @@ else
   gh api \
     --method PATCH \
     "repos/${REPOSITORY}/pulls/${pr_number}" \
-    --raw-field title='chore(deps): promote dependency maintenance stream' \
+    --raw-field title="$pr_title" \
     --raw-field body="$(cat "$report")" \
     --silent
   # New commits invalidate earlier validation, so drop auto-merge and return to draft.

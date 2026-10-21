@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-ag-charts",
-  "version": "15.0.4",
+  "version": "15.0.5",
   "description": "Fusion package for using AG Charts",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -58,8 +58,8 @@
   },
   "dependencies": {
     "ag-charts-community": "^14.0.1",
-    "ag-charts-enterprise": "~14.1.0",
-    "ag-charts-react": "~14.1.0"
+    "ag-charts-enterprise": "~14.2.0",
+    "ag-charts-react": "~14.2.0"
   },
   "devDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",

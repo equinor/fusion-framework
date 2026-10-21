@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-copilot",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "Copilot SDK powered evaluation plugin for Fusion Framework CLI",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "catalog:vitest"
   }
 }
