@@ -80,6 +80,15 @@ describe('diagnostic lifecycle ownership', () => {
     await expect(config.initialize()).rejects.toBe(failure);
   });
 
+  it('shares one disposal between the shorthand and configurator.dispose for the same instance', async () => {
+    const config = new ModulesConfigurator();
+    const dispose = vi.fn();
+    config.addConfig({ module: { name: 'resource', initialize: () => ({}), dispose } });
+    const modules = await config.initialize();
+    await Promise.all([modules.dispose(), config.dispose(modules as never)]);
+    expect(dispose).toHaveBeenCalledOnce();
+  });
+
   it('keeps plugin teardowns owned by the instance that registered them', async () => {
     const config = new ModulesConfigurator();
     const failure = new Error('later attempt failed');

@@ -1,8 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
-import { enableTelemetry, type TelemetryModule } from '@equinor/fusion-framework-module-telemetry';
+import {
+  enableTelemetry,
+  type ITelemetryProvider,
+  type TelemetryModule,
+} from '@equinor/fusion-framework-module-telemetry';
 import navigation, { type NavigationModule } from '../module.js';
 import { MemoryHistory } from '../lib/MemoryHistory.js';
+import { NavigationProvider } from '../NavigationProvider.js';
+import type { INavigationConfigurator } from '../NavigationConfigurator.interface.js';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -34,6 +40,27 @@ describe('optional navigation telemetry', () => {
     await modules.dispose();
     const count = processItem.mock.calls.length;
     expect(processItem).toHaveBeenCalledTimes(count);
+  });
+
+  it('reports a missing history as a failed notification', () => {
+    const trackEvent = vi.fn();
+    const telemetry = {
+      source: { source: 'app', hostId: 'host' },
+      trackEvent,
+    } as unknown as ITelemetryProvider;
+    expect(
+      () =>
+        new NavigationProvider({
+          version: '1.0.0',
+          config: { telemetry } as INavigationConfigurator,
+        }),
+    ).toThrow();
+    expect(trackEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Navigation::history.required',
+        diagnostic: expect.objectContaining({ outcome: 'failure' }),
+      }),
+    );
   });
 
   it('initializes and navigates without a telemetry module', async () => {

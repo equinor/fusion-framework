@@ -288,12 +288,13 @@ export class NavigationProvider
     try {
       const source = this.#telemetry?.source;
       // Hosts with identity get a safe envelope; custom providers without one receive the event as-is.
+      // Error-level notifications, such as a missing history, report the failure they describe.
       const diagnostic = source
         ? createDiagnosticContext({
             source,
             module: 'navigation',
             operation: 'notification',
-            outcome: 'success',
+            outcome: item.level >= TelemetryLevel.Error ? 'failure' : 'success',
           })
         : undefined;
       this.#telemetry?.trackEvent({ ...item, diagnostic });
