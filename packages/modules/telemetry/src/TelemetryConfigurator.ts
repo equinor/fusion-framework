@@ -218,7 +218,7 @@ export class TelemetryConfigurator
   }
 
   /** @inheritdoc */
-  public attachLifecycleItems(item$: TelemetryConfig['lifecycleItems$']): this {
+  public attachLifecycleItems(item$: NonNullable<TelemetryConfig['lifecycleItems$']>): this {
     this._set('lifecycleItems$', item$);
     return this;
   }
@@ -226,6 +226,12 @@ export class TelemetryConfigurator
   /** @inheritdoc */
   public hasLifecycleItems(): boolean {
     return this._has('lifecycleItems$');
+  }
+
+  /** @inheritdoc */
+  public setLifecycleItemsEnabled(enabled: boolean): this {
+    this._set('lifecycleItemsEnabled', enabled);
+    return this;
   }
 
   /**

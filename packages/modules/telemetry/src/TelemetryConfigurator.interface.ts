@@ -30,6 +30,8 @@ export type TelemetryConfig = {
   items$?: ObservableInput<TelemetryItem>;
   /** Host-owned safe lifecycle stream, subscribed independently from custom items so errors cannot disable capture. */
   lifecycleItems$?: ObservableInput<TelemetryItem>;
+  /** `false` keeps attached lifecycle records from reaching the provider without discarding the host's capture. */
+  lifecycleItemsEnabled?: boolean;
   filter?: {
     adapter?: (item: TelemetryItem) => boolean;
     relay?: (item: TelemetryItem) => boolean;
@@ -59,19 +61,26 @@ export interface ITelemetryConfigurator {
   /**
    * Attaches host lifecycle records captured before the provider existed, typically
    * `StartupCapture.items`. They are subscribed independently from custom items, so a failing
-   * custom stream cannot stop lifecycle records. Pass `undefined` to stop lifecycle records
-   * reaching this provider (the last call wins).
-   * @param item$ - Lifecycle record stream, or `undefined` to opt out.
+   * custom stream cannot stop lifecycle records.
+   * @param item$ - Lifecycle record stream.
    * @returns This configurator.
    */
-  attachLifecycleItems(item$: TelemetryConfig['lifecycleItems$']): this;
+  attachLifecycleItems(item$: NonNullable<TelemetryConfig['lifecycleItems$']>): this;
 
   /**
-   * Whether lifecycle records were attached or explicitly opted out, so helpers can avoid
-   * replacing a host's own startup capture.
+   * Whether lifecycle records are attached, so helpers can avoid replacing a host's own
+   * startup capture. Disabling delivery does not detach them.
    * @returns `true` once `attachLifecycleItems` has been called.
    */
   hasLifecycleItems(): boolean;
+
+  /**
+   * Enables or disables delivery of attached lifecycle records to this provider; the last call
+   * wins. Disabling keeps the attached capture, so a later call can enable it again.
+   * @param enabled - Whether attached lifecycle records reach the provider.
+   * @returns This configurator.
+   */
+  setLifecycleItemsEnabled(enabled: boolean): this;
 
   /**
    * Sets the origin for built-in diagnostics without depending on dynamic metadata.

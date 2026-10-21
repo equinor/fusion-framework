@@ -74,7 +74,7 @@ Return a teardown whenever the plugin creates subscriptions, event listeners, ti
 
 Plugin registration is isolated. If one plugin throws or rejects, `ModulesConfigurator` emits a warning event named `ModuleConfigurator.plugin.registerError` and continues running the remaining plugins. The failed plugin does not block `initialize()` unless your surrounding code chooses to react to that warning.
 
-During `configurator.dispose(instance, ref?)`, plugin teardowns run before module `dispose` hooks. Teardown failures are reported as warning events and do not prevent other plugin teardowns or module disposal from running. After teardown, the internal teardown registry is cleared so repeated dispose calls do not run the same plugin cleanup twice.
+During `configurator.dispose(instance, ref?)`, plugin teardowns run before module `dispose` hooks. Teardown failures are reported as warning events and do not prevent other plugin teardowns or module disposal from running. Teardowns belong to the instance whose initialization registered them, so disposing one instance never runs another instance's plugin cleanup, and each teardown runs at most once.
 
 ## Plugin API reference
 

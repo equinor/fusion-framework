@@ -208,6 +208,12 @@ providers from an earlier attempt are not included.
 Overrides of `_initialize` must forward its `instances` argument to `super` to retain
 this rollback ownership.
 
+Plugin teardowns are owned by the instance whose initialization registered them.
+Disposing one instance, or rolling back a failed attempt, never runs another
+instance's plugin cleanup. Overrides of `_registerPlugins` should forward its
+`teardowns` argument to `super`; teardowns from overrides that do not are kept in a
+shared list and run with the next disposal, as before.
+
 Module authors still need to bound their
 own asynchronous work; the framework cannot forcibly cancel arbitrary promises.
 

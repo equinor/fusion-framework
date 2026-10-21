@@ -80,6 +80,41 @@ describe('diagnostic lifecycle ownership', () => {
     await expect(config.initialize()).rejects.toBe(failure);
   });
 
+  it('keeps plugin teardowns owned by the instance that registered them', async () => {
+    const config = new ModulesConfigurator();
+    const failure = new Error('later attempt failed');
+    const teardowns: Array<ReturnType<typeof vi.fn>> = [];
+    config.registerPlugin(() => {
+      const teardown = vi.fn();
+      teardowns.push(teardown);
+      return teardown;
+    });
+    config.addConfig({
+      module: {
+        name: 'resource',
+        initialize: vi
+          .fn<() => Promise<object>>()
+          .mockResolvedValueOnce({})
+          .mockResolvedValueOnce({})
+          .mockRejectedValueOnce(failure),
+      },
+    });
+
+    const first = await config.initialize();
+    const second = await config.initialize();
+    // A failed attempt's rollback must not run cleanup that belongs to live instances.
+    await expect(config.initialize()).rejects.toBe(failure);
+    expect(teardowns).toHaveLength(2);
+    expect(teardowns[0]).not.toHaveBeenCalled();
+    expect(teardowns[1]).not.toHaveBeenCalled();
+
+    await first.dispose();
+    expect(teardowns[0]).toHaveBeenCalledOnce();
+    expect(teardowns[1]).not.toHaveBeenCalled();
+    await config.dispose(second as never);
+    expect(teardowns[1]).toHaveBeenCalledOnce();
+  });
+
   it('disposes fixed phases in order, with concurrent default hooks and one host boundary', async () => {
     const order: string[] = [];
     const config = new ModulesConfigurator();

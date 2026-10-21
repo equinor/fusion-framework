@@ -54,13 +54,10 @@ export const enableTelemetry = (
       attach === undefined
         ? undefined
         : (builder) => {
-            // Opting out stops lifecycle records reaching this provider; the last call wins.
-            if (!attach) {
-              builder.attachLifecycleItems(undefined);
-              return;
-            }
+            // Opting out keeps the host's capture attached, so a later `true` restores it.
+            builder.setLifecycleItemsEnabled(attach);
             // Hosts own their startup capture; only capture here when no host already does.
-            if (!builder.hasLifecycleItems()) {
+            if (attach && !builder.hasLifecycleItems()) {
               builder.attachLifecycleItems(new StartupCapture(configurator).items);
             }
           },
