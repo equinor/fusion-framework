@@ -698,12 +698,18 @@ importers:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
+      '@equinor/fusion-framework-module-navigation':
+        specifier: workspace:^
+        version: link:../../packages/modules/navigation
       '@equinor/fusion-framework-module-telemetry':
         specifier: workspace:^
         version: link:../../packages/modules/telemetry
       '@equinor/fusion-framework-react-app':
         specifier: workspace:^
         version: link:../../packages/react/app
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../../packages/react/router
       '@types/react':
         specifier: catalog:react
         version: 19.3.0
