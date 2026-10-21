@@ -177,14 +177,16 @@ Set `contextRouting` in your manifest's `build.options`:
 | `'path'` (or omitted) | `/apps/{appKey}/{contextId}/sub-route` | Default — simple apps without complex path routing |
 | `'query'` | `/apps/{appKey}/route?$contextId={id}` | Apps with nested routes that would conflict with a context path segment |
 
-Apps with custom URL shapes should omit `contextRouting` and register custom hooks instead (see below).
+Apps with custom URL shapes can omit `contextRouting` and register custom hooks instead (see below).
+An explicit `contextRouting: 'query'` always selects query routing, even when custom hooks are registered.
 
 > [!NOTE]
 > When `contextRouting` is not set (or set to `null`), the portal defaults to the
 > **path adapter** which encodes context as a path segment after the app key.
 > If your app also registers custom hooks (`setContextPathExtractor` /
 > `setContextPathGenerator`), the custom adapter takes priority over the path
-> adapter regardless of the `contextRouting` value.
+> adapter for path routing or when no strategy is declared. An explicit
+> `contextRouting: 'query'` selects the query adapter instead.
 
 ### Custom URL shapes
 
