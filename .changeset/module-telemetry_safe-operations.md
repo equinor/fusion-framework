@@ -35,7 +35,10 @@ Export `createDiagnosticContext` for notifications without a measured duration,
 alongside `createOperationalRecords` for measured outcomes, from the `/utils` sub-path;
 the shared `OperationalOutcome` type is exported from
 `/schemas`. Both validate module, operation and source kind as static
-kebab-case identifiers; the diagnostic schema enforces the same rule.
+kebab-case identifiers; the diagnostic schema enforces the same rule. Duration metrics
+are reported at `Information` with the outcome attached, and only the failure exception
+is `Error`; that exception is an `OperationalError` naming the failed operation, such
+as `fusion.http.request failed`.
 
 **Migration:** dashboards using raw configurator names must query
 `fusion.<module>.initialize.duration`, `fusion.<module>.dispose.duration`, and

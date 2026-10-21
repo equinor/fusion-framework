@@ -33,11 +33,12 @@ export function createOperationalRecords(args: OperationalRecordArgs): Telemetry
   // Capture origin and existing correlation before asynchronous enrichment or relaying.
   const diagnostic = createDiagnosticContext(args);
   const name = `fusion.${args.module}.${args.operation}`;
-  const level = args.outcome === 'failure' ? TelemetryLevel.Error : TelemetryLevel.Information;
+  // The measurement is not itself the error: its outcome marks a failure, and the exception
+  // alone carries Error severity, so each failure counts once in error views.
   const metric: TelemetryMetric = {
     name: `${name}.duration`,
     type: TelemetryType.Metric,
-    level,
+    level: TelemetryLevel.Information,
     value: args.duration,
     scope: operationalScope(args.source),
     diagnostic,
@@ -46,13 +47,15 @@ export function createOperationalRecords(args: OperationalRecordArgs): Telemetry
   if (args.outcome !== 'failure') {
     return [metric];
   }
-  const exception = new Error('Framework operation failed');
+  // The record name is built from validated static identifiers, so it is safe to name the
+  // failed operation; the original error, message and stack are never copied.
+  const exception = new Error(`${name} failed`);
   exception.name = 'OperationalError';
   exception.stack = undefined;
   const failure: TelemetryException = {
     name: `${name}.failure`,
     type: TelemetryType.Exception,
-    level,
+    level: TelemetryLevel.Error,
     exception: Object.freeze(exception),
     scope: metric.scope,
     diagnostic,

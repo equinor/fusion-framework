@@ -8,10 +8,20 @@ import type { TelemetryItem } from '../types.js';
 const STARTUP_RECORD_CAPACITY = 255;
 
 /**
+ * Failure evidence: an error-level record, or a measurement whose outcome failed even though
+ * the measurement itself is reported at a lower level.
+ * @param record - Buffered startup record.
+ * @returns Whether the record documents a failure.
+ */
+const isFailure = (record: TelemetryItem): boolean =>
+  record.level >= TelemetryLevel.Error || record.diagnostic?.outcome === 'failure';
+
+/**
  * Bounded buffer for records captured before a telemetry provider exists.
  *
- * At capacity, a failure record replaces the oldest lower-severity record, so failure evidence
- * survives a startup burst; everything else is dropped and counted for an overflow summary.
+ * At capacity, a failure record replaces the oldest record that is not failure evidence, so
+ * failures survive a startup burst; everything else is dropped and counted for an overflow
+ * summary.
  *
  * @example
  * ```ts
@@ -41,9 +51,9 @@ export class StartupBuffer {
       return;
     }
     // Prefer failure evidence over successful startup measurements when capacity is exhausted.
-    const replace = this.#items.findIndex((record) => record.level < TelemetryLevel.Error);
-    // Replacing only lower-severity entries prevents later successes from evicting failures.
-    if (item.level === TelemetryLevel.Error && replace >= 0) {
+    const replace = this.#items.findIndex((record) => !isFailure(record));
+    // Replacing only non-failure entries prevents later successes from evicting failures.
+    if (isFailure(item) && replace >= 0) {
       this.#items.splice(replace, 1, item);
     }
     this.#dropped++;
