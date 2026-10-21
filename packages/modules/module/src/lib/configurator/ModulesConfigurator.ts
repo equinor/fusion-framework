@@ -572,13 +572,13 @@ export class ModulesConfigurator<
 
     // `instance` is the freshly built module instance record, which is structurally compatible
     // with `ModulesInstance<TModules>` but not nominally assignable across the generic params.
-    const modules = Object.seal(
+    // The shorthand disposes the returned map itself, so it shares disposal with
+    // `configurator.dispose(modules)` and teardown never runs twice or concurrently.
+    const modules: ModulesInstance<CombinedModules<T, TModules>> = Object.seal(
       Object.assign({}, instance, {
-        dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
+        dispose: () => this.dispose(modules as unknown as ModulesInstance<TModules>),
       }),
     );
-    // The shorthand disposes the raw instance; callers dispose the sealed map. Both own the list.
-    this.#instanceTeardowns.set(instance, teardowns);
     this.#instanceTeardowns.set(modules, teardowns);
     await this._registerPlugins<T, R>(modules, ref, teardowns);
 
