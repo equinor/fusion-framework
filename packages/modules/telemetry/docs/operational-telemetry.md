@@ -233,7 +233,11 @@ wiring by implementing the optional `INavigationProvider.connectTelemetry` metho
 
 Use `createOperationalRecords` for a measured terminal outcome: it returns one
 `fusion.<module>.<operation>.duration` metric and, on failure, one sanitized
-`.failure` exception. Use `createDiagnosticContext` for a notification that has no
+`.failure` exception. The metric is always reported at `Information` and carries the
+outcome; only the exception is `Error`, so each failure counts once in error views. The
+exception is an `OperationalError` whose message names the failed operation, for
+example `fusion.http.request failed`, and never includes the original message, cause or
+stack. Use `createDiagnosticContext` for a notification that has no
 measured duration, and attach the envelope to your own event. Both validate the
 module, operation and source kind as static kebab-case identifiers, and capture
 occurrence time and the active OpenTelemetry span immediately.

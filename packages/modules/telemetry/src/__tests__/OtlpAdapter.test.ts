@@ -82,7 +82,7 @@ describe('OtlpAdapter', () => {
                       attributes: expect.arrayContaining([
                         {
                           key: 'exception.message',
-                          value: { stringValue: 'Framework operation failed' },
+                          value: { stringValue: 'fusion.host.initialize failed' },
                         },
                       ]),
                     },

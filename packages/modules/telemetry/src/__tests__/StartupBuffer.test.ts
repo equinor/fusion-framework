@@ -31,6 +31,20 @@ describe('startup buffer', () => {
     expect(dropped).toBe(2);
   });
 
+  it('treats failed measurements and critical records as failure evidence', () => {
+    const buffer = new StartupBuffer(2);
+    const failedMeasurement = {
+      ...record('failed-duration'),
+      diagnostic: { outcome: 'failure' },
+    } as TelemetryItem;
+    buffer.push(failedMeasurement);
+    buffer.push(record('success'));
+    buffer.push(record('critical', TelemetryLevel.Critical));
+    buffer.push(record('later-success'));
+    const { items } = buffer.drain();
+    expect(items.map((item) => item.name)).toEqual(['failed-duration', 'critical']);
+  });
+
   it('empties on drain', () => {
     const buffer = new StartupBuffer();
     buffer.push(record('retained'));
