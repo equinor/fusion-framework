@@ -303,3 +303,12 @@ Both workload increases were below `max(5 ms, 5% of baseline p95)`.
 These are in-process synthetic foundation measurements, not browser/device guarantees
 or collector/network benchmarks. Collector latency is excluded. Re-run the tests
 for the target environment; no sampling is used to conceal volume.
+
+The default test run always checks record volume and per-record cost. The workload p95
+gates compare wall-clock time, so they only hold on a documented, otherwise idle
+machine; shared CI runners measure contention between parallel test files instead.
+Enforce them explicitly when validating a rollout:
+
+```sh
+TELEMETRY_BUDGETS=1 pnpm vitest run --project '*-module-telemetry@*' operational-budgets
+```
