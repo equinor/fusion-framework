@@ -111,6 +111,16 @@ Each hub connection is described by a `SignalRHubConfig`:
 - **Shared connections** — multiple `Topic` instances for the same hub share one underlying `HubConnection` via `shareReplay`.
 - **Automatic teardown** — when the last subscriber unsubscribes, the connection is stopped and removed from the internal cache.
 
+### Operational telemetry
+
+When the telemetry module is available, the provider records each shared connection's
+lifecycle: `fusion.signalr.connect.duration`, `fusion.signalr.reconnect.duration` and
+`fusion.signalr.disconnect.duration`, with a sanitized `.failure` exception for failures,
+and a `fusion.signalr.connection-lost` notification when an established connection closes
+unexpectedly. Unsubscribing while a connection is still starting is a `cancelled` connect,
+not a failure. Hub names, URLs, tokens and messages are never recorded, and connection and
+reconnection behavior is unchanged.
+
 ### `Topic<T>`
 
 `Topic` extends RxJS `Observable<T>` and wraps a `HubConnection` method listener. It handles registering and unregistering the callback on the connection automatically.

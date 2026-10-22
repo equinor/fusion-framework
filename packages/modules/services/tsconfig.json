@@ -22,6 +22,9 @@
     },
     {
       "path": "../service-discovery"
+    },
+    {
+      "path": "../telemetry"
     }
   ],
   "include": ["src/**/*", "tests/**/*"],

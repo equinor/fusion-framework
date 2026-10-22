@@ -21,6 +21,7 @@ export type {
 } from './TelemetryConfigurator.interface.js';
 
 export type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+export type { TelemetryConnectable } from './TelemetryConnectable.interface.js';
 export { TelemetryConfigurator } from './TelemetryConfigurator.js';
 export { StartupCapture } from './lib/StartupCapture.js';
 export type { StartupCaptureOptions } from './lib/StartupCapture.js';

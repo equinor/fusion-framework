@@ -32,6 +32,8 @@
     "directory": "packages/modules/signalr"
   },
   "dependencies": {
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
     "@microsoft/signalr": "^10.0.0",
     "rxjs": "^7.8.1"
   },

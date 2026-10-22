@@ -11,6 +11,12 @@ import { MsalProvider, type IMsalProvider } from './MsalProvider.js';
 import { version } from './version.js';
 
 /**
+ * Providers this module created, so host disposal tears down only its own instances and
+ * their telemetry, never a provider supplied or shared by another host.
+ */
+const ownedProviders = new WeakMap<object, { dispose(): void }>();
+
+/**
  * MSAL authentication module configuration.
  *
  * This module provides Microsoft Authentication Library (MSAL) integration for the
@@ -67,11 +73,16 @@ export const module: MsalModule = {
 
     // Create new MSAL provider instance
     const provider = new MsalProvider(config);
+    ownedProviders.set(provider, provider);
 
     // Initialize the provider (handles redirect callbacks, SSO, etc.)
     await provider.initialize();
 
     return provider;
+  },
+  dispose: ({ instance }) => {
+    ownedProviders.get(instance)?.dispose();
+    ownedProviders.delete(instance);
   },
 };
 

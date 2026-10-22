@@ -86,24 +86,28 @@ describe('MsalProvider.initialize', () => {
   it('continues with the standard login flow when redirect handling fails', async () => {
     const mockClient = createClient();
     const error = new Error('AADSTS50148: The Code_Verifier does not match');
-    const trackException = vi.fn();
+    const track = vi.fn();
     mockClient.handleRedirectPromise.mockRejectedValue(error);
     const config = createConfig(mockClient.client);
     config.requiresAuth = true;
     config.telemetry.provider = {
+      source: { source: 'framework', hostId: 'host-1' },
       measure: vi.fn(() => ({ measure: vi.fn() })),
-      trackException,
+      track,
+      trackException: vi.fn(),
       trackEvent: vi.fn(),
     } as unknown as ITelemetryProvider;
 
     await expect(new MsalProvider(config).initialize()).resolves.toBeUndefined();
 
-    expect(trackException).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'module-msal.handleRedirect.failed',
-        exception: error,
-      }),
+    expect(track.mock.calls.map(([item]) => item.name)).toEqual(
+      expect.arrayContaining([
+        'fusion.msal.handle-redirect.duration',
+        'fusion.msal.handle-redirect.failure',
+      ]),
     );
+    // The original error, which may describe the auth code, is never recorded.
+    expect(JSON.stringify(track.mock.calls)).not.toContain('AADSTS50148');
     expect(mockClient.loginRedirect).toHaveBeenCalledWith({
       scopes: ['test-client-id/.default'],
     });

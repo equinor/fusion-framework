@@ -14,6 +14,12 @@
     },
     {
       "path": "../event"
+    },
+    {
+      "path": "../telemetry"
+    },
+    {
+      "path": "../../utils/observable"
     }
   ],
   "include": ["src/**/*"],
