@@ -3,6 +3,8 @@ import { from, switchMap, type Observable } from 'rxjs';
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+import httpModule from '@equinor/fusion-framework-module-http';
 import { ServiceDiscoveryClient } from '../client';
 import type { ServiceDiscoveryDiagnostic } from '../ServiceDiscoveryDiagnostic';
 import { ServiceDiscoveryProvider } from '../provider';
@@ -181,5 +183,28 @@ describe('service discovery operational telemetry', () => {
     await postInitialize({ instance, modules, ref: undefined });
     expect(connect).toHaveBeenCalledWith(telemetry);
     instance.dispose();
+  });
+
+  it('stops reporting resolutions once the host disposes the module', async () => {
+    const { telemetry, items } = createTelemetry();
+    const client = new ServiceDiscoveryClient({ http: createHttp(ok) });
+    // A host that registers discovery, its HTTP dependency and a stand-in telemetry module.
+    const configurator = new ModulesConfigurator([
+      httpModule,
+      module,
+      { name: 'telemetry', initialize: () => telemetry },
+    ]);
+    configurator.configure({
+      module,
+      configure: (config) => config.setServiceDiscoveryClient(client),
+    });
+    const instance = await configurator.initialize();
+    await instance.serviceDiscovery.resolveServices();
+    expect(items).toHaveLength(1);
+
+    await configurator.dispose(instance);
+    // The shared client keeps working; only this host's diagnostics are detached.
+    await expect(client.resolveServices(true)).resolves.toEqual(services);
+    expect(items).toHaveLength(1);
   });
 });
