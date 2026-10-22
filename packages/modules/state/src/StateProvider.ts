@@ -375,14 +375,14 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
     // Every (re)connection starts a fresh observation period: the previous period is
     // summarized to the telemetry it was gathered for, then its observer is released.
     this.#syncHealth?.unsubscribe();
     this.#syncHealth = undefined;
-    this.#telemetry.connect(telemetry ? () => telemetry : undefined);
-    // Disconnected or closed scopes keep no observer on storage events.
-    if (this.#telemetry.active) {
+    await this.#telemetry.connect(telemetry ? () => telemetry : undefined);
+    // Disconnected or closed scopes, or a newer connection, keep no observer on storage events.
+    if (this.#telemetry.active && !this.#syncHealth) {
       this.#syncHealth = observeSyncHealth(this.#storage.events$, this.#telemetry);
     }
   }

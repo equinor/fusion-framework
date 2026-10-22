@@ -39,7 +39,7 @@ const setup = async () => {
   const storage = new SyncingStorage();
   const provider = new StateProvider({ storage } as unknown as StateModuleConfig);
   await provider.initialize();
-  provider.connectTelemetry(modules.telemetry);
+  await provider.connectTelemetry(modules.telemetry);
   const records = () =>
     processItem.mock.calls
       .map(([item]) => item)
@@ -203,7 +203,7 @@ describe('state operational telemetry', () => {
   it('releases the sync observer on disconnect and starts a fresh period on reconnect', async () => {
     const { modules, storage, provider, summary } = await setup();
     storage.sync.next(new StateSyncEvent.Poll({ detail: { trigger: 'interval', skipped: false } }));
-    provider.connectTelemetry(undefined);
+    await provider.connectTelemetry(undefined);
     // The period gathered while connected is summarized before the observer is released.
     expect(summary()).toEqual([
       [
@@ -214,7 +214,7 @@ describe('state operational telemetry', () => {
     ]);
     expect(storage.sync.observed).toBe(false);
     storage.sync.next(new StateSyncEvent.Poll({ detail: { trigger: 'interval', skipped: false } }));
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
     provider.dispose();
     // Activity while disconnected is not carried into the new period.
@@ -242,7 +242,7 @@ describe('state operational telemetry', () => {
     const storage = new SyncingStorage();
     const plain = new StateProvider({ storage } as unknown as StateModuleConfig);
     await plain.initialize();
-    plain.connectTelemetry(undefined);
+    await plain.connectTelemetry(undefined);
     await expect(plain.storeItem({ key: 'a', value: 1 })).resolves.toEqual({
       status: 'success',
       key: 'a',
@@ -252,7 +252,7 @@ describe('state operational telemetry', () => {
     plain.dispose();
 
     const { modules, provider } = await setup();
-    provider.connectTelemetry({
+    await provider.connectTelemetry({
       source: { source: 'app', hostId: 'host' },
       track: () => {
         throw new Error('collector down');

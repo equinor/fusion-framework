@@ -1,10 +1,13 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { firstValueFrom, lastValueFrom, Observable, Subject, throwError } from 'rxjs';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 
 import { OperationalTelemetry } from '../integrations/OperationalTelemetry';
 
 afterEach(() => vi.restoreAllMocks());
+
+// Scopes built directly with a provider record once the optional peer's builders are loaded.
+beforeAll(() => OperationalTelemetry.load());
 
 /** Minimal host telemetry with source identity, capturing tracked records. */
 const createTelemetry = () => {
@@ -84,14 +87,14 @@ describe('OperationalTelemetry', () => {
     expect(new OperationalTelemetry('app').reserve('load')).toBeUndefined();
   });
 
-  it('derives child scopes that share connection and close only work in flight', () => {
+  it('derives child scopes that share connection and close only work in flight', async () => {
     const { telemetry, track } = createTelemetry();
     const parent = new OperationalTelemetry('app');
     const busy = parent.createScope({ identity: () => ({ appKey: 'busy' }) });
     const idle = parent.createScope({ identity: () => ({ appKey: 'idle' }) });
     // Children resolve telemetry through the parent, so connecting later reaches them.
     expect(busy.active).toBe(false);
-    parent.connect(() => telemetry);
+    await parent.connect(() => telemetry);
     expect(busy.active).toBe(true);
 
     busy.start('load-manifest');

@@ -184,5 +184,5 @@ export interface IBookmarkProvider {
    * Optional: mock and custom providers may omit it.
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }

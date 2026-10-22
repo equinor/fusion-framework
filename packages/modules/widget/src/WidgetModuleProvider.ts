@@ -65,7 +65,7 @@ export interface IWidgetModuleProvider {
    * Optional: mock and custom providers may omit operational load-stage records.
    * @param telemetry - The host telemetry provider, when one is registered.
    */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }
 
 /**
@@ -259,8 +259,8 @@ export class WidgetModuleProvider
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
-    this.#widgetTelemetry.connect(telemetry ? () => telemetry : undefined);
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    return this.#widgetTelemetry.connect(telemetry ? () => telemetry : undefined);
   }
 
   /**

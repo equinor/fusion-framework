@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { asyncScheduler, identity, lastValueFrom, observeOn, Subject, switchMap } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
@@ -18,6 +18,9 @@ import type { IClient, WidgetManifest } from '../types.js';
 const SENTINEL = 'sentinel-secret';
 
 afterEach(() => vi.restoreAllMocks());
+
+// Scopes built directly with a provider record once the optional peer's builders are loaded.
+beforeAll(() => OperationalTelemetry.load());
 
 const manifest = (name: string): WidgetManifest =>
   ({
@@ -65,7 +68,7 @@ describe('widget load-stage telemetry', () => {
     const provider = new WidgetModuleProvider({
       config: { client: createClient(async ({ widgetKey }) => manifest(widgetKey)) },
     });
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     const widget = provider.getWidget('my-widget');
     await lastValueFrom(widget.getManifest());
     await lastValueFrom(widget.getConfig());
@@ -93,7 +96,7 @@ describe('widget load-stage telemetry', () => {
         }),
       },
     });
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     const widget = provider.getWidget('my-widget');
     await expect(lastValueFrom(widget.getManifest())).rejects.toThrow();
     // The reason mirrors the classified error the caller receives; the provider maps
@@ -122,7 +125,7 @@ describe('widget load-stage telemetry', () => {
     );
     const { modules, records } = await createTelemetry();
     const provider = new WidgetModuleProvider({ config: { client } });
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     const widget = provider.getWidget('my-widget');
     widget.loadManifest();
     await vi.waitFor(() => expect(pending).toHaveLength(1));
@@ -204,7 +207,7 @@ describe('widget load-stage telemetry', () => {
         ),
       },
     });
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     const widget = provider.getWidget('my-widget');
     widget.loadManifest();
     await vi.waitFor(() => expect(resolve).toBeDefined());
@@ -233,7 +236,7 @@ describe('widget load-stage telemetry', () => {
         ),
       },
     });
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     const widget = provider.getWidget('my-widget');
     widget.loadManifest();
     await vi.waitFor(() => expect(resolve).toBeDefined());
@@ -255,7 +258,7 @@ describe('widget load-stage telemetry', () => {
     const provider = new WidgetModuleProvider({
       config: { client: createClient(() => new Promise(() => undefined)) },
     });
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     const widget = provider.getWidget('my-widget');
     widget
       .initialize()

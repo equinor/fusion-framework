@@ -43,7 +43,7 @@ const setup = async () => {
       Object.assign(draft, { secret: SENTINEL });
     }
   });
-  provider.connectTelemetry(modules.telemetry);
+  await provider.connectTelemetry(modules.telemetry);
   const records = () =>
     processItem.mock.calls
       .map(([item]) => item)
@@ -151,7 +151,7 @@ describe('bookmark operational telemetry', () => {
     expect(records().every((item) => item.properties?.reason === 'disposed')).toBe(true);
     const count = records().length;
     pending.unsubscribe();
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     expect(records()).toHaveLength(count);
     await modules.dispose();
   });
@@ -222,7 +222,7 @@ describe('bookmark operational telemetry', () => {
     expect(warn).not.toHaveBeenCalled();
 
     const { modules, provider } = await setup();
-    provider.connectTelemetry({
+    await provider.connectTelemetry({
       source: { source: 'app', hostId: 'host' },
       track: () => {
         throw new Error('collector down');

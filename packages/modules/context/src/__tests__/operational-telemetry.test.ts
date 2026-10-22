@@ -41,7 +41,7 @@ const setup = async (overrides: Partial<ContextModuleConfig> = {}) => {
     } as ContextModuleConfig,
     event: modules.event,
   });
-  provider.connectTelemetry(modules.telemetry);
+  await provider.connectTelemetry(modules.telemetry);
   const records = () =>
     processItem.mock.calls
       .map(([record]) => record)
@@ -142,7 +142,7 @@ describe('context operational telemetry', () => {
     );
     const count = records().length;
     gate.next(item('late'));
-    provider.connectTelemetry(modules.telemetry);
+    await provider.connectTelemetry(modules.telemetry);
     expect(records()).toHaveLength(count);
     await modules.dispose();
   });
@@ -268,7 +268,7 @@ describe('context operational telemetry', () => {
   it('keeps context selection unchanged when telemetry throws', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const { modules, provider } = await setup();
-    provider.connectTelemetry({
+    await provider.connectTelemetry({
       source: { source: 'app', hostId: 'host' },
       track: () => {
         throw new Error('collector down');

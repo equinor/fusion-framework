@@ -40,7 +40,7 @@ export const module: FeatureFlagModule = {
   postInitialize: async ({ instance, modules }) => {
     // Telemetry stays optional and is never awaited during feature-flag initialization.
     const { telemetry } = modules as { telemetry?: ITelemetryProvider };
-    instance.connectTelemetry?.(telemetry);
+    await instance.connectTelemetry?.(telemetry);
   },
   dispose: ({ instance }) => {
     // Runs in the default phase, before the telemetry sink shuts down, so pending toggles are

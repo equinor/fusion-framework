@@ -27,7 +27,7 @@ export const module: StateModule = {
   postInitialize: async ({ instance, modules }) => {
     // Telemetry stays optional and is never awaited during state initialization.
     const { telemetry } = modules as { telemetry?: ITelemetryProvider };
-    instance.connectTelemetry?.(telemetry);
+    await instance.connectTelemetry?.(telemetry);
   },
   dispose: ({ instance }) => {
     // Releases only the provider's own teardowns, such as telemetry observers.

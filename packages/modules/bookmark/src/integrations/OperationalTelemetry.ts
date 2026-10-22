@@ -1,13 +1,17 @@
 import { defer, finalize, tap, type MonoTypeOperatorFunction } from 'rxjs';
-import {
-  TelemetryLevel,
-  type ITelemetryProvider,
-} from '@equinor/fusion-framework-module-telemetry';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import type { OperationalOutcome } from '@equinor/fusion-framework-module-telemetry/schemas';
-import {
-  createDiagnosticContext,
-  createOperationalRecords,
-} from '@equinor/fusion-framework-module-telemetry/utils';
+
+/** Record builders of the optional telemetry peer, loaded on first connection. */
+type RecordBuilders = {
+  level: typeof import('@equinor/fusion-framework-module-telemetry')['TelemetryLevel'];
+  createDiagnosticContext: typeof import('@equinor/fusion-framework-module-telemetry/utils')['createDiagnosticContext'];
+  createOperationalRecords: typeof import('@equinor/fusion-framework-module-telemetry/utils')['createOperationalRecords'];
+};
+
+/** Loaded builders; absent until a connection loads them, or when the peer is not installed. */
+let builders: RecordBuilders | undefined;
+let loading: Promise<boolean> | undefined;
 
 /**
  * Allowlisted primitive summary fields attached to operational records, such as a stage, a
@@ -57,7 +61,8 @@ const safeVersion = /^[0-9A-Za-z][0-9A-Za-z.+-]{0,63}$/;
  *
  * @remarks
  * Internal to this package; each feature module keeps its own copy so telemetry stays an
- * optional integration rather than a new shared contract.
+ * optional integration rather than a new shared contract. The telemetry package is an optional
+ * peer and is only imported when a provider connects, so the module loads without it.
  */
 export class OperationalTelemetry {
   /**
@@ -130,6 +135,8 @@ export class OperationalTelemetry {
   #teardowns: Teardown[] = [];
   #closed = false;
   #warned = false;
+  /** Counts connections, so only the latest one applies after loading the builders. */
+  #connections = 0;
 
   /**
    * @param module - Static kebab-case module label, such as `app` or `bookmark`.
@@ -144,6 +151,28 @@ export class OperationalTelemetry {
     this.#module = module;
     this.#provider = provider;
     this.#identity = options?.identity;
+  }
+
+  /**
+   * Loads the record builders from the optional telemetry peer, once per module.
+   * @returns `true` when records can be built, `false` when the peer is not installed.
+   */
+  static load(): Promise<boolean> {
+    loading ??= Promise.all([
+      import('@equinor/fusion-framework-module-telemetry'),
+      import('@equinor/fusion-framework-module-telemetry/utils'),
+    ]).then(
+      ([core, utils]) => {
+        builders = {
+          level: core.TelemetryLevel,
+          createDiagnosticContext: utils.createDiagnosticContext,
+          createOperationalRecords: utils.createOperationalRecords,
+        };
+        return true;
+      },
+      () => false,
+    );
+    return loading;
   }
 
   /**
@@ -184,12 +213,21 @@ export class OperationalTelemetry {
   }
 
   /**
-   * Connects host telemetry after providers exist, so modules never wait on telemetry.
-   * @param provider - Lazy telemetry lookup; `undefined` keeps telemetry disabled.
+   * Connects host telemetry after providers exist. The record builders load first, so a
+   * connected scope can always report; without the telemetry peer the scope stays disconnected
+   * and warns once. Owners await it during initialization so no early outcome is missed.
+   * @param provider - Lazy telemetry lookup; `undefined` disconnects immediately.
+   * @returns Resolves once the connection applies; never rejects.
    */
-  connect(provider: (() => ITelemetryProvider | undefined) | undefined): void {
-    // A closed scope stays closed, so a disposed owner cannot be revived.
-    if (!this.#closed) {
+  async connect(provider: (() => ITelemetryProvider | undefined) | undefined): Promise<void> {
+    const connection = ++this.#connections;
+    // Only an actual connection needs the optional peer.
+    if (provider && !(await OperationalTelemetry.load())) {
+      this.#warn('telemetry package unavailable');
+      return;
+    }
+    // A closed scope stays closed, and a newer connection wins over one still loading.
+    if (!this.#closed && connection === this.#connections) {
       this.#provider = provider;
     }
   }
@@ -271,13 +309,13 @@ export class OperationalTelemetry {
     if (this.#closed) {
       return;
     }
-    this.#deliver((telemetry, source) => {
+    this.#deliver((telemetry, source, records) => {
       telemetry.trackEvent({
         name: `fusion.${this.#module}.${operation}`,
-        level: outcome === 'failure' ? TelemetryLevel.Warning : TelemetryLevel.Information,
+        level: outcome === 'failure' ? records.level.Warning : records.level.Information,
         scope: source.source ? [source.source, 'operational'] : ['operational'],
         properties: properties ? { ...properties } : undefined,
-        diagnostic: createDiagnosticContext({
+        diagnostic: records.createDiagnosticContext({
           source,
           module: this.#module,
           operation,
@@ -381,6 +419,10 @@ export class OperationalTelemetry {
    * @returns The telemetry provider, or `undefined` when absent or unavailable.
    */
   #resolve(): ITelemetryProvider | undefined {
+    // Without loaded builders nothing can be recorded, so no timers are reserved.
+    if (!builders) {
+      return undefined;
+    }
     try {
       return this.#provider?.();
     } catch {
@@ -402,9 +444,9 @@ export class OperationalTelemetry {
     properties: OperationalProperties,
   ): void {
     const fields = Object.keys(properties).length > 0 ? { ...properties } : undefined;
-    this.#deliver((telemetry, source) => {
+    this.#deliver((telemetry, source, records) => {
       // One duration metric, plus one sanitized exception for a failure.
-      for (const record of createOperationalRecords({
+      for (const record of records.createOperationalRecords({
         source,
         module: this.#module,
         operation,
@@ -426,12 +468,13 @@ export class OperationalTelemetry {
     send: (
       telemetry: ITelemetryProvider,
       source: NonNullable<ITelemetryProvider['source']>,
+      records: RecordBuilders,
     ) => void,
   ): void {
     try {
       const telemetry = this.#provider?.();
       // Optional telemetry must never become a dependency of the business operation.
-      if (!telemetry) {
+      if (!telemetry || !builders) {
         return;
       }
       // Built-in records require host identity rather than an invented origin.
@@ -439,7 +482,7 @@ export class OperationalTelemetry {
         this.#warn('requires host source identity');
         return;
       }
-      send(telemetry, telemetry.source);
+      send(telemetry, telemetry.source, builders);
     } catch {
       // Diagnostic failures are reported locally once, never re-exported or re-thrown.
       this.#warn('delivery failed');

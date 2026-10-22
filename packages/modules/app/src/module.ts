@@ -46,7 +46,7 @@ export const module: AppModule = {
    */
   postInitialize: async ({ instance, modules }) => {
     const { telemetry } = modules as { telemetry?: ITelemetryProvider };
-    instance.connectTelemetry(telemetry);
+    await instance.connectTelemetry(telemetry);
   },
   /**
    * Disposes the module.

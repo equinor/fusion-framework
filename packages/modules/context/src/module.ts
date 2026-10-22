@@ -93,7 +93,7 @@ export const module: ContextModule = {
     const provider = new ContextProvider({ config, event });
 
     // Operational records start with the initial resolution below, without extra waiting.
-    provider.connectTelemetry(telemetry);
+    await provider.connectTelemetry(telemetry);
 
     // create subscription for disposing the provider
     const subscription = new Subscription(() => provider.dispose());

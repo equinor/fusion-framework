@@ -45,7 +45,7 @@ export const module: WidgetModule = {
   postInitialize: async ({ instance, modules }) => {
     // Providers opt in through the interface; telemetry stays optional and is never awaited.
     const { telemetry } = modules as { telemetry?: ITelemetryProvider };
-    instance.connectTelemetry?.(telemetry);
+    await instance.connectTelemetry?.(telemetry);
   },
   dispose: (args) => {
     // `args.instance` is typed as the generic module instance, but the module descriptor

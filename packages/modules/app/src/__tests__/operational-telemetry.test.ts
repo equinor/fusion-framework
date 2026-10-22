@@ -370,7 +370,7 @@ describe('app load-stage telemetry', () => {
     await absent.modules.dispose();
 
     const failing = await setup(createClient());
-    failing.modules.app.connectTelemetry({
+    await failing.modules.app.connectTelemetry({
       source: { source: 'framework', hostId: 'host' },
       track: () => {
         throw new Error('collector down');

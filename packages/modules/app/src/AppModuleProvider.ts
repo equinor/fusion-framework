@@ -301,8 +301,8 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
-    this.#appTelemetry.connect(telemetry ? () => telemetry : undefined);
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    return this.#appTelemetry.connect(telemetry ? () => telemetry : undefined);
   }
 
   /**

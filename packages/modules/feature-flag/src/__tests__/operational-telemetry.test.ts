@@ -40,7 +40,7 @@ const setup = async () => {
     } as unknown as FeatureFlagConfig,
     event: modules.event,
   });
-  provider.connectTelemetry(modules.telemetry);
+  await provider.connectTelemetry(modules.telemetry);
   const records = () =>
     processItem.mock.calls
       .map(([item]) => item)
@@ -158,11 +158,11 @@ describe('feature-flag operational telemetry', () => {
 
   it('keeps toggling unchanged when telemetry is absent or throws', async () => {
     const { modules, provider } = await setup();
-    provider.connectTelemetry(undefined);
+    await provider.connectTelemetry(undefined);
     await provider.toggleFeature({ key: `${SENTINEL}-a`, enabled: true });
     expect(provider.features[`${SENTINEL}-a`].enabled).toBe(true);
 
-    provider.connectTelemetry({
+    await provider.connectTelemetry({
       source: { source: 'app', hostId: 'host' },
       track: () => {
         throw new Error('collector down');
