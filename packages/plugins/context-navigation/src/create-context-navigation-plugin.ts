@@ -6,7 +6,7 @@ import type { IEventModuleProvider } from '@equinor/fusion-framework-module-even
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 import type { ContextNavigationConfig } from './types.js';
-import { getCurrentURL, resolveAdapter } from './helpers/index.js';
+import { getCurrentURL, normalizePathFromURL, resolveAdapter } from './helpers/index.js';
 import type { OwnNavigationTokens } from './apply-navigation.js';
 import { activeAppNavigationEvents } from './operators/active-app-navigation-events.js';
 import {
@@ -56,7 +56,9 @@ export type ContextNavigationEventSource = typeof eventSource;
  * using the first matching adapter.
  *
  * **URL guard** — watches browser navigation state and detects when the URL no
- * longer reflects the active context. Behavior depends on `navigationOptions.replace`:
+ * longer reflects the active context. If the adapter reports `appOwnsUrl`, the URL is
+ * the source of truth: routes without context are left alone and a context found in the
+ * URL is applied. Otherwise behavior depends on `navigationOptions.replace`:
  *
  * - `replace: true` (default) — each context change replaces the current history entry,
  *   so there is no meaningful back/forward stack within the context history. If the URL
@@ -132,8 +134,8 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
         ({ appModules, appKey, routingStrategy }) => {
           const appContext = appModules.context;
 
-          // No active context means nothing to guard — bail early.
-          if (!appContext?.currentContext) {
+          // No context module means nothing to guard — bail early.
+          if (!appContext) {
             return;
           }
 
@@ -165,28 +167,51 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
 
           const activeContext = appContext.currentContext;
           const urlContextId = adapter.decode(currentURL);
+          const appOwnsUrl = adapter.appOwnsUrl === true;
+          const payload = { appKey, appModules, routingStrategy };
+
+          // No active context: only an app-owned URL that carries a context needs action
+          // (e.g. a link from a page without context) — apply the context from the URL.
+          if (!activeContext) {
+            if (appOwnsUrl && urlContextId !== null) {
+              log(`URL guard: no active context, applying [${urlContextId}] from URL`);
+              handlePushModeGuard(urlContextId, payload, currentURL, guardDeps);
+            }
+            return;
+          }
 
           // If the URL already encodes the active context, state is in sync — done.
           if (urlContextId === activeContext.id) {
             return;
           }
 
-          // Decision branch: push mode vs replace mode determines how we reconcile drift.
-          if (urlContextId !== null && config.navigationOptions?.replace === false) {
-            // Push mode: URL has a different context ID, meaning the user navigated
-            // via browser back/forward. Drive context FROM the URL to stay in sync.
-            handlePushModeGuard(
-              urlContextId,
-              { appKey, appModules, routingStrategy },
-              currentURL,
-              guardDeps,
-            );
+          // The app owns this route and it has no context (e.g. a list page) — not drift.
+          if (urlContextId === null && appOwnsUrl) {
+            log(`URL guard: [${currentURL.pathname}] has no context — leaving it alone.`);
+            return;
+          }
+
+          // The URL may identify the active context by key or slug instead of id.
+          // If encoding the active context yields the current URL, state is in sync.
+          if (urlContextId !== null) {
+            const activeURL = adapter.encode({ context: activeContext, currentURL });
+            if (activeURL && normalizePathFromURL(activeURL) === normalizePathFromURL(currentURL)) {
+              return;
+            }
+          }
+
+          // The URL holds a different context. Drive context FROM the URL when:
+          // - push mode: the user navigated via browser back/forward, or
+          // - the app owns its URL: the app navigated to another context's route.
+          const urlDrivesContext = config.navigationOptions?.replace === false || appOwnsUrl;
+          if (urlContextId !== null && urlDrivesContext) {
+            handlePushModeGuard(urlContextId, payload, currentURL, guardDeps);
             return;
           }
 
           // Replace mode (default): URL diverged from active context (external redirect,
           // stripped segment, etc.). Re-assert the active context INTO the URL.
-          handleReplaceModeGuard({ appKey, appModules, routingStrategy }, currentURL, guardDeps);
+          handleReplaceModeGuard(payload, currentURL, guardDeps);
         },
       ),
     );

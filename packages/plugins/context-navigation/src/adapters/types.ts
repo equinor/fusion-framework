@@ -54,6 +54,18 @@ export interface ContextNavigationAdapter {
    * @returns The context id if present, or `null` if not found.
    */
   decode(url: URL): string | null;
+
+  /**
+   * Whether the app defines its own URL shape, making the URL the source of truth.
+   *
+   * When `true`, the URL guard:
+   * - leaves URLs where `decode` finds no context alone (routes without context), and
+   * - applies a context found in the URL instead of re-asserting the active context,
+   *   also when no context is active.
+   *
+   * When omitted or `false`, a URL without the active context is treated as drift.
+   */
+  readonly appOwnsUrl?: boolean;
 }
 
 /**

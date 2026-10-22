@@ -6,19 +6,18 @@ import type { GuardTickPayload } from './guard-tick-payload.js';
 import type { GuardTickDeps } from './guard-tick-deps.js';
 
 /**
- * Handle a URL guard tick in **push mode** (`navigationOptions.replace: false`).
+ * Drive context FROM the URL.
  *
- * Intent: keep browser history and context state bidirectionally in sync.
- *
- * In push mode, each context change pushes a new history entry, so back/forward
- * navigations legitimately land on URLs with different context IDs. When the guard
- * detects a URL containing a context ID that differs from the active context, it
- * interprets this as the user having navigated through history and drives context
- * FROM the URL (rather than overwriting the URL).
+ * Used in **push mode** (`navigationOptions.replace: false`), where back/forward
+ * navigations legitimately land on URLs with different context IDs, and for adapters
+ * with `appOwnsUrl`, where the app's own navigation moves between context routes.
+ * In both cases the URL is authoritative, so the guard resolves the context from the
+ * URL instead of overwriting the URL.
  *
  * If the URL's context ID can't be resolved (stale bookmark, deleted context),
  * the function falls back to re-asserting the active context into the URL so the
- * address bar isn't left pointing at a broken resource.
+ * address bar isn't left pointing at a broken resource. Without an active context
+ * there is nothing to fall back to.
  *
  * @param urlContextId - The context ID decoded from the current URL by the adapter.
  * @param payload - The active app key and resolved modules.
@@ -37,11 +36,6 @@ export function handlePushModeGuard(
   // Resolve the active context and adapter — both are required to fall back.
   const activeContext = appModules.context.currentContext;
 
-  // No active context to fall back to — nothing to do.
-  if (!activeContext) {
-    return;
-  }
-
   const adapter = resolveAdapter(
     { appKey, appContext: appModules.context, routingStrategy, currentURL },
     deps.config.adapters,
@@ -57,6 +51,11 @@ export function handlePushModeGuard(
   // Attempt to set context from the URL-decoded ID.
   // On failure (e.g. context deleted), fall back to re-encoding the active context.
   context.setCurrentContextByIdAsync(urlContextId).catch(() => {
+    // No active context to fall back to — leave the URL as is.
+    if (!activeContext) {
+      log(`URL guard: could not resolve [${urlContextId}] for [${appKey}] — no fallback.`);
+      return;
+    }
     // Mirror reconcile's validation gate: an invalid active context must not
     // be re-encoded into the URL as a fallback.
     if (config.requireValidContext && !appModules.context.validateContext(activeContext)) {

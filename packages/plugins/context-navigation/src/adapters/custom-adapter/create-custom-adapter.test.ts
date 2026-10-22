@@ -128,4 +128,31 @@ describe('createCustomAdapter', () => {
       adapter?.encode({ context: { id: 'new-context' } as ContextItem, currentURL })?.pathname,
     ).toBe(`/apps/my-app${expectedPath}`);
   });
+
+  describe('routes without context', () => {
+    // Context lives in `/items/{id}/...`; every other route has no context.
+    const adapter = createCustomAdapter()({
+      appContext: {
+        extractContextIdFromPath: (path: string) => path.match(/^\/items\/([^/]+)/)?.[1],
+        generatePathFromContext: (context: ContextItem) => `/items/${context.id}`,
+      } as unknown as IContextProvider,
+      appKey: 'my-app',
+      currentURL: new URL('https://example.com/apps/my-app'),
+    });
+
+    it('declares that the app owns the URL', () => {
+      expect(adapter?.appOwnsUrl).toBe(true);
+    });
+
+    it('stays on the current route when context is cleared on a route without context', () => {
+      const currentURL = new URL('https://example.com/apps/my-app/categories?tab=all');
+      const url = adapter?.encode({ context: null, currentURL });
+      expect(`${url?.pathname}${url?.search}`).toBe('/apps/my-app/categories?tab=all');
+    });
+
+    it('navigates to the app root when context is cleared on a context route', () => {
+      const currentURL = new URL('https://example.com/apps/my-app/items/abc/details');
+      expect(adapter?.encode({ context: null, currentURL })?.pathname).toBe('/apps/my-app');
+    });
+  });
 });

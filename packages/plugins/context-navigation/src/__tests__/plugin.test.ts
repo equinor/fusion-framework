@@ -742,6 +742,79 @@ describe('createContextNavigationPlugin', () => {
     });
   });
 
+  // ─── URL Guard (adapters without appOwnsUrl) ──────────────────────
+
+  describe('URL guard — adapters without appOwnsUrl', () => {
+    const setup = (pathname: string, currentContext: ContextItem | null) => {
+      const navigationState$ = new Subject<unknown>();
+      // The guard reads only the active context from the app's context module
+      const appModules = { context: { currentContext } } as unknown as AppModulesInstance<
+        [ContextModule]
+      >;
+      // The guard only reads the active app's current$ stream
+      const app = {
+        current$: new BehaviorSubject({
+          appKey: 'my-app',
+          instance$: new BehaviorSubject(appModules),
+          manifest$: new BehaviorSubject(null),
+        }),
+      } as unknown as ContextNavigationPluginArgs['app'];
+      // The guard only reads path, navigate, and state$
+      const navigation = {
+        path: { pathname, search: '' },
+        navigate: vi.fn(),
+        state$: navigationState$,
+      } as unknown as ContextNavigationPluginArgs['navigation'];
+      // The guard only calls setCurrentContextByIdAsync
+      const context = {
+        setCurrentContextByIdAsync: vi.fn(async () => undefined),
+      } as unknown as ContextNavigationPluginArgs['context'];
+      // The plugin only calls dispatchEvent
+      const event = {
+        dispatchEvent: vi.fn(async () => ({ canceled: false })),
+      } as unknown as ContextNavigationPluginArgs['event'];
+      const teardown = createContextNavigationPlugin({
+        app,
+        navigation,
+        context,
+        event,
+        config: {
+          portalName: 'TestPortal',
+          origin: 'https://example.com',
+          adapters: [makeAdapter()],
+          enableUrlGuard: true,
+          debug: false,
+          requireValidContext: false,
+          sourceFactory: () => EMPTY,
+          navigationOptions: { replace: true },
+        },
+      });
+      navigationState$.next({});
+      return { navigation, context, teardown };
+    };
+
+    it('does not apply a URL context when no context is active', async () => {
+      const { navigation, context, teardown } = setup('/apps/my-app/url-ctx', null);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(context.setCurrentContextByIdAsync).not.toHaveBeenCalled();
+      expect(navigation.navigate).not.toHaveBeenCalled();
+      teardown();
+    });
+
+    it('re-asserts the active context on a URL without context', async () => {
+      const { navigation, teardown } = setup('/apps/my-app', makeContext('active-ctx'));
+
+      await vi.waitFor(() => {
+        expect(navigation.navigate).toHaveBeenCalledWith(
+          expect.objectContaining({ pathname: '/apps/my-app/active-ctx' }),
+          { replace: true },
+        );
+      });
+      teardown();
+    });
+  });
+
   // ─── Teardown ─────────────────────────────────────────────────────
 
   describe('teardown', () => {
