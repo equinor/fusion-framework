@@ -12,15 +12,7 @@ import type { FlowSubject } from '@equinor/fusion-observable';
 
 import { createState } from './state/create-state.js';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
-import {
-  Observable,
-  Subject,
-  Subscription,
-  combineLatest,
-  firstValueFrom,
-  lastValueFrom,
-  of,
-} from 'rxjs';
+import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom, of } from 'rxjs';
 import type WidgetModuleProvider from './WidgetModuleProvider.js';
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
@@ -28,7 +20,6 @@ import {
   OperationalTelemetry,
   type OperationalProperties,
 } from './integrations/OperationalTelemetry.js';
-import { observeLoadStages } from './integrations/observe-load-stages.js';
 
 import './events.js';
 
@@ -104,32 +95,13 @@ export class Widget {
     this.name = value.name;
     this.widgetPrams = args.widgetPrams;
     this.config = args.config;
-    const flowActions = new Subject<Actions>();
-    this.#state = createState(value, args.provider, (action) => flowActions.next(action));
-    args.event && this.#registerEvents(args.event);
-
     // Each widget owns a child scope of the provider's telemetry, so disposing one cannot
     // cancel another widget's stages, while provider disposal still closes stages in flight.
     this.#telemetry =
       args.telemetry?.createScope({ identity: () => this.#identity() }) ??
       new OperationalTelemetry('widget');
-    const stages = observeLoadStages(
-      this.#state.action$,
-      this.#telemetry,
-      {
-        stages: {
-          fetch_manifest: 'load-manifest',
-          fetch_config: 'load-config',
-          import_widget: 'import',
-        },
-        identity: () => this.#identity(),
-      },
-      flowActions,
-    );
-    stages.add(() => flowActions.complete());
-    this.#subscription.add(stages);
-    // Closing the scope early, e.g. on provider disposal, also releases the observer.
-    this.#telemetry.own(stages);
+    this.#state = createState(value, args.provider, this.#telemetry);
+    args.event && this.#registerEvents(args.event);
   }
 
   /**

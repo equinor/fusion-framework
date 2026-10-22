@@ -1,4 +1,4 @@
-import { from, of, concat } from 'rxjs';
+import { from, of, concat, identity, type MonoTypeOperatorFunction } from 'rxjs';
 import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
 
 import { actions } from '../actions.js';
@@ -13,16 +13,20 @@ import type { AppBundleState } from '../types.js';
  * filtering out null values, and dispatching success or failure actions accordingly.
  *
  * @param provider The AppModuleProvider used to fetch the app configuration.
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A Flow function that takes an Observable of actions and returns an Observable of actions.
  */
 export const handleFetchConfig =
-  (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
+  (
+    provider: AppModuleProvider,
+    measure: MonoTypeOperatorFunction<Actions> = identity,
+  ): Flow<Actions, AppBundleState> =>
   (action$) =>
     // only handle fetch config request actions
     action$.pipe(
       filter(actions.fetchConfig.match),
       // when request is received, abort any ongoing request and start new
-      switchMap(({ payload, meta: { telemetryAttemptId } }) => {
+      switchMap(({ payload }) => {
         // TODO(#5127) - use the configUrl directly from the manifest
         // fetch config from provider
         const subject = from(provider.getAppConfig(payload.appKey, payload.build?.version)).pipe(
@@ -36,13 +40,14 @@ export const handleFetchConfig =
           subject.pipe(map((config) => actions.setConfig(config))),
           subject.pipe(
             last(),
-            map((config) => actions.fetchConfig.success(config, telemetryAttemptId)),
+            map((config) => actions.fetchConfig.success(config)),
           ),
         ).pipe(
           // catch any error and dispatch failure action
           catchError((err) => {
-            return of(actions.fetchConfig.failure(err, telemetryAttemptId));
+            return of(actions.fetchConfig.failure(err));
           }),
+          measure,
         );
       }),
     );

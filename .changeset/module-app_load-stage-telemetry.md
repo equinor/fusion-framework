@@ -19,4 +19,10 @@ and cancellation are unchanged, and delivery failures are reported once locally.
 Use telemetry adapter or relay filters on `diagnostic.module === 'app'` to exclude
 these records.
 
+Each stage is measured on its own request, so action creators, action shapes and flow
+outputs are unchanged; the exported flow handlers only gain an optional trailing
+per-request observer argument.
+
+`@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+
 Ref: #5805.

@@ -1,4 +1,4 @@
-import { from, of, concat } from 'rxjs';
+import { from, of, concat, identity, type MonoTypeOperatorFunction } from 'rxjs';
 import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
 
 import { actions } from '../actions.js';
@@ -13,10 +13,14 @@ import type { AppBundleState } from '../types.js';
  * dispatching success or failure actions based on the result.
  *
  * @param provider The AppModuleProvider used to fetch the app manifest.
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A Flow function that takes an Observable of actions and returns an Observable of actions.
  */
 export const handleFetchManifest =
-  (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
+  (
+    provider: AppModuleProvider,
+    measure: MonoTypeOperatorFunction<Actions> = identity,
+  ): Flow<Actions, AppBundleState> =>
   (action$) =>
     // only handle fetch manifest request actions
     action$.pipe(
@@ -25,7 +29,7 @@ export const handleFetchManifest =
       switchMap((action) => {
         const {
           payload: { key, tag },
-          meta: { update, telemetryAttemptId },
+          meta: { update },
         } = action;
 
         // fetch manifest from provider
@@ -41,13 +45,14 @@ export const handleFetchManifest =
           subject.pipe(map((manifest) => actions.setManifest(manifest, update))),
           subject.pipe(
             last(),
-            map((manifest) => actions.fetchManifest.success(manifest, telemetryAttemptId)),
+            map((manifest) => actions.fetchManifest.success(manifest)),
           ),
         ).pipe(
           // catch any error and dispatch failure action
           catchError((err) => {
-            return of(actions.fetchManifest.failure(err, telemetryAttemptId));
+            return of(actions.fetchManifest.failure(err));
           }),
+          measure,
         );
       }),
     );

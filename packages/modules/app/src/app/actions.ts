@@ -12,8 +12,6 @@ import type {
   AppSettings,
 } from '../types.js';
 
-let nextTelemetryAttemptId = 0;
-
 /**
  * Factory function that creates all action creators used by the {@link App}
  * state machine.
@@ -39,35 +37,17 @@ const createActions = () => ({
 
   fetchManifest: createAsyncAction(
     'fetch_manifest',
-    (key: string, tag?: string, update?: boolean) => ({
-      payload: { key, tag },
-      meta: { update, telemetryAttemptId: ++nextTelemetryAttemptId },
-    }),
-    (manifest: AppManifest, telemetryAttemptId: number) => ({
-      payload: manifest,
-      meta: { telemetryAttemptId },
-    }),
-    (error: unknown, telemetryAttemptId: number) => ({
-      payload: error,
-      meta: { telemetryAttemptId },
-    }),
+    (key: string, tag?: string, update?: boolean) => ({ payload: { key, tag }, meta: { update } }),
+    (manifest: AppManifest) => ({ payload: manifest }),
+    (error: unknown) => ({ payload: error }),
   ),
   /** Config loading */
   setConfig: createAction('set_config', (config: AppConfig) => ({ payload: config })),
   fetchConfig: createAsyncAction(
     'fetch_config',
-    (manifest: AppManifest) => ({
-      payload: manifest,
-      meta: { telemetryAttemptId: ++nextTelemetryAttemptId },
-    }),
-    (config: AppConfig, telemetryAttemptId: number) => ({
-      payload: config,
-      meta: { telemetryAttemptId },
-    }),
-    (error: unknown, telemetryAttemptId: number) => ({
-      payload: error,
-      meta: { telemetryAttemptId },
-    }),
+    (manifest: AppManifest) => ({ payload: manifest }),
+    (config: AppConfig) => ({ payload: config }),
+    (error: unknown) => ({ payload: error }),
   ),
   /** Settings loading */
   setSettings: createAction('set_settings', (settings?: AppSettings) => ({
@@ -76,33 +56,21 @@ const createActions = () => ({
   /** Fetching settings */
   fetchSettings: createAsyncAction(
     'fetch_settings',
-    (appKey: string) => ({
-      payload: { appKey },
-      meta: { telemetryAttemptId: ++nextTelemetryAttemptId },
-    }),
-    (settings: AppSettings, telemetryAttemptId: number) => ({
-      payload: settings,
-      meta: { telemetryAttemptId },
-    }),
-    (error: unknown, telemetryAttemptId: number) => ({
-      payload: error,
-      meta: { telemetryAttemptId },
-    }),
+    (appKey: string) => ({ payload: { appKey } }),
+    (settings: AppSettings) => ({ payload: settings }),
+    (error: unknown) => ({ payload: error }),
   ),
   /** Updating settings */
   updateSettings: createAsyncAction(
     'update_settings',
     (appKey: string, settings: AppSettings) => ({
       payload: { appKey, settings },
-      meta: { telemetryAttemptId: ++nextTelemetryAttemptId },
     }),
-    (settings: AppSettings, telemetryAttemptId: number) => ({
+    (settings: AppSettings) => ({
       payload: settings,
-      meta: { telemetryAttemptId },
     }),
-    (error: unknown, telemetryAttemptId: number) => ({
+    (error: unknown) => ({
       payload: error,
-      meta: { telemetryAttemptId },
     }),
   ),
   updateSettingsAbort: createAction('update_settings::abort', (id: string) => ({
@@ -113,18 +81,9 @@ const createActions = () => ({
   setModule: createAction('set_module', (module: any) => ({ payload: module })),
   importApp: createAsyncAction(
     'import_app',
-    (entrypoint: string) => ({
-      payload: entrypoint,
-      meta: { telemetryAttemptId: ++nextTelemetryAttemptId },
-    }),
-    (module: AppScriptModule, telemetryAttemptId: number) => ({
-      payload: module,
-      meta: { telemetryAttemptId },
-    }),
-    (error: unknown, telemetryAttemptId: number) => ({
-      payload: error,
-      meta: { telemetryAttemptId },
-    }),
+    (entrypoint: string) => ({ payload: entrypoint }),
+    (module: AppScriptModule) => ({ payload: module }),
+    (error: unknown) => ({ payload: error }),
   ),
 
   // App Instance

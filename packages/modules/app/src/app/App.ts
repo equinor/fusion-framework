@@ -9,7 +9,7 @@ import type {
 import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider.js';
-import { combineLatest, of, Subject, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
+import { combineLatest, of, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
 import { defaultIfEmpty, last, map, switchMap } from 'rxjs/operators';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
@@ -26,7 +26,6 @@ import {
   OperationalTelemetry,
   type OperationalProperties,
 } from '../integrations/OperationalTelemetry.js';
-import { observeLoadStages } from '../integrations/observe-load-stages.js';
 
 import './events.js';
 
@@ -402,19 +401,8 @@ export class App<
       telemetry?: OperationalTelemetry;
     },
   ) {
-    const flowActions = new Subject<Actions>();
-    this.#state = createState(value, args.provider, (action) => flowActions.next(action));
-
-    const { appKey } = value;
-    const { event } = args;
-
-    // register events if event module is provided
-    event && this.#registerEvents(event);
-
-    // create a tear down handler for the application
-    const subscriptions = new Subscription();
-
     // Only static identity is exported; manifests, config and settings are never read for telemetry.
+    // Resolved when an operation ends, so it includes the version once the manifest is loaded.
     const identity = (): OperationalProperties => {
       const key = OperationalTelemetry.safeIdentity(this.#state.value.appKey);
       const version = OperationalTelemetry.safeIdentity(
@@ -431,25 +419,16 @@ export class App<
     // cancel another app's stages, while provider disposal still closes stages in flight.
     const telemetry = args.telemetry?.createScope({ identity }) ?? new OperationalTelemetry('app');
     this.#telemetry = telemetry;
-    const stages = observeLoadStages(
-      this.#state.action$,
-      telemetry,
-      {
-        stages: {
-          fetch_manifest: 'load-manifest',
-          fetch_config: 'load-config',
-          fetch_settings: 'load-settings',
-          update_settings: 'update-settings',
-          import_app: 'import',
-        },
-        identity,
-      },
-      flowActions,
-    );
-    stages.add(() => flowActions.complete());
-    subscriptions.add(stages);
-    // Closing the scope early, e.g. on provider disposal, also releases the observer.
-    telemetry.own(stages);
+    this.#state = createState(value, args.provider, telemetry);
+
+    const { appKey } = value;
+    const { event } = args;
+
+    // register events if event module is provided
+    event && this.#registerEvents(event);
+
+    // create a tear down handler for the application
+    const subscriptions = new Subscription();
 
     // only wire up event listeners when an event module is provided
     if (event) {

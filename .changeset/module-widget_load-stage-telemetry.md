@@ -14,4 +14,10 @@ never configuration bodies, URLs or error messages.
 Custom providers opt in through the optional `IWidgetModuleProvider.connectTelemetry`
 method. Telemetry stays optional and never changes widget results or errors.
 
+Each stage is measured on its own request, so action creators, action shapes and flow
+outputs are unchanged; the exported flow handlers only gain an optional trailing
+per-request observer argument.
+
+`@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+
 Ref: #5805.

@@ -1,5 +1,4 @@
-import { FlowSubject, type Flow } from '@equinor/fusion-observable';
-import { tap } from 'rxjs';
+import { FlowSubject } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer.js';
 
@@ -11,9 +10,14 @@ import {
   handleImportApplication,
 } from './flows/index.js';
 
-import type { Actions } from './actions.js';
+import { actions, type Actions } from './actions.js';
 import type { AppBundleState, AppBundleStateInitial } from './types.js';
 import type { AppModuleProvider } from '../AppModuleProvider.js';
+import {
+  OperationalTelemetry,
+  type OperationalProperties,
+} from '../integrations/OperationalTelemetry.js';
+import { measureStage } from '../integrations/measure-stage.js';
 
 /**
  * Creates and configures the reactive state machine ({@link FlowSubject}) for
@@ -24,43 +28,67 @@ import type { AppModuleProvider } from '../AppModuleProvider.js';
  *
  * @param value - Initial state values (appKey, tag, and any pre-loaded data).
  * @param provider - The {@link AppModuleProvider} used by flows to fetch data.
- * @param onFlowAction - Optional observer of flow outputs before scheduled store delivery.
+ * @param telemetry - Optional scope recording one outcome per load-stage request.
  * @returns A configured `FlowSubject` ready for use by the App class.
  */
 export const createState = (
   value: AppBundleStateInitial,
   provider: AppModuleProvider,
-  onFlowAction?: (action: Actions) => void,
+  telemetry?: OperationalTelemetry,
 ): FlowSubject<AppBundleState, Actions> => {
   const reducer = createReducer(value);
 
   // create state
   const state = new FlowSubject<AppBundleState, Actions>(reducer);
-  // Observe requests before any flow can synchronously emit its terminal action.
-  if (onFlowAction) {
-    state.action$.subscribe(onFlowAction);
-  }
-  /** Observe emitted terminal actions without changing FlowSubject's scheduling. */
-  const addFlow = (flow: Flow<Actions, AppBundleState>): void => {
-    state.addFlow((action$, state$) => {
-      // The tap runs before addFlow's asyncScheduler boundary.
-      return flow(action$, state$).pipe(tap(onFlowAction));
-    });
-  };
 
   // add handler for fetching manifest
-  addFlow(handleFetchManifest(provider));
+  state.addFlow(
+    handleFetchManifest(
+      provider,
+      measureStage<Actions>(
+        telemetry,
+        'load-manifest',
+        actions.fetchManifest,
+        (action): OperationalProperties => {
+          const version =
+            actions.fetchManifest.success.match(action) &&
+            OperationalTelemetry.safeIdentity(action.payload.build?.version, 'version');
+          return version ? { appVersion: version } : {};
+        },
+      ),
+    ),
+  );
 
   // add handler for fetching config
-  addFlow(handleFetchConfig(provider));
+  state.addFlow(
+    handleFetchConfig(
+      provider,
+      measureStage<Actions>(telemetry, 'load-config', actions.fetchConfig),
+    ),
+  );
 
   // add handler for fetching settings
-  addFlow(handleFetchSettings(provider));
+  state.addFlow(
+    handleFetchSettings(
+      provider,
+      measureStage<Actions>(telemetry, 'load-settings', actions.fetchSettings),
+    ),
+  );
 
-  addFlow(handleUpdateSettings(provider));
+  state.addFlow(
+    handleUpdateSettings(
+      provider,
+      measureStage<Actions>(telemetry, 'update-settings', actions.updateSettings),
+    ),
+  );
 
   // add handler for loading application script
-  addFlow(handleImportApplication(provider));
+  state.addFlow(
+    handleImportApplication(
+      provider,
+      measureStage<Actions>(telemetry, 'import', actions.importApp),
+    ),
+  );
 
   return state;
 };

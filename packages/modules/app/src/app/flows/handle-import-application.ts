@@ -1,4 +1,4 @@
-import { from, of } from 'rxjs';
+import { from, of, identity, type MonoTypeOperatorFunction } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 
 import { actions } from '../actions.js';
@@ -11,16 +11,20 @@ import type { AppBundleState } from '../types.js';
 /**
  * Handles the import application flow.
  * @param provider The AppModuleProvider used to resolve the application asset URI.
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A flow that takes in actions and returns an observable of AppBundleState.
  */
 export const handleImportApplication =
-  (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
+  (
+    provider: AppModuleProvider,
+    measure: MonoTypeOperatorFunction<Actions> = identity,
+  ): Flow<Actions, AppBundleState> =>
   (action$) =>
     // only handle import script request actions
     action$.pipe(
       filter(actions.importApp.match),
       // when request is received, abort any ongoing request and start new
-      switchMap(({ payload, meta: { telemetryAttemptId } }) => {
+      switchMap(({ payload }) => {
         // dynamically import the application script
         return from(
           import(
@@ -29,9 +33,10 @@ export const handleImportApplication =
           ),
         ).pipe(
           // dispatch success action
-          map((module) => actions.importApp.success(module, telemetryAttemptId)),
+          map(actions.importApp.success),
           // catch any error and dispatch failure action
-          catchError((err) => of(actions.importApp.failure(err, telemetryAttemptId))),
+          catchError((err) => of(actions.importApp.failure(err))),
+          measure,
         );
       }),
     );

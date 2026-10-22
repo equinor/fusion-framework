@@ -1,13 +1,17 @@
-import { FlowSubject, type Flow } from '@equinor/fusion-observable';
-import { tap } from 'rxjs';
+import { FlowSubject } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer.js';
 
 import { handleFetchManifest, handleImportWidget, handleFetchConfig } from './flows.js';
 
-import type { Actions } from './actions.js';
+import { actions, type Actions } from './actions.js';
 import type { WidgetState, WidgetStateInitial } from '../types.js';
 import type WidgetModuleProvider from '../WidgetModuleProvider.js';
+import {
+  OperationalTelemetry,
+  type OperationalProperties,
+} from '../integrations/OperationalTelemetry.js';
+import { measureStage } from '../integrations/measure-stage.js';
 
 /**
  * Creates and wires the RxJS-based `FlowSubject` state machine for a single
@@ -19,29 +23,40 @@ import type WidgetModuleProvider from '../WidgetModuleProvider.js';
  * @param value - Initial widget state (name and optional pre-loaded data).
  * @param provider - The {@link WidgetModuleProvider} used by flows to query
  *   the backend API.
- * @param onFlowAction - Optional observer of flow outputs before scheduled store delivery.
+ * @param telemetry - Optional scope recording one outcome per load-stage request.
  * @returns A `FlowSubject` managing {@link WidgetState} via {@link Actions}.
  */
 export const createState = (
   value: WidgetStateInitial,
   provider: WidgetModuleProvider,
-  onFlowAction?: (action: Actions) => void,
+  telemetry?: OperationalTelemetry,
 ): FlowSubject<WidgetState, Actions> => {
   const reducer = createReducer(value);
   const state = new FlowSubject<WidgetState, Actions>(reducer);
-  // Observe requests before any flow can synchronously emit its terminal action.
-  if (onFlowAction) {
-    state.action$.subscribe(onFlowAction);
-  }
-  /** Observe emitted terminal actions without changing FlowSubject's scheduling. */
-  const addFlow = (flow: Flow<Actions, WidgetState>): void => {
-    state.addFlow((action$, state$) => {
-      // The tap runs before addFlow's asyncScheduler boundary.
-      return flow(action$, state$).pipe(tap(onFlowAction));
-    });
-  };
-  addFlow(handleFetchManifest(provider));
-  addFlow(handleImportWidget());
-  addFlow(handleFetchConfig(provider));
+  state.addFlow(
+    handleFetchManifest(
+      provider,
+      measureStage<Actions>(
+        telemetry,
+        'load-manifest',
+        actions.fetchManifest,
+        (action): OperationalProperties => {
+          const version =
+            actions.fetchManifest.success.match(action) &&
+            OperationalTelemetry.safeIdentity(action.payload.version, 'version');
+          return version ? { widgetVersion: version } : {};
+        },
+      ),
+    ),
+  );
+  state.addFlow(
+    handleImportWidget(measureStage<Actions>(telemetry, 'import', actions.importWidget)),
+  );
+  state.addFlow(
+    handleFetchConfig(
+      provider,
+      measureStage<Actions>(telemetry, 'load-config', actions.fetchConfig),
+    ),
+  );
   return state;
 };

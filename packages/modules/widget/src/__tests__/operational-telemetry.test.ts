@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { asyncScheduler, lastValueFrom, Subject } from 'rxjs';
+import { asyncScheduler, identity, lastValueFrom, observeOn, Subject, switchMap } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
   enableTelemetry,
@@ -11,7 +11,7 @@ import {
 import { WidgetModuleProvider } from '../WidgetModuleProvider.js';
 import { WidgetManifestLoadError } from '../WidgetManifestLoadError.js';
 import { OperationalTelemetry } from '../integrations/OperationalTelemetry.js';
-import { observeLoadStages } from '../integrations/observe-load-stages.js';
+import { measureStage } from '../integrations/measure-stage.js';
 import widgetModule from '../module.js';
 import type { IClient, WidgetManifest } from '../types.js';
 
@@ -146,48 +146,47 @@ describe('widget load-stage telemetry', () => {
     await modules.dispose();
   });
 
-  it('correlates a queued terminal action with its originating request', async () => {
+  it('keeps each outcome with its own request when delivery is queued behind a newer one', async () => {
     const { modules, records } = await createTelemetry();
     const telemetry = new OperationalTelemetry('widget', () => modules.telemetry);
-    const action$ = new Subject<{
-      type: string;
-      payload?: unknown;
-      meta?: { telemetryAttemptId?: number };
-    }>();
-    const flowActions = new Subject<{
-      type: string;
-      meta: { telemetryAttemptId: number };
-    }>();
-    const observer = observeLoadStages(
-      action$,
-      telemetry,
-      {
-        stages: { fetch_manifest: 'load-manifest' },
-        identity: () => ({ widgetKey: 'my-widget' }),
-      },
-      flowActions,
-    );
+    type StageAction = { type: string; payload?: unknown };
+    const outcomes = {
+      success: { match: (action: StageAction) => action.type === 'fetch_manifest::success' },
+      failure: { match: (action: StageAction) => action.type === 'fetch_manifest::failure' },
+    };
+    // Mirrors a FlowSubject flow: switchMap per request, delivery on the async scheduler.
+    const requests = new Subject<Subject<StageAction>>();
+    const delivered: string[] = [];
+    const subscription = requests
+      .pipe(
+        switchMap((request) => request.pipe(measureStage(telemetry, 'load-manifest', outcomes))),
+        observeOn(asyncScheduler),
+      )
+      .subscribe((action) => delivered.push(action.type));
+    const [first, second, third] = [
+      new Subject<StageAction>(),
+      new Subject<StageAction>(),
+      new Subject<StageAction>(),
+    ];
 
-    action$.next({ type: 'fetch_manifest::request', meta: { telemetryAttemptId: 1 } });
-    flowActions.next({ type: 'fetch_manifest::success', meta: { telemetryAttemptId: 1 } });
-    asyncScheduler.schedule(() => {
-      action$.next({ type: 'fetch_manifest::success', meta: { telemetryAttemptId: 1 } });
-    });
-    action$.next({ type: 'fetch_manifest::request', meta: { telemetryAttemptId: 2 } });
-    action$.next({
-      type: 'fetch_manifest::failure',
-      payload: { type: 'unknown' },
-      meta: { telemetryAttemptId: 2 },
-    });
+    requests.next(first);
+    // Emitted but not yet delivered when the next request replaces it.
+    first.next({ type: 'fetch_manifest::success' });
+    requests.next(second);
+    // Replaced before producing any outcome.
+    requests.next(third);
+    third.next({ type: 'fetch_manifest::failure', payload: { type: 'unknown' } });
 
-    await vi.waitFor(() =>
-      expect(summary(records())).toEqual([
-        ['fusion.widget.load-manifest.duration', 'failure', 'unknown'],
-        ['fusion.widget.load-manifest.failure', 'failure', 'unknown'],
-        ['fusion.widget.load-manifest.duration', 'success', undefined],
-      ]),
-    );
-    observer.unsubscribe();
+    await vi.waitFor(() => expect(delivered).toHaveLength(2));
+    expect(summary(records())).toEqual([
+      ['fusion.widget.load-manifest.duration', 'success', undefined],
+      ['fusion.widget.load-manifest.duration', 'cancelled', 'superseded'],
+      ['fusion.widget.load-manifest.duration', 'failure', 'unknown'],
+      ['fusion.widget.load-manifest.failure', 'failure', 'unknown'],
+    ]);
+    // Absent telemetry adds no operator at all.
+    expect(measureStage(undefined, 'load-manifest', outcomes)).toBe(identity);
+    subscription.unsubscribe();
     telemetry.close();
     await modules.dispose();
   });
