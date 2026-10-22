@@ -14,6 +14,12 @@ import { type IApiProvider, ApiProvider } from './provider.js';
 
 import type { ApiClientFactory } from './types.js';
 
+/**
+ * Providers this module created, so host disposal tears down only its own instances and
+ * their telemetry, never a provider supplied or shared by another host.
+ */
+const ownedProviders = new WeakMap<object, { dispose(): void }>();
+
 /** String literal type for the services module registration key. */
 export type ServicesModuleKey = 'services';
 
@@ -83,11 +89,17 @@ export const module: ServicesModule = {
     if (!config.createClient) {
       throw Error('missing configuration for creating API client');
     }
-    return new ApiProvider({ createClient: config.createClient });
+    const provider = new ApiProvider({ createClient: config.createClient });
+    ownedProviders.set(provider, provider);
+    return provider;
   },
   postInitialize: async ({ instance, modules }) => {
     // Telemetry connects after initialization so client creation never waits for it.
     instance.connectTelemetry?.(modules.telemetry);
+  },
+  dispose: ({ instance }) => {
+    ownedProviders.get(instance)?.dispose();
+    ownedProviders.delete(instance);
   },
 };
 

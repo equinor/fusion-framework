@@ -2,7 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import { ApiProvider } from '../src/provider';
+import { module as servicesModule } from '../src/module';
 
 const sentinel = 'privacy-sentinel-c41d';
 
@@ -67,6 +69,30 @@ describe('services operational telemetry', () => {
     provider.connectTelemetry(telemetry);
     provider.dispose();
     await provider.createNotificationClient('json');
+    expect(items).toHaveLength(0);
+  });
+
+  it('stops reporting a pending client creation once the host disposes the module', async () => {
+    const { telemetry, items } = createTelemetry();
+    let resolve!: (client: IHttpClient) => void;
+    // A host that registers services next to a stand-in telemetry module.
+    const configurator = new ModulesConfigurator([
+      servicesModule,
+      { name: 'telemetry', initialize: () => telemetry },
+    ]);
+    configurator.configure({
+      module: servicesModule,
+      configure: (config) => {
+        config.createClient = () => new Promise<IHttpClient>((r) => (resolve = r));
+      },
+    });
+    const instance = await configurator.initialize();
+
+    const pending = instance.services.createNotificationClient('json');
+    await configurator.dispose(instance);
+    resolve(httpClient);
+
+    await expect(pending).resolves.toBeDefined();
     expect(items).toHaveLength(0);
   });
 });
