@@ -292,6 +292,17 @@ export class ModulesConfigurator<
       // all share one module singleton) must stay additive so multiple calls can register
       // multiple named clients without clobbering each other.
       if (existingModule !== module) {
+        // A host-prepared builder (for example telemetry identity and startup capture) is lost
+        // with the old descriptor; duplicate package copies make this easy to miss, so say so.
+        if (this.#configurators.has(existingModule)) {
+          console.warn(`Prepared configuration for module "${module.name}" was replaced`);
+          this._registerEvent({
+            level: ModuleEventLevel.Warning,
+            name: ModuleConfiguratorEventName.PreparedConfigReplaced,
+            message: `Prepared configuration for module ${module.name} was replaced by a different descriptor`,
+            properties: { moduleName: module.name },
+          });
+        }
         this._removeModuleCallbacks(module.name);
         this.#configurators.delete(existingModule);
         const modules = Array.from(this._modules)

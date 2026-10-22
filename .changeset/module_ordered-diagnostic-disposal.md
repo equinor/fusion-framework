@@ -26,6 +26,9 @@ factory. The orchestrator creates and reuses configuration internally; no public
 builder lookup is exposed. Preparation completes before registration returns,
 rejects async work and emits failure events without invoking ordinary factories early.
 A failed preparation leaves the previous registration for that module untouched.
+Replacing a prepared registration with a different descriptor of the same name, for
+example from a duplicate package copy, emits a `module.preparedConfigReplaced` warning
+event and a console warning instead of discarding the prepared builder silently.
 
 Export `markTelemetryExportRequest(init)` and the `telemetryExportRequest` symbol to
 identify exporter-owned requests through shared HTTP middleware. Operational

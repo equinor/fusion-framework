@@ -12,6 +12,7 @@ export { ModuleConfiguratorEventBaseName };
  */
 export const ModuleConfiguratorEventName = {
   ModuleConfigAdded: `${ModuleConfiguratorEventBaseName}.module.configAdded`,
+  PreparedConfigReplaced: `${ModuleConfiguratorEventBaseName}.module.preparedConfigReplaced`,
   OnConfiguredAdded: `${ModuleConfiguratorEventBaseName}.onConfigured.added`,
   OnInitializedAdded: `${ModuleConfiguratorEventBaseName}.onInitialized.added`,
   PluginAdded: `${ModuleConfiguratorEventBaseName}.plugin.added`,
