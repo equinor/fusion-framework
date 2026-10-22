@@ -1,4 +1,4 @@
-import { from, of, concat } from 'rxjs';
+import { from, of, concat, identity, type MonoTypeOperatorFunction } from 'rxjs';
 import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
 
 import { actions } from '../actions.js';
@@ -13,10 +13,14 @@ import type { AppBundleState } from '../types.js';
  * filtering out null values, and dispatching success or failure actions accordingly.
  *
  * @param provider The AppModuleProvider used to fetch the app settings.
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A Flow function that takes an Observable of actions and returns an Observable of actions.
  */
 export const handleFetchSettings =
-  (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
+  (
+    provider: AppModuleProvider,
+    measure: MonoTypeOperatorFunction<Actions> = identity,
+  ): Flow<Actions, AppBundleState> =>
   (action$) =>
     // only handle fetch settings request actions
     action$.pipe(
@@ -45,6 +49,7 @@ export const handleFetchSettings =
           catchError((err) => {
             return of(actions.fetchSettings.failure(err));
           }),
+          measure,
         );
       }),
     );

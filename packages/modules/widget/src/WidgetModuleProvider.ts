@@ -4,6 +4,7 @@ import type { ModuleType } from '@equinor/fusion-framework-module';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { HttpResponseError } from '@equinor/fusion-framework-module-http';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import { Query } from '@equinor/fusion-query';
 
@@ -12,6 +13,7 @@ import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types.
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 import { WidgetManifestLoadError, WidgetConfigLoadError } from './WidgetManifestLoadError.js';
 import { Widget } from './Widget.js';
+import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 import { version } from './version.js';
 
 /**
@@ -57,6 +59,13 @@ export interface IWidgetModuleProvider {
     widgetKey: GetWidgetParameters['widgetKey'],
     args?: GetWidgetParameters['args'],
   ): Observable<WidgetConfig>;
+
+  /**
+   * Connects host telemetry once all providers exist, so widget loading never waits on it.
+   * Optional: mock and custom providers may omit operational load-stage records.
+   * @param telemetry - The host telemetry provider, when one is registered.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }
 
 /**
@@ -82,6 +91,12 @@ export class WidgetModuleProvider
   #subscription = new Subscription();
   #config: WidgetModuleConfig;
   #event?: ModuleType<EventModule>;
+  /**
+   * Operational telemetry shared by every widget this provider creates. Each widget derives
+   * its own scope, so connecting here applies to all widgets and disposing closes their
+   * stages in flight.
+   */
+  readonly #widgetTelemetry = new OperationalTelemetry('widget');
 
   /**
    * Creates a new `WidgetModuleProvider`.
@@ -110,7 +125,13 @@ export class WidgetModuleProvider
   public getWidget(name: string, widgetPrams?: GetWidgetParameters['args']): Widget {
     return new Widget(
       { name },
-      { provider: this, event: this.#event, widgetPrams, config: this.#config },
+      {
+        provider: this,
+        event: this.#event,
+        widgetPrams,
+        config: this.#config,
+        telemetry: this.#widgetTelemetry,
+      },
     );
   }
 
@@ -229,11 +250,29 @@ export class WidgetModuleProvider
   }
 
   /**
+   * Connects host telemetry after all providers exist, so widget loading never waits on it.
+   *
+   * Widgets then report `fusion.widget.<stage>.duration` records for the manifest,
+   * configuration and import stages and the terminal `load` outcome of `initialize()`.
+   * Records carry only the stage, outcome, a static reason code and the validated widget
+   * key and version.
+   *
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    return this.#widgetTelemetry.connect(telemetry ? () => telemetry : undefined);
+  }
+
+  /**
    * Disposes all internal query subscriptions.
    *
    * After disposal the provider should not be reused.
    */
   public dispose(): void {
+    // Stages still in flight are recorded as cancelled while telemetry is available, and
+    // their observers released. Widgets that outlive the provider then report nothing;
+    // widget business teardown is unchanged.
+    this.#widgetTelemetry.close({ reason: 'disposed' });
     super.dispose();
     this.#subscription.unsubscribe();
   }
