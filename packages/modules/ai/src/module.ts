@@ -31,6 +31,14 @@ export const module: AiModule = {
     const config = await args.config.createConfigAsync(args);
     return new AiProvider(config);
   },
+  postInitialize: async ({ instance, modules }) => {
+    // Optional telemetry is connected after providers exist, never awaited during initialization.
+    instance.connectTelemetry?.(modules.telemetry);
+  },
+  dispose: ({ instance }) => {
+    // Stops reporting for clients that outlive the host; their AI behavior is unaffected.
+    (instance as Partial<AiProvider>).dispose?.();
+  },
 };
 
 /**

@@ -55,6 +55,14 @@ export const module: AgGridModule = {
     const config = await configurator.createConfigAsync(args);
     return new AgGridProvider(config);
   },
+  postInitialize: async ({ instance, modules }) => {
+    // Optional telemetry is connected after providers exist, never awaited during initialization.
+    instance.connectTelemetry?.(modules.telemetry);
+  },
+  dispose: ({ instance }) => {
+    // Ends compatibility-shim observation; the shim itself stays installed for other hosts.
+    (instance as Partial<AgGridProvider>).dispose?.();
+  },
 };
 
 /**

@@ -158,6 +158,20 @@ Registers the AG Grid module. The optional callback receives an `IAgGridConfigur
 
 Themes configured in a parent scope (portal) are automatically inherited by child scopes (applications). The module clones inherited themes via `createThemeFromTheme` to avoid `instanceof` mismatches across module-federation boundaries.
 
+### Legacy `add()` compatibility telemetry
+
+The provider patches a legacy `Set`-style `add()` onto AG Grid's shared `Map`-shaped
+`agStyleInjectionState.grids` when it is missing, so bundles built for older AG Grid keep
+working. When the host has the telemetry module, the first call to that patched `add()` in
+each host lifecycle emits one `fusion.ag-grid.legacy-add` event at `Warning` level, with the
+standard operational `diagnostic` envelope. Installing the patch alone records nothing.
+
+The event contains no grid keys, DOM references or theme data, and the patched `add()` keeps
+its behavior: it sets the key to `true` and returns the map, even if telemetry fails. Without
+telemetry, or after the module is disposed, nothing is recorded. Use the event to find hosts
+that still rely on the legacy shape before the shim is removed. A page whose patch was
+installed by an older Fusion AG Grid version cannot be observed.
+
 ## Testing
 
 Without a license key, AG Grid Enterprise logs a "License Key Not Found" banner through `console.error` on every grid mount, which is expected in tests but buries real assertion failures in the reporter output.

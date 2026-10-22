@@ -1,9 +1,12 @@
 import { LicenseManager } from 'ag-grid-enterprise';
 import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-community';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import type { AgGridConfig } from './AgGridConfigurator.interface.js';
 import { applyThemeShim } from './apply-theme-shim.js';
+import { observeLegacyAdd } from './observe-legacy-add.js';
+import { reportLegacyAdd } from './report-legacy-add.js';
 import { version } from './version.js';
 
 /**
@@ -18,6 +21,13 @@ export interface IAgGridProvider {
   readonly licenseKey?: string;
   /** The active AG Grid {@link Theme} applied globally. */
   readonly theme?: Theme;
+  /**
+   * Connects optional host telemetry for compatibility-shim usage diagnostics.
+   *
+   * Called by the module after initialization; `undefined` leaves AG Grid without diagnostics.
+   * @param telemetry - Available host telemetry provider.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
 }
 
 /**
@@ -35,6 +45,8 @@ export interface IAgGridProvider {
  * as a standard provider and can report the package `version`.
  */
 export class AgGridProvider extends BaseModuleProvider<AgGridConfig> implements IAgGridProvider {
+  #stopLegacyAddObservation?: VoidFunction;
+
   /**
    * The AG Grid enterprise license key, if configured.
    *
@@ -61,6 +73,33 @@ export class AgGridProvider extends BaseModuleProvider<AgGridConfig> implements 
   constructor(protected _config: AgGridConfig) {
     super({ version, config: _config });
     this._init();
+  }
+
+  /**
+   * Reports the first use of the patched legacy `add()` during this provider's lifecycle.
+   *
+   * One record per provider bounds volume regardless of how many grids mount; the observation
+   * ends after that record, on reconnection, or on disposal, and never changes grid behavior.
+   *
+   * @param telemetry - Available host telemetry provider; `undefined` disables the diagnostic.
+   */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#stopLegacyAddObservation?.();
+    this.#stopLegacyAddObservation = undefined;
+    // Without telemetry the shim keeps working; there is simply nothing to report to.
+    if (!telemetry) {
+      return;
+    }
+    const stopObserving = observeLegacyAdd(() => {
+      stop();
+      reportLegacyAdd(telemetry);
+    });
+    const removeTeardown = this._addTeardown(stopObserving);
+    const stop = (): void => {
+      stopObserving();
+      removeTeardown();
+    };
+    this.#stopLegacyAddObservation = stop;
   }
 
   /**
