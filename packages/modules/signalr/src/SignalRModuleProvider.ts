@@ -157,7 +157,7 @@ export class SignalRModuleProvider
           reconnectStarted = undefined;
         }
       });
-      connection.onclose((error) => {
+      connection.onclose(() => {
         // A close while reconnecting ends that reconnect attempt.
         if (reconnectStarted !== undefined) {
           this.#report({
@@ -166,8 +166,9 @@ export class SignalRModuleProvider
             duration: performance.now() - reconnectStarted,
           });
           reconnectStarted = undefined;
-        } else if (connected && !stopping && error) {
-          // An established connection lost without teardown is a live-connection failure.
+        } else if (connected && !stopping) {
+          // Teardown is the only intentional stop, so any other close of an established
+          // connection is a loss, including a graceful server close without an error.
           this.#report({
             operation: 'connection-lost',
             outcome: 'failure',

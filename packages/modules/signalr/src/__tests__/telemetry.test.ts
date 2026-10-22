@@ -185,6 +185,24 @@ describe('SignalR operational telemetry', () => {
     subscription.unsubscribe();
   });
 
+  it('reports a graceful server close as a loss, but not a close caused by teardown', async () => {
+    const lost = open(async () => undefined);
+    await vi.waitFor(() => expect(lost.items).toHaveLength(1));
+    lost.connection.close?.();
+    expect(names(lost.items).slice(1)).toEqual(['fusion.signalr.connection-lost:failure']);
+    lost.subscription.unsubscribe();
+
+    const stopped = open(async () => undefined);
+    await vi.waitFor(() => expect(stopped.items).toHaveLength(1));
+    stopped.subscription.unsubscribe();
+    stopped.connection.close?.();
+    await vi.waitFor(() => expect(stopped.items).toHaveLength(2));
+    expect(names(stopped.items)).toEqual([
+      'fusion.signalr.connect.duration:success',
+      'fusion.signalr.disconnect.duration:success',
+    ]);
+  });
+
   it('records nothing once telemetry is disconnected', async () => {
     const { provider, items, subscription, connection } = open(async () => undefined);
     provider.connectTelemetry(undefined);
