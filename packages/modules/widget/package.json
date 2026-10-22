@@ -55,6 +55,7 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-query": "workspace:^",
     "typescript": "^7.0.2"
   },
@@ -62,7 +63,8 @@
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-event": "workspace:*",
     "@equinor/fusion-framework-module-http": "workspace:*",
-    "@equinor/fusion-framework-module-service-discovery": "workspace:*"
+    "@equinor/fusion-framework-module-service-discovery": "workspace:*",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@equinor/fusion-framework-module-event": {
@@ -72,6 +74,9 @@
       "optional": true
     },
     "@equinor/fusion-framework-module-service-discovery": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-telemetry": {
       "optional": true
     }
   }

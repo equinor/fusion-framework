@@ -92,6 +92,9 @@ export const module: ContextModule = {
     // create context provider; parent context is wired up later via connectParentContext, not the deprecated ctor arg
     const provider = new ContextProvider({ config, event });
 
+    // Operational records start with the initial resolution below, without extra waiting.
+    await provider.connectTelemetry(telemetry);
+
     // create subscription for disposing the provider
     const subscription = new Subscription(() => provider.dispose());
 

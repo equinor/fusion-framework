@@ -1,4 +1,4 @@
-import { from, of, concat } from 'rxjs';
+import { from, of, concat, identity, type MonoTypeOperatorFunction } from 'rxjs';
 import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
 
 import { actions } from './actions.js';
@@ -15,10 +15,14 @@ import type WidgetModuleProvider from '../WidgetModuleProvider.js';
  * `setManifest` actions, and completing with a success or failure action.
  *
  * @param provider - The widget module provider used for API queries.
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A `Flow` function for the widget state machine.
  */
 export const handleFetchManifest =
-  (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
+  (
+    provider: WidgetModuleProvider,
+    measure: MonoTypeOperatorFunction<Actions> = identity,
+  ): Flow<Actions, WidgetState> =>
   (action$) =>
     // React only to `fetchManifest` actions
     action$.pipe(
@@ -52,6 +56,7 @@ export const handleFetchManifest =
                 console.error(err, action.payload);
                 return of(actions.fetchManifest.failure(err));
               }),
+              measure,
             )
         );
       }),
@@ -63,12 +68,16 @@ export const handleFetchManifest =
  * `setConfig` actions, and completing with a success or failure action.
  *
  * @param provider - The widget module provider used for API queries.
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A `Flow` function for the widget state machine.
  */
 // Deliberately co-located with `handleFetchManifest` above
 // fusion-lint-disable-next-line single-export-per-file
 export const handleFetchConfig =
-  (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
+  (
+    provider: WidgetModuleProvider,
+    measure: MonoTypeOperatorFunction<Actions> = identity,
+  ): Flow<Actions, WidgetState> =>
   (action$) =>
     // React only to `fetchConfig` actions
     action$.pipe(
@@ -96,6 +105,7 @@ export const handleFetchConfig =
               catchError((err) => {
                 return of(actions.fetchConfig.failure(err));
               }),
+              measure,
             )
         );
       }),
@@ -105,19 +115,23 @@ export const handleFetchConfig =
  * RxJS flow that reacts to `importWidget` actions by dynamically importing
  * the widget’s JavaScript entry point URL and emitting success or failure.
  *
+ * @param measure - Optional observer of each request, e.g. operational telemetry; defaults to none.
  * @returns A `Flow` function for the widget state machine.
  */
 // Deliberately co-located with the other flow handlers above
 // fusion-lint-disable-next-line single-export-per-file
-export const handleImportWidget = (): Flow<Actions, WidgetState> => (action$) =>
-  // React only to `importWidget` actions
-  action$.pipe(
-    filter(actions.importWidget.match),
-    switchMap(({ payload }) => {
-      // Dynamically import the widget's script entry point and report success/failure
-      return from(import(/* @vite-ignore */ payload)).pipe(
-        map(actions.importWidget.success),
-        catchError((err) => of(actions.importWidget.failure(err))),
-      );
-    }),
-  );
+export const handleImportWidget =
+  (measure: MonoTypeOperatorFunction<Actions> = identity): Flow<Actions, WidgetState> =>
+  (action$) =>
+    // React only to `importWidget` actions
+    action$.pipe(
+      filter(actions.importWidget.match),
+      switchMap(({ payload }) => {
+        // Dynamically import the widget's script entry point and report success/failure
+        return from(import(/* @vite-ignore */ payload)).pipe(
+          map(actions.importWidget.success),
+          catchError((err) => of(actions.importWidget.failure(err))),
+          measure,
+        );
+      }),
+    );

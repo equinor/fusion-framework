@@ -2347,6 +2347,9 @@ importers:
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:^
         version: link:../service-discovery
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2425,6 +2428,9 @@ importers:
       '@equinor/fusion-framework-module-services':
         specifier: workspace:^
         version: link:../services
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2521,6 +2527,9 @@ importers:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../navigation
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2835,6 +2844,9 @@ importers:
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:^
         version: link:../service-discovery
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@types/pouchdb':
         specifier: ^6.4.2
         version: 6.4.2
@@ -2930,6 +2942,9 @@ importers:
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:^
         version: link:../service-discovery
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       typescript:
         specifier: ^7.0.2
         version: 7.0.2

@@ -1,4 +1,4 @@
-import { of, from } from 'rxjs';
+import { of, from, identity, type MonoTypeOperatorFunction } from 'rxjs';
 import {
   throttleTime,
   groupBy,
@@ -22,10 +22,14 @@ const defaultThrottleTime = 200;
  * Creates a flow for handling fetching bookmark data.
  *
  * @param api - The bookmark client API.
+ * @param measure - Optional observer of each executed request, e.g. operational telemetry.
  * @returns A flow of bookmark actions.
  */
 export const handleFetchBookmarkData =
-  (api: IBookmarkClient): Flow<BookmarkActions> =>
+  (
+    api: IBookmarkClient,
+    measure: MonoTypeOperatorFunction<BookmarkActions> = identity,
+  ): Flow<BookmarkActions> =>
   (action$) => {
     // throttle requests per bookmark id, then fetch the data and dispatch success/failure
     const flow$ = action$.pipe(
@@ -51,6 +55,7 @@ export const handleFetchBookmarkData =
               ),
             ),
           ),
+          measure,
         );
       }),
     );
