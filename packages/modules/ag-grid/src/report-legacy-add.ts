@@ -4,7 +4,7 @@ import {
 } from '@equinor/fusion-framework-module-telemetry';
 import { createDiagnosticContext } from '@equinor/fusion-framework-module-telemetry/utils';
 
-let deliveryFailureReported = false;
+const providersWithDeliveryFailures = new WeakSet<ITelemetryProvider>();
 
 /**
  * Reports one use of the patched legacy `add()` as a safe operational notification.
@@ -36,9 +36,9 @@ export function reportLegacyAdd(telemetry: ITelemetryProvider): void {
       }),
     });
   } catch {
-    // Diagnostic delivery failures never reach AG Grid; warn once per page instead of exporting.
-    if (!deliveryFailureReported) {
-      deliveryFailureReported = true;
+    // Diagnostic delivery failures never reach AG Grid; report once per host provider.
+    if (!providersWithDeliveryFailures.has(telemetry)) {
+      providersWithDeliveryFailures.add(telemetry);
       console.warn('AG Grid compatibility telemetry delivery failed');
     }
   }
