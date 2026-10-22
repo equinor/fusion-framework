@@ -1,3 +1,4 @@
+import type { ApiAccountActiveAccessRoleAssignmentV1 } from '@equinor/fusion-services/roles';
 import { describe, expect, it, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 
@@ -159,6 +160,22 @@ describe('RolesProvider', () => {
     await expect(pages.next()).resolves.toEqual({ done: true, value: undefined });
     expect(recordNames(telemetry)).toEqual(['fusion.roles.get-access-roles.duration:cancelled']);
     provider.dispose();
+  });
+
+  it('stops reporting operations once the provider is disposed', async () => {
+    const client = createClient();
+    const result = new Subject<ApiAccountActiveAccessRoleAssignmentV1[]>();
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(result);
+    const telemetry = createTelemetry();
+    const provider = new RolesProvider({ client }, { telemetry });
+
+    const pending = provider.getActiveAccessRoleAssignments();
+    provider.dispose();
+    result.next([]);
+    result.complete();
+
+    await expect(pending).resolves.toEqual([]);
+    expect(telemetry.track).not.toHaveBeenCalled();
   });
 
   it('exposes role operations through the initialized client', async () => {

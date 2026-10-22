@@ -301,8 +301,15 @@ export class RolesProvider
     super({ version, config });
     this.client = config.client;
     this.dependencies = dependencies;
-    this.#report = createOperationalTelemetry('roles', () => dependencies.telemetry);
-    this._addTeardown(() => this.client.dispose?.());
+    let reporting = true;
+    this.#report = createOperationalTelemetry('roles', () =>
+      reporting ? dependencies.telemetry : undefined,
+    );
+    this._addTeardown(() => {
+      // In-flight operations must not report into a torn-down telemetry host.
+      reporting = false;
+      this.client.dispose?.();
+    });
   }
 
   /** {@inheritDoc IRolesProvider.getActiveAccessRoleAssignments} */
