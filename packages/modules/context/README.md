@@ -90,8 +90,10 @@ modules.context.clearCurrentContext();
 ## Operational telemetry
 
 When the host registers telemetry, each queued `setCurrentContext` task reports one
-`fusion.context.select.duration` outcome and each resolution attempt reports
-`fusion.context.resolve.duration`:
+`fusion.context.select.duration` outcome. Each resolution attempt reports
+`fusion.context.resolve.duration`, whether it comes from selection, a direct
+`resolveContext`/`resolveContextAsync` call or a configured resolver (`by: 'item'`), or
+from the lookup behind `setCurrentContextById` (`by: 'id'`):
 
 - `failure` with reason `validation` when validation fails and resolution is disabled;
 - `cancelled` with reason `listener` when an `onSetContextResolve`,

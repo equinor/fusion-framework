@@ -456,6 +456,12 @@ export class ContextProvider
     if (config.resolveContext) {
       this.resolveContext = config.resolveContext?.bind(this);
     }
+    // Measure the effective resolver, including configured overrides and subclass methods,
+    // so direct calls, `resolveContextAsync` and selection-driven resolution count once each.
+    const resolveContext = this.resolveContext.bind(this);
+    this.resolveContext = (item) =>
+      // Values, errors and cancellation pass through unchanged; only the outcome is recorded.
+      resolveContext(item).pipe(this.#telemetry.measure('resolve', { by: 'item' }));
     // override validateContext if configured
     if (config.validateContext) {
       this.validateContext = config.validateContext?.bind(this);
@@ -639,6 +645,8 @@ export class ContextProvider
           .resolveContext(id)
           // filter out invalid items and set as current context
           .pipe(
+            // The by-id lookup is its own resolution attempt, measured before selection.
+            this.#telemetry.measure('resolve', { by: 'id' }),
             // filter out invalid context items
             filter((item): item is ContextItem => !!item),
             // set current context with validation and resolution
@@ -835,7 +843,6 @@ export class ContextProvider
               switchMap((context) =>
                 // Pair the resolved context alongside the original for downstream consumers.
                 this.resolveContext(context).pipe(
-                  this.#telemetry.measure('resolve'),
                   map((resolved) => ({
                     context,
                     resolved,

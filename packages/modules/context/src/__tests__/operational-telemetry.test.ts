@@ -147,6 +147,47 @@ describe('context operational telemetry', () => {
     await modules.dispose();
   });
 
+  it('measures direct resolver calls, including configured overrides, once each', async () => {
+    const { modules, provider, summary, records } = await setup({
+      resolveContext: () => of(item('resolved')),
+    });
+    await expect(provider.resolveContextAsync(item('a'))).resolves.toMatchObject({
+      title: SENTINEL,
+    });
+    await lastValueFrom(provider.resolveContext(item('b')));
+    expect(summary()).toEqual([
+      ['fusion.context.resolve.duration', 'success', undefined],
+      ['fusion.context.resolve.duration', 'success', undefined],
+    ]);
+    expect(records()[0].properties).toEqual({ by: 'item' });
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('measures the lookup behind setCurrentContextById, including its failure', async () => {
+    const lookup = vi.fn<(args: { id: string }) => Promise<ContextItem>>();
+    const { modules, provider, summary, records, processItem } = await setup({
+      client: {
+        get: { client: { fn: lookup }, key: ({ id }: { id: string }) => id },
+        query: { client: { fn: vi.fn() }, key: () => 'query' },
+      } as never,
+    });
+    lookup.mockResolvedValueOnce(item('found'));
+    await provider.setCurrentContextByIdAsync('found');
+    lookup.mockRejectedValueOnce(new Error(SENTINEL));
+    await expect(provider.setCurrentContextByIdAsync('missing')).rejects.toBeDefined();
+    expect(summary()).toEqual([
+      ['fusion.context.resolve.duration', 'success', undefined],
+      ['fusion.context.select.duration', 'success', undefined],
+      ['fusion.context.resolve.duration', 'failure', undefined],
+      ['fusion.context.resolve.failure', 'failure', undefined],
+    ]);
+    expect(records()[0].properties).toEqual({ by: 'id' });
+    expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('keeps context selection unchanged when telemetry throws', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const { modules, provider } = await setup();
