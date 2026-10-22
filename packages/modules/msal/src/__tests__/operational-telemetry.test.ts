@@ -111,7 +111,9 @@ describe('MsalProvider operational telemetry', () => {
     const handleRedirectPromise = vi.fn(async () => ({ account }));
     const { provider, items } = createProvider({ logout, handleRedirectPromise });
 
-    await expect(provider.logout()).resolves.toBe(true);
+    await expect(provider.logout({ redirectUri: `https://${sentinel}.test/?q=1` })).resolves.toBe(
+      true,
+    );
     await expect(provider.logout()).resolves.toBe(false);
     await expect(provider.handleRedirect()).resolves.toEqual({ account });
 

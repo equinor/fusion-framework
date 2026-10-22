@@ -611,11 +611,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async logout(options?: LogoutOptions): Promise<boolean> {
-    this._trackEvent('logout', TelemetryLevel.Information, {
-      properties: {
-        redirectUri: options?.redirectUri,
-      },
-    });
+    // Redirect URIs can carry paths and query data, so the event only marks the transition.
+    this._trackEvent('logout', TelemetryLevel.Information);
 
     const started = performance.now();
     try {
