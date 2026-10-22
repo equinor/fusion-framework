@@ -26,7 +26,7 @@ export const handleFetchManifest =
       switchMap((action) => {
         const {
           payload: { key, args },
-          meta: { update },
+          meta: { update, telemetryAttemptId },
         } = action;
 
         // Query the provider for the manifest, dropping falsy emissions, and share it
@@ -43,14 +43,14 @@ export const handleFetchManifest =
               // Wait for the final emission and report it as the successful result
               .pipe(
                 last(),
-                map((manifest) => actions.fetchManifest.success(manifest)),
+                map((manifest) => actions.fetchManifest.success(manifest, telemetryAttemptId)),
               ),
           )
             // Convert any error from the query/emission chain into a failure action
             .pipe(
               catchError((err) => {
                 console.error(err, action.payload);
-                return of(actions.fetchManifest.failure(err));
+                return of(actions.fetchManifest.failure(err, telemetryAttemptId));
               }),
             )
         );
@@ -73,7 +73,7 @@ export const handleFetchConfig =
     // React only to `fetchConfig` actions
     action$.pipe(
       filter(actions.fetchConfig.match),
-      switchMap(({ payload: { key, args } }) => {
+      switchMap(({ payload: { key, args }, meta: { telemetryAttemptId } }) => {
         // Query the provider for the config, dropping falsy emissions, and share it
         const subject = from(provider.getWidgetConfig(key, args)).pipe(
           filter((x) => !!x),
@@ -88,13 +88,13 @@ export const handleFetchConfig =
               // Wait for the final emission and report it as the successful result
               .pipe(
                 last(),
-                map((manifest) => actions.fetchConfig.success(manifest)),
+                map((manifest) => actions.fetchConfig.success(manifest, telemetryAttemptId)),
               ),
           )
             // Convert any error from the query/emission chain into a failure action
             .pipe(
               catchError((err) => {
-                return of(actions.fetchConfig.failure(err));
+                return of(actions.fetchConfig.failure(err, telemetryAttemptId));
               }),
             )
         );
@@ -113,11 +113,11 @@ export const handleImportWidget = (): Flow<Actions, WidgetState> => (action$) =>
   // React only to `importWidget` actions
   action$.pipe(
     filter(actions.importWidget.match),
-    switchMap(({ payload }) => {
+    switchMap(({ payload, meta: { telemetryAttemptId } }) => {
       // Dynamically import the widget's script entry point and report success/failure
       return from(import(/* @vite-ignore */ payload)).pipe(
-        map(actions.importWidget.success),
-        catchError((err) => of(actions.importWidget.failure(err))),
+        map((module) => actions.importWidget.success(module, telemetryAttemptId)),
+        catchError((err) => of(actions.importWidget.failure(err, telemetryAttemptId))),
       );
     }),
   );

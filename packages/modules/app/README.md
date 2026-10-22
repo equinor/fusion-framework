@@ -128,7 +128,10 @@ one sanitized `.failure` exception; stage failures carry a static reason such as
 `not-found`) or `cancelled` (reason `superseded`, `unloaded`, or `disposed` when the app
 module is disposed). A teardown that throws records a failed `unload`. Records carry only
 the validated `appKey` and `appVersion`; manifests, configuration, settings, URLs and
-error messages are never exported. A replaced app stops reporting immediately.
+error messages are never exported. A replaced app stops load reporting immediately,
+even while asynchronous module teardown is pending; its separately owned `unload`
+measurement finishes when teardown settles. Queued stage outcomes stay correlated with
+the request that produced them, not a newer request for the same stage.
 
 Telemetry is connected after initialization and is never awaited, so loading results,
 errors and cancellation are unchanged. Exclude these records with a telemetry adapter

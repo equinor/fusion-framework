@@ -21,7 +21,7 @@ export const handleUpdateSettings =
     // only handle update settings request actions
     return action$.pipe(
       filter(actions.updateSettings.match),
-      switchMap(({ payload }) => {
+      switchMap(({ payload, meta: { telemetryAttemptId } }) => {
         const { appKey, settings } = payload;
         // take the last value, then request updating of settings and dispatch success or failure
         return provider.updateAppSettings(appKey, settings).pipe(
@@ -29,10 +29,10 @@ export const handleUpdateSettings =
           concatMap((updatedSettings) =>
             from([
               actions.setSettings(updatedSettings),
-              actions.updateSettings.success(updatedSettings),
+              actions.updateSettings.success(updatedSettings, telemetryAttemptId),
             ]),
           ),
-          catchError((err) => of(actions.updateSettings.failure(err))),
+          catchError((err) => of(actions.updateSettings.failure(err, telemetryAttemptId))),
         );
       }),
     );

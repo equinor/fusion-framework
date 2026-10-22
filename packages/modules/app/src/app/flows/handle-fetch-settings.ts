@@ -22,7 +22,7 @@ export const handleFetchSettings =
     action$.pipe(
       filter(actions.fetchSettings.match),
       // when request is received, abort any ongoing request and start new
-      switchMap(({ payload }) => {
+      switchMap(({ payload, meta: { telemetryAttemptId } }) => {
         const { appKey } = payload;
 
         // fetch settings from provider
@@ -38,12 +38,12 @@ export const handleFetchSettings =
           subject.pipe(map((settings) => actions.setSettings(settings))),
           subject.pipe(
             last(),
-            map((settings) => actions.fetchSettings.success(settings)),
+            map((settings) => actions.fetchSettings.success(settings, telemetryAttemptId)),
           ),
         ).pipe(
           // catch any error and dispatch failure action
           catchError((err) => {
-            return of(actions.fetchSettings.failure(err));
+            return of(actions.fetchSettings.failure(err, telemetryAttemptId));
           }),
         );
       }),

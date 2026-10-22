@@ -12,7 +12,15 @@ import type { FlowSubject } from '@equinor/fusion-observable';
 
 import { createState } from './state/create-state.js';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
-import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom, of } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  Subscription,
+  combineLatest,
+  firstValueFrom,
+  lastValueFrom,
+  of,
+} from 'rxjs';
 import type WidgetModuleProvider from './WidgetModuleProvider.js';
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
@@ -96,7 +104,8 @@ export class Widget {
     this.name = value.name;
     this.widgetPrams = args.widgetPrams;
     this.config = args.config;
-    this.#state = createState(value, args.provider);
+    const flowActions = new Subject<Actions>();
+    this.#state = createState(value, args.provider, (action) => flowActions.next(action));
     args.event && this.#registerEvents(args.event);
 
     // Each widget owns a child scope of the provider's telemetry, so disposing one cannot
@@ -104,14 +113,20 @@ export class Widget {
     this.#telemetry =
       args.telemetry?.createScope({ identity: () => this.#identity() }) ??
       new OperationalTelemetry('widget');
-    const stages = observeLoadStages(this.#state.action$, this.#telemetry, {
-      stages: {
-        fetch_manifest: 'load-manifest',
-        fetch_config: 'load-config',
-        import_widget: 'import',
+    const stages = observeLoadStages(
+      this.#state.action$,
+      this.#telemetry,
+      {
+        stages: {
+          fetch_manifest: 'load-manifest',
+          fetch_config: 'load-config',
+          import_widget: 'import',
+        },
+        identity: () => this.#identity(),
       },
-      identity: () => this.#identity(),
-    });
+      flowActions,
+    );
+    stages.add(() => flowActions.complete());
     this.#subscription.add(stages);
     // Closing the scope early, e.g. on provider disposal, also releases the observer.
     this.#telemetry.own(stages);

@@ -12,6 +12,8 @@ import type {
   WidgetScriptModule,
 } from '../types.js';
 
+let nextTelemetryAttemptId = 0;
+
 /**
  * Factory that creates all widget state-machine actions.
  *
@@ -35,10 +37,16 @@ const createActions = () => ({
     'fetch_manifest',
     (payload: { key: string; args?: GetWidgetParameters['args'] }, update?: boolean) => ({
       payload,
-      meta: { update },
+      meta: { update, telemetryAttemptId: ++nextTelemetryAttemptId },
     }),
-    (manifest: WidgetManifest) => ({ payload: manifest }),
-    (error: unknown) => ({ payload: error }),
+    (manifest: WidgetManifest, telemetryAttemptId: number) => ({
+      payload: manifest,
+      meta: { telemetryAttemptId },
+    }),
+    (error: unknown, telemetryAttemptId: number) => ({
+      payload: error,
+      meta: { telemetryAttemptId },
+    }),
   ),
   /** Sets the widget config in state. */
   setConfig: createAction('set_config', (config: WidgetConfig) => ({ payload: config })),
@@ -47,10 +55,16 @@ const createActions = () => ({
     'fetch_config',
     (payload: { key: string; args?: GetWidgetParameters['args'] }, update?: boolean) => ({
       payload,
-      meta: { update },
+      meta: { update, telemetryAttemptId: ++nextTelemetryAttemptId },
     }),
-    (config: WidgetConfig) => ({ payload: config }),
-    (error: unknown) => ({ payload: error }),
+    (config: WidgetConfig, telemetryAttemptId: number) => ({
+      payload: config,
+      meta: { telemetryAttemptId },
+    }),
+    (error: unknown, telemetryAttemptId: number) => ({
+      payload: error,
+      meta: { telemetryAttemptId },
+    }),
   ),
   /** Sets the dynamically imported widget script module in state. */
   // biome-ignore lint/suspicious/noExplicitAny: module payload widens to accept any script module shape when set
@@ -58,9 +72,18 @@ const createActions = () => ({
   /** Async action triplet for dynamically importing the widget script. */
   importWidget: createAsyncAction(
     'import_widget',
-    (entrypoint: string) => ({ payload: entrypoint }),
-    (module: WidgetScriptModule) => ({ payload: module }),
-    (error: unknown) => ({ payload: error }),
+    (entrypoint: string) => ({
+      payload: entrypoint,
+      meta: { telemetryAttemptId: ++nextTelemetryAttemptId },
+    }),
+    (module: WidgetScriptModule, telemetryAttemptId: number) => ({
+      payload: module,
+      meta: { telemetryAttemptId },
+    }),
+    (error: unknown, telemetryAttemptId: number) => ({
+      payload: error,
+      meta: { telemetryAttemptId },
+    }),
   ),
   /** Sets the resolved widget framework-module instances in state. */
   setInstance: createAction('set_instance', (instance: WidgetModulesInstance) => ({

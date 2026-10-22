@@ -9,7 +9,7 @@ import type {
 import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider.js';
-import { combineLatest, of, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
+import { combineLatest, of, Subject, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
 import { defaultIfEmpty, last, map, switchMap } from 'rxjs/operators';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
@@ -402,7 +402,8 @@ export class App<
       telemetry?: OperationalTelemetry;
     },
   ) {
-    this.#state = createState(value, args.provider);
+    const flowActions = new Subject<Actions>();
+    this.#state = createState(value, args.provider, (action) => flowActions.next(action));
 
     const { appKey } = value;
     const { event } = args;
@@ -430,16 +431,22 @@ export class App<
     // cancel another app's stages, while provider disposal still closes stages in flight.
     const telemetry = args.telemetry?.createScope({ identity }) ?? new OperationalTelemetry('app');
     this.#telemetry = telemetry;
-    const stages = observeLoadStages(this.#state.action$, telemetry, {
-      stages: {
-        fetch_manifest: 'load-manifest',
-        fetch_config: 'load-config',
-        fetch_settings: 'load-settings',
-        update_settings: 'update-settings',
-        import_app: 'import',
+    const stages = observeLoadStages(
+      this.#state.action$,
+      telemetry,
+      {
+        stages: {
+          fetch_manifest: 'load-manifest',
+          fetch_config: 'load-config',
+          fetch_settings: 'load-settings',
+          update_settings: 'update-settings',
+          import_app: 'import',
+        },
+        identity,
       },
-      identity,
-    });
+      flowActions,
+    );
+    stages.add(() => flowActions.complete());
     subscriptions.add(stages);
     // Closing the scope early, e.g. on provider disposal, also releases the observer.
     telemetry.own(stages);
@@ -468,12 +475,10 @@ export class App<
       // Repeated disposal keeps its existing behavior but records only the first unload.
       const first = !unloaded;
       unloaded = true;
-      // Pending stages are cancelled once, by the disposal that starts the unload.
-      if (first) {
-        // Stages interrupted by replacement or unload are cancellations, not failures.
-        telemetry.cancelPending({ ...identity(), reason: 'unloaded' });
-      }
-      const endUnload = first ? telemetry.start('unload') : undefined;
+      // Teardown has separate ownership so closing load reporting never waits for its promise.
+      const unloadTelemetry = first ? args.telemetry?.createScope({ identity }) : undefined;
+      telemetry.close({ ...identity(), reason: 'unloaded' });
+      const endUnload = unloadTelemetry?.start('unload');
       subscriptions?.unsubscribe();
       // tear down modules of application, if an instance was loaded
       // Typed as `void`, but module instances may return their teardown promise.
@@ -486,7 +491,7 @@ export class App<
       } catch (error) {
         // A synchronous teardown failure is recorded, then re-thrown exactly as before.
         endUnload?.('failure');
-        telemetry.close();
+        unloadTelemetry?.close();
         throw error;
       }
       this.#state.complete();
@@ -505,10 +510,10 @@ export class App<
               throw error;
             },
           )
-          .finally(() => telemetry.close());
+          .finally(() => unloadTelemetry?.close());
       } else {
         endUnload('success');
-        telemetry.close();
+        unloadTelemetry?.close();
       }
     };
   }

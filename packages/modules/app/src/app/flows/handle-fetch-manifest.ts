@@ -25,7 +25,7 @@ export const handleFetchManifest =
       switchMap((action) => {
         const {
           payload: { key, tag },
-          meta: { update },
+          meta: { update, telemetryAttemptId },
         } = action;
 
         // fetch manifest from provider
@@ -41,12 +41,12 @@ export const handleFetchManifest =
           subject.pipe(map((manifest) => actions.setManifest(manifest, update))),
           subject.pipe(
             last(),
-            map((manifest) => actions.fetchManifest.success(manifest)),
+            map((manifest) => actions.fetchManifest.success(manifest, telemetryAttemptId)),
           ),
         ).pipe(
           // catch any error and dispatch failure action
           catchError((err) => {
-            return of(actions.fetchManifest.failure(err));
+            return of(actions.fetchManifest.failure(err, telemetryAttemptId));
           }),
         );
       }),

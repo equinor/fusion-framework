@@ -20,7 +20,7 @@ export const handleImportApplication =
     action$.pipe(
       filter(actions.importApp.match),
       // when request is received, abort any ongoing request and start new
-      switchMap(({ payload }) => {
+      switchMap(({ payload, meta: { telemetryAttemptId } }) => {
         // dynamically import the application script
         return from(
           import(
@@ -29,9 +29,9 @@ export const handleImportApplication =
           ),
         ).pipe(
           // dispatch success action
-          map(actions.importApp.success),
+          map((module) => actions.importApp.success(module, telemetryAttemptId)),
           // catch any error and dispatch failure action
-          catchError((err) => of(actions.importApp.failure(err))),
+          catchError((err) => of(actions.importApp.failure(err, telemetryAttemptId))),
         );
       }),
     );

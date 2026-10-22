@@ -22,7 +22,7 @@ export const handleFetchConfig =
     action$.pipe(
       filter(actions.fetchConfig.match),
       // when request is received, abort any ongoing request and start new
-      switchMap(({ payload }) => {
+      switchMap(({ payload, meta: { telemetryAttemptId } }) => {
         // TODO(#5127) - use the configUrl directly from the manifest
         // fetch config from provider
         const subject = from(provider.getAppConfig(payload.appKey, payload.build?.version)).pipe(
@@ -36,12 +36,12 @@ export const handleFetchConfig =
           subject.pipe(map((config) => actions.setConfig(config))),
           subject.pipe(
             last(),
-            map((config) => actions.fetchConfig.success(config)),
+            map((config) => actions.fetchConfig.success(config, telemetryAttemptId)),
           ),
         ).pipe(
           // catch any error and dispatch failure action
           catchError((err) => {
-            return of(actions.fetchConfig.failure(err));
+            return of(actions.fetchConfig.failure(err, telemetryAttemptId));
           }),
         );
       }),

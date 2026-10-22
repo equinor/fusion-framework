@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { lastValueFrom } from 'rxjs';
+import { asyncScheduler, lastValueFrom, Subject } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
   enableTelemetry,
@@ -10,6 +10,8 @@ import {
 
 import { WidgetModuleProvider } from '../WidgetModuleProvider.js';
 import { WidgetManifestLoadError } from '../WidgetManifestLoadError.js';
+import { OperationalTelemetry } from '../integrations/OperationalTelemetry.js';
+import { observeLoadStages } from '../integrations/observe-load-stages.js';
 import widgetModule from '../module.js';
 import type { IClient, WidgetManifest } from '../types.js';
 
@@ -103,6 +105,90 @@ describe('widget load-stage telemetry', () => {
     expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
     widget.dispose();
     provider.dispose();
+    await modules.dispose();
+  });
+
+  it('cancels a superseded manifest request and keeps the latest failure outcome', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const pending: Array<{
+      resolve: (value: WidgetManifest) => void;
+      reject: (error: unknown) => void;
+    }> = [];
+    const client = createClient(
+      () =>
+        new Promise<WidgetManifest>((resolve, reject) => {
+          pending.push({ resolve, reject });
+        }),
+    );
+    const { modules, records } = await createTelemetry();
+    const provider = new WidgetModuleProvider({ config: { client } });
+    provider.connectTelemetry(modules.telemetry);
+    const widget = provider.getWidget('my-widget');
+    widget.loadManifest();
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
+
+    pending[0].resolve(manifest('my-widget'));
+    await Promise.resolve();
+    await Promise.resolve();
+    widget.loadManifest();
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
+    pending[1].reject(new Error(SENTINEL));
+
+    await vi.waitFor(() =>
+      expect(summary(records())).toEqual([
+        ['fusion.widget.load-manifest.duration', 'cancelled', 'superseded'],
+        ['fusion.widget.load-manifest.duration', 'failure', 'unknown'],
+        ['fusion.widget.load-manifest.failure', 'failure', 'unknown'],
+      ]),
+    );
+    widget.dispose();
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('correlates a queued terminal action with its originating request', async () => {
+    const { modules, records } = await createTelemetry();
+    const telemetry = new OperationalTelemetry('widget', () => modules.telemetry);
+    const action$ = new Subject<{
+      type: string;
+      payload?: unknown;
+      meta?: { telemetryAttemptId?: number };
+    }>();
+    const flowActions = new Subject<{
+      type: string;
+      meta: { telemetryAttemptId: number };
+    }>();
+    const observer = observeLoadStages(
+      action$,
+      telemetry,
+      {
+        stages: { fetch_manifest: 'load-manifest' },
+        identity: () => ({ widgetKey: 'my-widget' }),
+      },
+      flowActions,
+    );
+
+    action$.next({ type: 'fetch_manifest::request', meta: { telemetryAttemptId: 1 } });
+    flowActions.next({ type: 'fetch_manifest::success', meta: { telemetryAttemptId: 1 } });
+    asyncScheduler.schedule(() => {
+      action$.next({ type: 'fetch_manifest::success', meta: { telemetryAttemptId: 1 } });
+    });
+    action$.next({ type: 'fetch_manifest::request', meta: { telemetryAttemptId: 2 } });
+    action$.next({
+      type: 'fetch_manifest::failure',
+      payload: { type: 'unknown' },
+      meta: { telemetryAttemptId: 2 },
+    });
+
+    await vi.waitFor(() =>
+      expect(summary(records())).toEqual([
+        ['fusion.widget.load-manifest.duration', 'failure', 'unknown'],
+        ['fusion.widget.load-manifest.failure', 'failure', 'unknown'],
+        ['fusion.widget.load-manifest.duration', 'success', undefined],
+      ]),
+    );
+    observer.unsubscribe();
+    telemetry.close();
     await modules.dispose();
   });
 

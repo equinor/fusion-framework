@@ -139,6 +139,34 @@ describe('app load-stage telemetry', () => {
     await modules.dispose();
   });
 
+  it('keeps a queued outcome attached to its originating manifest request', async () => {
+    const pending = [deferred<AppManifest>(), deferred<AppManifest>()];
+    let call = 0;
+    const { modules, records } = await setup(
+      createClient({ getAppManifest: () => pending[call++].promise }),
+    );
+    modules.app.setCurrentApp('my-app');
+    const app = required(modules.app.current);
+    app.loadManifest();
+    await vi.waitFor(() => expect(call).toBe(1));
+
+    pending[0].resolve(manifest('my-app'));
+    await Promise.resolve();
+    await Promise.resolve();
+    app.loadManifest();
+    await vi.waitFor(() => expect(call).toBe(2));
+    pending[1].reject(new Error(SENTINEL));
+
+    await vi.waitFor(() =>
+      expect(summary(records())).toEqual([
+        ['fusion.app.load-manifest.duration', 'success', undefined],
+        ['fusion.app.load-manifest.duration', 'failure', 'error'],
+        ['fusion.app.load-manifest.failure', 'failure', 'error'],
+      ]),
+    );
+    await modules.dispose();
+  });
+
   it('marks superseded and unloaded stages as cancelled, then stops after replacement', async () => {
     const pending = [deferred<AppManifest>(), deferred<AppManifest>()];
     let call = 0;
@@ -150,6 +178,13 @@ describe('app load-stage telemetry', () => {
     first?.loadManifest();
     // A second request replaces the first through the store's switchMap flow.
     first?.loadManifest();
+    await vi.waitFor(() =>
+      expect(summary(records())).toContainEqual([
+        'fusion.app.load-manifest.duration',
+        'cancelled',
+        'superseded',
+      ]),
+    );
     modules.app.setCurrentApp('second-app');
 
     expect(summary(records())).toEqual([
@@ -250,6 +285,7 @@ describe('app load-stage telemetry', () => {
         } as never,
       },
     });
+
     expect(() => app.dispose()).toThrow(original);
     expect(summary(records())).toEqual([
       ['fusion.app.unload.duration', 'failure', undefined],
@@ -258,6 +294,31 @@ describe('app load-stage telemetry', () => {
     // The closed scope reports nothing more.
     app.loadManifest();
     expect(records()).toHaveLength(2);
+    await modules.dispose();
+  });
+
+  it('closes load reporting immediately while an asynchronous unload remains pending', async () => {
+    const { modules, records } = await setup(createClient());
+    const teardown = deferred<void>();
+    modules.app.setCurrentApp('my-app');
+    const app = required(modules.app.current);
+    await modules.event.dispatchEvent('onAppModulesLoaded', {
+      detail: {
+        appKey: 'my-app',
+        manifest: manifest('my-app'),
+        modules: { dispose: () => teardown.promise } as never,
+      },
+    });
+    app.dispose();
+    const late = app.initialize().subscribe({ error: () => undefined });
+    expect(records()).toHaveLength(0);
+    teardown.resolve();
+    await vi.waitFor(() =>
+      expect(summary(records())).toEqual([['fusion.app.unload.duration', 'success', undefined]]),
+    );
+    late.unsubscribe();
+    app.dispose();
+    expect(records()).toHaveLength(1);
     await modules.dispose();
   });
 
