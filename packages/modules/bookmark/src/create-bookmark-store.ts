@@ -6,6 +6,7 @@ import { createBookmarkReducer } from './create-bookmark-reducer.js';
 import { bookmarkApiFlows } from './bookmark-flows/index.js';
 import type { IBookmarkClient } from './BookmarkClient.interface.js';
 import type { Bookmark, BookmarkWithoutData } from './types.js';
+import type { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 
 /**
  * Internal state shape managed by the bookmark store.
@@ -43,11 +44,13 @@ export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions>;
  * @param args - Initialisation options.
  * @param args.initial - Optional partial state merged over the reducer defaults.
  * @param args.client - The {@link IBookmarkClient} used by store flows for API calls.
+ * @param args.telemetry - Optional scope recording one outcome per executed fetch request.
  * @returns A fully configured bookmark store.
  */
 export const createBookmarkStore = (args: {
   initial?: Partial<BookmarkState>;
   client: IBookmarkClient;
+  telemetry?: OperationalTelemetry;
 }): BookmarkStore => {
   // create the store
   const store = new FlowSubject<BookmarkState, BookmarkActions>(
@@ -55,7 +58,7 @@ export const createBookmarkStore = (args: {
   );
 
   // add the bookmark API flows to the store
-  store.addFlow(bookmarkApiFlows(args.client));
+  store.addFlow(bookmarkApiFlows(args.client, args.telemetry));
 
   return store;
 };
