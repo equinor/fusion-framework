@@ -44,7 +44,6 @@ export function createFusionSearchTool(
   config: IndexToolConfig,
 ): DynamicStructuredTool {
   const { name, description, indexName } = config;
-  // @ts-expect-error — DynamicStructuredTool + Zod triggers TS2589 (excessively deep type instantiation)
   return new DynamicStructuredTool({
     name,
     description,

@@ -23,9 +23,12 @@ export const Provider: FC<PropsWithChildren<unknown>> = ({ children }) => {
 
   // Load the selected bookmark into the form whenever selection changes.
   useEffect(() => {
+    // Bookmarks may omit optional fields, but the form reads them as strings and booleans.
     currentBookmark?.payload &&
       setState({
-        ...currentBookmark,
+        name: currentBookmark.name,
+        description: currentBookmark.description ?? '',
+        isShared: currentBookmark.isShared ?? false,
         payload: currentBookmark.payload,
       });
   }, [currentBookmark]);

@@ -1,5 +1,5 @@
 import { describe, expect } from 'vitest';
-import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
 
 import { App } from './App';
@@ -10,7 +10,7 @@ import { demoModule, type DemoModule } from './modules/demo';
  * real `config.ts`, so a test can assert against known, distinct values.
  */
 const withDemoConfig =
-  (foo: string, bar: number): AppModuleInitiator<[DemoModule]> =>
+  (foo: string, bar: number): AppMockConfigureFn<[DemoModule]> =>
   (configurator) => {
     configurator.addConfig({
       module: demoModule,

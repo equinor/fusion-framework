@@ -11,5 +11,6 @@ Fix the TypeScript errors reported when type-checking the React Router cookbook 
 - `RouterHandle` declares the optional `navigation.path` override that the sidebar reads.
 - The middleware demo routes annotate their `middleware` exports as `MiddlewareFunction[]`, so their types no longer depend on React Router's internal paths (TS2883).
 - Removed a `@ts-expect-error` that no longer suppresses an error.
+- Removed the `src/**/*.{test,spec}.{ts,tsx}` exclude from `tsconfig.json`. TypeScript doesn't support `{a,b}` globs, so it never excluded anything; test files stay type-checked, as in the other cookbooks.
 
 refs equinor/fusion-core-tasks#1626

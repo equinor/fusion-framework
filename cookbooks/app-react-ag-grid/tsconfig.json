@@ -19,6 +19,9 @@
   "references": [
     {
       "path": "../../packages/modules/ag-grid"
+    },
+    {
+      "path": "../../packages/react/ag-charts"
     }
   ]
 }
