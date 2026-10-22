@@ -1,4 +1,13 @@
-import { type MonoTypeOperatorFunction, type Observable, tap } from 'rxjs';
+import {
+  catchError,
+  defer,
+  from,
+  lastValueFrom,
+  type MonoTypeOperatorFunction,
+  type Observable,
+  tap,
+  throwError,
+} from 'rxjs';
 import { IterableReadableStream } from '@langchain/core/utils/stream';
 import type { OperationalOutcome } from '@equinor/fusion-framework-module-telemetry/schemas';
 import type { AiOperation, AiReport } from './create-ai-reporter.js';
@@ -120,11 +129,11 @@ export function measureExecution(
 }
 
 /**
- * Passes an async generator through unchanged while recording its terminal outcome.
+ * Observes each pull of an async generator through RxJS while preserving its pull-based contract.
  *
- * LangChain's `transform` contract returns a pull-based `AsyncGenerator`. Delegating with
- * `yield*` keeps pulling one chunk at a time and forwards early `return()` to the source,
- * which converting to an Observable and back would not.
+ * LangChain's `transform` contract returns an `AsyncGenerator`, so the adapter must remain
+ * pull-based. Each `next`, `return` or `throw` operation is measured with a one-value RxJS
+ * pipeline; it does not subscribe ahead, buffer chunks, or alter consumer cancellation.
  *
  * @param source - Generator returned by the original client.
  * @param operation - Static operation label.
@@ -132,23 +141,88 @@ export function measureExecution(
  * @param signal - Caller abort signal, used only to classify cancellation.
  * @returns A generator yielding the same chunks.
  */
-async function* observeGenerator(
+function observeGenerator(
   source: AsyncGenerator<unknown>,
   operation: AiOperation,
   report: AiReport,
   signal: AbortSignal | undefined,
 ): AsyncGenerator<unknown> {
-  const record = startExecution(operation, report);
-  try {
-    yield* source;
-    record('success');
-  } catch (error) {
-    record(classify(error, signal));
-    throw error;
-  } finally {
-    // Reached without an outcome only when the consumer stopped iterating early.
-    record('cancelled');
-  }
+  const iterator = source[Symbol.asyncIterator]();
+  let recorder: RecordOutcome | undefined;
+  let completed = false;
+  const getRecorder = (): RecordOutcome => {
+    recorder ??= startExecution(operation, report);
+    return recorder;
+  };
+  const pull = <T>(next: () => PromiseLike<T>, observe: (result: T) => void): Promise<T> => {
+    const source$ = defer(() => from(next()));
+    // A one-result pipeline observes a pull without prefetching or buffering chunks.
+    const result$ = source$.pipe(
+      tap(observe),
+      catchError((error: unknown) => {
+        // Preserve the source error while recording the failed pull once.
+        completed = true;
+        getRecorder()(classify(error, signal));
+        return throwError(() => error);
+      }),
+    );
+    return lastValueFrom(result$);
+  };
+  const observeNext = (result: IteratorResult<unknown>): void => {
+    // Record success only when the source reports natural completion.
+    if (result.done) {
+      completed = true;
+      getRecorder()('success');
+    }
+  };
+  const output: AsyncGenerator<unknown> = {
+    next(value?: unknown): Promise<IteratorResult<unknown>> {
+      // Do not pull a source again after its terminal result.
+      if (completed) {
+        return Promise.resolve({ value: undefined, done: true });
+      }
+      return pull(() => iterator.next(value), observeNext);
+    },
+    return(value?: unknown): Promise<IteratorResult<unknown>> {
+      // Repeated close calls are harmless after the source is terminal.
+      if (completed) {
+        return Promise.resolve({ value, done: true });
+      }
+      const close = iterator.return
+        ? (): PromiseLike<IteratorResult<unknown>> => iterator.return(value)
+        : (): PromiseLike<IteratorResult<unknown>> => Promise.resolve({ value, done: true });
+      return pull(close, (result) => {
+        // The consumer intentionally stopped before normal exhaustion.
+        if (result.done) {
+          completed = true;
+          getRecorder()('cancelled');
+        }
+      });
+    },
+    throw(error?: unknown): Promise<IteratorResult<unknown>> {
+      // A completed source cannot accept another injected error.
+      if (completed) {
+        return Promise.reject(error);
+      }
+      // Preserve the caller's error when the source has no throw handler.
+      if (!iterator.throw) {
+        completed = true;
+        getRecorder()(classify(error, signal));
+        return Promise.reject(error);
+      }
+      return pull(
+        () => iterator.throw?.(error) as PromiseLike<IteratorResult<unknown>>,
+        observeNext,
+      );
+    },
+    [Symbol.asyncIterator](): AsyncGenerator<unknown> {
+      return output;
+    },
+    [Symbol.asyncDispose](): Promise<void> {
+      return output.return(undefined).then(() => undefined);
+    },
+  };
+  return output;
 }
 
 /**

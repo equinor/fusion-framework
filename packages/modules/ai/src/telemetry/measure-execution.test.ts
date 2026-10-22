@@ -58,7 +58,32 @@ describe('observable execution measurement', () => {
 
     expect(received).toEqual(['chunk-0']);
     expect(pulled).toBe(1);
-    // Compare reported outcomes only.
+    // Check the terminal outcome without reading or asserting on emitted chunk values.
+    const outcomes = report.mock.calls.map(([, outcome]) => outcome);
+    expect(outcomes).toEqual(['cancelled']);
+  });
+
+  it('keeps generator transforms pull-based and forwards early return', async () => {
+    const report = vi.fn<AiReport>();
+    let pulled = 0;
+    async function* chunks(): AsyncGenerator<string> {
+      // Yield more chunks than the consumer requests.
+      for (let index = 0; index < 100; index++) {
+        pulled++;
+        yield `chunk-${index}`;
+      }
+    }
+
+    const generator = measureExecution('generator', 'model-stream', report, undefined, () =>
+      chunks(),
+    ) as AsyncGenerator<string>;
+    const iterator = generator[Symbol.asyncIterator]();
+
+    await expect(iterator.next()).resolves.toEqual({ value: 'chunk-0', done: false });
+    await expect(iterator.return?.()).resolves.toEqual({ value: undefined, done: true });
+
+    expect(pulled).toBe(1);
+    // Assert only terminal outcomes, never the chunks passed through the observer.
     const outcomes = report.mock.calls.map(([, outcome]) => outcome);
     expect(outcomes).toEqual(['cancelled']);
   });
