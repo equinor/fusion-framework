@@ -3,9 +3,11 @@ import { mergeMap } from 'rxjs/operators';
 
 import type { Flow } from '@equinor/fusion-observable';
 
-import type { BookmarkActions } from '../bookmark-actions.js';
-import type { BookmarkFetchCancellation, BookmarkState } from '../create-bookmark-store.js';
+import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions.js';
+import type { BookmarkState } from '../create-bookmark-store.js';
 import type { IBookmarkClient } from '../BookmarkClient.interface.js';
+import type { OperationalTelemetry } from '../integrations/OperationalTelemetry.js';
+import { measureRequest } from '../integrations/measure-request.js';
 
 import { handleFetchBookmark } from './handle-fetch-bookmark.js';
 import { handleFetchBookmarkData } from './handle-fetch-bookmark-data.js';
@@ -21,33 +23,35 @@ import { handleAddBookmarkAsFavorite } from './handle-add-bookmark-as-favorite.j
  * Defines a set of flows that handle various bookmark-related actions, such as fetching, creating, updating, and deleting bookmarks.
  *
  * @param api - An instance of `IBookmarkClient` that provides the necessary API methods for interacting with the bookmark service.
- * @param onFetchCancelled - Optional cleanup of telemetry observers for superseded fetches.
+ * @param telemetry - Optional scope recording one outcome per executed fetch request.
  * @returns A combined flow that handles all the bookmark-related actions.
  */
 export const bookmarkApiFlows = (
   api: IBookmarkClient,
-  onFetchCancelled?: BookmarkFetchCancellation,
+  telemetry?: OperationalTelemetry,
 ): Flow<BookmarkActions, BookmarkState> => {
   /**
    * Combines multiple Bookmark-related observable flows into a single observable stream.
    * The resulting observable stream emits the combined effects of these flows,
    * which can be used to update the application state.
    */
-  const flows = [
-    handleFetchBookmark(api, onFetchCancelled),
-    handleFetchBookmarkData(api, onFetchCancelled),
-    handleFetchAllBookmark(api),
-    handleCreateBookmark(api),
-    handleUpdateBookmark(api),
-    handleDeleteBookmark(api),
-    handleRemoveBookmark(api),
-    handleRemoveBookmarkFromFavorites(api),
-    handleAddBookmarkAsFavorite(api),
-  ];
-  return (actions$: Observable<BookmarkActions>, state$: Observable<BookmarkState>) => {
-    // Each flow shares the same business action stream without duplicating requests.
-    const outputs = flows.map((flow) => flow(actions$, state$));
-    // Keep every independent bookmark operation flow active.
-    return of(...outputs).pipe(mergeMap((flow) => flow));
-  };
+  return (actions$: Observable<BookmarkActions>, state$: Observable<BookmarkState>) =>
+    // Invoke every bookmark flow with the shared api client and merge their emissions.
+    of(
+      handleFetchBookmark(
+        api,
+        measureRequest<BookmarkActions>(telemetry, 'get', actions.fetchBookmark),
+      ),
+      handleFetchBookmarkData(
+        api,
+        measureRequest<BookmarkActions>(telemetry, 'payload-resolve', actions.fetchBookmarkData),
+      ),
+      handleFetchAllBookmark(api),
+      handleCreateBookmark(api),
+      handleUpdateBookmark(api),
+      handleDeleteBookmark(api),
+      handleRemoveBookmark(api),
+      handleRemoveBookmarkFromFavorites(api),
+      handleAddBookmarkAsFavorite(api),
+    ).pipe(mergeMap((flow) => flow(actions$, state$)));
 };

@@ -212,14 +212,14 @@ Available events:
 When the host registers telemetry, the provider reports one
 `fusion.bookmark.<operation>.duration` outcome for `get`, `list`, `apply`, `create`,
 `update`, `delete`, `favourite-add`, `favourite-remove` and `payload-resolve`.
-`create`, `update`, `delete`, `get` (bookmark metadata) and `payload-resolve` are
-measured from the call, because their requests start immediately, whether or not anyone
-subscribes. A listener canceling the matching event is `cancelled` with reason `listener`
+`create`, `update` and `delete` are measured from the call, because their requests start
+immediately, whether or not anyone subscribes. `get` (bookmark metadata) and
+`payload-resolve` are measured per executed fetch, so same-id calls absorbed by the
+provider's throttling share one record. A listener canceling the matching event is `cancelled` with reason `listener`
 rather than a failure; a mutation whose caller unsubscribes before it is sent is
 `cancelled` with reason `abandoned`; operations interrupted by disposal are `cancelled`
 with reason `disposed`. A metadata or payload fetch replaced by a newer request is
-`cancelled` with reason `superseded`; all observers sharing that fetch release their
-telemetry reservations. Bookmark names, ids, payloads and error messages
+`cancelled` with reason `superseded`. Bookmark names, ids, payloads and error messages
 are never exported. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
 
 ## Custom Bookmark Client

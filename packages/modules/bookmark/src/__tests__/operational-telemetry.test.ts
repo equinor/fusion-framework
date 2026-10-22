@@ -79,7 +79,7 @@ describe('bookmark operational telemetry', () => {
 
     expect(durations(summary())).toEqual([
       ['create', 'success'],
-      // Metadata and payload fetches are separate store requests, measured from dispatch.
+      // Metadata and payload fetches are separate store requests, each measured as executed.
       ['get', 'success'],
       ['payload-resolve', 'success'],
       ['apply', 'success'],
@@ -180,25 +180,30 @@ describe('bookmark operational telemetry', () => {
     await modules.dispose();
   });
 
-  it('releases coalesced same-id observers and keeps reporting beyond timer capacity', async () => {
+  it('records only executed fetches and retains nothing for superseded ones', async () => {
     const { modules, client, provider, summary, processItem } = await setup();
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     vi.spyOn(client, 'getBookmarkById').mockReturnValue(NEVER);
     vi.spyOn(client, 'getBookmarkData').mockReturnValue(NEVER);
+    // Same-id calls within the throttle window share one executed fetch.
     provider.getBookmark(`same-${SENTINEL}`);
     provider.getBookmark(`same-${SENTINEL}`);
     provider.getBookmark(`same-${SENTINEL}`);
     provider.getBookmark('next');
-    expect(durations(summary())).toHaveLength(6);
+    expect(durations(summary())).toEqual([
+      ['get', 'cancelled'],
+      ['payload-resolve', 'cancelled'],
+    ]);
+    // Far beyond the pending capacity: each superseded fetch is settled, never retained.
     for (let index = 0; index < 300; index++) {
       provider.getBookmark(`id-${index}`);
     }
-    expect(durations(summary())).toHaveLength(606);
+    expect(durations(summary())).toHaveLength(602);
     expect(durations(summary()).every(([, outcome]) => outcome === 'cancelled')).toBe(true);
     expect(warn).not.toHaveBeenCalled();
     expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
     provider.dispose();
-    expect(durations(summary())).toHaveLength(608);
+    expect(durations(summary())).toHaveLength(604);
     await modules.dispose();
   });
 

@@ -9,7 +9,6 @@ import {
   timeout,
   raceWith,
   first,
-  take,
   catchError,
 } from 'rxjs/operators';
 
@@ -56,6 +55,7 @@ import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
 import { version } from './version.js';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import { trackMutation } from './integrations/track-mutation.js';
 
 import type {
   BookmarkCreateArgs,
@@ -98,9 +98,6 @@ export class BookmarkProvider
 
   /** optional operational telemetry; never carries bookmark names, ids or payloads */
   #telemetry = new OperationalTelemetry('bookmark');
-
-  /** Active switch-mapped fetches, ordered so a superseded attempt releases its own timer. */
-  #fetchTrackers = new Map<string, Set<{ cancel: VoidFunction }>>();
 
   /**
    * @deprecated
@@ -333,7 +330,7 @@ export class BookmarkProvider
     this.#store = createBookmarkStore({
       client: config.client,
       initial: { currentBookmark: this._parent?.currentBookmark ?? null },
-      onFetchCancelled: (operation, ref) => this.#cancelFetchRequest(operation, ref),
+      telemetry: this.#telemetry,
     });
 
     // add teardown logic for disposing the store
@@ -734,7 +731,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for change to ${next?.id ?? 'none'}, from ${current?.id ?? 'none'}`,
           );
-          // A listener's veto is a cancellation, not a failure, in operational records.
           OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.info(error.message);
           throw error;
@@ -835,7 +831,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for creating bookmark: ${ref}`,
           );
-          // A listener's veto is a cancellation, not a failure, in operational records.
           OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.info(error.message);
           throw error;
@@ -845,9 +840,12 @@ export class BookmarkProvider
       }),
     );
 
-    // Measure from the call: the creation starts now, whether or not the caller subscribes.
-    const tracker = this.#trackRequest('create', action$, bookmarkActions.createBookmark);
-    let dispatched = false;
+    const tracker = trackMutation(
+      this.#telemetry,
+      'create',
+      action$,
+      bookmarkActions.createBookmark,
+    );
 
     // Start the creation process immediately
     const createSubscription = dispatch$.subscribe({
@@ -856,7 +854,7 @@ export class BookmarkProvider
         this._log?.error(`Failed to prepare bookmark creation: ${ref}`, error);
       },
       next: (newBookmark) => {
-        dispatched = true;
+        tracker.dispatched();
         // request the store to create the bookmark
         this.#store.next(bookmarkActions.createBookmark(newBookmark, { ref }));
       },
@@ -895,14 +893,8 @@ export class BookmarkProvider
     // Return the observable that will emit the result
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the create subscription when the result observable is unsubscribed
-      subscriber.add(() => {
-        createSubscription.unsubscribe();
-        // Abandoning the request before it is dispatched cancels it; once dispatched, the
-        // store result still ends it, whether or not anyone is subscribed.
-        if (!dispatched) {
-          tracker.cancel();
-        }
-      });
+      subscriber.add(() => createSubscription.unsubscribe());
+      subscriber.add(tracker.abandon);
 
       // Emit the created bookmark
       request$.subscribe(subscriber);
@@ -983,7 +975,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for updating bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-          // A listener's veto is a cancellation, not a failure, in operational records.
           OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.warn(error.message, updates);
           throw error;
@@ -993,9 +984,12 @@ export class BookmarkProvider
       }),
     );
 
-    // Measure from the call: the update starts now, whether or not the caller subscribes.
-    const tracker = this.#trackRequest('update', action$, bookmarkActions.updateBookmark);
-    let dispatched = false;
+    const tracker = trackMutation(
+      this.#telemetry,
+      'update',
+      action$,
+      bookmarkActions.updateBookmark,
+    );
 
     // Start the update process immediately
     const updateSubscription = dispatch$.subscribe({
@@ -1004,7 +998,7 @@ export class BookmarkProvider
         this._log?.error(`Failed to prepare bookmark update: ${bookmarkId}`, error);
       },
       next: (updates) => {
-        dispatched = true;
+        tracker.dispatched();
         // trigger the store to update the bookmark
         this.#store.next(bookmarkActions.updateBookmark({ bookmarkId, updates }, { ref }));
       },
@@ -1050,14 +1044,8 @@ export class BookmarkProvider
     // Return the observable that will emit the result
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the update subscription when the result observable is unsubscribed
-      subscriber.add(() => {
-        updateSubscription.unsubscribe();
-        // Abandoning the request before it is dispatched cancels it; once dispatched, the
-        // store result still ends it, whether or not anyone is subscribed.
-        if (!dispatched) {
-          tracker.cancel();
-        }
-      });
+      subscriber.add(() => updateSubscription.unsubscribe());
+      subscriber.add(tracker.abandon);
 
       // Emit the updated bookmark
       request$.subscribe(subscriber);
@@ -1136,7 +1124,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for removing bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-          // A listener's veto is a cancellation, not a failure, in operational records.
           OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.warn(error.message);
           throw error;
@@ -1145,9 +1132,12 @@ export class BookmarkProvider
       }),
     );
 
-    // Measure from the call: the deletion starts now, whether or not the caller subscribes.
-    const tracker = this.#trackRequest('delete', action$, bookmarkActions.deleteBookmark);
-    let dispatched = false;
+    const tracker = trackMutation(
+      this.#telemetry,
+      'delete',
+      action$,
+      bookmarkActions.deleteBookmark,
+    );
 
     // Start the deletion process immediately
     const deleteSubscription = dispatch$.subscribe({
@@ -1156,7 +1146,7 @@ export class BookmarkProvider
         this._log?.error(`Failed to prepare bookmark deletion: ${bookmarkId}`, error);
       },
       next: (bookmark) => {
-        dispatched = true;
+        tracker.dispatched();
         // request the store to delete the bookmark
         this.#store.next(bookmarkActions.deleteBookmark(bookmark.id, { ref }));
       },
@@ -1195,14 +1185,8 @@ export class BookmarkProvider
     // Return the observable that will emit the result
     return new Observable<void>((subscriber) => {
       // Clean up the delete subscription when the result observable is unsubscribed
-      subscriber.add(() => {
-        deleteSubscription.unsubscribe();
-        // Abandoning the request before it is dispatched cancels it; once dispatched, the
-        // store result still ends it, whether or not anyone is subscribed.
-        if (!dispatched) {
-          tracker.cancel();
-        }
-      });
+      subscriber.add(() => deleteSubscription.unsubscribe());
+      subscriber.add(tracker.abandon);
 
       // Emit the deletion result
       request$.subscribe(subscriber);
@@ -1249,7 +1233,6 @@ export class BookmarkProvider
             const error = new BookmarkProviderError(
               `event: ${type} was canceled by listener for adding favourite bookmark: ${bookmarkId}, ref: ${ref}`,
             );
-            // A listener's veto is a cancellation, not a failure, in operational records.
             OperationalTelemetry.markCancellation(error, 'listener');
             this._log?.info(error.message);
             throw error;
@@ -1304,7 +1287,7 @@ export class BookmarkProvider
       return request$.subscribe(subscriber);
     });
 
-    // Measure from subscription, since this operation is cold and starts per subscriber.
+    // Measured per subscription, since this operation is cold and starts per subscriber.
     return result$.pipe(this.#telemetry.measure('favourite-add'));
   }
 
@@ -1350,7 +1333,6 @@ export class BookmarkProvider
             const error = new BookmarkProviderError(
               `event: ${type} was canceled by listener for removing favourite bookmark: ${bookmarkId}, ref: ${ref}`,
             );
-            // A listener's veto is a cancellation, not a failure, in operational records.
             OperationalTelemetry.markCancellation(error, 'listener');
             this._log?.warn(error.message);
             throw error;
@@ -1409,7 +1391,7 @@ export class BookmarkProvider
       request$.subscribe(subscriber);
     });
 
-    // Measure from subscription, since this operation is cold and starts per subscriber.
+    // Measured per subscription, since this operation is cold and starts per subscriber.
     return result$.pipe(this.#telemetry.measure('favourite-remove'));
   }
 
@@ -1497,14 +1479,7 @@ export class BookmarkProvider
       }),
     );
 
-    // The fetch is dispatched now, so it is measured now, whether or not anyone subscribes.
-    this.#trackFetchRequest(
-      'get',
-      bookmarkId,
-      action$,
-      bookmarkActions.fetchBookmark,
-      bookmarkActions.fetchBookmark(bookmarkId, { ref: bookmarkId }),
-    );
+    this.#store.next(bookmarkActions.fetchBookmark(bookmarkId, { ref: bookmarkId }));
 
     // race the success and failure streams, whichever resolves first wins
     return success$.pipe(raceWith(failure$));
@@ -1550,14 +1525,8 @@ export class BookmarkProvider
       }),
     );
 
-    // The fetch is dispatched now, so it is measured now, whether or not anyone subscribes.
-    this.#trackFetchRequest(
-      'payload-resolve',
-      bookmarkId,
-      action$,
-      bookmarkActions.fetchBookmarkData,
-      bookmarkActions.fetchBookmarkData(bookmarkId, { ref: bookmarkId }),
-    );
+    // request the store to fetch the bookmark data
+    this.#store.next(bookmarkActions.fetchBookmarkData(bookmarkId, { ref: bookmarkId }));
 
     // race the success and failure streams, whichever resolves first wins
     return success$.pipe(raceWith(failure$));
@@ -1640,155 +1609,6 @@ export class BookmarkProvider
   }
 
   /**
-   * Measures a store request that starts immediately, independent of the caller's
-   * subscription. The outcome is the first scoped success or failure action, the preparation
-   * error when the request is never dispatched (for example, a listener veto), or
-   * `cancelled` when the caller abandons the request before it is dispatched.
-   * @param operation - Static operation label.
-   * @param action$ - Store actions scoped to this request's reference.
-   * @param creator - Async action creator whose success/failure actions end the request.
-   * @param creator.success - Success action creator.
-   * @param creator.failure - Failure action creator.
-   * @param onSettled - Optional cleanup of fetch cancellation registration.
-   * @param cancelReason - Static cancellation classification for this request.
-   * @returns Callbacks for the preparation error and abandonment paths.
-   */
-  #trackRequest(
-    operation: string,
-    action$: Observable<BookmarkActions>,
-    creator: {
-      success: { match: (action: BookmarkActions) => boolean };
-      failure: { match: (action: BookmarkActions) => boolean };
-    },
-    onSettled?: VoidFunction,
-    cancelReason = 'abandoned',
-  ): { fail: (error: unknown) => void; cancel: VoidFunction; tracked: boolean } {
-    const end = this.#telemetry.reserve(operation);
-    // Without a reserved timer (telemetry absent, closed or at capacity), add no observer.
-    if (!end) {
-      return { fail: () => undefined, cancel: () => undefined, tracked: false };
-    }
-    // Only the first terminal store action for this request's reference ends it.
-    let settled = false;
-    const subscription = new Subscription();
-    const release = (): void => {
-      subscription.unsubscribe();
-      this.#subscriptions.remove(subscription);
-    };
-    const settle = (outcome: 'success' | 'failure'): void => {
-      // A terminal action can race preparation failure or supersession.
-      if (settled) {
-        return;
-      }
-      settled = true;
-      release();
-      end(outcome);
-      onSettled?.();
-    };
-    // Observe only the first matching terminal action without triggering the business request.
-    subscription.add(
-      action$
-        .pipe(
-          filter((action) => creator.success.match(action) || creator.failure.match(action)),
-          take(1),
-        )
-        .subscribe((action) => settle(creator.success.match(action) ? 'success' : 'failure')),
-    );
-    // Owned by the provider until the request settles, so disposal releases it.
-    this.#subscriptions.add(subscription);
-    return {
-      fail: (error) => {
-        // Preparation errors must not overwrite an already completed request.
-        if (settled) {
-          return;
-        }
-        settled = true;
-        release();
-        const { outcome, reason } = OperationalTelemetry.classifyError(error);
-        end(outcome, reason ? { reason } : undefined);
-        onSettled?.();
-      },
-      cancel: () => {
-        // Supersession and caller abandonment can race a terminal action.
-        if (settled) {
-          return;
-        }
-        settled = true;
-        release();
-        end('cancelled', { reason: cancelReason });
-        onSettled?.();
-      },
-      tracked: true,
-    };
-  }
-
-  /**
-   * Tracks a latest-only fetch and registers it for cancellation when a newer fetch replaces it.
-   * @param operation - Static telemetry operation label.
-   * @param ref - Internal bookmark reference used to scope the action stream.
-   * @param action$ - Actions scoped to this bookmark request.
-   * @param creator - Async action creator whose success/failure actions end the request.
-   * @param request - Fetch request dispatched before its cancellation callback is registered.
-   * @returns Callbacks for preparation failure and caller abandonment.
-   */
-  #trackFetchRequest(
-    operation: 'get' | 'payload-resolve',
-    ref: string,
-    action$: Observable<BookmarkActions>,
-    creator: {
-      success: { match: (action: BookmarkActions) => boolean };
-      failure: { match: (action: BookmarkActions) => boolean };
-    },
-    request: BookmarkActions,
-  ): { fail: (error: unknown) => void; cancel: VoidFunction; tracked: boolean } {
-    const entry: { cancel: VoidFunction } = { cancel: () => undefined };
-    const key = `${operation}:${ref}`;
-    const tracker = this.#trackRequest(
-      operation,
-      action$,
-      creator,
-      () => {
-        const entries = this.#fetchTrackers.get(key);
-        entries?.delete(entry);
-        // Release bookmark references as soon as no fetch observer needs them.
-        if (entries?.size === 0) {
-          this.#fetchTrackers.delete(key);
-        }
-      },
-      'superseded',
-    );
-    // Replacing a same-ref fetch cancels older observers before this new tracker joins them.
-    this.#store.next(request);
-    // Unmeasured requests still execute, but retain no cancellation entry.
-    if (!tracker.tracked) {
-      return tracker;
-    }
-    entry.cancel = tracker.cancel;
-    let entries = this.#fetchTrackers.get(key);
-    // Throttled same-id calls share a fetch and therefore share its cancellation boundary.
-    if (!entries) {
-      entries = new Set();
-      this.#fetchTrackers.set(key, entries);
-    }
-    entries.add(entry);
-    return tracker;
-  }
-
-  /**
-   * Releases matching coalesced fetch observers when switchMap supersedes their inner work.
-   * @param operation - Static telemetry operation label.
-   * @param ref - Internal bookmark reference used to scope the action stream.
-   */
-  #cancelFetchRequest(operation: 'get' | 'payload-resolve', ref: string): void {
-    const key = `${operation}:${ref}`;
-    const entries = this.#fetchTrackers.get(key);
-    // Repeated same-id calls can share one throttled fetch; all stop with that fetch.
-    for (const entry of entries ?? []) {
-      entry.cancel();
-    }
-  }
-
-  /**
    * Disposes the BookmarkProvider.
    */
   dispose(): void {
@@ -1797,7 +1617,6 @@ export class BookmarkProvider
     this.#telemetry.close({ reason: 'disposed' });
     super.dispose();
     this.#subscriptions.unsubscribe();
-    this.#fetchTrackers.clear();
   }
 
   /**

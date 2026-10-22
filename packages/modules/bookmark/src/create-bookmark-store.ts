@@ -6,6 +6,7 @@ import { createBookmarkReducer } from './create-bookmark-reducer.js';
 import { bookmarkApiFlows } from './bookmark-flows/index.js';
 import type { IBookmarkClient } from './BookmarkClient.interface.js';
 import type { Bookmark, BookmarkWithoutData } from './types.js';
+import type { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 
 /**
  * Internal state shape managed by the bookmark store.
@@ -36,9 +37,6 @@ export type BookmarkState = {
  */
 export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions>;
 
-/** Notifies the provider when a switch-mapped bookmark fetch is superseded. */
-export type BookmarkFetchCancellation = (operation: 'get' | 'payload-resolve', ref: string) => void;
-
 /**
  * Creates and returns a new {@link BookmarkStore} wired with the bookmark
  * reducer and all API side-effect flows.
@@ -46,13 +44,13 @@ export type BookmarkFetchCancellation = (operation: 'get' | 'payload-resolve', r
  * @param args - Initialisation options.
  * @param args.initial - Optional partial state merged over the reducer defaults.
  * @param args.client - The {@link IBookmarkClient} used by store flows for API calls.
- * @param args.onFetchCancelled - Optional notification when a fetch flow is superseded.
+ * @param args.telemetry - Optional scope recording one outcome per executed fetch request.
  * @returns A fully configured bookmark store.
  */
 export const createBookmarkStore = (args: {
   initial?: Partial<BookmarkState>;
   client: IBookmarkClient;
-  onFetchCancelled?: BookmarkFetchCancellation;
+  telemetry?: OperationalTelemetry;
 }): BookmarkStore => {
   // create the store
   const store = new FlowSubject<BookmarkState, BookmarkActions>(
@@ -60,7 +58,7 @@ export const createBookmarkStore = (args: {
   );
 
   // add the bookmark API flows to the store
-  store.addFlow(bookmarkApiFlows(args.client, args.onFetchCancelled));
+  store.addFlow(bookmarkApiFlows(args.client, args.telemetry));
 
   return store;
 };

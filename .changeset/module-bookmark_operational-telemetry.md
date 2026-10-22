@@ -5,13 +5,13 @@
 Report bookmark operations through host telemetry. The provider records one
 `fusion.bookmark.<operation>.duration` outcome for `get`, `list`, `apply`, `create`,
 `update`, `delete`, `favourite-add`, `favourite-remove` and `payload-resolve`.
-Create, update, delete, `get` (bookmark metadata) and `payload-resolve` are measured
-from the call, because their requests start immediately, whether or not the caller
-subscribes. A listener canceling the matching event is recorded as `cancelled` with
+Create, update and delete are measured from the call, because their requests start
+immediately, whether or not the caller subscribes; `get` (bookmark metadata) and
+`payload-resolve` are measured per executed fetch. A listener canceling the matching event is recorded as `cancelled` with
 reason `listener`, not as a failure; a mutation whose caller unsubscribes before it is
 sent is `cancelled` with reason `abandoned`; operations interrupted by disposal are
 `cancelled` with reason `disposed`. Superseded metadata and payload fetches record
-`cancelled` with reason `superseded` and release every associated telemetry observer.
+`cancelled` with reason `superseded`.
 Bookmark names, ids,
 payloads and error messages are never included.
 
