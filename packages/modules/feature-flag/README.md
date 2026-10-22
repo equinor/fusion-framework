@@ -120,7 +120,9 @@ builder.addPlugin(
 When the host registers telemetry, each `toggleFeature`/`toggleFeatures` call reports
 one `fusion.feature-flag.toggle.duration` outcome with `requested`, `applied`,
 `rejected` (unregistered or read-only) and `cancelled` (listener veto) counts. A call
-whose applicable flags were all vetoed is `cancelled`. Reads such as `hasFeature` are
+whose applicable flags were all vetoed is `cancelled`; a toggle still awaiting listeners
+when the module is disposed is `cancelled` with reason `disposed`. The module now disposes
+its provider at host teardown, which also releases plugin connections. Reads such as `hasFeature` are
 never recorded, and feature keys and values are never exported. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
 
 ## Testing

@@ -42,6 +42,11 @@ export const module: FeatureFlagModule = {
     const { telemetry } = modules as { telemetry?: ITelemetryProvider };
     instance.connectTelemetry?.(telemetry);
   },
+  dispose: ({ instance }) => {
+    // Runs in the default phase, before the telemetry sink shuts down, so pending toggles are
+    // still reported as cancelled.
+    (instance as { dispose?: VoidFunction }).dispose?.();
+  },
 };
 
 /**

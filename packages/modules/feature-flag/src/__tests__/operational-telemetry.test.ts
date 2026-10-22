@@ -142,6 +142,35 @@ describe('feature-flag operational telemetry', () => {
     await modules.dispose();
   });
 
+  it('records a toggle pending at disposal as cancelled, then reports nothing more', async () => {
+    const { modules, provider, summary } = await setup();
+    let release!: VoidFunction;
+    // A slow listener keeps the toggle awaiting its event.
+    modules.event.addEventListener(
+      'onFeatureFlagToggle',
+      () =>
+        new Promise<void>((resolve) => {
+          release = resolve;
+        }),
+    );
+    const toggled = provider.toggleFeature({ key: `${SENTINEL}-a`, enabled: true });
+    await vi.waitFor(() => expect(release).toBeDefined());
+    provider.dispose();
+    expect(summary()).toEqual([
+      ['fusion.feature-flag.toggle.duration', 'cancelled', { reason: 'disposed' }],
+    ]);
+    release();
+    await toggled;
+    expect(summary()).toHaveLength(1);
+    await modules.dispose();
+  });
+
+  it('disposes the provider from the module dispose hook', async () => {
+    const dispose = vi.fn();
+    await featureFlagModule.dispose?.({ instance: { dispose } as never, modules: {} as never });
+    expect(dispose).toHaveBeenCalledTimes(1);
+  });
+
   it('connects telemetry through the optional provider hook', async () => {
     const connectTelemetry = vi.fn();
     const telemetry = {};

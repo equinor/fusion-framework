@@ -304,6 +304,16 @@ export class FeatureFlagProvider
   }
 
   /**
+   * Disposes the provider. Toggles still awaiting listeners are recorded as `cancelled`
+   * (reason `disposed`) while telemetry is available, then nothing more is reported; plugin
+   * connections and toggle listeners are released as before.
+   */
+  public override dispose(): void {
+    this.#telemetry.close({ reason: 'disposed' });
+    super.dispose();
+  }
+
+  /**
    * @param key - The feature flag key to look up.
    * @template T - Type of the flag's payload value.
    * @returns The flag if registered, otherwise `undefined`.
