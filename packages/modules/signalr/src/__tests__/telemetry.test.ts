@@ -123,6 +123,19 @@ describe('SignalR operational telemetry', () => {
     expect(names(items)).toEqual(['fusion.signalr.connect.duration:cancelled']);
   });
 
+  it('classifies a start that resolves after teardown as cancelled, not connected', async () => {
+    let resolve!: () => void;
+    const { items, subscription, connection } = open(() => new Promise<void>((r) => (resolve = r)));
+    subscription.unsubscribe();
+    resolve();
+
+    await vi.waitFor(() => expect(items).toHaveLength(1));
+    expect(names(items)).toEqual(['fusion.signalr.connect.duration:cancelled']);
+    // Never marked connected, so a later close is not reported as a lost connection.
+    connection.close?.(new Error(sentinel));
+    expect(items).toHaveLength(1);
+  });
+
   it('reports a failed start once and keeps rethrowing the original error', async () => {
     const original = new Error(sentinel);
     const unhandled: unknown[] = [];

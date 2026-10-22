@@ -181,6 +181,15 @@ export class SignalRModuleProvider
       connection
         .start()
         .then(() => {
+          // A start that settles after teardown was cancelled; the observer is already complete.
+          if (stopping) {
+            this.#report({
+              operation: 'connect',
+              outcome: 'cancelled',
+              duration: performance.now() - connectStarted,
+            });
+            return;
+          }
           connected = true;
           this.#report({
             operation: 'connect',
