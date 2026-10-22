@@ -96,7 +96,7 @@ describe.each([
     world.userNavigate('/app/my-app/settings');
     await flush();
 
-    expect(world.context.setCurrentContextByIdAsync).not.toHaveBeenCalled();
+    expect(world.context.setCurrentContextById).not.toHaveBeenCalled();
     expect(world.url).toBe(`${BASE}/app/my-app/settings`);
   });
 
@@ -106,7 +106,7 @@ describe.each([
       world.userNavigate('/app/other-app/builds');
       await flush();
 
-      expect(world.context.setCurrentContextByIdAsync).toHaveBeenCalledWith('other-app');
+      expect(world.context.setCurrentContextById).toHaveBeenCalledWith('other-app');
       expect(world.currentContext?.id).toBe(OTHER_APP.id);
       expect(world.url).toBe(`${BASE}/app/other-app/builds`);
     });

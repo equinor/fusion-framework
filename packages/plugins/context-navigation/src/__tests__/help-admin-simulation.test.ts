@@ -115,7 +115,7 @@ describe.each([
     world.userNavigate('/app/my-app/articles');
     await flush();
 
-    expect(world.context.setCurrentContextByIdAsync).not.toHaveBeenCalled();
+    expect(world.context.setCurrentContextById).not.toHaveBeenCalled();
     expect(world.url).toBe(`${BASE}/app/my-app/articles`);
   });
 

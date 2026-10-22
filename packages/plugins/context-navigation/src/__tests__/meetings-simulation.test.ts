@@ -96,7 +96,7 @@ describe.each([
     world.userNavigate(`/${A}/series/456/agenda`);
     await flush();
 
-    expect(world.context.setCurrentContextByIdAsync).not.toHaveBeenCalled();
+    expect(world.context.setCurrentContextById).not.toHaveBeenCalled();
     expect(world.pluginNavigations).toEqual([]);
     expect(world.url).toBe(`${BASE}/${A}/series/456/agenda`);
   });
