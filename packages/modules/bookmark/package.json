@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-log": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
     "@equinor/fusion-query": "workspace:^",
@@ -63,8 +62,17 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "typescript": "^7.0.2",
     "vitest": "catalog:vitest",
     "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module-telemetry": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    }
   }
 }

@@ -18,4 +18,6 @@ values are never included.
 Custom providers opt in through the optional `IFeatureFlagProvider.connectTelemetry`
 method. Toggle behavior is unchanged.
 
+`@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+
 Ref: #5805.

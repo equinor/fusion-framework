@@ -17,4 +17,6 @@ synchronously. The module now has a `dispose` hook that releases the provider's 
 telemetry observers; storage itself is not disposed. Custom providers opt in through the
 optional `IStateProvider.connectTelemetry` method.
 
+`@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+
 Ref: #5805.

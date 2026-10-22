@@ -18,4 +18,6 @@ payloads and error messages are never included.
 Custom providers opt in through the optional `IBookmarkProvider.connectTelemetry`
 method. Bookmark results, errors and event cancellation behave as before.
 
+`@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+
 Ref: #5805.
