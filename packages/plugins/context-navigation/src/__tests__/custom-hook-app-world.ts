@@ -5,7 +5,7 @@
  * Uses the real plugin, the real default adapter chain, and the URL guard enabled as in
  * the dev portal. Only the router, context service, and app module are replaced.
  */
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { vi } from 'vitest';
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
@@ -85,6 +85,17 @@ export interface CustomHookAppWorldOptions {
     extract: (path: string) => string | undefined;
     generate: (item: ContextItem, path: string) => string | undefined;
   };
+  /**
+   * Hold URL guard lookups (`setCurrentContextById`) until `settleLookups()` is called,
+   * to simulate a slow context service.
+   */
+  deferLookups?: boolean;
+}
+
+interface PendingLookup {
+  id: string;
+  canceled: boolean;
+  settle: () => void;
 }
 
 export function createCustomHookAppWorld(opts: CustomHookAppWorldOptions) {
@@ -116,13 +127,44 @@ export function createCustomHookAppWorld(opts: CustomHookAppWorldOptions) {
   };
 
   // Context service — resolves by GUID or by key (title), like the App/Help Admin clients.
+  const resolveContext = (idOrKey: string): ContextItem => {
+    const match = CONTEXTS.find((c) => c.id === idOrKey || c.title === idOrKey);
+    if (!match) throw new Error(`unknown context ${idOrKey}`);
+    appContext.currentContext = match;
+    emitContext();
+    return match;
+  };
+
+  const lookups: PendingLookup[] = [];
+
   const context = {
-    setCurrentContextByIdAsync: vi.fn(async (idOrKey: string) => {
-      const match = CONTEXTS.find((c) => c.id === idOrKey || c.title === idOrKey);
-      if (!match) throw new Error(`unknown context ${idOrKey}`);
-      appContext.currentContext = match;
-      emitContext();
-    }),
+    // Used by the URL guard; unsubscribing cancels the lookup, as in the real provider.
+    setCurrentContextById: vi.fn(
+      (idOrKey: string) =>
+        new Observable<ContextItem>((subscriber) => {
+          const lookup: PendingLookup = {
+            id: idOrKey,
+            canceled: false,
+            settle: () => {
+              try {
+                subscriber.next(resolveContext(idOrKey));
+                subscriber.complete();
+              } catch (err) {
+                subscriber.error(err);
+              }
+            },
+          };
+          lookups.push(lookup);
+          if (!opts.deferLookups) {
+            Promise.resolve().then(() => !lookup.canceled && lookup.settle());
+          }
+          return () => {
+            lookup.canceled = true;
+          };
+        }),
+    ),
+    // Used by the app itself (e.g. App Admin's AppProviderWrapper) and the context selector.
+    setCurrentContextByIdAsync: vi.fn(async (idOrKey: string) => resolveContext(idOrKey)),
   };
 
   const event = { dispatchEvent: vi.fn(async () => ({ canceled: false })) };
@@ -168,6 +210,14 @@ export function createCustomHookAppWorld(opts: CustomHookAppWorldOptions) {
     },
     get currentContext() {
       return appContext.currentContext;
+    },
+    /** URL guard lookups, including canceled ones. */
+    lookups,
+    /** Settle every held lookup that was not canceled (see `deferLookups`). */
+    settleLookups() {
+      for (const lookup of lookups.splice(0)) {
+        if (!lookup.canceled) lookup.settle();
+      }
     },
     get pluginNavigations() {
       return history.filter((h) => h.by === 'plugin');

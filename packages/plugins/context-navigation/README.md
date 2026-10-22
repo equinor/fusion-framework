@@ -92,8 +92,14 @@ The app owns its URL shape, so the URL is the source of truth for the URL guard:
   path from `generatePathFromContext`.
 
 The extracted value does not have to be the context id. If it is a key or slug,
-the URL guard treats the URL as in sync when `generatePathFromContext` yields
-the current path, so navigating within the same context does not resolve it again.
+the URL guard treats the URL as in sync when `generatePathFromContext` writes
+that same value for the active context. So navigating within the same context
+does not resolve it again. A generator that returns the path unchanged doesn't
+prove anything, so the guard resolves the value from the URL instead.
+
+When the URL guard resolves a context from the URL, the lookup belongs to that
+URL. If the user navigates elsewhere before the lookup finishes, the guard
+cancels it: a late result neither changes the context nor redirects the user.
 
 ## For Portal Developers
 
