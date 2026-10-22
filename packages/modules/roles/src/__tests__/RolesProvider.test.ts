@@ -162,6 +162,20 @@ describe('RolesProvider', () => {
     provider.dispose();
   });
 
+  it('still accepts the earlier trackEvent and trackException telemetry dependency', async () => {
+    const client = createClient();
+    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(of([]));
+    // The pre-operational dependency shape must keep type-checking for constructor callers.
+    const telemetry = { trackEvent: vi.fn(), trackException: vi.fn() };
+    const provider = new RolesProvider({ client }, { telemetry });
+
+    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual([]);
+    // Without `track` there is no operational record, and nothing breaks.
+    expect(telemetry.trackEvent).not.toHaveBeenCalled();
+    expect(telemetry.trackException).not.toHaveBeenCalled();
+    provider.dispose();
+  });
+
   it('stops reporting operations once the provider is disposed', async () => {
     const client = createClient();
     const result = new Subject<ApiAccountActiveAccessRoleAssignmentV1[]>();

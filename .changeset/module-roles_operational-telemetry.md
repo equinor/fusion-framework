@@ -7,6 +7,9 @@ Report Roles operations as timed operational records. Each operation records one
 `fusion.roles.get-access-roles.duration`, with a `success`, `failure` or `cancelled`
 outcome. Aborting `getAccessRoles` and a listener cancelling activation are cancellations;
 failures add one sanitized `.failure` exception. Thrown `RolesError` values are unchanged.
+The `RolesProvider` constructor still accepts a telemetry dependency that implements only
+`trackEvent` and `trackException`; operational records need `track`, so such a provider
+records nothing.
 
 **Migration:** the `RolesProvider.<operation>` debug events and failure exceptions are
 replaced by these records. Failure records no longer carry the original error as a cause;

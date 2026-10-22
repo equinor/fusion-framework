@@ -21,7 +21,10 @@ import type { RequiredAccessRoleStatus } from './RequiredAccessRoleStatus.js';
 import { ClaimableRoleAssignmentActivationEvent } from './ClaimableRoleAssignmentActivationEvent.js';
 import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
-import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
+import {
+  createOperationalTelemetry,
+  type OperationalTelemetryTarget,
+} from '@equinor/fusion-framework-module-telemetry/utils';
 import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
 
 /**
@@ -72,7 +75,13 @@ interface RolesEventDispatcher {
  */
 interface RolesProviderDependencies {
   event?: RolesEventDispatcher;
-  telemetry?: Pick<ITelemetryProvider, 'source' | 'track' | 'trackEvent'>;
+  /**
+   * Host telemetry provider. The earlier `trackEvent`/`trackException` shape is still
+   * accepted, but operational records need `track`, so such a provider records nothing.
+   */
+  telemetry?:
+    | Pick<ITelemetryProvider, 'trackEvent' | 'trackException'>
+    | OperationalTelemetryTarget;
 }
 
 /**
@@ -303,7 +312,8 @@ export class RolesProvider
     this.client = config.client;
     this.dependencies = dependencies;
     // Telemetry is resolved before construction, so bootstrap role checks are reported too.
-    this.#telemetry.connect(dependencies.telemetry);
+    const { telemetry } = dependencies;
+    this.#telemetry.connect(telemetry && 'track' in telemetry ? telemetry : undefined);
     this._addTeardown(() => {
       // In-flight operations must not report into a torn-down telemetry host.
       this.#telemetry.disconnect();
