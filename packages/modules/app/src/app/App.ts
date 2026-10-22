@@ -22,6 +22,13 @@ import isEqual from 'fast-deep-equal';
 
 import { filterEmpty } from './filter-empty.js';
 
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import {
+  OperationalTelemetry,
+  type OperationalProperties,
+} from '../integrations/OperationalTelemetry.js';
+import { observeLoadStages } from '../integrations/observe-load-stages.js';
+
 import './events.js';
 
 export { filterEmpty } from './filter-empty.js';
@@ -380,13 +387,17 @@ export class App<
   /**
    * Creates a new {@link App} instance and starts its internal state machine.
    * @param value - Initial app bundle state (appKey, tag, and any pre-loaded data).
-   * @param args - The owning {@link AppModuleProvider} and an optional event module for lifecycle events.
+   * @param args - The owning {@link AppModuleProvider}, an optional event module for lifecycle events,
+   *   and an optional lazy telemetry lookup for operational load-stage records.
+   * @throws Never synchronously. A rejected module teardown started by `dispose()` is
+   *   re-thrown from its promise chain, so it stays as visible as before.
    */
   constructor(
     value: AppBundleStateInitial,
     args: {
       provider: AppModuleProvider;
       event?: ModuleType<EventModule>;
+      telemetry?: () => ITelemetryProvider | undefined;
     },
   ) {
     this.#state = createState(value, args.provider);
@@ -399,6 +410,37 @@ export class App<
 
     // create a tear down handler for the application
     const subscriptions = new Subscription();
+
+    // Each app owns its records, so unloading one app cannot cancel another app's stages.
+    const telemetry = new OperationalTelemetry('app', args.telemetry);
+    // Only static identity is exported; manifests, config and settings are never read for telemetry.
+    const identity = (): OperationalProperties => {
+      const key = OperationalTelemetry.safeIdentity(this.#state.value.appKey);
+      const version = OperationalTelemetry.safeIdentity(
+        this.#state.value.manifest?.build?.version,
+        'version',
+      );
+      // Unsafe or missing identity is omitted rather than exported.
+      return {
+        ...(key ? { appKey: key } : {}),
+        ...(version ? { appVersion: version } : {}),
+      };
+    };
+    subscriptions.add(
+      observeLoadStages(this.#state.action$, telemetry, {
+        stages: {
+          fetch_manifest: 'load-manifest',
+          fetch_config: 'load-config',
+          fetch_settings: 'load-settings',
+          update_settings: 'update-settings',
+          import_app: 'import',
+          initialize_app: 'load',
+        },
+        // Overlapping `initialize()` calls each settle; the fetch flows use switchMap.
+        concurrent: ['initialize_app'],
+        identity,
+      }),
+    );
 
     // only wire up event listeners when an event module is provided
     if (event) {
@@ -419,14 +461,45 @@ export class App<
       );
     }
 
+    let unloaded = false;
     this.dispose = () => {
+      // Repeated disposal keeps its existing behavior but records only the first unload.
+      const first = !unloaded;
+      unloaded = true;
+      // Pending stages are cancelled once, by the disposal that starts the unload.
+      if (first) {
+        // Stages interrupted by replacement or unload are cancellations, not failures.
+        telemetry.cancelPending({ ...identity(), reason: 'unloaded' });
+      }
+      const endUnload = first ? telemetry.start('unload', identity()) : undefined;
       subscriptions?.unsubscribe();
       // tear down modules of application, if an instance was loaded
-      if (this.#state.value.instance) {
-        // tear down modules of application
-        this.#state.value.instance.dispose();
-      }
+      // Typed as `void`, but module instances may return their teardown promise.
+      const disposal: unknown = this.#state.value.instance
+        ? // tear down modules of application
+          this.#state.value.instance.dispose()
+        : undefined;
       this.#state.complete();
+      // Only the first disposal measures the unload.
+      if (!endUnload) {
+        return;
+      }
+      // Asynchronous module teardown ends the unload when it settles.
+      if (disposal instanceof Promise) {
+        // Re-throwing keeps an unhandled teardown rejection exactly as visible as before.
+        disposal
+          .then(
+            () => endUnload('success'),
+            (error: unknown) => {
+              endUnload('failure');
+              throw error;
+            },
+          )
+          .finally(() => telemetry.close());
+      } else {
+        endUnload('success');
+        telemetry.close();
+      }
     };
   }
 

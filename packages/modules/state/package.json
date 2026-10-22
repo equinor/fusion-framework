@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
     "events": "^3.3.0",
     "fast-deep-equal": "^3.1.3",

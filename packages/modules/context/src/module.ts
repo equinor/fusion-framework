@@ -92,6 +92,9 @@ export const module: ContextModule = {
     // create context provider; parent context is wired up later via connectParentContext, not the deprecated ctor arg
     const provider = new ContextProvider({ config, event });
 
+    // Operational records start with the initial resolution below, without extra waiting.
+    provider.connectTelemetry(telemetry);
+
     // create subscription for disposing the provider
     const subscription = new Subscription(() => provider.dispose());
 
@@ -122,9 +125,14 @@ export const module: ContextModule = {
                 const exception = err instanceof Error ? err : new Error(String(err));
                 // report through telemetry when available, otherwise fall back to console.warn below
                 if (telemetry) {
+                  // The outcome is measured by `fusion.context.select`; this exported record
+                  // keeps a controlled message so context data in the original error stays local.
+                  const sanitized = new Error('Context initial resolution failed');
+                  sanitized.name = 'ContextResolutionError';
+                  sanitized.stack = undefined;
                   telemetry.trackException({
                     name: 'Context::postInitialize.resolveInitialContext',
-                    exception,
+                    exception: sanitized,
                     level: TelemetryLevel.Warning,
                     scope: ['context', TelemetryScope.Framework],
                   });
@@ -143,7 +151,8 @@ export const module: ContextModule = {
                   name: 'Context::postInitialize.initialContextResolved',
                   level: TelemetryLevel.Debug,
                   scope: ['context', TelemetryScope.Framework],
-                  properties: { contextId: item ? item.id : 'none' },
+                  // Whether a context was resolved, never the context identity itself.
+                  properties: { resolved: !!item },
                 });
               },
               complete: () => {

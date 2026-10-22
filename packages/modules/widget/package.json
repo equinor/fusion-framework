@@ -45,6 +45,7 @@
     "directory": "packages/modules/widget"
   },
   "dependencies": {
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-observable": "workspace:*",
     "@equinor/fusion-query": "workspace:*",
     "immer": "^11.0.0",

@@ -26,6 +26,8 @@ import type { FeatureFlagConfig } from './types.js';
 import type { IFeatureFlag } from './FeatureFlag.js';
 import { normalizeFlags } from './utils/normalize-flags.js';
 import type { FeatureSelectorFn } from './utils/selectors.js';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 
 /**
  * Custom equality comparison for two feature flag snapshots.
@@ -95,6 +97,13 @@ export interface IFeatureFlagProvider {
    * @returns True if the feature flag exists, false otherwise.
    */
   hasFeature(key: string): boolean;
+
+  /**
+   * Connects host telemetry for operational toggle records once all providers exist.
+   * Optional: mock and custom providers may omit it.
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
 }
 
 /**
@@ -110,6 +119,9 @@ export class FeatureFlagProvider
 {
   #state: ReturnType<typeof createState>;
   #event?: ModuleType<EventModule>;
+
+  /** Optional operational telemetry; never carries feature keys or values. */
+  #telemetry = new OperationalTelemetry('feature-flag');
 
   /** @returns All currently registered feature flags, keyed by flag key. */
   get features(): Record<string, IFeatureFlag> {
@@ -212,8 +224,13 @@ export class FeatureFlagProvider
    * before applying it.
    *
    * @param values - The flag keys and desired enabled states to toggle.
+   * @throws The original error when dispatching a toggle event fails, after recording it.
    */
   public async toggleFeatures(values: Array<{ key: string; enabled: boolean }>): Promise<void> {
+    // Counts only: feature keys and values are never part of operational records.
+    const counts = { requested: values.length, rejected: 0, cancelled: 0 };
+    const end = this.#telemetry.start('toggle');
+
     // get current features from the state
     const { features } = this.#state.value;
 
@@ -224,9 +241,11 @@ export class FeatureFlagProvider
         const feature = features[value.key];
         // skip flags that aren't registered, or that are marked readonly
         if (!feature) {
+          counts.rejected++;
           console.warn(`toggling flag [${value.key}] which is not registered`);
           return;
         } else if (feature.readonly) {
+          counts.rejected++;
           console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
           return;
         }
@@ -243,6 +262,7 @@ export class FeatureFlagProvider
         if (!event?.canceled) {
           return value;
         } else {
+          counts.cancelled++;
           console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
         }
       }),
@@ -252,11 +272,35 @@ export class FeatureFlagProvider
       reduce((acc, value) => acc.concat([value]), [] as Array<{ key: string; enabled: boolean }>),
     );
 
-    // wait for the onToggle observable to complete and get the toggled features
-    const toggledFeatures = await lastValueFrom(onToggle);
+    let toggledFeatures: Array<{ key: string; enabled: boolean }>;
+    try {
+      // wait for the onToggle observable to complete and get the toggled features
+      toggledFeatures = await lastValueFrom(onToggle);
+    } catch (error) {
+      end('failure', counts);
+      throw error;
+    }
 
     // dispatch the toggle values to the state
     this.#state.next(actions.toggleFeatures(toggledFeatures));
+
+    const applied = toggledFeatures.length;
+    // A request where listeners vetoed everything that could apply is a cancellation;
+    // rejected (unregistered or read-only) flags are reported as counts, not failures.
+    end(applied === 0 && counts.cancelled > 0 ? 'cancelled' : 'success', { ...counts, applied });
+  }
+
+  /**
+   * Connects host telemetry for operational feature-flag records once all providers exist.
+   *
+   * Each `toggleFeature`/`toggleFeatures` call reports one `fusion.feature-flag.toggle`
+   * outcome with `requested`, `applied`, `rejected` and `cancelled` counts. Reads such as
+   * `hasFeature` and `getFeature` are never recorded, and feature keys and values are omitted.
+   *
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry.connect(telemetry ? () => telemetry : undefined);
   }
 
   /**

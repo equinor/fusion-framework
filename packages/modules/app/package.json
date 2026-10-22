@@ -73,6 +73,7 @@
     "directory": "packages/modules/app"
   },
   "dependencies": {
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
     "@equinor/fusion-query": "workspace:^",
     "fast-deep-equal": "^3.1.3",

@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-log": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
     "@equinor/fusion-query": "workspace:^",

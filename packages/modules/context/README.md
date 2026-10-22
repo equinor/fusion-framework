@@ -87,6 +87,22 @@ await modules.context.setCurrentContextByIdAsync('7fd97952-...');
 modules.context.clearCurrentContext();
 ```
 
+## Operational telemetry
+
+When the host registers telemetry, each queued `setCurrentContext` task reports one
+`fusion.context.select.duration` outcome and each resolution attempt reports
+`fusion.context.resolve.duration`:
+
+- `failure` with reason `validation` when validation fails and resolution is disabled;
+- `cancelled` with reason `listener` when an `onSetContextResolve`,
+  `onSetContextResolved` or `onCurrentContextChange` listener calls `preventDefault()`;
+- `cancelled` when a newer task supersedes the task, the caller unsubscribes, or the
+  provider is disposed (reason `disposed`).
+
+Re-setting the current item without validation is skipped and reports nothing.
+Context ids, titles and values are never exported, and context behavior is unchanged.
+See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
+
 ## Configuration
 
 All configuration flows through `enableContext` → `ContextModuleConfigurator`:

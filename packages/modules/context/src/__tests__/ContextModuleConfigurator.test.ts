@@ -384,10 +384,13 @@ describe('ContextProvider through the real module system (http mocked at the net
     const [item] = adapter.getItems('Context::postInitialize.resolveInitialContext');
     expect(item).toMatchObject({
       name: 'Context::postInitialize.resolveInitialContext',
-      exception: resolverError,
+      exception: expect.objectContaining({ message: 'Context initial resolution failed' }),
       level: TelemetryLevel.Warning,
       scope: ['context', TelemetryScope.Framework],
     });
+    // The original error stays local; only a controlled message is exported.
+    expect(JSON.stringify(item, Object.getOwnPropertyNames(item))).not.toContain('boom');
+    expect((item as { exception?: Error }).exception).not.toBe(resolverError);
 
     warnSpy.mockRestore();
   });
@@ -406,7 +409,7 @@ describe('ContextProvider through the real module system (http mocked at the net
       name: 'Context::postInitialize.initialContextResolved',
       level: TelemetryLevel.Debug,
       scope: ['context', TelemetryScope.Framework],
-      properties: { contextId: 'ctx-1' },
+      properties: { resolved: true },
     });
   });
 });

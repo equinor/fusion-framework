@@ -16,6 +16,13 @@ import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom,
 import type WidgetModuleProvider from './WidgetModuleProvider.js';
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import {
+  OperationalTelemetry,
+  type OperationalProperties,
+} from './integrations/OperationalTelemetry.js';
+import { observeLoadStages } from './integrations/observe-load-stages.js';
+
 import './events.js';
 
 /**
@@ -51,6 +58,8 @@ export class Widget {
 
   #subscription = new Subscription();
 
+  #telemetry: OperationalTelemetry;
+
   /**
    * Current snapshot of the widget's internal state (manifest, config, modules, status).
    *
@@ -72,6 +81,7 @@ export class Widget {
    * @param args.config - Optional module-level HTTP client configuration.
    * @param args.event - Optional event module for dispatching lifecycle events.
    * @param args.widgetPrams - Optional version/tag selector for the widget.
+   * @param args.telemetry - Optional lazy telemetry lookup for operational load-stage records.
    */
   constructor(
     value: WidgetStateInitial,
@@ -80,6 +90,7 @@ export class Widget {
       config?: WidgetModuleConfig;
       event?: ModuleType<EventModule>;
       widgetPrams?: GetWidgetParameters['args'];
+      telemetry?: () => ITelemetryProvider | undefined;
     },
   ) {
     this.name = value.name;
@@ -87,6 +98,39 @@ export class Widget {
     this.config = args.config;
     this.#state = createState(value, args.provider);
     args.event && this.#registerEvents(args.event);
+
+    // Each widget owns its records, so disposing one cannot cancel another widget's stages.
+    this.#telemetry = new OperationalTelemetry('widget', args.telemetry);
+    this.#subscription.add(
+      observeLoadStages(this.#state.action$, this.#telemetry, {
+        stages: {
+          fetch_manifest: 'load-manifest',
+          fetch_config: 'load-config',
+          import_widget: 'import',
+          initialize_widget: 'load',
+        },
+        // Overlapping `initialize()` calls each settle; the fetch flows use switchMap.
+        concurrent: ['initialize_widget'],
+        identity: () => this.#identity(),
+      }),
+    );
+  }
+
+  /**
+   * Static widget identity for operational records; configuration bodies are never read.
+   * @returns The validated widget key and loaded version, when available.
+   */
+  #identity(): OperationalProperties {
+    const key = OperationalTelemetry.safeIdentity(this.name);
+    const version = OperationalTelemetry.safeIdentity(
+      this.#state.value.manifest?.version,
+      'version',
+    );
+    // Unsafe or missing identity is omitted rather than exported.
+    return {
+      ...(key ? { widgetKey: key } : {}),
+      ...(version ? { widgetVersion: version } : {}),
+    };
   }
 
   /**
@@ -398,6 +442,8 @@ export class Widget {
    * After disposal the widget instance should not be reused.
    */
   public dispose() {
+    // Stages interrupted by disposal are cancellations; nothing is emitted afterwards.
+    this.#telemetry.close({ ...this.#identity(), reason: 'unloaded' });
     this.#subscription.unsubscribe();
   }
 }

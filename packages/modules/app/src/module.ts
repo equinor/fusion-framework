@@ -1,5 +1,6 @@
 import type { Module } from '@equinor/fusion-framework-module';
 import type { ModuleDeps } from './types.js';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import { AppConfigurator } from './AppConfigurator.js';
 import { AppModuleProvider } from './AppModuleProvider.js';
@@ -38,6 +39,14 @@ export const module: AppModule = {
     const config = await args.config.createConfigAsync(args);
     const event = await args.requireInstance('event').catch(() => undefined);
     return new AppModuleProvider({ config, event });
+  },
+  /**
+   * Connects optional host telemetry once providers exist, without an initialization dependency.
+   * @param args - The post-initialization arguments.
+   */
+  postInitialize: async ({ instance, modules }) => {
+    const { telemetry } = modules as { telemetry?: ITelemetryProvider };
+    instance.connectTelemetry(telemetry);
   },
   /**
    * Disposes the module.

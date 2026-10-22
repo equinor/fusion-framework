@@ -2307,6 +2307,9 @@ importers:
 
   packages/modules/app:
     dependencies:
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
@@ -2388,6 +2391,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@equinor/fusion-log':
         specifier: workspace:^
         version: link:../../utils/log
@@ -2499,6 +2505,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
@@ -2798,6 +2807,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
@@ -2905,6 +2917,9 @@ importers:
 
   packages/modules/widget:
     dependencies:
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@equinor/fusion-observable':
         specifier: workspace:*
         version: link:../../utils/observable

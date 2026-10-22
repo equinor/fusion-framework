@@ -117,6 +117,21 @@ All API requests map HTTP status codes to typed error classes:
 
 Each error includes a `type` property (`'not_found'`, `'unauthorized'`, `'deleted'`, or `'unknown'`) for programmatic handling.
 
+## Operational telemetry
+
+When the host registers telemetry, every app reports one `fusion.app.<stage>.duration`
+outcome per attempted stage: `load-manifest`, `load-config`, `load-settings`,
+`update-settings`, `import`, the terminal `load` outcome of `initialize()`, and `unload`
+when the app is replaced or cleared. Outcomes are `success`, `failure` (plus one
+sanitized `.failure` exception with a static reason such as `not-found`) or `cancelled`
+(reason `superseded` or `unloaded`). Records carry only the validated `appKey` and
+`appVersion`; manifests, configuration, settings, URLs and error messages are never
+exported. A replaced app stops reporting immediately.
+
+Telemetry is connected after initialization and is never awaited, so loading results,
+errors and cancellation are unchanged. Exclude these records with a telemetry adapter
+or relay filter on `diagnostic.module === 'app'`. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
+
 ## Testing
 
 Import from `@equinor/fusion-framework-module-app/mock` to serve one app's manifest

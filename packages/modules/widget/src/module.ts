@@ -1,5 +1,6 @@
 import type { Module } from '@equinor/fusion-framework-module';
 import type { ModuleDeps } from './types.js';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import { WidgetModuleConfigurator } from './WidgetModuleConfigurator.js';
 import { type IWidgetModuleProvider, WidgetModuleProvider } from './WidgetModuleProvider.js';
@@ -40,6 +41,11 @@ export const module: WidgetModule = {
     const config = await args.config.createConfigAsync(args);
     const event = await args.requireInstance('event').catch(() => undefined);
     return new WidgetModuleProvider({ config, event });
+  },
+  postInitialize: async ({ instance, modules }) => {
+    // Providers opt in through the interface; telemetry stays optional and is never awaited.
+    const { telemetry } = modules as { telemetry?: ITelemetryProvider };
+    instance.connectTelemetry?.(telemetry);
   },
   dispose: (args) => {
     // `args.instance` is typed as the generic module instance, but the module descriptor

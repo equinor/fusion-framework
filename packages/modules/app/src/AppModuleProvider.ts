@@ -11,6 +11,7 @@ import {
 
 import type { ModuleType } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import type {
   AppConfig,
@@ -66,6 +67,11 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
   #subscription = new Subscription();
 
   #event?: ModuleType<EventModule>;
+
+  #telemetry?: ITelemetryProvider;
+
+  /** Lazy lookup shared with every app, so disconnecting stops all of their records. */
+  readonly #telemetryRef = (): ITelemetryProvider | undefined => this.#telemetry;
 
   /**
    * The current active application instance.
@@ -223,7 +229,10 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
   public setCurrentApp(appKeyOrApp: string | IApp | AppReference): void {
     // a plain string is treated as an appKey to create a new App from
     if (typeof appKeyOrApp === 'string') {
-      const newApp = new App({ appKey: appKeyOrApp }, { provider: this, event: this.#event });
+      const newApp = new App(
+        { appKey: appKeyOrApp },
+        { provider: this, event: this.#event, telemetry: this.#telemetryRef },
+      );
       this.#current$.next(newApp as CurrentApp);
       return;
     }
@@ -232,7 +241,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
     if (appKeyOrApp.appKey && 'tag' in appKeyOrApp) {
       const newApp = new App(
         { appKey: appKeyOrApp.appKey, tag: appKeyOrApp.tag },
-        { provider: this, event: this.#event },
+        { provider: this, event: this.#event, telemetry: this.#telemetryRef },
       );
       this.#current$.next(newApp as CurrentApp);
       return;
@@ -265,13 +274,29 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    */
   public createApp(value: AppBundleStateInitial): App {
     console.warn('AppModuleProvider.createApp is deprecated and should not be used.');
-    return new App(value, { provider: this, event: this.#event });
+    return new App(value, { provider: this, event: this.#event, telemetry: this.#telemetryRef });
+  }
+
+  /**
+   * Connects host telemetry after all providers exist, so app loading never waits on it.
+   *
+   * Apps then report `fusion.app.<stage>.duration` records for the manifest, configuration,
+   * settings and import stages, the terminal `load` outcome of `initialize()`, settings
+   * updates and unload. Records carry only the stage, outcome, a static reason code and the
+   * validated app key and version.
+   *
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry = telemetry;
   }
 
   /**
    * Tears down the provider, unsubscribing from all internal observables.
    */
   public dispose(): void {
+    // Apps that outlive the provider must not report through a torn-down host.
+    this.#telemetry = undefined;
     super.dispose();
     this.#subscription.unsubscribe();
   }
