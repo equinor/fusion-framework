@@ -79,8 +79,9 @@ describe('bookmark operational telemetry', () => {
 
     expect(durations(summary())).toEqual([
       ['create', 'success'],
-      ['payload-resolve', 'success'],
+      // Metadata and payload fetches are separate store requests, measured from dispatch.
       ['get', 'success'],
+      ['payload-resolve', 'success'],
       ['apply', 'success'],
       ['favourite-remove', 'success'],
       ['update', 'success'],
@@ -181,6 +182,46 @@ describe('bookmark operational telemetry', () => {
       name: 'b',
     });
     expect(warn).toHaveBeenCalledTimes(1);
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('measures eager fetches from the call, even when nobody subscribes', async () => {
+    const { modules, provider, summary } = await setup();
+    const created = await lastValueFrom(provider.createBookmark({ name: 'a', payload: {} }));
+    // The fetches are dispatched by the call itself; the result is never subscribed.
+    provider.getBookmark(created.id);
+    await vi.waitFor(() =>
+      expect(durations(summary())).toEqual([
+        ['create', 'success'],
+        ['get', 'success'],
+        ['payload-resolve', 'success'],
+      ]),
+    );
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('cancels a mutation abandoned before dispatch and releases its observer', async () => {
+    const { modules, provider, summary } = await setup();
+    // A slow payload generator keeps creation in preparation.
+    let release!: VoidFunction;
+    provider.addPayloadGenerator(
+      () =>
+        new Promise<void>((resolve) => {
+          release = resolve;
+        }),
+    );
+    const subscription = provider.createBookmark({ name: 'a', payload: {} }).subscribe({
+      error: () => undefined,
+    });
+    await vi.waitFor(() => expect(release).toBeDefined());
+    subscription.unsubscribe();
+    expect(summary()).toEqual([['fusion.bookmark.create.duration', 'cancelled', 'abandoned']]);
+    // Preparation finishing later neither dispatches nor records anything more.
+    release();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(summary()).toHaveLength(1);
     provider.dispose();
     await modules.dispose();
   });

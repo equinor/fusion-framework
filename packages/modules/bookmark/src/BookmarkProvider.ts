@@ -555,7 +555,6 @@ export class BookmarkProvider
       tap((bookmark) => {
         this._log?.debug(`Bookmark fetched: ${bookmark.id}`, bookmark);
       }),
-      this.#telemetry.measure('get', { payload: !options?.excludePayload }),
     );
   }
 
@@ -843,15 +842,17 @@ export class BookmarkProvider
     );
 
     // Measure from the call: the creation starts now, whether or not the caller subscribes.
-    const prepareFailed = this.#trackMutation('create', action$, bookmarkActions.createBookmark);
+    const tracker = this.#trackRequest('create', action$, bookmarkActions.createBookmark);
+    let dispatched = false;
 
     // Start the creation process immediately
     const createSubscription = dispatch$.subscribe({
       error: (error) => {
-        prepareFailed(error);
+        tracker.fail(error);
         this._log?.error(`Failed to prepare bookmark creation: ${ref}`, error);
       },
       next: (newBookmark) => {
+        dispatched = true;
         // request the store to create the bookmark
         this.#store.next(bookmarkActions.createBookmark(newBookmark, { ref }));
       },
@@ -890,7 +891,14 @@ export class BookmarkProvider
     // Return the observable that will emit the result
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the create subscription when the result observable is unsubscribed
-      subscriber.add(() => createSubscription.unsubscribe());
+      subscriber.add(() => {
+        createSubscription.unsubscribe();
+        // Abandoning the request before it is dispatched cancels it; once dispatched, the
+        // store result still ends it, whether or not anyone is subscribed.
+        if (!dispatched) {
+          tracker.cancel();
+        }
+      });
 
       // Emit the created bookmark
       request$.subscribe(subscriber);
@@ -982,15 +990,17 @@ export class BookmarkProvider
     );
 
     // Measure from the call: the update starts now, whether or not the caller subscribes.
-    const prepareFailed = this.#trackMutation('update', action$, bookmarkActions.updateBookmark);
+    const tracker = this.#trackRequest('update', action$, bookmarkActions.updateBookmark);
+    let dispatched = false;
 
     // Start the update process immediately
     const updateSubscription = dispatch$.subscribe({
       error: (error) => {
-        prepareFailed(error);
+        tracker.fail(error);
         this._log?.error(`Failed to prepare bookmark update: ${bookmarkId}`, error);
       },
       next: (updates) => {
+        dispatched = true;
         // trigger the store to update the bookmark
         this.#store.next(bookmarkActions.updateBookmark({ bookmarkId, updates }, { ref }));
       },
@@ -1036,7 +1046,14 @@ export class BookmarkProvider
     // Return the observable that will emit the result
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the update subscription when the result observable is unsubscribed
-      subscriber.add(() => updateSubscription.unsubscribe());
+      subscriber.add(() => {
+        updateSubscription.unsubscribe();
+        // Abandoning the request before it is dispatched cancels it; once dispatched, the
+        // store result still ends it, whether or not anyone is subscribed.
+        if (!dispatched) {
+          tracker.cancel();
+        }
+      });
 
       // Emit the updated bookmark
       request$.subscribe(subscriber);
@@ -1125,15 +1142,17 @@ export class BookmarkProvider
     );
 
     // Measure from the call: the deletion starts now, whether or not the caller subscribes.
-    const prepareFailed = this.#trackMutation('delete', action$, bookmarkActions.deleteBookmark);
+    const tracker = this.#trackRequest('delete', action$, bookmarkActions.deleteBookmark);
+    let dispatched = false;
 
     // Start the deletion process immediately
     const deleteSubscription = dispatch$.subscribe({
       error: (error) => {
-        prepareFailed(error);
+        tracker.fail(error);
         this._log?.error(`Failed to prepare bookmark deletion: ${bookmarkId}`, error);
       },
       next: (bookmark) => {
+        dispatched = true;
         // request the store to delete the bookmark
         this.#store.next(bookmarkActions.deleteBookmark(bookmark.id, { ref }));
       },
@@ -1172,7 +1191,14 @@ export class BookmarkProvider
     // Return the observable that will emit the result
     return new Observable<void>((subscriber) => {
       // Clean up the delete subscription when the result observable is unsubscribed
-      subscriber.add(() => deleteSubscription.unsubscribe());
+      subscriber.add(() => {
+        deleteSubscription.unsubscribe();
+        // Abandoning the request before it is dispatched cancels it; once dispatched, the
+        // store result still ends it, whether or not anyone is subscribed.
+        if (!dispatched) {
+          tracker.cancel();
+        }
+      });
 
       // Emit the deletion result
       request$.subscribe(subscriber);
@@ -1467,6 +1493,8 @@ export class BookmarkProvider
       }),
     );
 
+    // The fetch is dispatched now, so it is measured now, whether or not anyone subscribes.
+    this.#trackRequest('get', action$, bookmarkActions.fetchBookmark);
     this.#store.next(bookmarkActions.fetchBookmark(bookmarkId, { ref: bookmarkId }));
 
     // race the success and failure streams, whichever resolves first wins
@@ -1513,11 +1541,13 @@ export class BookmarkProvider
       }),
     );
 
+    // The fetch is dispatched now, so it is measured now, whether or not anyone subscribes.
+    this.#trackRequest('payload-resolve', action$, bookmarkActions.fetchBookmarkData);
     // request the store to fetch the bookmark data
     this.#store.next(bookmarkActions.fetchBookmarkData(bookmarkId, { ref: bookmarkId }));
 
     // race the success and failure streams, whichever resolves first wins
-    return success$.pipe(raceWith(failure$), this.#telemetry.measure('payload-resolve'));
+    return success$.pipe(raceWith(failure$));
   }
 
   /**
@@ -1586,7 +1616,8 @@ export class BookmarkProvider
    * Reports one `fusion.bookmark.<operation>.duration` outcome per attempted `get`, `list`,
    * `apply`, `create`, `update`, `delete`, `favourite-add`, `favourite-remove` and
    * `payload-resolve` operation. A listener canceling the matching event is recorded as
-   * `cancelled` with reason `listener`, never as a failure. Bookmark names, ids, payloads and
+   * `cancelled` with reason `listener`, never as a failure; a mutation abandoned before it is
+   * sent is `cancelled` with reason `abandoned`. Bookmark names, ids, payloads and
    * error messages are never included.
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
@@ -1596,43 +1627,53 @@ export class BookmarkProvider
   }
 
   /**
-   * Measures a mutation that starts immediately, independent of the caller's subscription.
-   * The outcome is the scoped store result, or the preparation error when the request is
-   * never dispatched (for example, a listener veto).
+   * Measures a store request that starts immediately, independent of the caller's
+   * subscription. The outcome is the first scoped success or failure action, the preparation
+   * error when the request is never dispatched (for example, a listener veto), or
+   * `cancelled` when the caller abandons the request before it is dispatched.
    * @param operation - Static operation label.
-   * @param action$ - Store actions scoped to this mutation's reference.
-   * @param creator - Async action creator whose success/failure actions end the mutation.
+   * @param action$ - Store actions scoped to this request's reference.
+   * @param creator - Async action creator whose success/failure actions end the request.
    * @param creator.success - Success action creator.
    * @param creator.failure - Failure action creator.
-   * @returns A callback for the preparation error path.
+   * @returns Callbacks for the preparation error and abandonment paths.
    */
-  #trackMutation(
+  #trackRequest(
     operation: string,
     action$: Observable<BookmarkActions>,
     creator: {
       success: { match: (action: BookmarkActions) => boolean };
       failure: { match: (action: BookmarkActions) => boolean };
     },
-  ): (error: unknown) => void {
-    // Absent telemetry adds no store subscription.
-    if (!this.#telemetry.active) {
-      return () => undefined;
+  ): { fail: (error: unknown) => void; cancel: VoidFunction } {
+    const end = this.#telemetry.reserve(operation);
+    // Without a reserved timer (telemetry absent, closed or at capacity), add no observer.
+    if (!end) {
+      return { fail: () => undefined, cancel: () => undefined };
     }
-    const end = this.#telemetry.start(operation);
-    // Only the first terminal store action for this mutation's reference ends it.
+    // Only the first terminal store action for this request's reference ends it.
     const subscription = action$
       .pipe(
         filter((action) => creator.success.match(action) || creator.failure.match(action)),
         take(1),
       )
       .subscribe((action) => end(creator.success.match(action) ? 'success' : 'failure'));
-    // Owned by the provider, and released as soon as the mutation settles.
+    // Owned by the provider until the request settles, so disposal releases it.
     this.#subscriptions.add(subscription);
-    return (error) => {
+    const release = (): void => {
       subscription.unsubscribe();
       this.#subscriptions.remove(subscription);
-      const { outcome, reason } = OperationalTelemetry.classifyError(error);
-      end(outcome, reason ? { reason } : undefined);
+    };
+    return {
+      fail: (error) => {
+        release();
+        const { outcome, reason } = OperationalTelemetry.classifyError(error);
+        end(outcome, reason ? { reason } : undefined);
+      },
+      cancel: () => {
+        release();
+        end('cancelled', { reason: 'abandoned' });
+      },
     };
   }
 
