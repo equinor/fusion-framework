@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { type MonoTypeOperatorFunction, type Observable, tap } from 'rxjs';
 import { IterableReadableStream } from '@langchain/core/utils/stream';
 import type { OperationalOutcome } from '@equinor/fusion-framework-module-telemetry/schemas';
 import type { AiOperation, AiReport } from './create-ai-reporter.js';
@@ -6,11 +6,14 @@ import type { AiOperation, AiReport } from './create-ai-reporter.js';
 /**
  * Shape of an instrumented method's result, which decides where the execution ends:
  * - `promise`: settlement of the returned promise;
- * - `observable`: completion, error or unsubscription of each subscription;
+ * - `observable`: completion, error or unsubscription of the first subscription;
  * - `stream`: end, error or cancellation of the resolved LangChain stream;
  * - `generator`: end, error or early return of the async generator.
  */
 export type ExecutionKind = 'promise' | 'observable' | 'stream' | 'generator';
+
+/** Records one terminal outcome; later calls are ignored. */
+type RecordOutcome = (outcome: OperationalOutcome) => void;
 
 /** Cancellation is an expected terminal outcome, not a failure. */
 const classify = (error: unknown, signal: AbortSignal | undefined): OperationalOutcome =>
@@ -19,11 +22,54 @@ const classify = (error: unknown, signal: AbortSignal | undefined): OperationalO
     : 'failure';
 
 /**
+ * Starts timing one execution and returns its recorder.
+ *
+ * @param operation - Static operation label.
+ * @param report - Isolated outcome reporter.
+ * @returns A recorder reporting the first outcome with the time elapsed since this call.
+ */
+function startExecution(operation: AiOperation, report: AiReport): RecordOutcome {
+  const started = performance.now();
+  let recorded = false;
+  return (outcome) => {
+    // One execution has one terminal outcome, even if it both errors and is cancelled.
+    if (!recorded) {
+      recorded = true;
+      report(operation, outcome, performance.now() - started);
+    }
+  };
+}
+
+/**
+ * Records the terminal outcome of an observable without altering its notifications.
+ * As an operator, it is chained to the downstream subscriber, so synchronous downstream
+ * cancellation such as `take(1)` stops the source and is recorded as `cancelled`.
+ *
+ * @param record - Recorder of the execution.
+ * @param signal - Caller abort signal, used only to classify cancellation.
+ * @returns An operator passing all notifications through.
+ */
+const recordTerminal = (
+  record: RecordOutcome,
+  signal: AbortSignal | undefined,
+): MonoTypeOperatorFunction<unknown> =>
+  tap({
+    complete: () => record('success'),
+    error: (error: unknown) => record(classify(error, signal)),
+    // Unsubscribing before a terminal notification is the consumer cancelling the execution.
+    unsubscribe: () => record('cancelled'),
+  });
+
+/**
  * Measures one AI execution from its start until its terminal outcome, exactly once.
  *
  * The original result, values, errors and cancellation are passed through unchanged; only
  * the outcome and elapsed milliseconds are reported. No per-chunk records are produced and
  * time-to-first-result is intentionally not measured.
+ *
+ * An `invoke$` call is one execution timed from the call, because clients may start their
+ * request before returning the observable (the built-in Azure clients do). Its first
+ * subscription ends the record; resubscribing produces no further records.
  *
  * @param kind - How the execution ends, see {@link ExecutionKind}.
  * @param operation - Static operation label.
@@ -40,127 +86,103 @@ export function measureExecution(
   signal: AbortSignal | undefined,
   run: () => unknown,
 ): unknown {
-  // Observables and generators are lazy: each subscription or iteration is one execution.
-  if (kind === 'observable') {
-    return observeObservable(run() as Observable<unknown>, operation, report, signal);
-  }
-  // Generator results are wrapped the same way as observables, timing from first iteration.
+  // An async generator executes nothing until iterated, so it times itself from the first pull.
   if (kind === 'generator') {
     return observeGenerator(run() as AsyncGenerator<unknown>, operation, report, signal);
   }
-  const started = performance.now();
-  let settled = false;
-  const finish = (outcome: OperationalOutcome): void => {
-    // A terminal outcome is recorded once, even if a stream both errors and is cancelled.
-    if (!settled) {
-      settled = true;
-      report(operation, outcome, performance.now() - started);
-    }
-  };
+  const record = startExecution(operation, report);
   let result: unknown;
   try {
     result = run();
   } catch (error) {
-    finish(classify(error, signal));
+    record(classify(error, signal));
     throw error;
+  }
+  // Observable results end with their first subscription's terminal notification.
+  if (kind === 'observable') {
+    // Chain the recorder so it observes exactly what the downstream subscriber observes.
+    return (result as Observable<unknown>).pipe(recordTerminal(record, signal));
   }
   return Promise.resolve(result).then(
     (value) => {
       // A resolved stream is only the start of the execution; its consumption ends it.
       if (kind === 'stream') {
-        return observeStream(value as AsyncIterable<unknown>, finish, signal);
+        return observeStream(value as AsyncIterable<unknown>, record, signal);
       }
-      finish('success');
+      record('success');
       return value;
     },
     (error: unknown) => {
-      finish(classify(error, signal));
+      record(classify(error, signal));
       throw error;
     },
   );
 }
 
-function observeObservable(
-  source: Observable<unknown>,
-  operation: AiOperation,
-  report: AiReport,
-  signal: AbortSignal | undefined,
-): Observable<unknown> {
-  return new Observable((subscriber) => {
-    const started = performance.now();
-    let settled = false;
-    const finish = (outcome: OperationalOutcome): void => {
-      // Each subscription reports exactly one terminal outcome.
-      if (!settled) {
-        settled = true;
-        report(operation, outcome, performance.now() - started);
-      }
-    };
-    const subscription = source.subscribe({
-      next: (value) => subscriber.next(value),
-      error: (error: unknown) => {
-        finish(classify(error, signal));
-        subscriber.error(error);
-      },
-      complete: () => {
-        finish('success');
-        subscriber.complete();
-      },
-    });
-    return () => {
-      subscription.unsubscribe();
-      // Unsubscribing before a terminal notification is the consumer cancelling the stream.
-      finish('cancelled');
-    };
-  });
-}
-
+/**
+ * Passes an async generator through unchanged while recording its terminal outcome.
+ *
+ * LangChain's `transform` contract returns a pull-based `AsyncGenerator`. Delegating with
+ * `yield*` keeps pulling one chunk at a time and forwards early `return()` to the source,
+ * which converting to an Observable and back would not.
+ *
+ * @param source - Generator returned by the original client.
+ * @param operation - Static operation label.
+ * @param report - Isolated outcome reporter.
+ * @param signal - Caller abort signal, used only to classify cancellation.
+ * @returns A generator yielding the same chunks.
+ */
 async function* observeGenerator(
   source: AsyncGenerator<unknown>,
   operation: AiOperation,
   report: AiReport,
   signal: AbortSignal | undefined,
 ): AsyncGenerator<unknown> {
-  // Timing starts with iteration, because creating a generator executes nothing.
-  const started = performance.now();
-  let outcome: OperationalOutcome = 'cancelled';
+  const record = startExecution(operation, report);
   try {
     yield* source;
-    outcome = 'success';
+    record('success');
   } catch (error) {
-    outcome = classify(error, signal);
+    record(classify(error, signal));
     throw error;
   } finally {
-    // An early `return()` from the consumer leaves the outcome as cancelled.
-    report(operation, outcome, performance.now() - started);
+    // Reached without an outcome only when the consumer stopped iterating early.
+    record('cancelled');
   }
 }
 
+/**
+ * Re-exposes a LangChain stream while recording when its consumption ends.
+ *
+ * @param source - Stream resolved by the original client.
+ * @param record - Recorder of the execution.
+ * @param signal - Caller abort signal, used only to classify cancellation.
+ * @returns A stream of the same type, so readers, piping and `for await` keep working.
+ */
 function observeStream(
   source: AsyncIterable<unknown>,
-  finish: (outcome: OperationalOutcome) => void,
+  record: RecordOutcome,
   signal: AbortSignal | undefined,
 ): IterableReadableStream<unknown> {
   const iterator = source[Symbol.asyncIterator]();
-  // Same stream type as LangChain returns, so readers, piping and `for await` keep working.
   return new IterableReadableStream<unknown>({
     async pull(controller) {
       try {
         const { value, done } = await iterator.next();
         // Exhausting the source is the successful end of the stream.
         if (done) {
-          finish('success');
+          record('success');
           controller.close();
           return;
         }
         controller.enqueue(value);
       } catch (error) {
-        finish(classify(error, signal));
+        record(classify(error, signal));
         controller.error(error);
       }
     },
     async cancel(reason) {
-      finish('cancelled');
+      record('cancelled');
       await iterator.return?.(reason);
     },
   });

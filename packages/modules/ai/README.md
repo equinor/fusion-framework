@@ -159,7 +159,9 @@ Each record carries `success`, `failure` or `cancelled` in its `diagnostic` enve
 failure adds one `.failure` exception with a controlled message. An aborted `signal`, an
 unsubscribed observable or a stream the consumer stops reading is `cancelled`, not a failure.
 A stream's duration ends when it completes, fails or is cancelled, not at the first chunk;
-time to first result is not recorded. A search includes its query embedding and produces no
+time to first result is not recorded. An `invoke$` call is one execution, timed from the
+call because clients may start their request before it is subscribed; its first subscription
+ends the record, and resubscribing adds none. A search includes its query embedding and produces no
 separate embed record. Chains, `batch` and other LangChain composition reach the measured
 `invoke`, so each underlying model call is recorded.
 
