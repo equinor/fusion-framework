@@ -350,6 +350,16 @@ describe('AI execution telemetry', () => {
     expect(exported).not.toContain('deployment');
   });
 
+  it('leaves inherited object members such as constructor and toString untouched', async () => {
+    const { model, track } = await setup();
+    const llm = model(['a']);
+
+    expect(llm.constructor).toBe(FakeModel);
+    expect(llm.toString()).toBe(nextModel.toString());
+    expect(llm.valueOf()).not.toBeInstanceOf(Promise);
+    expect(track).not.toHaveBeenCalled();
+  });
+
   it('returns the strategy client untouched when telemetry is not connected', () => {
     const provider = new AiProvider({ strategies } as never);
     nextModel = new FakeModel(['a']);

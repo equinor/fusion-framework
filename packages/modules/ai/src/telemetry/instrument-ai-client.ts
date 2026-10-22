@@ -50,7 +50,9 @@ export function instrumentAiClient<T>(client: T, plan: InstrumentationPlan, repo
     get(obj, property) {
       // Accessors read the original client, so getters over private state keep working.
       const value: unknown = Reflect.get(obj, property, obj);
-      const entry = typeof property === 'string' ? plan[property] : undefined;
+      // Only the plan's own keys count; inherited names such as `constructor` are not planned.
+      const entry =
+        typeof property === 'string' && Object.hasOwn(plan, property) ? plan[property] : undefined;
       // Unplanned members and non-callable values pass through untouched.
       if (!entry || typeof value !== 'function') {
         return value;
