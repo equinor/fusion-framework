@@ -172,7 +172,9 @@ telemetry, including when telemetry delivery fails. Executions that finish after
 is disposed are not recorded.
 
 Not covered: clients constructed directly (for example `new AzureOpenAIModel(...)`), index
-`addDocuments`/`deleteDocuments`, LangChain `streamEvents`, and tools' own execution.
+`addDocuments`/`deleteDocuments`, LangChain `streamEvents`, tools' own execution, a custom
+client's own `batch` implementation, and read-only, non-configurable own methods, which are
+left unwrapped.
 
 ## Error handling
 

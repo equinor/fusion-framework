@@ -25,7 +25,6 @@ const createModelRunnablePlan = (): InstrumentationPlan => {
     | { readonly returns: InstrumentationPlan }
   > = {
     invoke: { kind: 'promise', operation: 'model-invoke' },
-    batch: { kind: 'promise', operation: 'model-invoke' },
     invoke$: { kind: 'observable', operation: 'model-stream' },
     stream: { kind: 'stream', operation: 'model-stream' },
     transform: { kind: 'generator', operation: 'model-stream' },

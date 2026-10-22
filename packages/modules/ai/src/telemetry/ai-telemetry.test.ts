@@ -350,14 +350,13 @@ describe('AI execution telemetry', () => {
     ]);
     await expect(chain.invoke('q')).resolves.toBe(6);
     await llm.batch(['a', 'b']);
+    // Empty batches make no model calls, so they record nothing.
+    await expect(llm.batch([])).resolves.toEqual([]);
+    await expect(bound.batch([])).resolves.toEqual([]);
 
-    expect(outcomes()).toEqual([
-      'fusion.ai.model-invoke.duration:success',
-      'fusion.ai.model-invoke.duration:success',
-      'fusion.ai.model-invoke.duration:success',
-      'fusion.ai.model-invoke.duration:success',
-      'fusion.ai.model-invoke.duration:success',
-    ]);
+    // One record per underlying call: invoke, 2 bound batch inputs, configured invoke, chain,
+    // and 2 model batch inputs.
+    expect(outcomes()).toEqual(Array(7).fill('fusion.ai.model-invoke.duration:success'));
     expect(JSON.stringify(track.mock.calls)).not.toContain(SENTINEL);
   });
 
@@ -395,10 +394,10 @@ describe('AI execution telemetry', () => {
     const llm = provider.useModel('m', { strategy: 'custom' });
 
     await expect(llm.batch(['x', 'y'])).resolves.toEqual(['private:x', 'private:y']);
-    // The planned batch entry point is measured without changing the private-state receiver.
-    expect(track).toHaveBeenCalledTimes(1);
+    // A custom batch is not a measured entry point, and nothing broke with telemetry on.
+    expect(track).not.toHaveBeenCalled();
     await expect(llm.invoke('q')).resolves.toBe('a');
-    expect(track).toHaveBeenCalledTimes(2);
+    expect(track).toHaveBeenCalledTimes(1);
   });
 
   it('leaves inherited object members such as constructor and toString untouched', async () => {
@@ -419,15 +418,28 @@ describe('AI execution telemetry', () => {
     expect(provider.useEmbed()).toBe(embedClient);
   });
 
-  it('leaves non-extensible clients untouched instead of violating proxy invariants', async () => {
+  it('measures frozen clients through their prototype methods', async () => {
     const { provider, track } = await setup();
-    const frozen = Object.freeze(new FrozenModel(['frozen']));
-    nextModel = frozen;
+    nextModel = Object.freeze(new FrozenModel(['frozen']));
 
     const client = provider.useModel('m', { strategy: 'custom' });
 
-    expect(client).toBe(frozen);
     await expect(client.invoke('q')).resolves.toBe('frozen');
+    expect(track).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns immutable own methods unwrapped instead of violating proxy invariants', async () => {
+    const { provider, track } = await setup();
+    const immutable = new FakeModel(['a']);
+    const invoke = async (): Promise<string> => 'immutable';
+    Object.defineProperty(immutable, 'invoke', { value: invoke });
+    nextModel = immutable;
+
+    const client = provider.useModel('m', { strategy: 'custom' });
+
+    expect(Object.isExtensible(immutable)).toBe(true);
+    expect(client.invoke).toBe(invoke);
+    await expect(client.invoke('q')).resolves.toBe('immutable');
     expect(track).not.toHaveBeenCalled();
   });
 

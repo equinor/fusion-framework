@@ -1,4 +1,4 @@
-import { Runnable } from '@langchain/core/runnables';
+import { Runnable, RunnableBinding } from '@langchain/core/runnables';
 import { BaseService } from '../lib/BaseService.js';
 import type { AiOperation, AiReport } from './create-ai-reporter.js';
 import { type ExecutionKind, measureExecution } from './measure-execution.js';
@@ -67,6 +67,11 @@ function wrapMethod(
         method.apply(client, args),
       );
   }
+  // A binding's batch hands inputs to the raw bound runnable; the generic batch runs on the
+  // wrapper and calls the measured `invoke` once per input, honouring the same batch options.
+  if (method === RunnableBinding.prototype.batch) {
+    return Runnable.prototype.batch as Method;
+  }
   // Unchanged LangChain composition runs on the wrapper and reaches the measured methods.
   if (isInheritedComposition(property, method)) {
     return method;
@@ -83,7 +88,9 @@ function wrapMethod(
  * working and the client's internal self-calls (such as a default `invoke` delegating to
  * `invoke$`) are not measured twice. Composition methods inherited unchanged from LangChain's
  * `Runnable` (`pipe`, `batch`, `asRunnable`, ...) run on the wrapper, so they reach the measured
- * methods. Properties, prototype and `instanceof` are those of the original client.
+ * methods; a `RunnableBinding` batch uses that generic batch too. Read-only, non-configurable
+ * own methods are returned unwrapped, as Proxy invariants require. Properties, prototype and
+ * `instanceof` are those of the original client.
  *
  * @template T - Client type, preserved for callers.
  * @param client - Client returned by a strategy.
@@ -96,16 +103,17 @@ export function instrumentAiClient<T>(client: T, plan: InstrumentationPlan, repo
   if ((typeof client !== 'object' && typeof client !== 'function') || client === null) {
     return client;
   }
-  // Non-extensible clients can have immutable own methods that a proxy cannot replace.
-  if (!Object.isExtensible(client)) {
-    return client;
-  }
   const target = client as object;
   const wrapped = new Map<PropertyKey, { method: Method; member: Method }>();
   return new Proxy(target, {
     get(obj, property) {
       // Accessors read the original client, so getters over private state keep working.
       const value: unknown = Reflect.get(obj, property, obj);
+      const own = Reflect.getOwnPropertyDescriptor(obj, property);
+      // Proxy invariants require read-only, non-configurable own members to be returned as is.
+      if (own?.configurable === false && own.writable === false) {
+        return value;
+      }
       // Data properties and the class reference pass through untouched.
       if (typeof value !== 'function' || property === 'constructor') {
         return value;
