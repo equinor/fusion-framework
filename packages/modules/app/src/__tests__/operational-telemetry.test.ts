@@ -198,12 +198,84 @@ describe('app load-stage telemetry', () => {
       ['fusion.app.import.duration', 'cancelled', 'superseded'],
       ['fusion.app.import.duration', 'failure', 'error'],
       ['fusion.app.import.failure', 'failure', 'error'],
-      ['fusion.app.load.duration', 'failure', 'error'],
-      ['fusion.app.load.failure', 'failure', 'error'],
+      // The load outcome is the caller's result; stage records carry the classified reason.
+      ['fusion.app.load.duration', 'failure', undefined],
+      ['fusion.app.load.failure', 'failure', undefined],
     ]);
     // The entry point carries a token, which must not leak through the import failure.
     expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
     await modules.dispose();
+  });
+
+  it('records an abandoned initialize() as cancelled without settling a later attempt', async () => {
+    const pending = deferred<AppManifest>();
+    let call = 0;
+    const { modules, records } = await setup(
+      createClient({
+        getAppManifest: async ({ appKey }: { appKey: string }) =>
+          call++ === 0 ? pending.promise : manifest(appKey),
+      }),
+    );
+    modules.app.setCurrentApp('my-app');
+    const app = required(modules.app.current);
+    app
+      .initialize()
+      .subscribe({ error: () => undefined })
+      .unsubscribe();
+    await expect(lastValueFrom(app.initialize())).rejects.toBeDefined();
+    await vi.waitFor(() =>
+      expect(records().filter((item) => item.name === 'fusion.app.load.duration')).toHaveLength(2),
+    );
+    expect(summary(records().filter((item) => item.name === 'fusion.app.load.duration'))).toEqual([
+      ['fusion.app.load.duration', 'cancelled', undefined],
+      ['fusion.app.load.duration', 'failure', undefined],
+    ]);
+    pending.resolve(manifest('my-app'));
+    await modules.dispose();
+  });
+
+  it('records a synchronous teardown failure as a failed unload and rethrows it', async () => {
+    const { modules, records } = await setup(createClient());
+    modules.app.setCurrentApp('my-app');
+    const app = required(modules.app.current);
+    const original = new Error(SENTINEL);
+    await modules.event.dispatchEvent('onAppModulesLoaded', {
+      detail: {
+        appKey: 'my-app',
+        manifest: manifest('my-app'),
+        modules: {
+          dispose: () => {
+            throw original;
+          },
+        } as never,
+      },
+    });
+    expect(() => app.dispose()).toThrow(original);
+    expect(summary(records())).toEqual([
+      ['fusion.app.unload.duration', 'failure', undefined],
+      ['fusion.app.unload.failure', 'failure', undefined],
+    ]);
+    // The closed scope reports nothing more.
+    app.loadManifest();
+    expect(records()).toHaveLength(2);
+    await modules.dispose();
+  });
+
+  it('cancels in-flight stages when the provider is disposed, before telemetry shuts down', async () => {
+    const pending = deferred<AppManifest>();
+    const { modules, records } = await setup(
+      createClient({ getAppManifest: () => pending.promise }),
+    );
+    modules.app.setCurrentApp('my-app');
+    required(modules.app.current).loadManifest();
+    await modules.dispose();
+    expect(summary(records())).toEqual([
+      ['fusion.app.load-manifest.duration', 'cancelled', 'disposed'],
+    ]);
+    expect(records()[0].properties).toMatchObject({ appKey: 'my-app' });
+    pending.resolve(manifest('my-app'));
+    await Promise.resolve();
+    expect(records()).toHaveLength(1);
   });
 
   it('records a failed update as a failure while the caller still receives its error', async () => {

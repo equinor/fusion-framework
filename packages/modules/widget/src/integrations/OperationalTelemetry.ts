@@ -25,6 +25,20 @@ export type EndOperation = (
   properties?: OperationalProperties,
 ) => void;
 
+/** Optional collaborators of one {@link OperationalTelemetry} scope. */
+export interface OperationalTelemetryOptions {
+  /**
+   * Owner-held set the scope joins only while it has unsettled operations, so an owner can
+   * close in-flight work at its own teardown without retaining idle or abandoned scopes.
+   */
+  registry?: Set<OperationalTelemetry>;
+  /** Static identity resolved when an operation ends, e.g. an app key and loaded version. */
+  identity?: () => OperationalProperties;
+}
+
+/** Releasable resource owned by a scope, such as a diagnostic observer subscription. */
+type Teardown = VoidFunction | { unsubscribe(): void };
+
 /** Bounds retained timers when an operation never settles, e.g. a hung backend request. */
 const PENDING_CAPACITY = 256;
 
@@ -113,16 +127,26 @@ export class OperationalTelemetry {
   readonly #module: string;
   #provider?: () => ITelemetryProvider | undefined;
   readonly #pending = new Set<EndOperation>();
+  readonly #registry?: Set<OperationalTelemetry>;
+  readonly #identity?: () => OperationalProperties;
+  #teardowns: Teardown[] = [];
   #closed = false;
   #warned = false;
 
   /**
    * @param module - Static kebab-case module label, such as `app` or `bookmark`.
    * @param provider - Lazy telemetry lookup; may be connected later.
+   * @param options - Optional owner registry and end-time identity.
    */
-  constructor(module: string, provider?: () => ITelemetryProvider | undefined) {
+  constructor(
+    module: string,
+    provider?: () => ITelemetryProvider | undefined,
+    options?: OperationalTelemetryOptions,
+  ) {
     this.#module = module;
     this.#provider = provider;
+    this.#registry = options?.registry;
+    this.#identity = options?.identity;
   }
 
   /**
@@ -135,10 +159,10 @@ export class OperationalTelemetry {
 
   /**
    * Whether outcomes can currently be recorded; lets callers skip optional observation work.
-   * @returns `true` while the scope is open and telemetry is connected.
+   * @returns `true` while the scope is open and telemetry currently resolves.
    */
   get active(): boolean {
-    return !this.#closed && !!this.#provider;
+    return !this.#closed && this.#resolve() !== undefined;
   }
 
   /**
@@ -156,17 +180,29 @@ export class OperationalTelemetry {
    * Starts timing one attempted operation.
    * @param operation - Static kebab-case operation label.
    * @param properties - Allowlisted summary fields shared by the terminal records.
-   * @returns A single-use function recording the terminal outcome.
+   * @returns A single-use function recording the terminal outcome; a no-op when not timed.
    */
   start(operation: string, properties?: OperationalProperties): EndOperation {
+    return this.reserve(operation, properties) ?? noop;
+  }
+
+  /**
+   * Reserves a timer for one attempted operation, so callers can skip optional observation
+   * work when no timer was reserved.
+   * @param operation - Static kebab-case operation label.
+   * @param properties - Allowlisted summary fields shared by the terminal records.
+   * @returns A single-use end function, or `undefined` when the scope is closed, telemetry is
+   *   absent, or the pending-operation capacity is exhausted.
+   */
+  reserve(operation: string, properties?: OperationalProperties): EndOperation | undefined {
     // Closed scopes and absent telemetry keep no timers, so they cannot retain state.
-    if (this.#closed || !this.#provider) {
-      return noop;
+    if (this.#closed || this.#resolve() === undefined) {
+      return undefined;
     }
     // Unsettled operations are bounded; beyond the cap, attempts are not timed.
     if (this.#pending.size >= PENDING_CAPACITY) {
       this.#warn('pending-operation capacity exceeded');
-      return noop;
+      return undefined;
     }
     const started = performance.now();
     const end: EndOperation = (outcome, extra) => {
@@ -174,11 +210,35 @@ export class OperationalTelemetry {
       if (!this.#pending.delete(end)) {
         return;
       }
-      // Terminal fields, such as a failure reason, extend the fields given at start.
-      this.#emit(operation, outcome, performance.now() - started, { ...properties, ...extra });
+      // An idle scope leaves its owner's registry, so abandoned owners are never retained.
+      if (this.#pending.size === 0) {
+        this.#registry?.delete(this);
+      }
+      // Identity resolved now includes values learned while the operation ran; terminal
+      // fields, such as a failure reason, extend the fields given at start.
+      this.#emit(operation, outcome, performance.now() - started, {
+        ...properties,
+        ...this.#identity?.(),
+        ...extra,
+      });
     };
     this.#pending.add(end);
+    this.#registry?.add(this);
     return end;
+  }
+
+  /**
+   * Owns a diagnostic resource, such as an observer subscription, released when the scope
+   * closes. Resources added to a closed scope are released immediately.
+   * @param teardown - Function or subscription to release.
+   */
+  own(teardown: Teardown): void {
+    // A closed scope cannot hold new resources.
+    if (this.#closed) {
+      OperationalTelemetry.#release(teardown);
+      return;
+    }
+    this.#teardowns.push(teardown);
   }
 
   /**
@@ -268,6 +328,42 @@ export class OperationalTelemetry {
     this.cancelPending(properties);
     this.#closed = true;
     this.#provider = undefined;
+    this.#registry?.delete(this);
+    const teardowns = this.#teardowns;
+    this.#teardowns = [];
+    // Owned diagnostic observers stop once nothing more can be reported.
+    for (const teardown of teardowns) {
+      OperationalTelemetry.#release(teardown);
+    }
+  }
+
+  /**
+   * Releases one owned resource; a failing teardown must not prevent the others.
+   * @param teardown - Function or subscription to release.
+   */
+  static #release(teardown: Teardown): void {
+    try {
+      // Subscriptions and plain teardown functions are both supported.
+      if (typeof teardown === 'function') {
+        teardown();
+      } else {
+        teardown.unsubscribe();
+      }
+    } catch {
+      // Diagnostic teardown failures never reach the owner's disposal.
+    }
+  }
+
+  /**
+   * Resolves telemetry without letting a failing lookup reach business code.
+   * @returns The telemetry provider, or `undefined` when absent or unavailable.
+   */
+  #resolve(): ITelemetryProvider | undefined {
+    try {
+      return this.#provider?.();
+    } catch {
+      return undefined;
+    }
   }
 
   /**

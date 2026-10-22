@@ -135,6 +135,55 @@ describe('widget load-stage telemetry', () => {
     await modules.dispose();
   });
 
+  it('cancels in-flight stages when the provider is disposed and stops the widget reporting', async () => {
+    const { modules, records } = await createTelemetry();
+    let resolve!: (value: WidgetManifest) => void;
+    const provider = new WidgetModuleProvider({
+      config: {
+        client: createClient(
+          () =>
+            new Promise((res) => {
+              resolve = res;
+            }),
+        ),
+      },
+    });
+    provider.connectTelemetry(modules.telemetry);
+    const widget = provider.getWidget('my-widget');
+    widget.loadManifest();
+    await vi.waitFor(() => expect(resolve).toBeDefined());
+    provider.dispose();
+    expect(summary(records())).toEqual([
+      ['fusion.widget.load-manifest.duration', 'cancelled', 'disposed'],
+    ]);
+    expect(records()[0].properties).toMatchObject({ widgetKey: 'my-widget' });
+    resolve(manifest('my-widget'));
+    await new Promise((res) => setTimeout(res, 0));
+    widget.loadManifest();
+    expect(records()).toHaveLength(1);
+    widget.dispose();
+    await modules.dispose();
+  });
+
+  it('records an abandoned initialize() as cancelled', async () => {
+    const { modules, records } = await createTelemetry();
+    const provider = new WidgetModuleProvider({
+      config: { client: createClient(() => new Promise(() => undefined)) },
+    });
+    provider.connectTelemetry(modules.telemetry);
+    const widget = provider.getWidget('my-widget');
+    widget
+      .initialize()
+      .subscribe({ error: () => undefined })
+      .unsubscribe();
+    expect(summary(records().filter((item) => item.diagnostic?.operation === 'load'))).toEqual([
+      ['fusion.widget.load.duration', 'cancelled', undefined],
+    ]);
+    widget.dispose();
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('connects telemetry through the optional provider hook without requiring it', async () => {
     const telemetry = {} as ITelemetryProvider;
     const connectTelemetry = vi.fn();

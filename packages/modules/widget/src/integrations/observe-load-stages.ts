@@ -5,9 +5,6 @@ import type {
   OperationalTelemetry,
 } from './OperationalTelemetry.js';
 
-/** Bounds queued attempts for stages whose requests may overlap, such as `initialize`. */
-const QUEUE_CAPACITY = 256;
-
 /** Static error classifications that are safe to export as a reason code. */
 const reasons: Record<string, string> = {
   not_found: 'not-found',
@@ -20,11 +17,6 @@ const reasons: Record<string, string> = {
 export interface LoadStageOptions {
   /** Async action base type mapped to its static operation label, e.g. `fetch_manifest`. */
   stages: Readonly<Record<string, string>>;
-  /**
-   * Request types whose concurrent attempts each settle independently. Other stages follow
-   * `switchMap` semantics: a new request supersedes, and so cancels, the pending one.
-   */
-  concurrent?: ReadonlyArray<string>;
   /** Static identity resolved when an attempt ends, e.g. the app key and loaded version. */
   identity: () => OperationalProperties;
 }
@@ -44,8 +36,8 @@ export function observeLoadStages(
   options: LoadStageOptions,
 ): Subscription {
   const { stages, identity } = options;
-  const concurrent = new Set(options.concurrent);
-  const pending = new Map<string, EndOperation[]>();
+  // The store flows use switchMap, so each stage has at most one live attempt.
+  const pending = new Map<string, EndOperation>();
   const subscription = action$.subscribe((action) => {
     const [base, phase] = action.type.split('::');
     const operation = stages[base];
@@ -53,38 +45,29 @@ export function observeLoadStages(
     if (!operation) {
       return;
     }
-    const queue = pending.get(base) ?? [];
-    pending.set(base, queue);
-    // A request starts a new attempt; every other phase ends the oldest pending one.
+    const previous = pending.get(base);
+    pending.delete(base);
+    // A request starts a new attempt; every other phase ends the pending one.
     if (phase === 'request') {
-      // The store's switchMap flows drop the previous attempt when a new one starts.
-      if (!concurrent.has(base)) {
-        // Each superseded attempt gets its own terminal record.
-        for (const end of queue.splice(0)) {
-          end('cancelled', { ...identity(), reason: 'superseded' });
-        }
-      }
-      // Overlapping attempts beyond the cap are not timed, so memory stays bounded.
-      if (queue.length < QUEUE_CAPACITY) {
-        queue.push(telemetry.start(operation));
-      }
+      // A new request supersedes, and so cancels, the attempt still pending.
+      previous?.('cancelled', { ...identity(), reason: 'superseded' });
+      pending.set(base, telemetry.start(operation));
       return;
     }
-    const end = queue.shift();
     // Terminal actions without an observed request, e.g. replayed state, are not attempts.
-    if (!end) {
+    if (!previous) {
       return;
     }
     // Identity is read at the end, so a version learned during loading is included.
     if (phase === 'success') {
-      end('success', identity());
+      previous('success', identity());
     } else if (phase === 'failure') {
-      end('failure', { ...identity(), reason: reasonOf(action.payload) });
+      previous('failure', { ...identity(), reason: reasonOf(action.payload) });
     } else if (phase === 'abort') {
-      end('cancelled', { ...identity(), reason: 'aborted' });
+      previous('cancelled', { ...identity(), reason: 'aborted' });
     } else {
       // Unknown phases leave the attempt pending rather than inventing an outcome.
-      queue.unshift(end);
+      pending.set(base, previous);
     }
   });
   subscription.add(() => pending.clear());

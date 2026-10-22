@@ -283,6 +283,9 @@ export class App<
 {
   #state: FlowSubject<AppBundleState, Actions>;
 
+  /** Operational records of this app; closed when it unloads or its provider disposes. */
+  #telemetry: OperationalTelemetry;
+
   //#region === streams ===
 
   /** @inheritdoc */
@@ -398,6 +401,7 @@ export class App<
       provider: AppModuleProvider;
       event?: ModuleType<EventModule>;
       telemetry?: () => ITelemetryProvider | undefined;
+      telemetryScopes?: Set<OperationalTelemetry>;
     },
   ) {
     this.#state = createState(value, args.provider);
@@ -411,8 +415,6 @@ export class App<
     // create a tear down handler for the application
     const subscriptions = new Subscription();
 
-    // Each app owns its records, so unloading one app cannot cancel another app's stages.
-    const telemetry = new OperationalTelemetry('app', args.telemetry);
     // Only static identity is exported; manifests, config and settings are never read for telemetry.
     const identity = (): OperationalProperties => {
       const key = OperationalTelemetry.safeIdentity(this.#state.value.appKey);
@@ -426,21 +428,26 @@ export class App<
         ...(version ? { appVersion: version } : {}),
       };
     };
-    subscriptions.add(
-      observeLoadStages(this.#state.action$, telemetry, {
-        stages: {
-          fetch_manifest: 'load-manifest',
-          fetch_config: 'load-config',
-          fetch_settings: 'load-settings',
-          update_settings: 'update-settings',
-          import_app: 'import',
-          initialize_app: 'load',
-        },
-        // Overlapping `initialize()` calls each settle; the fetch flows use switchMap.
-        concurrent: ['initialize_app'],
-        identity,
-      }),
-    );
+    // Each app owns its records, so unloading one app cannot cancel another app's stages.
+    // The provider's registry lets its disposal close stages still in flight.
+    const telemetry = new OperationalTelemetry('app', args.telemetry, {
+      registry: args.telemetryScopes,
+      identity,
+    });
+    this.#telemetry = telemetry;
+    const stages = observeLoadStages(this.#state.action$, telemetry, {
+      stages: {
+        fetch_manifest: 'load-manifest',
+        fetch_config: 'load-config',
+        fetch_settings: 'load-settings',
+        update_settings: 'update-settings',
+        import_app: 'import',
+      },
+      identity,
+    });
+    subscriptions.add(stages);
+    // Closing the scope early, e.g. on provider disposal, also releases the observer.
+    telemetry.own(stages);
 
     // only wire up event listeners when an event module is provided
     if (event) {
@@ -471,14 +478,22 @@ export class App<
         // Stages interrupted by replacement or unload are cancellations, not failures.
         telemetry.cancelPending({ ...identity(), reason: 'unloaded' });
       }
-      const endUnload = first ? telemetry.start('unload', identity()) : undefined;
+      const endUnload = first ? telemetry.start('unload') : undefined;
       subscriptions?.unsubscribe();
       // tear down modules of application, if an instance was loaded
       // Typed as `void`, but module instances may return their teardown promise.
-      const disposal: unknown = this.#state.value.instance
-        ? // tear down modules of application
-          this.#state.value.instance.dispose()
-        : undefined;
+      let disposal: unknown;
+      try {
+        disposal = this.#state.value.instance
+          ? // tear down modules of application
+            this.#state.value.instance.dispose()
+          : undefined;
+      } catch (error) {
+        // A synchronous teardown failure is recorded, then re-thrown exactly as before.
+        endUnload?.('failure');
+        telemetry.close();
+        throw error;
+      }
       this.#state.complete();
       // Only the first disposal measures the unload.
       if (!endUnload) {
@@ -675,7 +690,9 @@ export class App<
 
   /** @inheritdoc */
   public initialize(): Observable<AppInitializeResult> {
-    return new Observable((subscriber) => {
+    // Each subscription is one load attempt: its result, error or unsubscription is the
+    // terminal `load` outcome, so abandoned attempts cannot settle a later one.
+    return new Observable<AppInitializeResult>((subscriber) => {
       // dispatch initialize action to indicate that the application is initializing
       this.#state.next(actions.initialize());
       subscriber.add(
@@ -700,7 +717,7 @@ export class App<
           },
         }),
       );
-    });
+    }).pipe(this.#telemetry.measure('load'));
   }
 
   /** @inheritdoc */

@@ -13,6 +13,7 @@ import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types.
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 import { WidgetManifestLoadError, WidgetConfigLoadError } from './WidgetManifestLoadError.js';
 import { Widget } from './Widget.js';
+import type { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 import { version } from './version.js';
 
 /**
@@ -95,6 +96,9 @@ export class WidgetModuleProvider
   /** Lazy lookup shared with every widget, so disconnecting stops all of their records. */
   readonly #telemetryRef = (): ITelemetryProvider | undefined => this.#telemetry;
 
+  /** Widget scopes with stages in flight; idle and abandoned widgets are not retained. */
+  readonly #telemetryScopes = new Set<OperationalTelemetry>();
+
   /**
    * Creates a new `WidgetModuleProvider`.
    *
@@ -128,6 +132,7 @@ export class WidgetModuleProvider
         widgetPrams,
         config: this.#config,
         telemetry: this.#telemetryRef,
+        telemetryScopes: this.#telemetryScopes,
       },
     );
   }
@@ -266,6 +271,11 @@ export class WidgetModuleProvider
    * After disposal the provider should not be reused.
    */
   public dispose(): void {
+    // Stages still in flight are recorded as cancelled while telemetry is available, and
+    // their observers released; widget business teardown is unchanged.
+    for (const scope of [...this.#telemetryScopes]) {
+      scope.close({ reason: 'disposed' });
+    }
     // Widgets that outlive the provider must not report through a torn-down host.
     this.#telemetry = undefined;
     super.dispose();

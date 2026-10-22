@@ -121,12 +121,14 @@ Each error includes a `type` property (`'not_found'`, `'unauthorized'`, `'delete
 
 When the host registers telemetry, every app reports one `fusion.app.<stage>.duration`
 outcome per attempted stage: `load-manifest`, `load-config`, `load-settings`,
-`update-settings`, `import`, the terminal `load` outcome of `initialize()`, and `unload`
-when the app is replaced or cleared. Outcomes are `success`, `failure` (plus one
-sanitized `.failure` exception with a static reason such as `not-found`) or `cancelled`
-(reason `superseded` or `unloaded`). Records carry only the validated `appKey` and
-`appVersion`; manifests, configuration, settings, URLs and error messages are never
-exported. A replaced app stops reporting immediately.
+`update-settings`, `import`, `load`, and `unload` when the app is replaced or cleared.
+`load` is the outcome of each `initialize()` subscription: its result, its error, or
+`cancelled` when the caller unsubscribes first. Outcomes are `success`, `failure` (plus
+one sanitized `.failure` exception; stage failures carry a static reason such as
+`not-found`) or `cancelled` (reason `superseded`, `unloaded`, or `disposed` when the app
+module is disposed). A teardown that throws records a failed `unload`. Records carry only
+the validated `appKey` and `appVersion`; manifests, configuration, settings, URLs and
+error messages are never exported. A replaced app stops reporting immediately.
 
 Telemetry is connected after initialization and is never awaited, so loading results,
 errors and cancellation are unchanged. Exclude these records with a telemetry adapter

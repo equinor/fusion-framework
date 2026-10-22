@@ -82,6 +82,8 @@ export class Widget {
    * @param args.event - Optional event module for dispatching lifecycle events.
    * @param args.widgetPrams - Optional version/tag selector for the widget.
    * @param args.telemetry - Optional lazy telemetry lookup for operational load-stage records.
+   * @param args.telemetryScopes - Provider-owned registry used to close in-flight stages when
+   *   the provider is disposed.
    */
   constructor(
     value: WidgetStateInitial,
@@ -91,6 +93,7 @@ export class Widget {
       event?: ModuleType<EventModule>;
       widgetPrams?: GetWidgetParameters['args'];
       telemetry?: () => ITelemetryProvider | undefined;
+      telemetryScopes?: Set<OperationalTelemetry>;
     },
   ) {
     this.name = value.name;
@@ -100,20 +103,22 @@ export class Widget {
     args.event && this.#registerEvents(args.event);
 
     // Each widget owns its records, so disposing one cannot cancel another widget's stages.
-    this.#telemetry = new OperationalTelemetry('widget', args.telemetry);
-    this.#subscription.add(
-      observeLoadStages(this.#state.action$, this.#telemetry, {
-        stages: {
-          fetch_manifest: 'load-manifest',
-          fetch_config: 'load-config',
-          import_widget: 'import',
-          initialize_widget: 'load',
-        },
-        // Overlapping `initialize()` calls each settle; the fetch flows use switchMap.
-        concurrent: ['initialize_widget'],
-        identity: () => this.#identity(),
-      }),
-    );
+    // The provider's registry lets its disposal close stages still in flight.
+    this.#telemetry = new OperationalTelemetry('widget', args.telemetry, {
+      registry: args.telemetryScopes,
+      identity: () => this.#identity(),
+    });
+    const stages = observeLoadStages(this.#state.action$, this.#telemetry, {
+      stages: {
+        fetch_manifest: 'load-manifest',
+        fetch_config: 'load-config',
+        import_widget: 'import',
+      },
+      identity: () => this.#identity(),
+    });
+    this.#subscription.add(stages);
+    // Closing the scope early, e.g. on provider disposal, also releases the observer.
+    this.#telemetry.own(stages);
   }
 
   /**
@@ -380,7 +385,13 @@ export class Widget {
     script: WidgetScriptModule;
     config?: WidgetConfig;
   }> {
-    return new Observable((observer) => {
+    // Each subscription is one load attempt: its result, error or unsubscription is the
+    // terminal `load` outcome, so abandoned attempts cannot settle a later one.
+    return new Observable<{
+      manifest: WidgetManifest;
+      script: WidgetScriptModule;
+      config?: WidgetConfig;
+    }>((observer) => {
       this.#state.next(actions.initialize());
       observer.add(
         combineLatest([
@@ -408,7 +419,7 @@ export class Widget {
           },
         }),
       );
-    });
+    }).pipe(this.#telemetry.measure('load'));
   }
   /**
    * Retrieves the widget script module as a `Promise`.
@@ -443,7 +454,7 @@ export class Widget {
    */
   public dispose() {
     // Stages interrupted by disposal are cancellations; nothing is emitted afterwards.
-    this.#telemetry.close({ ...this.#identity(), reason: 'unloaded' });
+    this.#telemetry.close({ reason: 'unloaded' });
     this.#subscription.unsubscribe();
   }
 }

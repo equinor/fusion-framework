@@ -4,11 +4,13 @@
 
 Report application loading through host telemetry. Each app now records one
 `fusion.app.<stage>.duration` outcome for `load-manifest`, `load-config`,
-`load-settings`, `update-settings` and `import`, a terminal `load` outcome for
-`initialize()`, and `unload` when the app is replaced or cleared. Failures add one
-sanitized `.failure` exception with a static reason code (`not-found`,
-`unauthorized`, `deleted`, `unknown` or `error`). Superseded and unloaded stages are
-recorded as `cancelled`. Records carry only the validated app key and build version;
+`load-settings`, `update-settings` and `import`, a `load` outcome for each
+`initialize()` subscription (`cancelled` when the caller unsubscribes first), and
+`unload` when the app is replaced or cleared, including a failed `unload` when module
+teardown throws. Failures add one sanitized `.failure` exception; stage failures carry a
+static reason code (`not-found`, `unauthorized`, `deleted`, `unknown` or `error`).
+Superseded and unloaded stages are recorded as `cancelled`, and stages still in flight
+when the app module is disposed are `cancelled` with reason `disposed`. Records carry only the validated app key and build version;
 manifests, configuration, settings, URLs and error messages are never included.
 
 Telemetry is connected after initialization through the new

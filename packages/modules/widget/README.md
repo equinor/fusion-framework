@@ -114,10 +114,11 @@ provider.getWidgetConfig('my-widget').subscribe((config) => {
 
 When the host registers telemetry, every widget reports one
 `fusion.widget.<stage>.duration` outcome for `load-manifest`, `load-config`, `import`
-and the terminal `load` outcome of `initialize()`. Failures add one sanitized
-`.failure` exception with a static reason code; stages still running at
-`widget.dispose()` are `cancelled` with reason `unloaded`, and a disposed widget reports
-nothing more. Records carry only the validated `widgetKey` and `widgetVersion`. Custom
+and `load`, the outcome of each `initialize()` subscription (`cancelled` when the caller
+unsubscribes first). Failures add one sanitized `.failure` exception; stage failures carry
+a static reason code. Stages still running at `widget.dispose()` are `cancelled` with
+reason `unloaded`, or `disposed` when the widget module is disposed, and a disposed
+widget reports nothing more. Records carry only the validated `widgetKey` and `widgetVersion`. Custom
 providers opt in through the optional `IWidgetModuleProvider.connectTelemetry` method.
 See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
 

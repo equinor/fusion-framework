@@ -23,6 +23,7 @@ import type {
 } from './types.js';
 
 import { App, filterEmpty, type IApp } from './app/App.js';
+import type { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 import type { AppModuleConfig } from './AppConfigurator.js';
 import type { AppBundleStateInitial } from './app/types.js';
 import type { IAppClient } from './AppClient.js';
@@ -72,6 +73,9 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
 
   /** Lazy lookup shared with every app, so disconnecting stops all of their records. */
   readonly #telemetryRef = (): ITelemetryProvider | undefined => this.#telemetry;
+
+  /** App scopes with stages in flight; idle and abandoned apps are not retained. */
+  readonly #telemetryScopes = new Set<OperationalTelemetry>();
 
   /**
    * The current active application instance.
@@ -231,7 +235,12 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
     if (typeof appKeyOrApp === 'string') {
       const newApp = new App(
         { appKey: appKeyOrApp },
-        { provider: this, event: this.#event, telemetry: this.#telemetryRef },
+        {
+          provider: this,
+          event: this.#event,
+          telemetry: this.#telemetryRef,
+          telemetryScopes: this.#telemetryScopes,
+        },
       );
       this.#current$.next(newApp as CurrentApp);
       return;
@@ -241,7 +250,12 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
     if (appKeyOrApp.appKey && 'tag' in appKeyOrApp) {
       const newApp = new App(
         { appKey: appKeyOrApp.appKey, tag: appKeyOrApp.tag },
-        { provider: this, event: this.#event, telemetry: this.#telemetryRef },
+        {
+          provider: this,
+          event: this.#event,
+          telemetry: this.#telemetryRef,
+          telemetryScopes: this.#telemetryScopes,
+        },
       );
       this.#current$.next(newApp as CurrentApp);
       return;
@@ -274,7 +288,12 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    */
   public createApp(value: AppBundleStateInitial): App {
     console.warn('AppModuleProvider.createApp is deprecated and should not be used.');
-    return new App(value, { provider: this, event: this.#event, telemetry: this.#telemetryRef });
+    return new App(value, {
+      provider: this,
+      event: this.#event,
+      telemetry: this.#telemetryRef,
+      telemetryScopes: this.#telemetryScopes,
+    });
   }
 
   /**
@@ -295,6 +314,11 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    * Tears down the provider, unsubscribing from all internal observables.
    */
   public dispose(): void {
+    // Stages still in flight are recorded as cancelled while telemetry is available, and
+    // their observers released; app business teardown is unchanged.
+    for (const scope of [...this.#telemetryScopes]) {
+      scope.close({ reason: 'disposed' });
+    }
     // Apps that outlive the provider must not report through a torn-down host.
     this.#telemetry = undefined;
     super.dispose();
