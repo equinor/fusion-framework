@@ -1,9 +1,5 @@
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
-import {
-  TelemetryLevel,
-  TelemetryScope,
-  type ITelemetryProvider,
-} from '@equinor/fusion-framework-module-telemetry';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import type {
   ApiAccountActiveAccessRoleAssignmentV1,
   ApiClaimableRoleAssignmentActivationV1,
@@ -25,6 +21,10 @@ import type { RequiredAccessRoleStatus } from './RequiredAccessRoleStatus.js';
 import { ClaimableRoleAssignmentActivationEvent } from './ClaimableRoleAssignmentActivationEvent.js';
 import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
+import {
+  createOperationalTelemetry,
+  type OperationalTelemetryTarget,
+} from '@equinor/fusion-framework-module-telemetry/utils';
 import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
 
 /**
@@ -39,6 +39,14 @@ type RolesProviderOperation =
   | 'hasClaimableRoleAssignmentForAccessRole'
   | 'getRequiredAccessRoleStatuses'
   | 'getAccessRoles';
+
+/**
+ * Converts a provider operation into its static kebab-case telemetry label.
+ * @param operation - Provider operation name.
+ * @returns Label such as `get-access-roles`.
+ */
+const operationName = (operation: RolesProviderOperation): string =>
+  operation.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 
 /**
  * Final provider configuration containing the client resolved during module setup.
@@ -67,7 +75,13 @@ interface RolesEventDispatcher {
  */
 interface RolesProviderDependencies {
   event?: RolesEventDispatcher;
-  telemetry?: Pick<ITelemetryProvider, 'trackEvent' | 'trackException'>;
+  /**
+   * Host telemetry provider. The earlier `trackEvent`/`trackException` shape is still
+   * accepted, but operational records need `track`, so such a provider records nothing.
+   */
+  telemetry?:
+    | Pick<ITelemetryProvider, 'trackEvent' | 'trackException'>
+    | OperationalTelemetryTarget;
 }
 
 /**
@@ -284,6 +298,8 @@ export class RolesProvider
 {
   private readonly client: IRolesClient;
   private readonly dependencies: RolesProviderDependencies;
+  /** Safe operational outcomes; never carries account, assignment or role identifiers. */
+  readonly #telemetry = createOperationalTelemetry('roles');
 
   /**
    * Creates a Roles provider around a client initialized during module initialization.
@@ -295,7 +311,14 @@ export class RolesProvider
     super({ version, config });
     this.client = config.client;
     this.dependencies = dependencies;
-    this._addTeardown(() => this.client.dispose?.());
+    // Telemetry is resolved before construction, so bootstrap role checks are reported too.
+    const { telemetry } = dependencies;
+    this.#telemetry.connect(telemetry && 'track' in telemetry ? telemetry : undefined);
+    this._addTeardown(() => {
+      // In-flight operations must not report into a torn-down telemetry host.
+      this.#telemetry.disconnect();
+      this.client.dispose?.();
+    });
   }
 
   /** {@inheritDoc IRolesProvider.getActiveAccessRoleAssignments} */
@@ -329,32 +352,38 @@ export class RolesProvider
   public async activateClaimableRoleAssignment(
     input: ActivateClaimableRoleAssignmentInput,
   ): Promise<ApiClaimableRoleAssignmentActivationV1> {
-    return this.executeOperation('activateClaimableRoleAssignment', async () => {
-      try {
-        const activationEvent = await this.dependencies.event?.dispatchEvent(
-          new ClaimableRoleAssignmentActivationEvent({
-            source: this,
-            detail: input,
-          }),
-        );
-        // Cancellation prevents the irreversible activation request from reaching Roles V2.
-        if (activationEvent?.canceled) {
+    let canceled = false;
+    return this.executeOperation(
+      'activateClaimableRoleAssignment',
+      async () => {
+        try {
+          const activationEvent = await this.dependencies.event?.dispatchEvent(
+            new ClaimableRoleAssignmentActivationEvent({
+              source: this,
+              detail: input,
+            }),
+          );
+          // Cancellation prevents the irreversible activation request from reaching Roles V2.
+          if (activationEvent?.canceled) {
+            canceled = true;
+            throw new ActivateClaimableRoleAssignmentError(
+              'Claimable role assignment activation was canceled by an event listener.',
+            );
+          }
+          return await lastValueFrom(this.client.activateClaimableRoleAssignment(input));
+        } catch (error) {
+          // Preserve an intentional cancellation while classifying all other activation failures.
+          if (error instanceof ActivateClaimableRoleAssignmentError) {
+            throw error;
+          }
           throw new ActivateClaimableRoleAssignmentError(
-            'Claimable role assignment activation was canceled by an event listener.',
+            'Failed to activate claimable role assignment.',
+            { cause: error },
           );
         }
-        return await lastValueFrom(this.client.activateClaimableRoleAssignment(input));
-      } catch (error) {
-        // Preserve an intentional cancellation while classifying all other activation failures.
-        if (error instanceof ActivateClaimableRoleAssignmentError) {
-          throw error;
-        }
-        throw new ActivateClaimableRoleAssignmentError(
-          'Failed to activate claimable role assignment.',
-          { cause: error },
-        );
-      }
-    });
+      },
+      () => canceled,
+    );
   }
 
   /** {@inheritDoc IRolesProvider.deactivateClaimableRoleAssignment} */
@@ -475,21 +504,25 @@ export class RolesProvider
     try {
       // Await consumer demand before fetching each page, preserving backpressure.
       while (true) {
-        const page = await this.executeOperation('getAccessRoles', async () => {
-          // Enforce cancellation at the provider boundary, including custom client observables.
-          // takeUntil releases the subscription without emitting a success-shaped page.
-          const result = await lastValueFrom(
-            defer(() => {
-              requestSignal.throwIfAborted();
-              return this.client.getAccessRoles({ top: 100, skip }, requestSignal);
-            }).pipe(takeUntil(fromEvent(requestSignal, 'abort'))),
-          );
-          // Never repeat an offset when a malformed continuation cannot advance.
-          if (result.nextPage && !result.value?.length) {
-            throw new RolesError('Roles V2 returned an invalid access-role continuation.');
-          }
-          return result;
-        });
+        const page = await this.executeOperation(
+          'getAccessRoles',
+          async () => {
+            // Enforce cancellation at the provider boundary, including custom client observables.
+            // takeUntil releases the subscription without emitting a success-shaped page.
+            const result = await lastValueFrom(
+              defer(() => {
+                requestSignal.throwIfAborted();
+                return this.client.getAccessRoles({ top: 100, skip }, requestSignal);
+              }).pipe(takeUntil(fromEvent(requestSignal, 'abort'))),
+            );
+            // Never repeat an offset when a malformed continuation cannot advance.
+            if (result.nextPage && !result.value?.length) {
+              throw new RolesError('Roles V2 returned an invalid access-role continuation.');
+            }
+            return result;
+          },
+          () => requestSignal.aborted,
+        );
         const accessRoles = page.value ?? [];
         yield accessRoles;
         // Resume only on consumer demand; stop without an extra request after the final page.
@@ -507,37 +540,42 @@ export class RolesProvider
   /**
    * Executes a provider operation and reports its outcome without account or access-role identifiers.
    *
+   * Each call records one `fusion.roles.<operation>.duration` metric with a `success`,
+   * `failure` or `cancelled` outcome, and one sanitized `.failure` exception on failure.
+   * Original errors, arguments and responses are never recorded.
+   *
    * @template TResult - Operation result returned unchanged to the caller.
    * @param operation - Stable operation name used for telemetry.
    * @param execute - Client request and related event dispatch.
+   * @param isCancelled - Reports whether the operation stopped by intent, such as an abort
+   *   or a listener cancellation, rather than by an unexpected failure.
    * @returns The operation result.
    * @throws {RolesError} The classified operation error after recording failure telemetry.
    */
   private async executeOperation<TResult>(
     operation: RolesProviderOperation,
     execute: () => Promise<TResult>,
+    isCancelled?: () => boolean,
   ): Promise<TResult> {
+    const started = performance.now();
+    const name = operationName(operation);
     try {
       const result = await execute();
-      this.dependencies.telemetry?.trackEvent({
-        name: `RolesProvider.${operation}`,
-        level: TelemetryLevel.Debug,
-        scope: ['roles', TelemetryScope.Framework],
-        properties: { outcome: 'success' },
+      this.#telemetry.report({
+        operation: name,
+        outcome: 'success',
+        duration: performance.now() - started,
       });
       return result;
     } catch (error) {
-      const exception = RolesError.is(error)
+      this.#telemetry.report({
+        operation: name,
+        outcome: isCancelled?.() ? 'cancelled' : 'failure',
+        duration: performance.now() - started,
+      });
+      throw RolesError.is(error)
         ? error
         : new RolesError(`Roles operation '${operation}' failed.`, { cause: error });
-      this.dependencies.telemetry?.trackException({
-        name: `RolesProvider.${operation}`,
-        exception,
-        level: TelemetryLevel.Error,
-        scope: ['roles', TelemetryScope.Framework],
-        properties: { outcome: 'failure' },
-      });
-      throw exception;
     }
   }
 }

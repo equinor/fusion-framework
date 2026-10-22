@@ -229,8 +229,90 @@ Explicit `setTelemetry(provider)` retains detailed static debug notifications;
 action payloads are never included. Custom navigation providers opt in to automatic
 wiring by implementing the optional `INavigationProvider.connectTelemetry` method.
 
+## Wire telemetry into a module
+
+Every framework module wires operational telemetry the same way, in three steps:
+
+1. **Own a handle.** The provider creates one with `createOperationalTelemetry(module)` from
+   `@equinor/fusion-framework-module-telemetry/utils`, binding its static kebab-case module label.
+2. **Connect after initialization.** The provider implements `TelemetryConnectable` and its
+   module descriptor calls `instance.connectTelemetry?.(modules.telemetry)` from
+   `postInitialize`, so initialization never waits for telemetry and the module works without it.
+3. **Disconnect on teardown.** The provider calls `disconnect()` from `_addTeardown`.
+   Disconnection is final, so work that completes during or after disposal never reports into a
+   torn-down host.
+
+```ts
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
+
+export interface IReportsProvider extends TelemetryConnectable {
+  export(): Promise<void>;
+}
+
+export class ReportsProvider extends BaseModuleProvider<ReportsConfig> implements IReportsProvider {
+  #telemetry = createOperationalTelemetry('reports');
+
+  constructor(config: ReportsConfig) {
+    super({ version, config });
+    this._addTeardown(() => this.#telemetry.disconnect());
+  }
+
+  connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry.connect(telemetry);
+  }
+
+  async export(): Promise<void> {
+    const started = performance.now();
+    try {
+      await this.#export();
+      this.#telemetry.report({ operation: 'export', outcome: 'success', duration: performance.now() - started });
+    } catch (error) {
+      // One duration metric plus one sanitized exception; the original error is rethrown unchanged.
+      this.#telemetry.report({ operation: 'export', outcome: 'failure', duration: performance.now() - started });
+      throw error;
+    }
+  }
+}
+
+export const module: ReportsModule = {
+  name: 'reports',
+  configure: () => new ReportsConfigurator(),
+  initialize: async (init) => new ReportsProvider(await init.config.createConfigAsync(init)),
+  postInitialize: async ({ instance, modules }) => {
+    instance.connectTelemetry?.(modules.telemetry);
+  },
+};
+```
+
+A handle reports two kinds of outcome:
+
+- **Measured:** `{ operation, outcome, duration }` records one `fusion.<module>.<operation>.duration`
+  metric, plus one sanitized `.failure` exception when the outcome is `failure`.
+- **Notification:** `{ operation, outcome, notification: true, level? }` records one
+  `fusion.<module>.<operation>` event without a fabricated duration. Severity defaults to
+  `Error` for a failure and `Information` otherwise; set `TelemetryLevel.Warning` for a
+  recoverable degradation, such as serving a fallback.
+
+Reports never accept arguments, payloads or errors, and never throw. Delivery failures,
+including a custom provider without host `source` identity, produce one sanitized console
+warning per handle. `createOperationalTelemetry` throws a `RangeError` when the module label
+is not a static kebab-case identifier, so a dynamic label fails when the handle is created.
+
+When a dependency is already resolved during initialization, connect it in the constructor
+instead, as the Roles and MSAL providers do, so outcomes from initialization itself are
+reported. `connected` reports whether records are currently delivered.
+
+The framework's service discovery, services, roles, MSAL, MSAL Node, Azure Identity and
+SignalR modules all follow this pattern. HTTP and query use the integrations described above.
+
 ## Report your own operational outcomes
 
+The lower-level builders are available when you need to track records yourself.
 Use `createOperationalRecords` for a measured terminal outcome: it returns one
 `fusion.<module>.<operation>.duration` metric and, on failure, one sanitized
 `.failure` exception. The metric is always reported at `Information` and carries the

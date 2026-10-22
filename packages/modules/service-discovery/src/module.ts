@@ -9,6 +9,12 @@ import type {
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 
 /**
+ * Providers this module created, so host disposal tears down only its own instances and
+ * their telemetry, never a provider supplied or shared by another host.
+ */
+const ownedProviders = new WeakMap<object, { dispose(): void }>();
+
+/**
  * Module identifier used to register and look up the Service Discovery module
  * within the Fusion Framework module system.
  */
@@ -66,7 +72,20 @@ export const module: ServiceDiscoveryModule = {
     const httpModule = await requireInstance('http');
 
     // return service discovery provider
-    return new ServiceDiscoveryProvider(config, httpModule);
+    const provider = new ServiceDiscoveryProvider(config, httpModule);
+    ownedProviders.set(provider, provider);
+    return provider;
+  },
+  postInitialize: async ({ instance, modules, ref }) => {
+    // A child reusing its parent's client leaves reporting to the parent, so each
+    // resolution is recorded once, by the host that owns the client.
+    if (instance.client !== ref?.serviceDiscovery?.client) {
+      instance.connectTelemetry?.(modules.telemetry);
+    }
+  },
+  dispose: ({ instance }) => {
+    ownedProviders.get(instance)?.dispose();
+    ownedProviders.delete(instance);
   },
 };
 

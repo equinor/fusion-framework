@@ -1,5 +1,11 @@
 import { configureHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import {
+  TelemetryLevel,
+  type ITelemetryProvider,
+  type TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { Subscription } from 'rxjs';
 
 import type { ModulesConfigurator, ModuleType } from '@equinor/fusion-framework-module';
 import type {
@@ -13,6 +19,8 @@ import { version } from './version.js';
 import type { Service } from './types.js';
 import type { ServiceDiscoveryConfig } from './configurator.js';
 import type { IServiceDiscoveryClient } from './client.js';
+import type { ServiceDiscoveryDiagnostic } from './ServiceDiscoveryDiagnostic.js';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 
 /**
  * Public API surface of the Service Discovery provider.
@@ -21,7 +29,7 @@ import type { IServiceDiscoveryClient } from './client.js';
  * pre-configured HTTP clients for discovered services, or register
  * service-backed HTTP clients on a {@link ModulesConfigurator}.
  */
-export interface IServiceDiscoveryProvider {
+export interface IServiceDiscoveryProvider extends TelemetryConnectable {
   /**
    * Resolves a single service endpoint by its lookup key.
    *
@@ -122,6 +130,63 @@ export class ServiceDiscoveryProvider
     super({
       version,
       config,
+    });
+    this._addTeardown(() => {
+      this.#diagnostics?.unsubscribe();
+      this.#telemetry.disconnect();
+    });
+  }
+
+  #telemetry = createOperationalTelemetry('service-discovery');
+  #diagnostics?: Subscription;
+
+  /**
+   * Connects optional operational telemetry for the client this provider owns.
+   *
+   * Records one `fusion.service-discovery.resolve.duration` per resolution, plus
+   * `cache-hit`, `fallback`, `cooldown` and `unknown-service` notifications. No keys,
+   * URIs, scopes or errors are recorded, and HTTP attempts are left to HTTP telemetry.
+   * Calling it again replaces the provider; `undefined` records nothing until reconnected.
+   *
+   * @param telemetry - Host telemetry provider, or `undefined` to record nothing.
+   */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry.connect(telemetry);
+    const diagnostic$ = this.client.diagnostic$;
+    // One subscription serves every connection; custom clients without a stream are skipped.
+    if (this.#diagnostics || !this.#telemetry.connected || !diagnostic$) {
+      return;
+    }
+    const report = this.#telemetry.report;
+    this.#diagnostics = diagnostic$.subscribe((diagnostic: ServiceDiscoveryDiagnostic) => {
+      // An unmatched key is a notification only; it has no measured resolution of its own.
+      if (diagnostic.type === 'unknown-service') {
+        report({
+          notification: true,
+          operation: 'unknown-service',
+          outcome: 'failure',
+          level: TelemetryLevel.Warning,
+        });
+        return;
+      }
+      const { outcome, origin, duration } = diagnostic;
+      report({ operation: 'resolve', outcome, duration });
+      // Network resolutions are fully described by the measurement and the HTTP attempt.
+      if (origin === 'cache') {
+        report({
+          notification: true,
+          operation: 'cache-hit',
+          outcome,
+          level: TelemetryLevel.Information,
+        });
+      } else if (origin !== 'network') {
+        report({
+          notification: true,
+          operation: origin,
+          outcome,
+          level: TelemetryLevel.Warning,
+        });
+      }
     });
   }
 

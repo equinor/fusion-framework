@@ -2362,6 +2362,12 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
     devDependencies:
       typescript:
         specifier: ^7.0.2
@@ -2596,6 +2602,12 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
       open:
         specifier: ^11.0.0
         version: 11.0.4
@@ -2696,6 +2708,12 @@ importers:
       '@equinor/fusion-framework-module-http':
         specifier: workspace:^
         version: link:../http
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
       '@equinor/fusion-query':
         specifier: workspace:^
         version: link:../../utils/query
@@ -2712,6 +2730,12 @@ importers:
 
   packages/modules/services:
     dependencies:
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
       odata-query:
         specifier: ^8.0.4
         version: 8.1.0
@@ -2743,6 +2767,12 @@ importers:
 
   packages/modules/signalr:
     dependencies:
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
       '@microsoft/signalr':
         specifier: ^10.0.0
         version: 10.0.11
