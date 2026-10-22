@@ -9,7 +9,8 @@ outcome. MSAL `user_cancelled` errors and suppressed acquisition in the hidden i
 cancellations, a failure adds one sanitized exception, and a failed silent login before the
 interactive fallback adds a `fusion.msal.silent-login-fallback` warning. Tokens, scopes,
 accounts, login hints, auth codes and original errors are never recorded; authentication
-results and thrown errors are unchanged.
+results and thrown errors are unchanged. Token acquisition for a telemetry export request,
+marked with `markTelemetryExportRequest`, is not recorded.
 
 **Migration:** these records replace the `module-msal.acquireToken` measurement and the
 `acquireToken-failed`, `logout.failed`, `handleRedirect.failed`,

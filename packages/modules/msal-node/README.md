@@ -103,7 +103,8 @@ When a telemetry module is registered alongside this module, the provider record
 and `fusion.msal-node.logout.duration`, with one sanitized `.failure` exception per failure.
 An interactive login started by a token request is also recorded as its own `login`.
 Tokens, scopes, accounts, device codes and original errors are never recorded, and results
-and errors are unchanged. Static `token_only` providers are never instrumented. Without
+and errors are unchanged. Static `token_only` providers are never instrumented, and calls for a telemetry export
+request, marked with `markTelemetryExportRequest`, are not recorded. Without
 telemetry the provider is left untouched; the package remains Node-compatible either way.
 
 ## Testing

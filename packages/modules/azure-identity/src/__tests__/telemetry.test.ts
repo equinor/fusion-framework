@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { markTelemetryExportRequest } from '@equinor/fusion-framework-module';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 
 import { AuthProviderTokenOnly } from '../AuthProviderTokenOnly.js';
@@ -131,5 +132,18 @@ describe('azure-identity operational telemetry', () => {
     await other.acquireAccessToken();
     expect(otherDispose).not.toHaveBeenCalled();
     expect(items).toHaveLength(0);
+  });
+
+  it('does not record calls owned by a telemetry export, while recording application calls', async () => {
+    const original = vi.fn(async () => 'token');
+    const provider = { acquireToken: original };
+    const { telemetry, items } = createTelemetry();
+    connectAuthTelemetry(provider, telemetry);
+
+    await provider.acquireToken(markTelemetryExportRequest({ request: { scopes: ['a'] } }));
+    await provider.acquireToken({ request: { scopes: ['a'] } });
+
+    expect(original).toHaveBeenCalledTimes(2);
+    expect(names(items)).toEqual(['fusion.azure-identity.acquire-token.duration:success']);
   });
 });

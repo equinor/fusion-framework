@@ -7,6 +7,7 @@ import type {
 
 import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
+import { telemetryExportRequest } from '@equinor/fusion-framework-module';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import type { MsalConfig } from './MsalConfigurator.js';
@@ -402,6 +403,10 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       }
     }
 
+    // Token acquisition for telemetry delivery belongs to the export and is never recorded,
+    // otherwise each export would produce a record to export in turn.
+    const operational =
+      options && telemetryExportRequest in options ? undefined : this.#operational;
     const started = performance.now();
     try {
       // Merge account, original request options, and resolved scopes.
@@ -411,7 +416,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         silent,
         request: { ...inputRequest, account, scopes },
       });
-      this.#operational.report({
+      operational?.report({
         operation: 'acquire-token',
         outcome: 'success',
         duration: performance.now() - started,
@@ -421,7 +426,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       // Inside MSAL's hidden iframe, silent acquisition may fail and the client
       // would fall back to acquireTokenRedirect which throws "block_iframe_reload".
       // Suppress this — the parent frame handles interactive auth, so it is not a failure.
-      this.#operational.report({
+      operational?.report({
         operation: 'acquire-token',
         outcome: inIframe || isUserCancellation(error) ? 'cancelled' : 'failure',
         duration: performance.now() - started,

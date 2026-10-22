@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { markTelemetryExportRequest } from '@equinor/fusion-framework-module';
+import {
+  markTelemetryExportRequest,
+  telemetryExportRequest,
+} from '@equinor/fusion-framework-module';
 import { enableTelemetry, type TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 import { mockFramework } from '../mock/mock-framework.js';
 
@@ -33,6 +36,10 @@ const setup = async (register: 'configure' | 'async-on-configured' = 'configure'
       },
     });
     config.configureHttpClient('remote', { baseUri: `https://${sentinel}.example.com` });
+    config.configureHttpClient('secured', {
+      baseUri: `https://${sentinel}.example.com`,
+      defaultScopes: ['api://telemetry/.default'],
+    });
     // Application retry middleware wraps the instrumentation wherever it is registered.
     if (register === 'configure') {
       config.http.addMiddleware(retry);
@@ -137,5 +144,26 @@ describe('framework HTTP telemetry', () => {
     await client.fetch('/after-dispose');
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(http()).toHaveLength(0);
+  });
+
+  it('forwards the export marker to token acquisition for authenticated exports only', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('ok')),
+    );
+    const { fusion } = await setup();
+    const acquire = vi.spyOn(fusion.modules.auth, 'acquireAccessToken');
+    const client = fusion.modules.http.createClient('secured');
+
+    await client.fetch('/v1/logs', markTelemetryExportRequest({ method: 'POST' }));
+    await client.fetch('/items');
+
+    expect(acquire).toHaveBeenCalledTimes(2);
+    const [exported, application] = acquire.mock.calls.map(([options]) => options as object);
+    // Only the exporter's token request is owned by telemetry delivery.
+    expect(telemetryExportRequest in exported).toBe(true);
+    expect(telemetryExportRequest in application).toBe(false);
+    expect(exported).toMatchObject({ request: { scopes: ['api://telemetry/.default'] } });
+    await fusion.modules.dispose();
   });
 });

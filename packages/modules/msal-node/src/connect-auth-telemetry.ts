@@ -1,3 +1,4 @@
+import { telemetryExportRequest } from '@equinor/fusion-framework-module';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 
@@ -21,6 +22,8 @@ type InstrumentedMethod = keyof typeof operations;
  * is recorded as its own `login` outcome in addition to `acquire-token`.
  *
  * @param provider - Initialized auth provider owned by the module.
+ * Calls whose options carry the telemetry export marker, such as token acquisition for an
+ * exporter's HTTP request, are not recorded; concurrent application calls still are.
  * Reporting stops when the provider's `dispose()` runs, or when the returned function is
  * called, so in-flight calls never report into a torn-down telemetry host.
  *
@@ -59,6 +62,12 @@ export function connectAuthTelemetry<T extends Partial<Record<InstrumentedMethod
     }
     const operation = operations[method];
     target[method] = async function (this: unknown, ...args: unknown[]) {
+      const [options] = args;
+      // Authentication for telemetry delivery belongs to the export and is never recorded,
+      // otherwise each export would produce a record to export in turn.
+      if (typeof options === 'object' && options !== null && telemetryExportRequest in options) {
+        return original.apply(this, args);
+      }
       const started = performance.now();
       try {
         const result = await original.apply(this, args);

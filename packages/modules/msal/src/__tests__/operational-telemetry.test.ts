@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { markTelemetryExportRequest } from '@equinor/fusion-framework-module';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 import type { IMsalClient } from '../MsalClient.interface';
 import type { MsalConfig } from '../MsalConfigurator';
@@ -143,6 +144,21 @@ describe('MsalProvider operational telemetry', () => {
 
     await expect(pending).resolves.toEqual({ accessToken: 'token' });
     expect(operational(items)).toEqual([]);
+  });
+
+  it('does not record token acquisition owned by a telemetry export', async () => {
+    const result = { accessToken: 'token' };
+    const acquireToken = vi.fn(async () => result);
+    const { provider, items } = createProvider({ acquireToken });
+
+    await expect(
+      provider.acquireAccessToken(markTelemetryExportRequest({ request: { scopes: ['a'] } })),
+    ).resolves.toBe('token');
+    await expect(provider.acquireToken({ request: { scopes: ['a'] } })).resolves.toBe(result);
+
+    // The export's token is acquired as usual, but only the application call is recorded.
+    expect(acquireToken).toHaveBeenCalledTimes(2);
+    expect(operational(items)).toEqual(['fusion.msal.acquire-token.duration:success']);
   });
 
   it('keeps authentication behavior unchanged without telemetry', async () => {

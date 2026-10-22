@@ -127,7 +127,9 @@ When the telemetry module is available, the provider records safe terminal outco
 iframe are cancellations. A failure adds one sanitized `.failure` exception, and a failed
 silent login before the interactive fallback adds a `fusion.msal.silent-login-fallback`
 warning. Tokens, scopes, accounts, usernames, login hints, auth codes and original errors
-are never recorded. Return values and thrown errors are unchanged.
+are never recorded. Return values and thrown errors are unchanged. Token acquisition for a
+telemetry export request, marked with `markTelemetryExportRequest`, is not recorded, so an
+exporter using an authenticated Fusion HTTP client does not generate records to export.
 
 These records replace the legacy `module-msal.acquireToken` measurement and the
 `acquireToken-failed`, `logout.failed`, `handleRedirect.failed`,

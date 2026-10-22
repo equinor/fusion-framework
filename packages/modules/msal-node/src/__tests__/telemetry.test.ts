@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { markTelemetryExportRequest } from '@equinor/fusion-framework-module';
 import { PublicClientApplication } from '@azure/msal-node';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 
@@ -115,5 +116,18 @@ describe('msal-node operational telemetry', () => {
     await other.acquireAccessToken();
     expect(otherDispose).not.toHaveBeenCalled();
     expect(items).toHaveLength(0);
+  });
+
+  it('does not record calls owned by a telemetry export, while recording application calls', async () => {
+    const original = vi.fn(async () => 'token');
+    const provider = { acquireAccessToken: original };
+    const { telemetry, items } = createTelemetry();
+    connectAuthTelemetry(provider, telemetry);
+
+    await provider.acquireAccessToken(markTelemetryExportRequest({ request: { scopes: ['a'] } }));
+    await provider.acquireAccessToken({ request: { scopes: ['a'] } });
+
+    expect(original).toHaveBeenCalledTimes(2);
+    expect(names(items)).toEqual(['fusion.msal-node.acquire-token.duration:success']);
   });
 });

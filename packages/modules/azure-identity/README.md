@@ -119,7 +119,8 @@ When a telemetry module is registered alongside this module, the provider record
 `acquireToken` (which `acquireAccessToken` uses), `login` and `logout` as `fusion.azure-identity.acquire-token.duration`, `fusion.azure-identity.login.duration`
 and `fusion.azure-identity.logout.duration`, with one sanitized `.failure` exception per failure.
 Tokens, scopes, accounts, device codes and original errors are never recorded, and results
-and errors are unchanged. Static `token_only` providers are never instrumented. Without
+and errors are unchanged. Static `token_only` providers are never instrumented, and calls for a telemetry export
+request, marked with `markTelemetryExportRequest`, are not recorded. Without
 telemetry the provider is left untouched; the package remains Node-compatible either way.
 
 ## Testing
