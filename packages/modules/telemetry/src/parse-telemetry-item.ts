@@ -7,7 +7,7 @@ import {
   TelemetryExceptionSchema,
   type TelemetryItemSchema,
   TelemetryMetricSchema,
-} from './schemas.js';
+} from './schemas/telemetry-item-schema.js';
 
 /**
  * Parses a telemetry item according to the `TelemetryEventSchema`.

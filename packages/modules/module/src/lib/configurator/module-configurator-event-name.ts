@@ -12,14 +12,20 @@ export { ModuleConfiguratorEventBaseName };
  */
 export const ModuleConfiguratorEventName = {
   ModuleConfigAdded: `${ModuleConfiguratorEventBaseName}.module.configAdded`,
+  PreparedConfigReplaced: `${ModuleConfiguratorEventBaseName}.module.preparedConfigReplaced`,
   OnConfiguredAdded: `${ModuleConfiguratorEventBaseName}.onConfigured.added`,
   OnInitializedAdded: `${ModuleConfiguratorEventBaseName}.onInitialized.added`,
   PluginAdded: `${ModuleConfiguratorEventBaseName}.plugin.added`,
   InitializeConfigLoaded: `${ModuleConfiguratorEventBaseName}.config.loaded`,
   InitializeInstanceInitialized: `${ModuleConfiguratorEventBaseName}.instance.initialized`,
   Initialize: `${ModuleConfiguratorEventBaseName}.initialize.complete`,
+  HostInitializeStarted: `${ModuleConfiguratorEventBaseName}.host.initializeStarted`,
+  HostInitialized: `${ModuleConfiguratorEventBaseName}.host.initialized`,
+  HostInitializeError: `${ModuleConfiguratorEventBaseName}.host.initializeError`,
 
   ConfiguratorCreated: `${ModuleConfiguratorEventBaseName}.configurator.created`,
+  ConfiguratorPrepared: `${ModuleConfiguratorEventBaseName}.configurator.prepared`,
+  ConfiguratorPrepareError: `${ModuleConfiguratorEventBaseName}.configurator.prepareError`,
   ConfiguratorFailed: `${ModuleConfiguratorEventBaseName}.configurator.failed`,
   ModulePostConfigured: `${ModuleConfiguratorEventBaseName}.module.postConfigured`,
   ModulePostConfigureError: `${ModuleConfiguratorEventBaseName}.module.postConfigureError`,
