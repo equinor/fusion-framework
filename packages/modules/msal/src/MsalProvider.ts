@@ -369,8 +369,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     const scopes =
       candidateScopes.length > 0 ? candidateScopes : defaultScopes.length > 0 ? defaultScopes : [];
 
-    // Prepare telemetry properties for this token acquisition attempt
-    const telemetryProperties = { behavior, silent, scopes };
+    // Flow flags only; scopes identify the requested resources and are never recorded.
+    const telemetryProperties = { behavior, silent };
 
     // Track usage of deprecated legacy scopes format for migration monitoring
     if ((options as AcquireTokenOptionsLegacy)?.scopes) {
@@ -384,7 +384,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       // Fall back to the client-id-derived default scope when one is available
       if (defaultScopes.length > 0) {
         this._trackEvent('acquireToken.missing-scope.defaulted', TelemetryLevel.Warning, {
-          properties: { ...telemetryProperties, defaultScopes },
+          properties: telemetryProperties,
         });
       } else {
         const exception = new Error(
@@ -503,7 +503,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     // Silent login requires either an account object or a loginHint to work
     const canLoginSilently = silent && (request.account || request.loginHint);
 
-    const telemetryProperties = { behavior, silent, canLoginSilently, scopes: request.scopes };
+    // Flow flags only; scopes identify the requested resources and are never recorded.
+    const telemetryProperties = { behavior, silent, canLoginSilently: Boolean(canLoginSilently) };
 
     // Default to active account if no account/hint provided in request
     // This allows silent login to work automatically with existing authentication state

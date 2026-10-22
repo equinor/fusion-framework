@@ -52,10 +52,18 @@ describe('MsalProvider operational telemetry', () => {
       provider.acquireToken({ request: { scopes: [`api://${sentinel}/.default`] } }),
     ).resolves.toBe(result);
 
-    expect(operational(items)).toEqual(['fusion.msal.acquire-token.duration:success']);
-    expect(JSON.stringify(items.filter((item) => item.name.startsWith('fusion.')))).not.toContain(
-      sentinel,
-    );
+    // The deprecated scope format emits a legacy warning event, which must not carry scopes either.
+    await provider.acquireToken({ scopes: [`api://${sentinel}/.default`] } as never);
+
+    expect(operational(items)).toEqual([
+      'fusion.msal.acquire-token.duration:success',
+      'fusion.msal.acquire-token.duration:success',
+    ]);
+    expect(
+      items.some((item) => item.name === 'module-msal.acquireToken.legacy-scopes-provided'),
+    ).toBe(true);
+    // Legacy events share the boundary, so every exported item is checked.
+    expect(JSON.stringify(items)).not.toContain(sentinel);
   });
 
   it('rethrows token failures with one sanitized exception and classifies user cancellation', async () => {
@@ -91,9 +99,8 @@ describe('MsalProvider operational telemetry', () => {
       'fusion.msal.silent-login-fallback:failure',
       'fusion.msal.login.duration:success',
     ]);
-    expect(JSON.stringify(items.filter((item) => item.name.startsWith('fusion.')))).not.toContain(
-      sentinel,
-    );
+    // Legacy events share the boundary, so every exported item is checked.
+    expect(JSON.stringify(items)).not.toContain(sentinel);
   });
 
   it('records logout and redirect outcomes without account identifiers', async () => {
