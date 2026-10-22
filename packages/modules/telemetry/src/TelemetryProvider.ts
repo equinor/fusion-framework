@@ -1,75 +1,55 @@
-import { from, type ObservableInput, Subject, type Observable, type Subscription } from 'rxjs';
 import type { z } from 'zod';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 import type { TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import { version } from './version.js';
-import { TelemetryType, TelemetryItemNames } from './static.js';
+import { TelemetryType } from './static.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
-import type { MetadataExtractor, TelemetryItem } from './types.js';
+import type { TelemetryItem } from './types.js';
 import {
   TelemetryExceptionSchema,
   TelemetryCustomEventSchema,
   TelemetryEventSchema,
   TelemetryMetricSchema,
   type TelemetryItemSchema,
-} from './schemas.js';
+} from './schemas/telemetry-item-schema.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
-import { TelemetryErrorEvent, TelemetryEvent } from './TelemetryEvent.js';
 import { Measurement } from './Measurement.js';
-import { mergeTelemetryItem } from './utils/merge-telemetry-item.js';
-import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';
-import { applyMetadata } from './utils/resolve-metadata.js';
+import type { TelemetrySource } from './schemas/diagnostic-context.js';
+import type { Observable } from 'rxjs';
+import { TelemetryProviderState } from './TelemetryProviderState.js';
+import type { TelemetryInitializeArgs } from './TelemetryProviderState.actions.js';
 
 /**
- * Provides telemetry tracking, event dispatching, and adapter integration for application instrumentation.
+ * The telemetry provider applications and modules use to track events, exceptions, metrics
+ * and custom telemetry.
  *
- * The `TelemetryProvider` class is responsible for collecting, processing, and relaying telemetry data such as events,
- * exceptions, metrics, and custom events. It supports adapter-based processing, event provider integration, and
- * hierarchical telemetry relaying to parent providers. Telemetry items are validated and dispatched to registered
- * adapters and event providers, with robust error handling and metadata merging.
- *
- * @remarks
- * - Integrates with adapters for extensible telemetry processing.
- * - Supports event provider for dispatching telemetry as events.
- * - Allows relaying telemetry data to a parent provider, merging metadata as needed.
- * - Provides utility methods for tracking and measuring telemetry items.
- * - Handles error reporting via telemetry error events.
+ * `TelemetryProvider` is a thin, consumer-facing facade: it validates input against the item
+ * schemas and delegates everything else (scope, enrichment, exporter delivery, parent relay,
+ * lifecycle and health) to its {@link TelemetryProviderState} engine.
  *
  * @example
  * ```typescript
  * const provider = new TelemetryProvider(config, { event: eventProvider });
- * provider.track({ type: TelemetryType.Event, name: 'user_login', metadata: { userId: '123' } });
+ * await provider.initialize({ parent });
+ * provider.trackEvent({ name: 'user_login', metadata: { userId: '123' } });
  * const end = provider.measure({ name: 'load_time' });
  * // ... do work ...
  * end();
+ * await provider.dispose();
  * ```
- *
- * @typeParam TelemetryConfig - The configuration type for telemetry.
- * @implements ITelemetryProvider
- * @extends BaseModuleProvider<TelemetryConfig>
  */
 export class TelemetryProvider
   extends BaseModuleProvider<TelemetryConfig>
   implements ITelemetryProvider
 {
-  #items: Subject<TelemetryItem> = new Subject();
+  /** Immutable composition-root origin used by optional infrastructure reporters. */
+  readonly source: TelemetrySource;
 
-  #initialized = false;
-  #disposal?: Promise<void>;
-
-  #adapters: Record<string, ITelemetryAdapter> = {};
-  #handledByChild = new WeakSet<TelemetryItem>();
-  #filters?: {
-    adapter?: (item: TelemetryItem) => boolean;
-    relay?: (item: TelemetryItem) => boolean;
-  };
-
-  #defaultScope: string[];
-
-  #eventProvider: IEventModuleProvider | undefined;
+  #state: TelemetryProviderState;
 
   /**
    * Stream of every telemetry item tracked by this provider.
@@ -77,28 +57,25 @@ export class TelemetryProvider
    * @returns An observable emitting each tracked `TelemetryItem`.
    */
   get items(): Observable<TelemetryItem> {
-    return this.#items.asObservable();
+    return this.#state.items;
   }
 
   /**
-   * Returns true if the provider has been initialized.
+   * Returns true once initialization has started.
    *
-   * @returns `true` when {@link initialize} has completed, otherwise `false`.
+   * @returns `true` once {@link initialize} has been called, otherwise `false`.
    */
   get initialized(): boolean {
-    return this.#initialized;
+    return this.#state.value.status !== 'idle';
   }
 
-  #metadata?: MetadataExtractor;
-
-  #modules: ModulesInstanceType<Modules> | undefined;
   /**
    * Sets the resolved framework module instances used to resolve metadata.
    *
    * @param value - The resolved framework module instances.
    */
   set modules(value: ModulesInstanceType<Modules>) {
-    this.#modules = value;
+    this.#state.modules = value;
   }
 
   /**
@@ -110,65 +87,22 @@ export class TelemetryProvider
    */
   constructor(config: TelemetryConfig, deps?: { event?: IEventModuleProvider }) {
     super({ version, config });
-
-    this.#adapters = config?.adapters ?? {};
-    this.#metadata = config?.metadata;
-    this.#defaultScope = config?.defaultScope ?? [];
-    this.#eventProvider = deps?.event;
-    this.#filters = config?.filter;
+    this.source = Object.freeze(config?.source ?? { hostId: crypto.randomUUID() });
+    this.#state = new TelemetryProviderState({ config, event: deps?.event, owner: this });
   }
 
   /**
-   * Initializes the telemetry provider with adapters, parent provider, and optional initial items.
+   * Connects exporters, the parent relay and startup streams. Exporter initialization failures
+   * are reported but do not prevent the provider from becoming usable.
    *
-   * This method sets up the provider for operation by:
-   * 1. Storing the provided adapters
-   * 2. Initializing all adapters that support async initialization (failures are logged but don't prevent initialization)
-   * 3. Setting up subscriptions for telemetry processing
-   * 4. Handling initial telemetry items if provided
+   * Repeated and reentrant calls return the same promise.
    *
-   * @param args - Initialization arguments
-   * @param args.adapters - Array of telemetry adapters to use
-   * @param args.parent - Optional parent telemetry provider for relaying data
-   * @param args.initialItems - Optional observable of initial telemetry items to process
-   * @returns A promise that resolves when initialization is complete
+   * @param args - Optional parent provider to relay to, and startup records to track.
+   * @returns Resolves when the provider is connected.
+   * @throws {Error} When the provider has already been disposed.
    */
-  public async initialize(args?: {
-    parent?: ITelemetryProvider;
-    initialItems?: ObservableInput<TelemetryItem>;
-  }): Promise<void> {
-    const { parent, initialItems } = args ?? {};
-
-    // Mark as initialized early to allow adapter connections
-    this.#initialized = true;
-
-    // Initialize all adapters that support async initialization
-    await this._initializeAdapters();
-
-    // Connect adapters to the telemetry items, processing each item as it is emitted
-    this._addTeardown(this._connectAdapters());
-
-    // If a parent telemetry provider is provided, relay telemetry data to it
-    if (parent) {
-      this._addTeardown(this._relayTelemetryData(parent));
-    }
-
-    // Emit telemetry items as events if an event provider is available
-    this._addTeardown(this.#items.subscribe(this._dispatchEntityEvent.bind(this)));
-
-    // Handle initial telemetry items if provided
-    if (initialItems) {
-      this._addTeardown(
-        from(initialItems).subscribe((item) => {
-          this.track(item);
-        }),
-      );
-    }
-
-    // Ensure the subject is completed when the provider is destroyed
-    this._addTeardown(() => {
-      this.#items.complete();
-    });
+  public initialize(args?: TelemetryInitializeArgs): Promise<void> {
+    return this.#state.initialize(args);
   }
 
   /**
@@ -185,172 +119,7 @@ export class TelemetryProvider
    * ```
    */
   public override dispose(): Promise<void> {
-    // Direct disposal and module disposal must join the same pending shutdown.
-    if (this.#disposal) {
-      return this.#disposal;
-    }
-    super.dispose();
-    // Defer adapter callbacks until the shared promise is assigned, including reentrant disposal.
-    this.#disposal = Promise.resolve().then(async () => {
-      // Shut down all exporters even when one rejects or throws synchronously.
-      const results = await Promise.allSettled(
-        Object.entries(this.#adapters).map(async ([identifier, adapter]) => {
-          try {
-            await adapter.shutdown?.();
-          } catch (cause) {
-            throw new Error(`Failed to shut down telemetry adapter "${identifier}"`, { cause });
-          }
-        }),
-      );
-      const errors: unknown[] = [];
-      // Retain each failure for the module lifecycle's structured disposal error event.
-      for (const result of results) {
-        // Successful shutdowns must not obscure another exporter's failure.
-        if (result.status === 'rejected') {
-          errors.push(result.reason);
-        }
-      }
-      // Reject only after all exporters have had a chance to release their resources.
-      if (errors.length) {
-        throw new AggregateError(errors, 'Failed to shut down telemetry adapters');
-      }
-    });
-    return this.#disposal;
-  }
-
-  /**
-   * Initializes all telemetry adapters that support async initialization.
-   * Uses Promise.allSettled to ensure all adapters attempt initialization,
-   * with individual error reporting for any failures.
-   * Subclasses can override this method to customize adapter initialization behavior.
-   *
-   * @protected
-   */
-  protected async _initializeAdapters(): Promise<void> {
-    // Initialize all adapters, do it in parallel
-    const adapterEntries = Object.entries(this.#adapters);
-    // Kick off every adapter's initialize() concurrently
-    const initializationPromises = adapterEntries.map(([_identifier, adapter]) =>
-      adapter.initialize(),
-    );
-
-    // Wait for all adapters to settle (either resolve or reject)
-    const results = await Promise.allSettled(initializationPromises);
-
-    // Check each result and dispatch errors for failed initializations
-    for (const [index, result] of results.entries()) {
-      // Only rejected adapters need an error dispatched; fulfilled ones need no action
-      if (result.status === 'rejected') {
-        const [identifier] = adapterEntries[index];
-        this._dispatchError(
-          new Error(`Failed to initialize telemetry adapter "${identifier}"`, {
-            cause: result.reason,
-          }),
-        );
-      }
-    }
-  }
-
-  /**
-   * Subscribes all adapters to the telemetry item stream.
-   * Each adapter processes every telemetry item as it is emitted.
-   * If an adapter filter is configured, only items that pass the filter will be sent to adapters.
-   * If an adapter throws, the error is dispatched as a telemetry error event.
-   *
-   * @returns Subscription to the telemetry item stream
-   * @protected
-   * @throws {Error} When the provider has not been initialized yet.
-   */
-  protected _connectAdapters(): Subscription {
-    // Adapters can only be connected after the provider has completed initialization
-    if (!this.#initialized) {
-      throw new Error('TelemetryProvider is not initialized');
-    }
-    return this.#items.subscribe((item) => {
-      const { adapter: adapterFilter } = this.#filters ?? {};
-      // Apply adapter filter if configured - skip item if filter returns false
-      if (adapterFilter && !adapterFilter(item)) {
-        return;
-      }
-
-      // Iterate through all registered adapters
-      for (const [identifier, adapter] of Object.entries(this.#adapters)) {
-        // Explicit child exporters take precedence over inherited development exporters.
-        if (adapter.fallback && this.#handledByChild.has(item)) {
-          // Keep application-owned records out of parent fallback exporters.
-          continue;
-        }
-        try {
-          // Let the adapter process the telemetry item
-          Promise.resolve(adapter.processItem(item));
-        } catch (error) {
-          // If processing fails, dispatch an error event
-          this._dispatchError(
-            new Error(`Failed to process telemetry item with adapter "${identifier}"`, {
-              cause: error,
-            }),
-          );
-        }
-      }
-    });
-  }
-
-  /**
-   * Relays telemetry data items to a target telemetry provider.
-   *
-   * Subscribes to the internal telemetry item stream and forwards each processed item
-   * to the specified target provider by invoking its `track` method.
-   * If a relay filter is configured, only items that pass the filter will be relayed.
-   *
-   * @param target - The telemetry provider to which telemetry data should be relayed.
-   * @returns A Subscription object that can be used to unsubscribe from the relay.
-   */
-  protected _relayTelemetryData(target: ITelemetryProvider): Subscription {
-    // Subscribe to the processed stream and forward each item to the parent provider
-    return this.#items.subscribe((item) => {
-      const { relay: relayFilter } = this.#filters ?? {};
-      // Apply relay filter if configured - skip item if filter returns false
-      if (relayFilter && !relayFilter(item)) {
-        return;
-      }
-      // Older/custom providers retain the original track-only relay contract.
-      if (target.trackRelayed) {
-        // Carry exporter ownership across intermediate providers without changing record metadata.
-        const hasAdapters =
-          this.#handledByChild.has(item) ||
-          Object.values(this.#adapters).some((adapter) => !adapter.fallback);
-        target.trackRelayed(item, hasAdapters);
-      } else {
-        target.track(item);
-      }
-    });
-  }
-
-  /**
-   * Dispatches a telemetry event to the event provider, if available.
-   *
-   * @param item - The telemetry item to dispatch as an event
-   * @protected
-   */
-  protected _dispatchEntityEvent(item: TelemetryItem): void {
-    // Only dispatch when an event provider is configured
-    if (this.#eventProvider) {
-      // Wrap the telemetry item in a TelemetryEvent and dispatch it
-      this.#eventProvider.dispatchEvent(new TelemetryEvent(item, this));
-    }
-  }
-
-  /**
-   * Dispatches a telemetry error event using the internal event provider, if available.
-   *
-   * @param error - The error instance to be dispatched with the telemetry error event.
-   * @protected
-   */
-  protected _dispatchError(error: Error): void {
-    // Only dispatch when an event provider is configured
-    if (this.#eventProvider) {
-      this.#eventProvider.dispatchEvent(new TelemetryErrorEvent(error, this));
-    }
+    return this.#state.dispose();
   }
 
   /**
@@ -390,48 +159,7 @@ export class TelemetryProvider
    * @param hasAdapters - Whether an explicit child adapter has already handled this record.
    */
   public trackRelayed(item: TelemetryItem, hasAdapters: boolean): void {
-    this._track(item, hasAdapters);
-  }
-
-  /**
-   * Tracks a telemetry item by merging the default scope with the item's scope (if provided),
-   * ensuring that all telemetry items have the correct scope context. The merged item is then
-   * emitted to downstream handlers.
-   *
-   * @param item - The telemetry item to be tracked, conforming to the input schema of `TelemetryItemSchema`.
-   * @param handledByChild - Whether fallback adapters should skip this relayed item.
-   *
-   * @protected
-   */
-  protected async _track(
-    item: z.input<typeof TelemetryItemSchema>,
-    handledByChild = false,
-  ): Promise<void> {
-    const mergedItem = mergeTelemetryItem(item, {
-      scope: this.#defaultScope,
-    });
-
-    // Skip metadata application for TelemetryMetadataError items to prevent infinite recursion
-    if (this.#metadata && mergedItem.name !== TelemetryItemNames.MetadataError) {
-      applyMetadata(this.#metadata, {
-        modules: this.#modules,
-        item: mergedItem,
-      }).subscribe((nextItem) => {
-        // Async metadata resolution creates new objects; retain ownership on the emitted record.
-        if (handledByChild) {
-          this.#handledByChild.add(nextItem);
-        }
-        // Emit the item after applying metadata
-        this.#items.next(nextItem);
-      });
-    } else {
-      // Providers without metadata still need the same fallback precedence.
-      if (handledByChild) {
-        this.#handledByChild.add(mergedItem);
-      }
-      // If no metadata extractor is provided or item is TelemetryMetadataError, emit directly
-      this.#items.next(mergedItem);
-    }
+    this.#state.track(item, hasAdapters);
   }
 
   /**
@@ -461,7 +189,7 @@ export class TelemetryProvider
    * provider.trackEvent({ name: 'button_click', metadata: { button: 'save' } });
    */
   public trackEvent(data: Omit<z.input<typeof TelemetryEventSchema>, 'type'>): void {
-    this._track(TelemetryEventSchema.parse({ ...data, type: TelemetryType.Event }));
+    this.#state.track(TelemetryEventSchema.parse({ ...data, type: TelemetryType.Event }));
   }
 
   /**
@@ -476,7 +204,7 @@ export class TelemetryProvider
    * });
    */
   public trackException(data: Omit<z.input<typeof TelemetryExceptionSchema>, 'type'>): void {
-    this._track(TelemetryExceptionSchema.parse({ ...data, type: TelemetryType.Exception }));
+    this.#state.track(TelemetryExceptionSchema.parse({ ...data, type: TelemetryType.Exception }));
   }
 
   /**
@@ -487,7 +215,7 @@ export class TelemetryProvider
    * provider.trackMetric({ name: 'response_time', value: 123 });
    */
   public trackMetric(data: Omit<z.input<typeof TelemetryMetricSchema>, 'type'>): void {
-    this._track(TelemetryMetricSchema.parse({ ...data, type: TelemetryType.Metric }));
+    this.#state.track(TelemetryMetricSchema.parse({ ...data, type: TelemetryType.Metric }));
   }
 
   /**
@@ -498,7 +226,7 @@ export class TelemetryProvider
    * provider.trackCustom({ name: 'custom_event', metadata: { foo: 'bar' } });
    */
   public trackCustom(data: Omit<z.input<typeof TelemetryCustomEventSchema>, 'type'>): void {
-    this._track(TelemetryCustomEventSchema.parse({ ...data, type: TelemetryType.Custom }));
+    this.#state.track(TelemetryCustomEventSchema.parse({ ...data, type: TelemetryType.Custom }));
   }
 
   /**
@@ -509,7 +237,7 @@ export class TelemetryProvider
    * @returns The telemetry adapter corresponding to the given identifier, or `undefined` if not found.
    */
   public getAdapter(identifier: string): ITelemetryAdapter | undefined {
-    const adapter = this.#adapters[identifier];
+    const adapter = this.#state.adapters[identifier];
     // Report a missing adapter as a telemetry exception rather than throwing
     if (!adapter) {
       this.trackException({
@@ -529,6 +257,6 @@ export class TelemetryProvider
    * @returns True if the adapter exists, false otherwise.
    */
   public hasAdapter(identifier: string): boolean {
-    return identifier in this.#adapters;
+    return identifier in this.#state.adapters;
   }
 }

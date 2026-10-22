@@ -10,12 +10,16 @@
       "types": "./dist/types/index.d.ts"
     },
     "./schemas": {
-      "import": "./dist/esm/schemas.js",
-      "types": "./dist/types/schemas.d.ts"
+      "import": "./dist/esm/schemas/index.js",
+      "types": "./dist/types/schemas/index.d.ts"
     },
     "./utils": {
       "import": "./dist/esm/utils/index.js",
       "types": "./dist/types/utils/index.d.ts"
+    },
+    "./integrations": {
+      "import": "./dist/esm/integrations/index.js",
+      "types": "./dist/types/integrations/index.d.ts"
     },
     "./adapter": {
       "import": "./dist/esm/adapters/index.js",
@@ -64,6 +68,7 @@
     "directory": "packages/modules/telemetry"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
     "deepmerge": "^4.3.1",
     "rxjs": "^7.8.1",
     "zod": "^4.4.3"

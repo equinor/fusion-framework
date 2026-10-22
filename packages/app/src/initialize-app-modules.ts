@@ -1,7 +1,8 @@
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
-import {
-  enableTelemetry,
+import telemetry, {
+  StartupCapture,
+  TelemetryConfigurator,
   type MetadataExtractor,
 } from '@equinor/fusion-framework-module-telemetry';
 
@@ -26,6 +27,7 @@ import type { AppModulesInstance, AppEnv } from './types.js';
  * @template TRef - The parent Fusion instance type.
  * @template TEnv - The application environment descriptor.
  * @template TConfigurator - The (real or mock) `AppConfigurator` subclass driving the pipeline.
+ * @throws Rethrows the original host configuration or module initialization error.
  */
 export async function initializeAppModules<
   TModules extends Array<AnyModule> | never,
@@ -61,21 +63,34 @@ export async function initializeAppModules<
     };
   };
 
-  // Enable telemetry collection for module configuration events
-  // attachConfiguratorEvents automatically prefixes events with configurator class name
-  enableTelemetry(configurator, {
-    attachConfiguratorEvents: true,
-    configure: (builder) => {
-      builder.setMetadata(metadataExtractor);
-      builder.setParent(fusion.modules.telemetry);
-      // Scope telemetry to 'app' level for app-specific event filtering
-      builder.setDefaultScope(['app']);
-    },
+  const source = {
+    source: 'app',
+    hostId: crypto.randomUUID(),
+    hostName: args.env.manifest?.appKey,
+    hostVersion: args.env.manifest?.build?.version,
+  };
+  const parent = fusion.modules.telemetry;
+  // Capture startup before user code can fail; a failed startup is reported to the framework.
+  const capture = new StartupCapture(configurator, { source, parent });
+  const builder = new TelemetryConfigurator()
+    .setSource(source)
+    .setMetadata(metadataExtractor)
+    .setParent(parent)
+    .setDefaultScope(['app'])
+    .attachLifecycleItems(capture.items);
+  configurator.addConfig({
+    module: telemetry,
+    configurator: builder,
   });
 
   // Allow user configuration callback to run before module initialization
   if (cb) {
-    await Promise.resolve(cb(configurator, args));
+    try {
+      await cb(configurator, args);
+    } catch (error) {
+      capture.fail();
+      throw error;
+    }
   }
   // Type cast is safe because AppConfigurator.initialize() returns the exact module
   // instance that was registered and configured above. The intermediate 'unknown'

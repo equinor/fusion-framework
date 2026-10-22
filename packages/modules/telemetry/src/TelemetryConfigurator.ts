@@ -1,6 +1,7 @@
-import { from, type ObservableInput } from 'rxjs';
+import { EMPTY, defer, from, type ObservableInput } from 'rxjs';
 import {
   concatMap,
+  catchError,
   defaultIfEmpty,
   filter,
   last,
@@ -21,17 +22,28 @@ import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import { toObservable } from '@equinor/fusion-observable';
 import { mergeMetadata } from './utils/merge-telemetry-item.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
+import type { TelemetrySource } from './schemas/diagnostic-context.js';
+import { operationalIdentifier } from './schemas/operational-identifier.js';
+
+/** A declared exporter: how to create it, and whether it owns delivery. */
+interface DeclaredAdapter {
+  configure: ConfigBuilderCallback<ITelemetryAdapter>;
+  /** Explicit (non-fallback) exporters own delivery, suppressing the parent's fallback exporters. */
+  explicit: boolean;
+}
 
 /**
  * Configures telemetry settings for the application.
  *
  * The `TelemetryConfigurator` class extends `BaseConfigBuilder` to provide a fluent API for
- * setting up telemetry adapters, metadata, default scopes, and parent providers.
+ * setting up telemetry adapters, metadata, default scopes, parent providers, host identity and
+ * lifecycle records. Every setter records configuration; nothing is resolved until the
+ * telemetry module builds its configuration.
  *
  * @example
  * ```typescript
  * const configurator = new TelemetryConfigurator()
- *   .setAdapter(myAdapter)
+ *   .setAdapter('console', consoleAdapter)
  *   .setMetadata({ app: 'my-app' })
  *   .setDefaultScope(['user', 'session'])
  *   .setParent(parentProvider);
@@ -50,7 +62,7 @@ export class TelemetryConfigurator
   extends BaseConfigBuilder<TelemetryConfig>
   implements ITelemetryConfigurator
 {
-  #adaptersCallbacks: Record<string, ConfigBuilderCallback<ITelemetryAdapter>> = {};
+  #adapters: Record<string, DeclaredAdapter> = {};
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
   /**
@@ -65,12 +77,17 @@ export class TelemetryConfigurator
       'adapters',
       (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, ITelemetryAdapter>> => {
         // Resolve every adapter factory concurrently and merge them into a single record
-        return from(Object.entries(this.#adaptersCallbacks)).pipe(
-          mergeMap(([identifier, adapterFn]) =>
+        return from(Object.entries(this.#adapters)).pipe(
+          mergeMap(([identifier, { configure }]) =>
             // Drop adapters whose factory resolved to a falsy value
-            from(adapterFn(args)).pipe(
+            defer(() => from(configure(args))).pipe(
               filter((adapter): adapter is ITelemetryAdapter => !!adapter),
               map((adapter) => [identifier, adapter] as const),
+              catchError(() => {
+                // Factory errors may carry credentials or URLs, so only the failure is reported.
+                console.warn('Telemetry adapter factory failed');
+                return EMPTY;
+              }),
             ),
           ),
           scan(
@@ -86,6 +103,13 @@ export class TelemetryConfigurator
       },
     );
 
+    // Ownership is declared configuration: a failed explicit exporter still owns delivery,
+    // so its failure can never activate an ancestor's fallback exporter.
+    this._set('ownsExport', async () =>
+      // Any explicit declaration owns delivery.
+      Object.values(this.#adapters).some(({ explicit }) => explicit),
+    );
+
     // Configure metadata merging - handles multiple sync/async metadata sources
     this._set('metadata', async (): Promise<TelemetryConfig['metadata']> => {
       const metadataItems = this.#metadata;
@@ -94,6 +118,7 @@ export class TelemetryConfigurator
         from(metadataItems).pipe(
           concatMap((metadata) => toObservable(metadata, ...args)),
           scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
+          defaultIfEmpty({}),
           last(),
           shareReplay({ bufferSize: 1, refCount: true }),
         );
@@ -103,16 +128,23 @@ export class TelemetryConfigurator
   /**
    * Registers a telemetry adapter with the configurator.
    *
+   * A non-fallback adapter is an explicit exporter: it owns delivery, so the parent's fallback
+   * exporters skip records this provider relays.
+   *
    * @param identifier - The key used to register and later resolve this adapter.
-   * @param adapter - The telemetry adapter to be added. The adapter's identifier is used as the key.
+   * @param adapter - The telemetry adapter to be added.
    * @returns The current instance of the configurator for method chaining.
    */
   public setAdapter(identifier: string, adapter: ITelemetryAdapter): this {
-    return this.configureAdapter(identifier, async () => adapter);
+    this.#adapters[identifier] = { configure: async () => adapter, explicit: !adapter.fallback };
+    return this;
   }
 
   /**
    * Configures a telemetry adapter with the configurator.
+   *
+   * A factory's adapter is unknown until it resolves, so it is declared as an explicit exporter;
+   * register fallback adapters with `setAdapter`.
    *
    * @param identifier - The key used to register and later resolve this adapter.
    * @param adapterFn - A callback function that returns a telemetry adapter instance
@@ -122,7 +154,7 @@ export class TelemetryConfigurator
     identifier: string,
     adapterFn: ConfigBuilderCallback<ITelemetryAdapter>,
   ): this {
-    this.#adaptersCallbacks[identifier] = adapterFn;
+    this.#adapters[identifier] = { configure: adapterFn, explicit: true };
     return this;
   }
 
@@ -162,6 +194,18 @@ export class TelemetryConfigurator
     return this;
   }
 
+  /** @inheritdoc */
+  public setSource(source: TelemetrySource): this {
+    // Fail at configuration time; an invalid label would otherwise drop every built-in record.
+    if (source.source !== undefined && !operationalIdentifier.safeParse(source.source).success) {
+      throw new RangeError(
+        'Telemetry source kind must be a lowercase kebab-case identifier, such as "portal"',
+      );
+    }
+    this._set('source', Object.freeze({ ...source }));
+    return this;
+  }
+
   /**
    * Attaches an observable stream of telemetry items to the configurator.
    *
@@ -170,6 +214,23 @@ export class TelemetryConfigurator
    */
   public attachItems(item$: TelemetryConfig['items$']): this {
     this._set('items$', item$);
+    return this;
+  }
+
+  /** @inheritdoc */
+  public attachLifecycleItems(item$: NonNullable<TelemetryConfig['lifecycleItems$']>): this {
+    this._set('lifecycleItems$', item$);
+    return this;
+  }
+
+  /** @inheritdoc */
+  public hasLifecycleItems(): boolean {
+    return this._has('lifecycleItems$');
+  }
+
+  /** @inheritdoc */
+  public setLifecycleItemsEnabled(enabled: boolean): this {
+    this._set('lifecycleItemsEnabled', enabled);
     return this;
   }
 

@@ -2,24 +2,25 @@ import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module } from './module.js';
 import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface.js';
-import { mapConfiguratorEvents } from './utils/map-configurator-events.js';
+import { StartupCapture } from './lib/StartupCapture.js';
 
 /**
  * Enables telemetry for a given module configurator.
  *
+ * Registers the telemetry module and an optional configuration callback. Framework, app and
+ * widget hosts already capture their own startup lifecycle; `attachConfiguratorEvents` only
+ * matters for custom hosts and for opting out.
+ *
  * @param configurator - The module configurator instance to which telemetry should be attached.
  * @param options - Optional configuration for telemetry setup.
- * @param options.attachConfiguratorEvents - If true, attaches configurator events to the telemetry builder.
+ * @param options.attachConfiguratorEvents - `true` captures this configurator's lifecycle unless
+ *   its host already does; `false` stops lifecycle records reaching this provider. A host still
+ *   reports a failed startup to its parent.
  * @param options.configure - An optional callback to further configure the telemetry builder. Can be synchronous or asynchronous.
  *
  * @remarks
- * This function adds telemetry configuration to the provided configurator. It supports attaching configurator events
- * and allows for additional custom configuration via the `configure` callback.
- *
- * @remarks
- * `attachConfiguratorEvents` allows for the automatic attachment of configurator events to the telemetry builder,
- * ensuring that relevant events are captured and processed. __NOTE__ if the configurator crashes before the telemetry
- * builder is fully initialized, some events may be missed.
+ * The lifecycle option applies synchronously when this is called, so capture starts before any
+ * later configuration code runs. The `configure` callback is deferred until module initialization.
  *
  * @example
  * ```typescript
@@ -45,17 +46,21 @@ export const enableTelemetry = (
     configure?: (configurator: ITelemetryConfigurator, ref?: any) => void | Promise<void>;
   },
 ): void => {
+  const attach = options?.attachConfiguratorEvents;
   configurator.addConfig({
     module,
-    configure: async (builder, ref) => {
-      // Attach configurator events to the telemetry builder only when opted in
-      if (options?.attachConfiguratorEvents) {
-        builder.attachItems(mapConfiguratorEvents(configurator));
-      }
-      // Run the caller-supplied configure callback when one was provided
-      if (options?.configure) {
-        await Promise.resolve(options.configure(builder, ref));
-      }
-    },
+    // Lifecycle capture must start now, before later configuration code can run.
+    prepare:
+      attach === undefined
+        ? undefined
+        : (builder) => {
+            // Opting out keeps the host's capture attached, so a later `true` restores it.
+            builder.setLifecycleItemsEnabled(attach);
+            // Hosts own their startup capture; only capture here when no host already does.
+            if (attach && !builder.hasLifecycleItems()) {
+              builder.attachLifecycleItems(new StartupCapture(configurator).items);
+            }
+          },
+    configure: options?.configure,
   });
 };
