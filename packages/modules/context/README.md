@@ -103,6 +103,10 @@ from the lookup behind `setCurrentContextById` (`by: 'id'`):
 
 Re-setting the current item without validation is skipped and reports nothing.
 Context ids, titles and values are never exported, and context behavior is unchanged.
+Synchronous resolver factory failures are recorded and rethrown synchronously without
+changing the error object. A final `onCurrentContextChange` veto records cancellation
+immediately, including on the existing detached-error path; telemetry does not change
+that path's caller behavior.
 See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
 
 ## Configuration
@@ -348,4 +352,3 @@ Additional helpers are available from `@equinor/fusion-framework-module-context/
 | `@equinor/fusion-framework-module-context/utils` | Utility functions for path resolution and enablement |
 | `@equinor/fusion-framework-module-context/mock` | `enableContextMock`, `ContextMockConfigurator` — in-memory test double |
 | `@equinor/fusion-framework-module-context/mock/fixtures` | Fixture factories for generating seeded context items |
-

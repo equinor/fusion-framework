@@ -431,6 +431,7 @@ export class ContextProvider
    * @param args.config - The context module configuration.
    * @param args.event - Optional event module instance for dispatching context change events.
    * @param args.parentContext - Optional parent context provider. Deprecated, use {@link connectParentContext}.
+   * @throws Configured resolver failures propagate unchanged from the installed `resolveContext` method.
    */
   constructor(args: {
     config: ContextModuleConfig;
@@ -459,9 +460,20 @@ export class ContextProvider
     // Measure the effective resolver, including configured overrides and subclass methods,
     // so direct calls, `resolveContextAsync` and selection-driven resolution count once each.
     const resolveContext = this.resolveContext.bind(this);
-    this.resolveContext = (item) =>
+    this.resolveContext = (item) => {
+      let result: Observable<ContextItem<Record<string, unknown>>>;
+      try {
+        result = resolveContext(item);
+      } catch (error) {
+        // Resolver factories may throw before returning an observable; retain the sync contract.
+        const end = this.#telemetry.start('resolve', { by: 'item' });
+        const { outcome, reason } = OperationalTelemetry.classifyError(error);
+        end(outcome, reason ? { reason } : undefined);
+        throw error;
+      }
       // Values, errors and cancellation pass through unchanged; only the outcome is recorded.
-      resolveContext(item).pipe(this.#telemetry.measure('resolve', { by: 'item' }));
+      return result.pipe(this.#telemetry.measure('resolve', { by: 'item' }));
+    };
     // override validateContext if configured
     if (config.validateContext) {
       this.validateContext = config.validateContext?.bind(this);
@@ -705,19 +717,33 @@ export class ContextProvider
 
     // run the actual context-setting logic and relay results/errors to the caller's subject
     const task$ = defer(() => {
-      const run$ = this._setCurrentContext(context, opt);
       // Re-setting the current item without validation is skipped work, not an operation.
       if (context === this.currentContext && opt?.validate !== true) {
-        return run$;
+        return this._setCurrentContext(context, opt);
       }
       // Measured upstream of the abort signal, so queue replacement and caller
       // unsubscription record a cancellation rather than a success or failure.
-      return run$.pipe(
-        this.#telemetry.measure<T>('select', {
-          clear: context === null,
-          validate: opt?.validate === true,
-          resolve: opt?.resolve === true,
+      const end = this.#telemetry.start('select', {
+        clear: context === null,
+        validate: opt?.validate === true,
+        resolve: opt?.resolve === true,
+      });
+      let emitted = false;
+      // The change-event veto has a detached error path; end this tracker at that boundary.
+      return this._setCurrentContext(context, opt, () =>
+        end('cancelled', { reason: 'listener' }),
+      ).pipe(
+        tap({
+          next: () => {
+            emitted = true;
+          },
+          complete: () => end('success'),
+          error: (error: unknown) => {
+            const { outcome, reason } = OperationalTelemetry.classifyError(error);
+            end(outcome, reason ? { reason } : undefined);
+          },
         }),
+        finalize(() => end(emitted ? 'success' : 'cancelled')),
       );
     }).pipe(
       // send context item which was set to the caller
@@ -779,6 +805,7 @@ export class ContextProvider
    * @param opt - Optional settings:
    *   - `validate`: Whether to validate the context before setting.
    *   - `resolve`: Whether to attempt to resolve the context if validation fails.
+   * @param onCancelled - Optional selection telemetry callback for a detached listener veto.
    * @returns An `Observable<T>` that emits the context when set, or errors if validation or resolution fails.
    * @fires onSetContextValidationFailed - When context validation fails and resolution is not enabled.
    * @fires onSetContextResolve - Before attempting to resolve the context.
@@ -789,6 +816,7 @@ export class ContextProvider
   protected _setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
     context: T,
     opt?: { validate?: boolean; resolve?: boolean },
+    onCancelled?: VoidFunction,
   ): Observable<T> {
     return new Observable((subscriber) => {
       const isInvalid =
@@ -867,7 +895,9 @@ export class ContextProvider
                 return resolved;
               }),
               // recursive call to set current context without validation and resolution
-              switchMap((resolved) => this._setCurrentContext(resolved as unknown as T)),
+              switchMap((resolved) =>
+                this._setCurrentContext(resolved as unknown as T, undefined, onCancelled),
+              ),
             )
             .subscribe(subscriber);
         }
@@ -887,6 +917,7 @@ export class ContextProvider
 
             // check if event was canceled and abort if so
             if (event?.canceled) {
+              onCancelled?.();
               throw OperationalTelemetry.markCancellation(
                 Error('change of context was aborted'),
                 'listener',

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { lastValueFrom, of, Subject } from 'rxjs';
+import { config as rxjsConfig, firstValueFrom, lastValueFrom, Observable, of, Subject } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import eventModule, { type EventModule } from '@equinor/fusion-framework-module-event';
 import {
@@ -162,6 +162,83 @@ describe('context operational telemetry', () => {
     expect(records()[0].properties).toEqual({ by: 'item' });
     provider.dispose();
     await modules.dispose();
+  });
+
+  it('records a synchronous resolver factory throw and rethrows the same error', async () => {
+    const original = new Error(SENTINEL);
+    const { modules, provider, summary, processItem } = await setup({
+      resolveContext: () => {
+        throw original;
+      },
+    });
+    let caught: unknown;
+    try {
+      provider.resolveContext(item('sync-throw'));
+    } catch (error) {
+      caught = error;
+    }
+
+    expect(caught).toBe(original);
+    expect(summary()).toEqual([
+      ['fusion.context.resolve.duration', 'failure', undefined],
+      ['fusion.context.resolve.failure', 'failure', undefined],
+    ]);
+    expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('stops a synchronous resolver after firstValueFrom receives its result', async () => {
+    const continued = vi.fn();
+    const resolved = item('resolved');
+    const { modules, provider, summary } = await setup({
+      resolveContext: () =>
+        new Observable((subscriber) => {
+          subscriber.next(resolved);
+          if (!subscriber.closed) {
+            continued();
+            subscriber.error(new Error(SENTINEL));
+          }
+        }),
+    });
+    await expect(firstValueFrom(provider.resolveContext(item('a')))).resolves.toBe(resolved);
+    expect(continued).not.toHaveBeenCalled();
+    expect(summary()).toEqual([['fusion.context.resolve.duration', 'success', undefined]]);
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('records a final change-event veto without changing the detached business error path', async () => {
+    const { modules, provider, summary, processItem } = await setup();
+    const previousHandler = rxjsConfig.onUnhandledError;
+    const detachedError = vi.fn();
+    const result = vi.fn();
+    const callerError = vi.fn();
+    rxjsConfig.onUnhandledError = detachedError;
+    const remove = modules.event.addEventListener('onCurrentContextChange', (event) =>
+      event.preventDefault(),
+    );
+    const pending = provider.setCurrentContext(item('vetoed')).subscribe({
+      next: result,
+      error: callerError,
+    });
+    try {
+      await vi.waitFor(() => expect(detachedError).toHaveBeenCalledTimes(1));
+      expect(summary()).toEqual([['fusion.context.select.duration', 'cancelled', 'listener']]);
+      expect(result).not.toHaveBeenCalled();
+      expect(callerError).not.toHaveBeenCalled();
+      expect(provider.currentContext).toBeUndefined();
+      expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
+      pending.unsubscribe();
+      provider.dispose();
+      expect(summary()).toHaveLength(1);
+    } finally {
+      remove();
+      pending.unsubscribe();
+      provider.dispose();
+      rxjsConfig.onUnhandledError = previousHandler;
+      await modules.dispose();
+    }
   });
 
   it('measures the lookup behind setCurrentContextById, including its failure', async () => {
