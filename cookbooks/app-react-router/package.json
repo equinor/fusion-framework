@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@equinor/fusion-wc-markdown": "^1.5.0",
+    "@equinor/fusion-wc-markdown": "^1.6.5",
     "@tanstack/react-query": "^5.90.10",
     "styled-components": "^6.3.11"
   },
