@@ -89,13 +89,15 @@ See [Usage & Error Handling](docs/usage.md) for full CRUD examples, subscription
 When the host registers telemetry, each `getItem`, `getAllItems`, `storeItem(s)`,
 `removeItem(s)` and `clear` call reports one `fusion.state.<operation>.duration` outcome
 (`get`, `list`, `store`, `remove`, `clear`) with an item `count`. Storage error results
-are failures with reason `storage-error`. Synchronization is summarized rather than
-forwarded:
+are failures with reason `storage-error`. Synchronization is summarized in one-minute
+reporting windows rather than forwarded, because each pull reports `active` and then
+`paused`:
 
-- `fusion.state.sync-status` on each status transition;
-- `fusion.state.sync-error` for the first error of each type in a status period;
-- `fusion.state.sync-activity` with change, poll, skipped-poll, completion and error
-  counts, emitted at each status transition and on disposal.
+- `fusion.state.sync-status` for the first transition into each status in a window;
+- `fusion.state.sync-error` for the first error of each type in a window;
+- `fusion.state.sync-activity` with status-change, change, poll, skipped-poll, completion
+  and error counts and the current status, emitted when the next event arrives after a
+  window ends, on disconnect, and on disposal. Quiet windows emit nothing.
 
 Keys, values, arguments and error messages are never exported. Promises settle exactly
 as before. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).

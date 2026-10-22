@@ -102,13 +102,14 @@ describe('state operational telemetry', () => {
     await modules.dispose();
   });
 
-  it('summarizes noisy synchronization into bounded status, error and activity records', async () => {
+  it('bounds replication churn to one status per value and one error per type per window', async () => {
     const { modules, storage, provider, processItem, summary } = await setup();
-    storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
+    // Each pull reports active, a change, an error and paused, as PouchDB replication does.
     for (let index = 0; index < 100; index++) {
       storage.sync.next(
         new StateSyncEvent.Poll({ detail: { trigger: 'interval', skipped: index % 2 === 0 } }),
       );
+      storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
       storage.sync.next(
         new StateSyncEvent.Change({
           detail: { direction: 'pull', change: { docs: [{ secret: SENTINEL }] } as never },
@@ -117,27 +118,29 @@ describe('state operational telemetry', () => {
       storage.sync.next(
         new StateSyncEvent.Error({ detail: { type: 'error', error: new Error(SENTINEL) } }),
       );
+      storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'paused' } }));
     }
     // Repeated identical statuses are not transitions.
-    storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
     storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'paused' } }));
-    storage.sync.next(new StateSyncEvent.Poll({ detail: { trigger: 'focus', skipped: false } }));
     provider.dispose();
 
     expect(summary()).toEqual([
       ['fusion.state.sync-status', 'success', { status: 'active' }],
       ['fusion.state.sync-error', 'failure', { errorType: 'error' }],
-      [
-        'fusion.state.sync-activity',
-        'success',
-        { changes: 100, polls: 50, skippedPolls: 50, completions: 0, errors: 100 },
-      ],
       ['fusion.state.sync-status', 'success', { status: 'paused' }],
-      // The final period is summarized on disposal, then nothing more is emitted.
+      // The window is summarized on disposal, then nothing more is emitted.
       [
         'fusion.state.sync-activity',
         'success',
-        { changes: 0, polls: 1, skippedPolls: 0, completions: 0, errors: 0 },
+        {
+          statusChanges: 200,
+          changes: 100,
+          polls: 50,
+          skippedPolls: 50,
+          completions: 0,
+          errors: 100,
+          status: 'paused',
+        },
       ],
     ]);
     const count = summary().length;
@@ -145,6 +148,92 @@ describe('state operational telemetry', () => {
     expect(summary()).toHaveLength(count);
     expect(storage.sync.observed).toBe(false);
     expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
+    await modules.dispose();
+  });
+
+  it('summarizes each reporting window once it ends and resets status and error suppression', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      const { modules, storage, provider, summary } = await setup();
+      storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
+      storage.sync.next(new StateSyncEvent.Error({ detail: { type: 'denied', error: {} } }));
+      vi.setSystemTime(Date.now() + 61_000);
+      // The first event after the window ends summarizes it before being handled.
+      storage.sync.next(new StateSyncEvent.Error({ detail: { type: 'denied', error: {} } }));
+      storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'paused' } }));
+      provider.dispose();
+      expect(summary()).toEqual([
+        ['fusion.state.sync-status', 'success', { status: 'active' }],
+        ['fusion.state.sync-error', 'failure', { errorType: 'denied' }],
+        [
+          'fusion.state.sync-activity',
+          'success',
+          {
+            statusChanges: 1,
+            changes: 0,
+            polls: 0,
+            skippedPolls: 0,
+            completions: 0,
+            errors: 1,
+            status: 'active',
+          },
+        ],
+        ['fusion.state.sync-error', 'failure', { errorType: 'denied' }],
+        ['fusion.state.sync-status', 'success', { status: 'paused' }],
+        [
+          'fusion.state.sync-activity',
+          'success',
+          {
+            statusChanges: 1,
+            changes: 0,
+            polls: 0,
+            skippedPolls: 0,
+            completions: 0,
+            errors: 1,
+            status: 'paused',
+          },
+        ],
+      ]);
+      await modules.dispose();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('releases the sync observer on disconnect and starts a fresh period on reconnect', async () => {
+    const { modules, storage, provider, summary } = await setup();
+    storage.sync.next(new StateSyncEvent.Poll({ detail: { trigger: 'interval', skipped: false } }));
+    provider.connectTelemetry(undefined);
+    // The period gathered while connected is summarized before the observer is released.
+    expect(summary()).toEqual([
+      [
+        'fusion.state.sync-activity',
+        'success',
+        { statusChanges: 0, changes: 0, polls: 1, skippedPolls: 0, completions: 0, errors: 0 },
+      ],
+    ]);
+    expect(storage.sync.observed).toBe(false);
+    storage.sync.next(new StateSyncEvent.Poll({ detail: { trigger: 'interval', skipped: false } }));
+    provider.connectTelemetry(modules.telemetry);
+    storage.sync.next(new StateSyncEvent.Status({ detail: { status: 'active' } }));
+    provider.dispose();
+    // Activity while disconnected is not carried into the new period.
+    expect(summary().slice(1)).toEqual([
+      ['fusion.state.sync-status', 'success', { status: 'active' }],
+      [
+        'fusion.state.sync-activity',
+        'success',
+        {
+          statusChanges: 1,
+          changes: 0,
+          polls: 0,
+          skippedPolls: 0,
+          completions: 0,
+          errors: 0,
+          status: 'active',
+        },
+      ],
+    ]);
     await modules.dispose();
   });
 

@@ -368,16 +368,21 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    *
    * Each `get`, `list`, `store`, `remove` and `clear` call reports one
    * `fusion.state.<operation>.duration` outcome; error results returned by the storage count
-   * as failures with reason `storage-error`. Synchronization is summarized through bounded
-   * `sync-status`, `sync-error` and `sync-activity` notifications. Keys, values, arguments
-   * and error messages are never included.
+   * as failures with reason `storage-error`. Synchronization is summarized in one-minute
+   * windows through bounded `sync-status`, `sync-error` and `sync-activity` notifications;
+   * every (re)connection or disconnection starts a fresh observation period. Keys, values,
+   * arguments and error messages are never included.
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
   public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    // Every (re)connection starts a fresh observation period: the previous period is
+    // summarized to the telemetry it was gathered for, then its observer is released.
+    this.#syncHealth?.unsubscribe();
+    this.#syncHealth = undefined;
     this.#telemetry.connect(telemetry ? () => telemetry : undefined);
-    // One owned observer at most; reconnecting does not duplicate sync summaries.
-    if (telemetry && !this.#syncHealth && this.#telemetry.active) {
+    // Disconnected or closed scopes keep no observer on storage events.
+    if (this.#telemetry.active) {
       this.#syncHealth = observeSyncHealth(this.#storage.events$, this.#telemetry);
     }
   }
