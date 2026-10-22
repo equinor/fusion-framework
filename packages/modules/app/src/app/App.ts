@@ -22,7 +22,6 @@ import isEqual from 'fast-deep-equal';
 
 import { filterEmpty } from './filter-empty.js';
 
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import {
   OperationalTelemetry,
   type OperationalProperties,
@@ -391,7 +390,7 @@ export class App<
    * Creates a new {@link App} instance and starts its internal state machine.
    * @param value - Initial app bundle state (appKey, tag, and any pre-loaded data).
    * @param args - The owning {@link AppModuleProvider}, an optional event module for lifecycle events,
-   *   and an optional lazy telemetry lookup for operational load-stage records.
+   *   and the provider's operational telemetry, from which the app derives its own scope.
    * @throws Never synchronously. A rejected module teardown started by `dispose()` is
    *   re-thrown from its promise chain, so it stays as visible as before.
    */
@@ -400,8 +399,7 @@ export class App<
     args: {
       provider: AppModuleProvider;
       event?: ModuleType<EventModule>;
-      telemetry?: () => ITelemetryProvider | undefined;
-      telemetryScopes?: Set<OperationalTelemetry>;
+      telemetry?: OperationalTelemetry;
     },
   ) {
     this.#state = createState(value, args.provider);
@@ -428,12 +426,9 @@ export class App<
         ...(version ? { appVersion: version } : {}),
       };
     };
-    // Each app owns its records, so unloading one app cannot cancel another app's stages.
-    // The provider's registry lets its disposal close stages still in flight.
-    const telemetry = new OperationalTelemetry('app', args.telemetry, {
-      registry: args.telemetryScopes,
-      identity,
-    });
+    // Each app owns a child scope of the provider's telemetry, so unloading one app cannot
+    // cancel another app's stages, while provider disposal still closes stages in flight.
+    const telemetry = args.telemetry?.createScope({ identity }) ?? new OperationalTelemetry('app');
     this.#telemetry = telemetry;
     const stages = observeLoadStages(this.#state.action$, telemetry, {
       stages: {

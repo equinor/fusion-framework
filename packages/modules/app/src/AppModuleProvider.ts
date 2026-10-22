@@ -23,7 +23,7 @@ import type {
 } from './types.js';
 
 import { App, filterEmpty, type IApp } from './app/App.js';
-import type { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
 import type { AppModuleConfig } from './AppConfigurator.js';
 import type { AppBundleStateInitial } from './app/types.js';
 import type { IAppClient } from './AppClient.js';
@@ -69,13 +69,11 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
 
   #event?: ModuleType<EventModule>;
 
-  #telemetry?: ITelemetryProvider;
-
-  /** Lazy lookup shared with every app, so disconnecting stops all of their records. */
-  readonly #telemetryRef = (): ITelemetryProvider | undefined => this.#telemetry;
-
-  /** App scopes with stages in flight; idle and abandoned apps are not retained. */
-  readonly #telemetryScopes = new Set<OperationalTelemetry>();
+  /**
+   * Operational telemetry shared by every app this provider creates. Each app derives its own
+   * scope, so connecting here applies to all apps and disposing closes their stages in flight.
+   */
+  readonly #appTelemetry = new OperationalTelemetry('app');
 
   /**
    * The current active application instance.
@@ -238,8 +236,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
         {
           provider: this,
           event: this.#event,
-          telemetry: this.#telemetryRef,
-          telemetryScopes: this.#telemetryScopes,
+          telemetry: this.#appTelemetry,
         },
       );
       this.#current$.next(newApp as CurrentApp);
@@ -253,8 +250,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
         {
           provider: this,
           event: this.#event,
-          telemetry: this.#telemetryRef,
-          telemetryScopes: this.#telemetryScopes,
+          telemetry: this.#appTelemetry,
         },
       );
       this.#current$.next(newApp as CurrentApp);
@@ -291,8 +287,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
     return new App(value, {
       provider: this,
       event: this.#event,
-      telemetry: this.#telemetryRef,
-      telemetryScopes: this.#telemetryScopes,
+      telemetry: this.#appTelemetry,
     });
   }
 
@@ -307,7 +302,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
   public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
-    this.#telemetry = telemetry;
+    this.#appTelemetry.connect(telemetry ? () => telemetry : undefined);
   }
 
   /**
@@ -315,12 +310,9 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    */
   public dispose(): void {
     // Stages still in flight are recorded as cancelled while telemetry is available, and
-    // their observers released; app business teardown is unchanged.
-    for (const scope of [...this.#telemetryScopes]) {
-      scope.close({ reason: 'disposed' });
-    }
-    // Apps that outlive the provider must not report through a torn-down host.
-    this.#telemetry = undefined;
+    // their observers released. Apps that outlive the provider then report nothing; app
+    // business teardown is unchanged.
+    this.#appTelemetry.close({ reason: 'disposed' });
     super.dispose();
     this.#subscription.unsubscribe();
   }

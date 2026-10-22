@@ -25,13 +25,8 @@ export type EndOperation = (
   properties?: OperationalProperties,
 ) => void;
 
-/** Optional collaborators of one {@link OperationalTelemetry} scope. */
+/** Optional settings of one {@link OperationalTelemetry} scope. */
 export interface OperationalTelemetryOptions {
-  /**
-   * Owner-held set the scope joins only while it has unsettled operations, so an owner can
-   * close in-flight work at its own teardown without retaining idle or abandoned scopes.
-   */
-  registry?: Set<OperationalTelemetry>;
   /** Static identity resolved when an operation ends, e.g. an app key and loaded version. */
   identity?: () => OperationalProperties;
 }
@@ -127,8 +122,11 @@ export class OperationalTelemetry {
   readonly #module: string;
   #provider?: () => ITelemetryProvider | undefined;
   readonly #pending = new Set<EndOperation>();
-  readonly #registry?: Set<OperationalTelemetry>;
   readonly #identity?: () => OperationalProperties;
+  /** Busy-child set of the scope this one was created from, which closes its work in flight. */
+  #parentBusy?: Set<OperationalTelemetry>;
+  /** Child scopes with unsettled operations; idle and abandoned children are not retained. */
+  readonly #busyChildren = new Set<OperationalTelemetry>();
   #teardowns: Teardown[] = [];
   #closed = false;
   #warned = false;
@@ -136,7 +134,7 @@ export class OperationalTelemetry {
   /**
    * @param module - Static kebab-case module label, such as `app` or `bookmark`.
    * @param provider - Lazy telemetry lookup; may be connected later.
-   * @param options - Optional owner registry and end-time identity.
+   * @param options - Optional end-time identity.
    */
   constructor(
     module: string,
@@ -145,8 +143,28 @@ export class OperationalTelemetry {
   ) {
     this.#module = module;
     this.#provider = provider;
-    this.#registry = options?.registry;
     this.#identity = options?.identity;
+  }
+
+  /**
+   * Creates a child scope for one owned unit, such as an app or widget instance.
+   *
+   * The child resolves telemetry through this scope, so connecting or disconnecting here
+   * applies to every child. Closing this scope first closes children with operations still
+   * in flight. Each child records its own operations, and closing a child never affects its
+   * siblings or this scope.
+   *
+   * @param options - Optional end-time identity of the child.
+   * @returns A new scope with the same module label.
+   */
+  createScope(options?: OperationalTelemetryOptions): OperationalTelemetry {
+    const child = new OperationalTelemetry(this.#module, () => this.#resolve(), options);
+    child.#parentBusy = this.#busyChildren;
+    // Children of a closed scope can never report.
+    if (this.#closed) {
+      child.close();
+    }
+    return child;
   }
 
   /**
@@ -210,9 +228,9 @@ export class OperationalTelemetry {
       if (!this.#pending.delete(end)) {
         return;
       }
-      // An idle scope leaves its owner's registry, so abandoned owners are never retained.
+      // An idle child leaves its parent, so abandoned owners are never retained.
       if (this.#pending.size === 0) {
-        this.#registry?.delete(this);
+        this.#parentBusy?.delete(this);
       }
       // Identity resolved now includes values learned while the operation ran; terminal
       // fields, such as a failure reason, extend the fields given at start.
@@ -223,7 +241,7 @@ export class OperationalTelemetry {
       });
     };
     this.#pending.add(end);
-    this.#registry?.add(this);
+    this.#parentBusy?.add(this);
     return end;
   }
 
@@ -317,7 +335,8 @@ export class OperationalTelemetry {
   }
 
   /**
-   * Ends the scope: pending operations are recorded as cancelled, then nothing more is emitted.
+   * Ends the scope: pending operations, including those of busy child scopes, are recorded as
+   * cancelled, then nothing more is emitted.
    * @param properties - Allowlisted fields for the cancelled records.
    */
   close(properties?: OperationalProperties): void {
@@ -325,10 +344,14 @@ export class OperationalTelemetry {
     if (this.#closed) {
       return;
     }
+    // Children with work in flight record it as cancelled while telemetry is still available.
+    for (const child of [...this.#busyChildren]) {
+      child.close(properties);
+    }
     this.cancelPending(properties);
     this.#closed = true;
     this.#provider = undefined;
-    this.#registry?.delete(this);
+    this.#parentBusy?.delete(this);
     const teardowns = this.#teardowns;
     this.#teardowns = [];
     // Owned diagnostic observers stop once nothing more can be reported.

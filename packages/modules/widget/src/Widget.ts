@@ -16,7 +16,6 @@ import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom,
 import type WidgetModuleProvider from './WidgetModuleProvider.js';
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import {
   OperationalTelemetry,
   type OperationalProperties,
@@ -81,9 +80,8 @@ export class Widget {
    * @param args.config - Optional module-level HTTP client configuration.
    * @param args.event - Optional event module for dispatching lifecycle events.
    * @param args.widgetPrams - Optional version/tag selector for the widget.
-   * @param args.telemetry - Optional lazy telemetry lookup for operational load-stage records.
-   * @param args.telemetryScopes - Provider-owned registry used to close in-flight stages when
-   *   the provider is disposed.
+   * @param args.telemetry - The provider's operational telemetry, from which the widget derives
+   *   its own scope for load-stage records.
    */
   constructor(
     value: WidgetStateInitial,
@@ -92,8 +90,7 @@ export class Widget {
       config?: WidgetModuleConfig;
       event?: ModuleType<EventModule>;
       widgetPrams?: GetWidgetParameters['args'];
-      telemetry?: () => ITelemetryProvider | undefined;
-      telemetryScopes?: Set<OperationalTelemetry>;
+      telemetry?: OperationalTelemetry;
     },
   ) {
     this.name = value.name;
@@ -102,12 +99,11 @@ export class Widget {
     this.#state = createState(value, args.provider);
     args.event && this.#registerEvents(args.event);
 
-    // Each widget owns its records, so disposing one cannot cancel another widget's stages.
-    // The provider's registry lets its disposal close stages still in flight.
-    this.#telemetry = new OperationalTelemetry('widget', args.telemetry, {
-      registry: args.telemetryScopes,
-      identity: () => this.#identity(),
-    });
+    // Each widget owns a child scope of the provider's telemetry, so disposing one cannot
+    // cancel another widget's stages, while provider disposal still closes stages in flight.
+    this.#telemetry =
+      args.telemetry?.createScope({ identity: () => this.#identity() }) ??
+      new OperationalTelemetry('widget');
     const stages = observeLoadStages(this.#state.action$, this.#telemetry, {
       stages: {
         fetch_manifest: 'load-manifest',

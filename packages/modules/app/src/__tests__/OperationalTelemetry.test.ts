@@ -37,18 +37,35 @@ describe('OperationalTelemetry', () => {
     expect(new OperationalTelemetry('app').reserve('load')).toBeUndefined();
   });
 
-  it('joins the owner registry only while operations are pending', () => {
-    const { telemetry } = createTelemetry();
-    const registry = new Set<OperationalTelemetry>();
-    const scope = new OperationalTelemetry('app', () => telemetry, { registry });
-    expect(registry.size).toBe(0);
-    const first = scope.start('load');
-    const second = scope.start('import');
-    expect(registry.has(scope)).toBe(true);
-    first('success');
-    expect(registry.has(scope)).toBe(true);
-    second('success');
-    expect(registry.size).toBe(0);
+  it('derives child scopes that share connection and close only work in flight', () => {
+    const { telemetry, track } = createTelemetry();
+    const parent = new OperationalTelemetry('app');
+    const busy = parent.createScope({ identity: () => ({ appKey: 'busy' }) });
+    const idle = parent.createScope({ identity: () => ({ appKey: 'idle' }) });
+    // Children resolve telemetry through the parent, so connecting later reaches them.
+    expect(busy.active).toBe(false);
+    parent.connect(() => telemetry);
+    expect(busy.active).toBe(true);
+
+    busy.start('load-manifest');
+    idle.start('load-manifest')('success');
+    expect(track).toHaveBeenCalledTimes(1);
+
+    // Closing a child never affects its siblings or the parent.
+    const sibling = parent.createScope();
+    sibling.close();
+    expect(busy.active).toBe(true);
+
+    parent.close({ reason: 'disposed' });
+    expect(track).toHaveBeenCalledTimes(2);
+    expect(track.mock.calls[1][0]).toMatchObject({
+      name: 'fusion.app.load-manifest.duration',
+      properties: { appKey: 'busy', reason: 'disposed' },
+    });
+    // Idle children go inert with the parent, and new children cannot report.
+    idle.start('import')('success');
+    parent.createScope().start('import')('success');
+    expect(track).toHaveBeenCalledTimes(2);
   });
 
   it('closes with end-time identity, releases owned teardowns and then emits nothing', () => {
