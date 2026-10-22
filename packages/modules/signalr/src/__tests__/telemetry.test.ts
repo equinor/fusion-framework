@@ -50,6 +50,8 @@ vi.mock('@microsoft/signalr', async (importOriginal) => {
 
 const { AbortError } = await import('@microsoft/signalr');
 const { SignalRModuleProvider } = await import('../SignalRModuleProvider.js');
+const { module: signalRModule } = await import('../SignalRModule.js');
+const { ModulesConfigurator } = await import('@equinor/fusion-framework-module');
 
 /** Telemetry double that keeps every record the provider would export. */
 const createTelemetry = (): { telemetry: ITelemetryProvider; items: TelemetryItem[] } => {
@@ -210,6 +212,36 @@ describe('SignalR operational telemetry', () => {
     await Promise.resolve();
     subscription.unsubscribe();
     await Promise.resolve();
+    expect(items).toHaveLength(0);
+  });
+
+  it('stops reporting an in-flight connection once the host disposes the module', async () => {
+    const { telemetry, items } = createTelemetry();
+    // A host that registers SignalR next to a stand-in telemetry module.
+    const configurator = new ModulesConfigurator([
+      signalRModule,
+      { name: 'telemetry', initialize: () => telemetry },
+    ]);
+    configurator.configure({
+      module: signalRModule,
+      configure: (builder) => builder.addHub(sentinel, { url: `https://${sentinel}.test/hub` }),
+    });
+    const instance = await configurator.initialize();
+    let resolve!: () => void;
+    nextStart = () => new Promise<void>((r) => (resolve = r));
+    const subscription = (
+      instance.signalR as unknown as {
+        _createHubConnection(id: string): import('rxjs').Observable<unknown>;
+      }
+    )
+      ._createHubConnection(sentinel)
+      .subscribe();
+
+    await configurator.dispose(instance);
+    resolve();
+    await Promise.resolve();
+    subscription.unsubscribe();
+
     expect(items).toHaveLength(0);
   });
 });

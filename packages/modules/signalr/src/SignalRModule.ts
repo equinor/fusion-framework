@@ -4,6 +4,12 @@ import { SignalRConfigurator } from './SignalRConfigurator.js';
 
 import { type ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider.js';
 
+/**
+ * Providers this module created, so host disposal tears down only its own instances and
+ * their telemetry, never a provider supplied or shared by another host.
+ */
+const ownedProviders = new WeakMap<object, { dispose(): void }>();
+
 /** String literal key used to register the SignalR module in the Fusion Framework module system. */
 export type SignalRModuleKey = 'signalR';
 
@@ -41,11 +47,17 @@ export const module: SignalRModule = {
   configure: () => new SignalRConfigurator(),
   initialize: async (init) => {
     const config = await (init.config as SignalRConfigurator).createConfig(init);
-    return new SignalRModuleProvider(config);
+    const provider = new SignalRModuleProvider(config);
+    ownedProviders.set(provider, provider);
+    return provider;
   },
   postInitialize: async ({ instance, modules }) => {
     // Telemetry connects after initialization so hub setup never waits for it.
     instance.connectTelemetry?.(modules.telemetry);
+  },
+  dispose: ({ instance }) => {
+    ownedProviders.get(instance)?.dispose();
+    ownedProviders.delete(instance);
   },
 };
 
