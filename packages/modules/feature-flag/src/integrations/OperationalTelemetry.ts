@@ -1,4 +1,4 @@
-import { Observable, type MonoTypeOperatorFunction } from 'rxjs';
+import { defer, finalize, tap, type MonoTypeOperatorFunction } from 'rxjs';
 import {
   TelemetryLevel,
   type ITelemetryProvider,
@@ -298,28 +298,27 @@ export class OperationalTelemetry {
    */
   measure<T>(operation: string, properties?: OperationalProperties): MonoTypeOperatorFunction<T> {
     return (source) =>
-      new Observable<T>((subscriber) => {
+      defer(() => {
         const end = this.start(operation, properties);
         let emitted = false;
-        const subscription = source.subscribe({
-          next: (value) => {
-            emitted = true;
-            subscriber.next(value);
-          },
-          error: (error) => {
-            const { outcome, reason } = OperationalTelemetry.classifyError(error);
-            end(outcome, reason ? { reason } : undefined);
-            subscriber.error(error);
-          },
-          complete: () => {
-            end('success');
-            subscriber.complete();
-          },
-        });
-        return () => {
-          subscription.unsubscribe();
-          end(emitted ? 'success' : 'cancelled');
-        };
+        // Linked operators stop synchronous producers as soon as the downstream closes.
+        return source.pipe(
+          tap({
+            next: () => {
+              emitted = true;
+            },
+            error: (error) => {
+              const { outcome, reason } = OperationalTelemetry.classifyError(error);
+              end(outcome, reason ? { reason } : undefined);
+            },
+            complete: () => {
+              end('success');
+            },
+          }),
+          finalize(() => {
+            end(emitted ? 'success' : 'cancelled');
+          }),
+        );
       });
   }
 

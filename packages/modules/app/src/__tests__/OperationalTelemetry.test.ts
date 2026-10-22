@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { firstValueFrom, lastValueFrom, Observable, Subject, throwError } from 'rxjs';
 import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
 
 import { OperationalTelemetry } from '../integrations/OperationalTelemetry';
@@ -17,6 +18,52 @@ const createTelemetry = () => {
 };
 
 describe('OperationalTelemetry', () => {
+  it('propagates synchronous downstream unsubscription before a later source error', async () => {
+    const { telemetry, track } = createTelemetry();
+    const scope = new OperationalTelemetry('app', () => telemetry);
+    const continued = vi.fn();
+    const source = new Observable<number>((subscriber) => {
+      subscriber.next(1);
+      if (!subscriber.closed) {
+        continued();
+        subscriber.error(new Error('sentinel-secret'));
+      }
+    });
+
+    await expect(firstValueFrom(source.pipe(scope.measure('load')))).resolves.toBe(1);
+    expect(continued).not.toHaveBeenCalled();
+    expect(track).toHaveBeenCalledTimes(1);
+    expect(track.mock.calls[0][0]).toMatchObject({
+      name: 'fusion.app.load.duration',
+      diagnostic: { outcome: 'success' },
+    });
+    expect(scope.pending).toBe(0);
+  });
+
+  it('preserves errors and measures each subscription with independent cancellation state', async () => {
+    const { telemetry, track } = createTelemetry();
+    const scope = new OperationalTelemetry('app', () => telemetry);
+    const original = new Error('sentinel-secret');
+    await expect(
+      lastValueFrom(throwError(() => original).pipe(scope.measure('load'))),
+    ).rejects.toBe(original);
+    const gate = new Subject<number>();
+    const measured = gate.pipe(scope.measure('load'));
+    const first = measured.subscribe();
+    const second = measured.subscribe();
+    first.unsubscribe();
+    gate.next(1);
+    second.unsubscribe();
+    expect(track.mock.calls.map(([record]) => [record.name, record.diagnostic?.outcome])).toEqual([
+      ['fusion.app.load.duration', 'failure'],
+      ['fusion.app.load.failure', 'failure'],
+      ['fusion.app.load.duration', 'cancelled'],
+      ['fusion.app.load.duration', 'success'],
+    ]);
+    expect(scope.pending).toBe(0);
+    expect(JSON.stringify(track.mock.calls)).not.toContain('sentinel-secret');
+  });
+
   it('reserves no timer once 256 operations are pending, so callers can skip observers', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const { telemetry } = createTelemetry();
