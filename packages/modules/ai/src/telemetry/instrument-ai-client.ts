@@ -96,6 +96,10 @@ export function instrumentAiClient<T>(client: T, plan: InstrumentationPlan, repo
   if ((typeof client !== 'object' && typeof client !== 'function') || client === null) {
     return client;
   }
+  // Non-extensible clients can have immutable own methods that a proxy cannot replace.
+  if (!Object.isExtensible(client)) {
+    return client;
+  }
   const target = client as object;
   const wrapped = new Map<PropertyKey, { method: Method; member: Method }>();
   return new Proxy(target, {

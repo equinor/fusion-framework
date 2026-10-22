@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { concat, from, Observable, throwError } from 'rxjs';
-import { RunnableLambda, RunnableSequence, type RunnableConfig } from '@langchain/core/runnables';
+import {
+  RunnableLambda,
+  RunnableSequence,
+  type RunnableConfig,
+  type RunnableInterface,
+} from '@langchain/core/runnables';
 import { IterableReadableStream } from '@langchain/core/utils/stream';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
@@ -69,8 +74,10 @@ class FakeModel extends BaseService<string, string> {
   }
 
   /** @returns A tool-bound runnable whose output contains a privacy sentinel. */
-  bindTools(): RunnableLambda<string, string> {
-    return RunnableLambda.from(async (input: string) => `${input}:${SENTINEL}-tool-result`);
+  bindTools(): RunnableInterface<string, string> {
+    return RunnableLambda.from(
+      async (input: string) => `${input}:${SENTINEL}-tool-result`,
+    ).withConfig({ runName: 'tool-bound-model' });
   }
 }
 
@@ -83,6 +90,17 @@ class PrivateBatchModel extends FakeModel {
    */
   async batch(inputs: string[]): Promise<string[]> {
     return Array.from(inputs, (input) => `${this.#prefix}:${input}`);
+  }
+}
+
+/** Frozen client whose invocation does not mutate the test double. */
+class FrozenModel extends FakeModel {
+  /**
+   * @param _input - Ignored input.
+   * @returns A stable result without writing to frozen instance state.
+   */
+  override invoke(_input: string): Promise<string> {
+    return Promise.resolve('frozen');
   }
 }
 
@@ -315,8 +333,16 @@ describe('AI execution telemetry', () => {
   it('covers tool-bound runnables and LangChain composition', async () => {
     const { model, outcomes, track } = await setup();
     const llm = model(['answer']);
+    const bound = llm.bindTools([]);
 
-    await expect(llm.bindTools([]).invoke(SENTINEL)).resolves.toContain('tool-result');
+    await expect(bound.invoke(SENTINEL)).resolves.toContain('tool-result');
+    await expect(bound.batch(['a', 'b'])).resolves.toEqual([
+      'a:PRIVACY_SENTINEL-tool-result',
+      'b:PRIVACY_SENTINEL-tool-result',
+    ]);
+    await expect(
+      bound.withConfig({ runName: 'configured-tool-bound' }).invoke('configured'),
+    ).resolves.toContain('tool-result');
     // LangChain chains call the instrumented client's own invoke.
     const chain = RunnableSequence.from([
       llm,
@@ -326,6 +352,7 @@ describe('AI execution telemetry', () => {
     await llm.batch(['a', 'b']);
 
     expect(outcomes()).toEqual([
+      'fusion.ai.model-invoke.duration:success',
       'fusion.ai.model-invoke.duration:success',
       'fusion.ai.model-invoke.duration:success',
       'fusion.ai.model-invoke.duration:success',
@@ -368,10 +395,10 @@ describe('AI execution telemetry', () => {
     const llm = provider.useModel('m', { strategy: 'custom' });
 
     await expect(llm.batch(['x', 'y'])).resolves.toEqual(['private:x', 'private:y']);
-    // A custom batch is not a measured entry point, and nothing broke with telemetry on.
-    expect(track).not.toHaveBeenCalled();
-    await expect(llm.invoke('q')).resolves.toBe('a');
+    // The planned batch entry point is measured without changing the private-state receiver.
     expect(track).toHaveBeenCalledTimes(1);
+    await expect(llm.invoke('q')).resolves.toBe('a');
+    expect(track).toHaveBeenCalledTimes(2);
   });
 
   it('leaves inherited object members such as constructor and toString untouched', async () => {
@@ -390,6 +417,18 @@ describe('AI execution telemetry', () => {
 
     expect(provider.useModel('m', { strategy: 'custom' })).toBe(nextModel);
     expect(provider.useEmbed()).toBe(embedClient);
+  });
+
+  it('leaves non-extensible clients untouched instead of violating proxy invariants', async () => {
+    const { provider, track } = await setup();
+    const frozen = Object.freeze(new FrozenModel(['frozen']));
+    nextModel = frozen;
+
+    const client = provider.useModel('m', { strategy: 'custom' });
+
+    expect(client).toBe(frozen);
+    await expect(client.invoke('q')).resolves.toBe('frozen');
+    expect(track).not.toHaveBeenCalled();
   });
 
   it('preserves AI results when telemetry delivery fails, warning once', async () => {

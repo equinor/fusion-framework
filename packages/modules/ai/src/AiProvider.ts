@@ -10,21 +10,38 @@ import {
   STRATEGY_TYPE,
 } from './lib/strategies/index.js';
 import type { EmbedStrategy, ModelStrategy, Strategy } from './lib/strategies/index.js';
-import type { AiReport } from './telemetry/create-ai-reporter.js';
+import type { AiOperation, AiReport } from './telemetry/create-ai-reporter.js';
 import { type InstrumentationPlan, instrumentAiClient } from './telemetry/instrument-ai-client.js';
+import type { ExecutionKind } from './telemetry/measure-execution.js';
 
-/** @internal Measured execution methods of a model or a tool-bound model runnable. */
-const modelRunnablePlan: InstrumentationPlan = {
-  invoke: { kind: 'promise', operation: 'model-invoke' },
-  invoke$: { kind: 'observable', operation: 'model-stream' },
-  stream: { kind: 'stream', operation: 'model-stream' },
-  transform: { kind: 'generator', operation: 'model-stream' },
+/**
+ * @internal Creates a recursive execution plan for LangChain runnables and their bindings.
+ * @returns Plans that measure execution and wrap new bindings returned by configuration methods.
+ */
+const createModelRunnablePlan = (): InstrumentationPlan => {
+  const plan: Record<
+    string,
+    | { readonly kind: ExecutionKind; readonly operation: AiOperation }
+    | { readonly returns: InstrumentationPlan }
+  > = {
+    invoke: { kind: 'promise', operation: 'model-invoke' },
+    batch: { kind: 'promise', operation: 'model-invoke' },
+    invoke$: { kind: 'observable', operation: 'model-stream' },
+    stream: { kind: 'stream', operation: 'model-stream' },
+    transform: { kind: 'generator', operation: 'model-stream' },
+  };
+  // Configuration methods construct a new runnable; recursively instrument that binding too.
+  plan.withConfig = { returns: plan };
+  plan.withRetry = { returns: plan };
+  return plan;
 };
+
+const modelRunnablePlan = createModelRunnablePlan();
 
 /** @internal Models also instrument the runnables returned by tool binding. */
 const modelPlan: InstrumentationPlan = {
   ...modelRunnablePlan,
-  bindTools: { returns: modelRunnablePlan },
+  bindTools: { returns: createModelRunnablePlan() },
 };
 
 /** @internal Embedding executions, whichever entry point is used. */
