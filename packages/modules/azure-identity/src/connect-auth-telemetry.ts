@@ -22,20 +22,38 @@ type InstrumentedMethod = keyof typeof operations;
  * are never recorded.
  *
  * @param provider - Initialized auth provider owned by the module.
+ * Reporting stops when the provider's `dispose()` runs, or when the returned function is
+ * called, so in-flight calls never report into a torn-down telemetry host.
+ *
  * @param telemetry - Optional telemetry provider; when absent, the provider is left untouched.
+ * @returns A function that stops reporting without restoring the original methods.
  * @template T - Auth provider type.
  * @throws Never directly; wrapped methods rethrow the original authentication error.
  */
 export function connectAuthTelemetry<T extends Partial<Record<InstrumentedMethod, unknown>>>(
   provider: T,
   telemetry: ITelemetryProvider | undefined,
-): void {
+): () => void {
+  let active = true;
+  const disconnect = (): void => {
+    active = false;
+  };
   // Telemetry is optional; without it the provider keeps its original methods.
   if (!telemetry) {
-    return;
+    return disconnect;
   }
-  const report = createOperationalTelemetry('azure-identity', () => telemetry);
-  const target = provider as Record<InstrumentedMethod, unknown>;
+  const report = createOperationalTelemetry('azure-identity', () =>
+    active ? telemetry : undefined,
+  );
+  const target = provider as Record<InstrumentedMethod | 'dispose', unknown>;
+  const dispose = target.dispose;
+  // Provider teardown is the lifecycle owner, so disposal also stops reporting.
+  if (typeof dispose === 'function') {
+    target.dispose = function (this: unknown, ...args: unknown[]) {
+      disconnect();
+      return dispose.apply(this, args);
+    };
+  }
   // Each public boundary is wrapped once, on the instance, so prototypes stay untouched.
   for (const method of Object.keys(operations) as InstrumentedMethod[]) {
     const original = target[method];
@@ -57,6 +75,7 @@ export function connectAuthTelemetry<T extends Partial<Record<InstrumentedMethod
       }
     };
   }
+  return disconnect;
 }
 
 export default connectAuthTelemetry;

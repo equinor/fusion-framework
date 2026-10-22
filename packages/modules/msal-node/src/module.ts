@@ -7,6 +7,9 @@ import { AuthProviderInteractive } from './AuthProviderInteractive.js';
 import { AuthProviderDeviceCode } from './AuthProviderDeviceCode.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 
+/** Telemetry disconnects owned by each initialized provider, released on module disposal. */
+const telemetryConnections = new WeakMap<object, () => void>();
+
 /**
  * MSAL Node authentication module for the Fusion Framework.
  *
@@ -61,8 +64,13 @@ export const module: MsalNodeModule = {
     // A static token involves no acquisition and must never be observed. The prototype check
     // is deliberate: provider `instanceof` is duck-typed and matches every module provider.
     if (!Object.prototype.isPrototypeOf.call(AuthTokenProvider.prototype, instance)) {
-      connectAuthTelemetry(instance, modules.telemetry);
+      telemetryConnections.set(instance, connectAuthTelemetry(instance, modules.telemetry));
     }
+  },
+  dispose: ({ instance }) => {
+    // Only telemetry is detached; provider disposal itself is unchanged.
+    telemetryConnections.get(instance)?.();
+    telemetryConnections.delete(instance);
   },
 };
 

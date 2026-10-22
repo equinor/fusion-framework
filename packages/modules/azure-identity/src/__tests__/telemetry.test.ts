@@ -95,4 +95,41 @@ describe('azure-identity operational telemetry', () => {
     });
     expect(other.acquireToken).not.toBe(acquireToken);
   });
+  it('stops reporting after provider disposal or module disposal, even for in-flight calls', async () => {
+    let resolve!: (value: unknown) => void;
+    const dispose = vi.fn();
+    const provider = {
+      acquireToken: vi.fn(() => new Promise((r) => (resolve = r))),
+      acquireAccessToken: vi.fn(() => new Promise((r) => (resolve = r))),
+      dispose,
+    };
+    const { telemetry, items } = createTelemetry();
+    connectAuthTelemetry(provider, telemetry);
+
+    const pending = provider.acquireToken();
+    provider.dispose();
+    resolve('token');
+
+    await expect(pending).resolves.toBe('token');
+    expect(dispose).toHaveBeenCalledOnce();
+    expect(items).toHaveLength(0);
+
+    // The module dispose hook detaches telemetry without disposing the provider itself.
+    const otherDispose = vi.fn();
+    const other = {
+      acquireToken: vi.fn(async () => 'token'),
+      acquireAccessToken: vi.fn(async () => 'token'),
+      dispose: otherDispose,
+    };
+    const hooks = module as Required<Pick<typeof module, 'postInitialize' | 'dispose'>>;
+    const modules = { telemetry } as unknown as Parameters<
+      typeof hooks.postInitialize
+    >[0]['modules'];
+    await hooks.postInitialize({ instance: other as never, modules });
+    await hooks.dispose({ instance: other as never, modules } as never);
+    await other.acquireToken();
+    await other.acquireAccessToken();
+    expect(otherDispose).not.toHaveBeenCalled();
+    expect(items).toHaveLength(0);
+  });
 });
