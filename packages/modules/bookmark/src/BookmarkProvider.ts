@@ -99,6 +99,9 @@ export class BookmarkProvider
   /** optional operational telemetry; never carries bookmark names, ids or payloads */
   #telemetry = new OperationalTelemetry('bookmark');
 
+  /** Active switch-mapped fetches, ordered so a superseded attempt releases its own timer. */
+  #fetchTrackers = new Map<string, Set<{ cancel: VoidFunction }>>();
+
   /**
    * @deprecated
    * this will be removed as soon as applications have been migrated to use the bookmark provider
@@ -330,6 +333,7 @@ export class BookmarkProvider
     this.#store = createBookmarkStore({
       client: config.client,
       initial: { currentBookmark: this._parent?.currentBookmark ?? null },
+      onFetchCancelled: (operation, ref) => this.#cancelFetchRequest(operation, ref),
     });
 
     // add teardown logic for disposing the store
@@ -1494,8 +1498,13 @@ export class BookmarkProvider
     );
 
     // The fetch is dispatched now, so it is measured now, whether or not anyone subscribes.
-    this.#trackRequest('get', action$, bookmarkActions.fetchBookmark);
-    this.#store.next(bookmarkActions.fetchBookmark(bookmarkId, { ref: bookmarkId }));
+    this.#trackFetchRequest(
+      'get',
+      bookmarkId,
+      action$,
+      bookmarkActions.fetchBookmark,
+      bookmarkActions.fetchBookmark(bookmarkId, { ref: bookmarkId }),
+    );
 
     // race the success and failure streams, whichever resolves first wins
     return success$.pipe(raceWith(failure$));
@@ -1542,9 +1551,13 @@ export class BookmarkProvider
     );
 
     // The fetch is dispatched now, so it is measured now, whether or not anyone subscribes.
-    this.#trackRequest('payload-resolve', action$, bookmarkActions.fetchBookmarkData);
-    // request the store to fetch the bookmark data
-    this.#store.next(bookmarkActions.fetchBookmarkData(bookmarkId, { ref: bookmarkId }));
+    this.#trackFetchRequest(
+      'payload-resolve',
+      bookmarkId,
+      action$,
+      bookmarkActions.fetchBookmarkData,
+      bookmarkActions.fetchBookmarkData(bookmarkId, { ref: bookmarkId }),
+    );
 
     // race the success and failure streams, whichever resolves first wins
     return success$.pipe(raceWith(failure$));
@@ -1636,6 +1649,8 @@ export class BookmarkProvider
    * @param creator - Async action creator whose success/failure actions end the request.
    * @param creator.success - Success action creator.
    * @param creator.failure - Failure action creator.
+   * @param onSettled - Optional cleanup of fetch cancellation registration.
+   * @param cancelReason - Static cancellation classification for this request.
    * @returns Callbacks for the preparation error and abandonment paths.
    */
   #trackRequest(
@@ -1645,36 +1660,132 @@ export class BookmarkProvider
       success: { match: (action: BookmarkActions) => boolean };
       failure: { match: (action: BookmarkActions) => boolean };
     },
-  ): { fail: (error: unknown) => void; cancel: VoidFunction } {
+    onSettled?: VoidFunction,
+    cancelReason = 'abandoned',
+  ): { fail: (error: unknown) => void; cancel: VoidFunction; tracked: boolean } {
     const end = this.#telemetry.reserve(operation);
     // Without a reserved timer (telemetry absent, closed or at capacity), add no observer.
     if (!end) {
-      return { fail: () => undefined, cancel: () => undefined };
+      return { fail: () => undefined, cancel: () => undefined, tracked: false };
     }
     // Only the first terminal store action for this request's reference ends it.
-    const subscription = action$
-      .pipe(
-        filter((action) => creator.success.match(action) || creator.failure.match(action)),
-        take(1),
-      )
-      .subscribe((action) => end(creator.success.match(action) ? 'success' : 'failure'));
-    // Owned by the provider until the request settles, so disposal releases it.
-    this.#subscriptions.add(subscription);
+    let settled = false;
+    const subscription = new Subscription();
     const release = (): void => {
       subscription.unsubscribe();
       this.#subscriptions.remove(subscription);
     };
+    const settle = (outcome: 'success' | 'failure'): void => {
+      // A terminal action can race preparation failure or supersession.
+      if (settled) {
+        return;
+      }
+      settled = true;
+      release();
+      end(outcome);
+      onSettled?.();
+    };
+    // Observe only the first matching terminal action without triggering the business request.
+    subscription.add(
+      action$
+        .pipe(
+          filter((action) => creator.success.match(action) || creator.failure.match(action)),
+          take(1),
+        )
+        .subscribe((action) => settle(creator.success.match(action) ? 'success' : 'failure')),
+    );
+    // Owned by the provider until the request settles, so disposal releases it.
+    this.#subscriptions.add(subscription);
     return {
       fail: (error) => {
+        // Preparation errors must not overwrite an already completed request.
+        if (settled) {
+          return;
+        }
+        settled = true;
         release();
         const { outcome, reason } = OperationalTelemetry.classifyError(error);
         end(outcome, reason ? { reason } : undefined);
+        onSettled?.();
       },
       cancel: () => {
+        // Supersession and caller abandonment can race a terminal action.
+        if (settled) {
+          return;
+        }
+        settled = true;
         release();
-        end('cancelled', { reason: 'abandoned' });
+        end('cancelled', { reason: cancelReason });
+        onSettled?.();
       },
+      tracked: true,
     };
+  }
+
+  /**
+   * Tracks a latest-only fetch and registers it for cancellation when a newer fetch replaces it.
+   * @param operation - Static telemetry operation label.
+   * @param ref - Internal bookmark reference used to scope the action stream.
+   * @param action$ - Actions scoped to this bookmark request.
+   * @param creator - Async action creator whose success/failure actions end the request.
+   * @param request - Fetch request dispatched before its cancellation callback is registered.
+   * @returns Callbacks for preparation failure and caller abandonment.
+   */
+  #trackFetchRequest(
+    operation: 'get' | 'payload-resolve',
+    ref: string,
+    action$: Observable<BookmarkActions>,
+    creator: {
+      success: { match: (action: BookmarkActions) => boolean };
+      failure: { match: (action: BookmarkActions) => boolean };
+    },
+    request: BookmarkActions,
+  ): { fail: (error: unknown) => void; cancel: VoidFunction; tracked: boolean } {
+    const entry: { cancel: VoidFunction } = { cancel: () => undefined };
+    const key = `${operation}:${ref}`;
+    const tracker = this.#trackRequest(
+      operation,
+      action$,
+      creator,
+      () => {
+        const entries = this.#fetchTrackers.get(key);
+        entries?.delete(entry);
+        // Release bookmark references as soon as no fetch observer needs them.
+        if (entries?.size === 0) {
+          this.#fetchTrackers.delete(key);
+        }
+      },
+      'superseded',
+    );
+    // Replacing a same-ref fetch cancels older observers before this new tracker joins them.
+    this.#store.next(request);
+    // Unmeasured requests still execute, but retain no cancellation entry.
+    if (!tracker.tracked) {
+      return tracker;
+    }
+    entry.cancel = tracker.cancel;
+    let entries = this.#fetchTrackers.get(key);
+    // Throttled same-id calls share a fetch and therefore share its cancellation boundary.
+    if (!entries) {
+      entries = new Set();
+      this.#fetchTrackers.set(key, entries);
+    }
+    entries.add(entry);
+    return tracker;
+  }
+
+  /**
+   * Releases matching coalesced fetch observers when switchMap supersedes their inner work.
+   * @param operation - Static telemetry operation label.
+   * @param ref - Internal bookmark reference used to scope the action stream.
+   */
+  #cancelFetchRequest(operation: 'get' | 'payload-resolve', ref: string): void {
+    const key = `${operation}:${ref}`;
+    const entries = this.#fetchTrackers.get(key);
+    // Repeated same-id calls can share one throttled fetch; all stop with that fetch.
+    for (const entry of entries ?? []) {
+      entry.cancel();
+    }
   }
 
   /**
@@ -1686,6 +1797,7 @@ export class BookmarkProvider
     this.#telemetry.close({ reason: 'disposed' });
     super.dispose();
     this.#subscriptions.unsubscribe();
+    this.#fetchTrackers.clear();
   }
 
   /**

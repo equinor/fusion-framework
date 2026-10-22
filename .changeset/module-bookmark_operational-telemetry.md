@@ -10,7 +10,9 @@ from the call, because their requests start immediately, whether or not the call
 subscribes. A listener canceling the matching event is recorded as `cancelled` with
 reason `listener`, not as a failure; a mutation whose caller unsubscribes before it is
 sent is `cancelled` with reason `abandoned`; operations interrupted by disposal are
-`cancelled` with reason `disposed`. Bookmark names, ids,
+`cancelled` with reason `disposed`. Superseded metadata and payload fetches record
+`cancelled` with reason `superseded` and release every associated telemetry observer.
+Bookmark names, ids,
 payloads and error messages are never included.
 
 Custom providers opt in through the optional `IBookmarkProvider.connectTelemetry`

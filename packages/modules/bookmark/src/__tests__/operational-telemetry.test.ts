@@ -156,6 +156,52 @@ describe('bookmark operational telemetry', () => {
     await modules.dispose();
   });
 
+  it('releases the superseded metadata and payload fetch trackers', async () => {
+    const { modules, client, provider, summary } = await setup();
+    vi.spyOn(client, 'getBookmarkById').mockReturnValue(NEVER);
+    vi.spyOn(client, 'getBookmarkData').mockReturnValue(NEVER);
+
+    const first = provider.getBookmark('first').subscribe({ error: () => undefined });
+    await vi.waitFor(() => {
+      expect(client.getBookmarkById).toHaveBeenCalledWith('first');
+      expect(client.getBookmarkData).toHaveBeenCalledWith('first');
+    });
+    const second = provider.getBookmark('second').subscribe({ error: () => undefined });
+    await vi.waitFor(() =>
+      expect(durations(summary())).toEqual([
+        ['get', 'cancelled'],
+        ['payload-resolve', 'cancelled'],
+      ]),
+    );
+
+    first.unsubscribe();
+    second.unsubscribe();
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('releases coalesced same-id observers and keeps reporting beyond timer capacity', async () => {
+    const { modules, client, provider, summary, processItem } = await setup();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    vi.spyOn(client, 'getBookmarkById').mockReturnValue(NEVER);
+    vi.spyOn(client, 'getBookmarkData').mockReturnValue(NEVER);
+    provider.getBookmark(`same-${SENTINEL}`);
+    provider.getBookmark(`same-${SENTINEL}`);
+    provider.getBookmark(`same-${SENTINEL}`);
+    provider.getBookmark('next');
+    expect(durations(summary())).toHaveLength(6);
+    for (let index = 0; index < 300; index++) {
+      provider.getBookmark(`id-${index}`);
+    }
+    expect(durations(summary())).toHaveLength(606);
+    expect(durations(summary()).every(([, outcome]) => outcome === 'cancelled')).toBe(true);
+    expect(warn).not.toHaveBeenCalled();
+    expect(JSON.stringify(processItem.mock.calls)).not.toContain(SENTINEL);
+    provider.dispose();
+    expect(durations(summary())).toHaveLength(608);
+    await modules.dispose();
+  });
+
   it('keeps bookmark behavior unchanged without telemetry or when telemetry throws', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const plain = new BookmarkProvider({

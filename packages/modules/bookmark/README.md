@@ -217,7 +217,9 @@ measured from the call, because their requests start immediately, whether or not
 subscribes. A listener canceling the matching event is `cancelled` with reason `listener`
 rather than a failure; a mutation whose caller unsubscribes before it is sent is
 `cancelled` with reason `abandoned`; operations interrupted by disposal are `cancelled`
-with reason `disposed`. Bookmark names, ids, payloads and error messages
+with reason `disposed`. A metadata or payload fetch replaced by a newer request is
+`cancelled` with reason `superseded`; all observers sharing that fetch release their
+telemetry reservations. Bookmark names, ids, payloads and error messages
 are never exported. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
 
 ## Custom Bookmark Client
