@@ -1,6 +1,11 @@
 ---
-"@equinor/fusion-framework-module-telemetry": minor
+"@equinor/fusion-framework-module-telemetry": major
 ---
+
+**Breaking:** automatic lifecycle telemetry changes its record names, payload fields,
+severity, metadata and scopes. Dashboards, queries and relay filters built on the raw
+configurator records must be updated (see **Migration**). The `ITelemetryProvider` and
+configuration APIs remain compatible; custom `track*` calls are unaffected.
 
 Replace automatic raw configurator telemetry with bounded, sanitized operational
 outcomes, preserving host origin, occurrence time and existing trace context across

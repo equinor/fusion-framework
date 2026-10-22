@@ -1,6 +1,11 @@
 ---
-"@equinor/fusion-framework-module-navigation": minor
+"@equinor/fusion-framework-module-navigation": major
 ---
+
+**Breaking:** navigation telemetry changes its event names and payloads. Dashboards,
+queries and relay filters that match per-action event names or read location and
+action properties must be updated (see **Migration**). The navigation API and routing
+behavior are unchanged.
 
 Connect available host telemetry after initialization without adding a startup
 dependency. Explicit `setTelemetry(provider)` and `setTelemetry(undefined)` continue
