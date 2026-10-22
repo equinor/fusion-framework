@@ -117,6 +117,52 @@ describe('feature-flag operational telemetry', () => {
     await modules.dispose();
   });
 
+  it('counts a superseded pending listener before recording the latest toggle result', async () => {
+    const { modules, provider, summary } = await setup();
+    let releaseFirst!: VoidFunction;
+    let markFirstStarted!: VoidFunction;
+    const firstStarted = new Promise<void>((resolve) => {
+      markFirstStarted = resolve;
+    });
+    const firstListener = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    modules.event.addEventListener('onFeatureFlagToggle', async (event) => {
+      if (event.detail.feature.key === `${SENTINEL}-a`) {
+        markFirstStarted();
+        await firstListener;
+        event.preventDefault();
+      }
+    });
+
+    await provider.toggleFeatures([
+      { key: `${SENTINEL}-a`, enabled: true },
+      { key: `${SENTINEL}-b`, enabled: true },
+    ]);
+    await firstStarted;
+    expect(summary()).toEqual([
+      [
+        'fusion.feature-flag.toggle.duration',
+        'success',
+        { requested: 2, rejected: 0, cancelled: 1, applied: 1 },
+      ],
+    ]);
+    expect(provider.features[`${SENTINEL}-a`].enabled).toBe(false);
+    expect(provider.features[`${SENTINEL}-b`].enabled).toBe(true);
+
+    releaseFirst();
+    await Promise.resolve();
+    expect(provider.features[`${SENTINEL}-a`].enabled).toBe(false);
+    expect(summary()).toEqual([
+      [
+        'fusion.feature-flag.toggle.duration',
+        'success',
+        { requested: 2, rejected: 0, cancelled: 1, applied: 1 },
+      ],
+    ]);
+    await modules.dispose();
+  });
+
   it('keeps toggling unchanged when telemetry is absent or throws', async () => {
     const { modules, provider } = await setup();
     provider.connectTelemetry(undefined);

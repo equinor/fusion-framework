@@ -6,6 +6,7 @@ import {
   map,
   pairwise,
   reduce,
+  finalize,
   switchMap,
 } from 'rxjs';
 
@@ -237,34 +238,60 @@ export class FeatureFlagProvider
     // create an observable from the provided values
     const onToggle = from(values).pipe(
       //  notify event observers that a feature is about to be toggled - parallel execution
-      switchMap(async (value) => {
-        const feature = features[value.key];
-        // skip flags that aren't registered, or that are marked readonly
-        if (!feature) {
-          counts.rejected++;
-          console.warn(`toggling flag [${value.key}] which is not registered`);
-          return;
-        } else if (feature.readonly) {
-          counts.rejected++;
-          console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
-          return;
-        }
-        // notify event observers that a feature is about to be toggled - can be canceled
-        const event = await this.#event?.dispatchEvent('onFeatureFlagToggle', {
-          source: this,
-          detail: {
-            feature,
-            enable: value.enabled,
-          },
-          cancelable: true,
-        });
-        // only apply the toggle if no observer canceled the event
-        if (!event?.canceled) {
-          return value;
-        } else {
-          counts.cancelled++;
-          console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
-        }
+      switchMap((value) => {
+        let active = true;
+        let settled = false;
+        const pending = (async () => {
+          try {
+            const feature = features[value.key];
+            // Skip flags that aren't registered, or that are marked readonly.
+            if (!feature) {
+              counts.rejected++;
+              console.warn(`toggling flag [${value.key}] which is not registered`);
+              settled = true;
+              return;
+            } else if (feature.readonly) {
+              counts.rejected++;
+              console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
+              settled = true;
+              return;
+            }
+            // Notify event observers that a feature is about to be toggled; they may cancel it.
+            const event = await this.#event?.dispatchEvent('onFeatureFlagToggle', {
+              source: this,
+              detail: {
+                feature,
+                enable: value.enabled,
+              },
+              cancelable: true,
+            });
+            // switchMap stops observing displaced promises, but they still finish in the background.
+            if (!active) {
+              return;
+            }
+            settled = true;
+            // Listener approval only counts if this promise is still observed by switchMap.
+            if (!event?.canceled) {
+              return value;
+            }
+            counts.cancelled++;
+            console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
+          } catch (error) {
+            settled = true;
+            throw error;
+          }
+        })();
+        // Teardown runs immediately on supersession, before the final promise settles.
+        return from(pending).pipe(
+          finalize(() => {
+            // Account for an event listener that was still pending when switchMap replaced it.
+            if (!settled) {
+              active = false;
+              settled = true;
+              counts.cancelled++;
+            }
+          }),
+        );
       }),
       // filter out undefined values
       filter((x): x is { key: string; enabled: boolean } => !!x),

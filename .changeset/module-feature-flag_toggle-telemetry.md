@@ -4,8 +4,10 @@
 
 Report feature toggles through host telemetry. Each `toggleFeature`/`toggleFeatures`
 call records one `fusion.feature-flag.toggle.duration` outcome with `requested`,
-`applied`, `rejected` (unregistered or read-only) and `cancelled` (listener veto)
-counts. A request where listeners vetoed every applicable flag is `cancelled`;
+`applied`, `rejected` (unregistered or read-only) and `cancelled` (listener veto or
+superseded listener work) counts. Bulk toggles retain their existing latest-only
+application behavior and account for discarded pending listeners before exporting counts.
+A request where listeners vetoed every applicable flag is `cancelled`;
 a rejected dispatch is a failure, and the original rejection still reaches the caller.
 A toggle still awaiting listeners at disposal is `cancelled` with reason `disposed`. The
 module now disposes its provider at host teardown, which also releases plugin
