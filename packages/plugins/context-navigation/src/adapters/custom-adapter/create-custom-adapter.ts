@@ -61,6 +61,9 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
     return {
       id: 'custom',
 
+      // The app's hooks define the URL shape, so the URL is the source of truth.
+      appOwnsUrl: true,
+
       /** Always true — selection already happened in the factory guard above. */
       canHandle(): boolean {
         return true;
@@ -69,7 +72,8 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
       /**
        * Encode a context into the URL using the app's path generator.
        *
-       * - **Null context:** navigates to the app root (clears context from URL).
+       * - **Null context on a context-free route:** stays on the current route.
+       * - **Null context on a context route:** navigates to the app root.
        * - **Existing context in URL:** replaces it with the new context id,
        *   preferring the app generator's output, falling back to string replacement.
        * - **No existing context:** delegates entirely to the app generator.
@@ -84,18 +88,22 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         context: ContextItem | null;
         currentURL: URL;
       }): URL | null {
-        // Null context means the user deselected context — navigate to the app root
+        const appRelativePath = toAppRelative(currentURL.pathname, appBasename);
+        const existingContextId = normalizeStringResult(extract(appRelativePath)) ?? undefined;
+
         if (context === null) {
-          const url = new URL(appBasename, currentURL.origin);
+          // Stay on a route without context (e.g. the app cleared context itself);
+          // leaving a context route returns to the app root.
+          const url = new URL(
+            existingContextId ? appBasename : currentURL.pathname,
+            currentURL.origin,
+          );
           url.search = currentURL.search;
           // Remove query-adapter param — custom apps encode context in the path
           stripContextQueryParam(url);
-          // Hash is intentionally not preserved — returning to root app view
+          // Hash is intentionally not preserved
           return url;
         }
-
-        const appRelativePath = toAppRelative(currentURL.pathname, appBasename);
-        const existingContextId = normalizeStringResult(extract(appRelativePath)) ?? undefined;
 
         let generatedPath: string | undefined;
 
