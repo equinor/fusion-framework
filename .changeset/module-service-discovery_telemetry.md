@@ -13,4 +13,7 @@ reuses its parent's client leaves reporting to the parent, so each resolution co
 `connectTelemetry(telemetry)` method; custom clients opt in by exposing `diagnostic$`.
 Resolution results, caching, backoff and fallback behavior are unchanged.
 
+The module now disposes the provider it created when the host disposes it, detaching
+its diagnostics without disposing the shared discovery client.
+
 Ref: #5804.

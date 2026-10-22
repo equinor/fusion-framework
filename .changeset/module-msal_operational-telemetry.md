@@ -19,4 +19,7 @@ marked with `markTelemetryExportRequest`, is not recorded.
 logout `redirectUri`; `canLoginSilently` is now a boolean rather than the login hint or
 account it was derived from.
 
+The module now disposes providers it created when the host disposes it; hosted, proxied
+and custom providers are left untouched.
+
 Ref: #5804.

@@ -9,4 +9,7 @@ notification when an established connection closes unexpectedly. Unsubscribing w
 connection is starting is a cancelled connect, not a failure. Hub names, URLs, tokens and
 messages are never recorded, and connection and reconnection behavior is unchanged.
 
+The module now disposes the provider it created when the host disposes it, so
+telemetry stops at teardown.
+
 Ref: #5804.

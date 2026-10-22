@@ -9,4 +9,7 @@ client can be created. Service names, URIs and errors are never recorded; create
 and thrown errors are unchanged. The provider gains an optional `connectTelemetry(telemetry)`
 method, connected automatically after initialization.
 
+The module now disposes the `ApiProvider` it created when the host disposes it, so
+telemetry stops at teardown.
+
 Ref: #5804.
