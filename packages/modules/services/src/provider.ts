@@ -1,7 +1,7 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { createOperationalTelemetry } from './create-operational-telemetry.js';
+import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
 import type { ClientMethod } from './types.js';
 
 import type { ApiClientFactory } from './types.js';
@@ -151,6 +151,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
       try {
         const client = await createClient(name);
         this.#report({
+          module: 'services',
           operation: 'create-client',
           outcome: 'success',
           duration: performance.now() - started,
@@ -158,6 +159,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
         return client;
       } catch (error) {
         this.#report({
+          module: 'services',
           operation: 'create-client',
           outcome: 'failure',
           duration: performance.now() - started,
@@ -169,7 +171,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
   }
 
   #telemetry?: ITelemetryProvider;
-  #report = createOperationalTelemetry('services', () => this.#telemetry);
+  #report = createOperationalReporter(() => this.#telemetry);
 
   /** {@inheritDoc IApiProvider.connectTelemetry} */
   public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {

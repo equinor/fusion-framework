@@ -10,7 +10,7 @@ import type { SignalRConfig } from './SignalRModuleConfigBuilder.js';
 
 import { Topic } from './lib/Topic.js';
 import { version } from './version.js';
-import { createOperationalTelemetry } from './create-operational-telemetry.js';
+import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
 
 /**
  * Public interface for the SignalR module provider.
@@ -83,7 +83,7 @@ export class SignalRModuleProvider
   }
 
   #telemetry?: ITelemetryProvider;
-  #report = createOperationalTelemetry('signalr', () => this.#telemetry);
+  #report = createOperationalReporter(() => this.#telemetry);
 
   /** {@inheritDoc ISignalRProvider.connectTelemetry} */
   public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
@@ -150,6 +150,7 @@ export class SignalRModuleProvider
         // Only reconnects observed from their start have a measurable duration.
         if (reconnectStarted !== undefined) {
           this.#report({
+            module: 'signalr',
             operation: 'reconnect',
             outcome: 'success',
             duration: performance.now() - reconnectStarted,
@@ -161,6 +162,7 @@ export class SignalRModuleProvider
         // A close while reconnecting ends that reconnect attempt.
         if (reconnectStarted !== undefined) {
           this.#report({
+            module: 'signalr',
             operation: 'reconnect',
             outcome: stopping ? 'cancelled' : 'failure',
             duration: performance.now() - reconnectStarted,
@@ -170,6 +172,8 @@ export class SignalRModuleProvider
           // Teardown is the only intentional stop, so any other close of an established
           // connection is a loss, including a graceful server close without an error.
           this.#report({
+            module: 'signalr',
+            notification: true,
             operation: 'connection-lost',
             outcome: 'failure',
             level: TelemetryLevel.Error,
@@ -185,6 +189,7 @@ export class SignalRModuleProvider
           // A start that settles after teardown was cancelled; the observer is already complete.
           if (stopping) {
             this.#report({
+              module: 'signalr',
               operation: 'connect',
               outcome: 'cancelled',
               duration: performance.now() - connectStarted,
@@ -193,6 +198,7 @@ export class SignalRModuleProvider
           }
           connected = true;
           this.#report({
+            module: 'signalr',
             operation: 'connect',
             outcome: 'success',
             duration: performance.now() - connectStarted,
@@ -202,6 +208,7 @@ export class SignalRModuleProvider
         .catch((error: unknown) => {
           // Teardown during start is an expected cancellation, not a failure.
           this.#report({
+            module: 'signalr',
             operation: 'connect',
             outcome: error instanceof AbortError || stopping ? 'cancelled' : 'failure',
             duration: performance.now() - connectStarted,
@@ -226,12 +233,14 @@ export class SignalRModuleProvider
           stopped?.then(
             () =>
               this.#report({
+                module: 'signalr',
                 operation: 'disconnect',
                 outcome: 'success',
                 duration: performance.now() - stopStarted,
               }),
             (error: unknown) => {
               this.#report({
+                module: 'signalr',
                 operation: 'disconnect',
                 outcome: 'failure',
                 duration: performance.now() - stopStarted,

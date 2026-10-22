@@ -19,7 +19,7 @@ import type { Service } from './types.js';
 import type { ServiceDiscoveryConfig } from './configurator.js';
 import type { IServiceDiscoveryClient } from './client.js';
 import type { ServiceDiscoveryDiagnostic } from './ServiceDiscoveryDiagnostic.js';
-import { createOperationalTelemetry } from './create-operational-telemetry.js';
+import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
 
 /**
  * Public API surface of the Service Discovery provider.
@@ -156,20 +156,38 @@ export class ServiceDiscoveryProvider
     if (!telemetry || !diagnostic$) {
       return;
     }
-    const report = createOperationalTelemetry('service-discovery', () => telemetry);
+    const report = createOperationalReporter(() => telemetry);
     this.#telemetry = diagnostic$.subscribe((diagnostic: ServiceDiscoveryDiagnostic) => {
       // An unmatched key is a notification only; it has no measured resolution of its own.
       if (diagnostic.type === 'unknown-service') {
-        report({ operation: 'unknown-service', outcome: 'failure', level: TelemetryLevel.Warning });
+        report({
+          module: 'service-discovery',
+          notification: true,
+          operation: 'unknown-service',
+          outcome: 'failure',
+          level: TelemetryLevel.Warning,
+        });
         return;
       }
       const { outcome, origin, duration } = diagnostic;
-      report({ operation: 'resolve', outcome, duration });
+      report({ module: 'service-discovery', operation: 'resolve', outcome, duration });
       // Network resolutions are fully described by the measurement and the HTTP attempt.
       if (origin === 'cache') {
-        report({ operation: 'cache-hit', outcome, level: TelemetryLevel.Information });
+        report({
+          module: 'service-discovery',
+          notification: true,
+          operation: 'cache-hit',
+          outcome,
+          level: TelemetryLevel.Information,
+        });
       } else if (origin !== 'network') {
-        report({ operation: origin, outcome, level: TelemetryLevel.Warning });
+        report({
+          module: 'service-discovery',
+          notification: true,
+          operation: origin,
+          outcome,
+          level: TelemetryLevel.Warning,
+        });
       }
     });
   }

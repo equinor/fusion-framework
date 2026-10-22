@@ -21,7 +21,7 @@ import type { RequiredAccessRoleStatus } from './RequiredAccessRoleStatus.js';
 import { ClaimableRoleAssignmentActivationEvent } from './ClaimableRoleAssignmentActivationEvent.js';
 import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
-import { createOperationalTelemetry } from './create-operational-telemetry.js';
+import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
 import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
 
 /**
@@ -289,7 +289,7 @@ export class RolesProvider
 {
   private readonly client: IRolesClient;
   private readonly dependencies: RolesProviderDependencies;
-  readonly #report: ReturnType<typeof createOperationalTelemetry>;
+  readonly #report: ReturnType<typeof createOperationalReporter>;
 
   /**
    * Creates a Roles provider around a client initialized during module initialization.
@@ -302,7 +302,7 @@ export class RolesProvider
     this.client = config.client;
     this.dependencies = dependencies;
     let reporting = true;
-    this.#report = createOperationalTelemetry('roles', () =>
+    this.#report = createOperationalReporter(() =>
       reporting ? dependencies.telemetry : undefined,
     );
     this._addTeardown(() => {
@@ -552,10 +552,16 @@ export class RolesProvider
     const name = operationName(operation);
     try {
       const result = await execute();
-      this.#report({ operation: name, outcome: 'success', duration: performance.now() - started });
+      this.#report({
+        module: 'roles',
+        operation: name,
+        outcome: 'success',
+        duration: performance.now() - started,
+      });
       return result;
     } catch (error) {
       this.#report({
+        module: 'roles',
         operation: name,
         outcome: isCancelled?.() ? 'cancelled' : 'failure',
         duration: performance.now() - started,

@@ -10,4 +10,9 @@ export { applyMetadata } from './resolve-metadata.js';
 export { createOperationalRecords } from './create-operational-records.js';
 export type { OperationalRecordArgs } from './create-operational-records.js';
 export { createDiagnosticContext } from './create-diagnostic-context.js';
+export { createOperationalReporter } from './create-operational-reporter.js';
+export type {
+  OperationalReport,
+  OperationalTelemetryTarget,
+} from './create-operational-reporter.js';
 export type { DiagnosticContextArgs } from './create-diagnostic-context.js';

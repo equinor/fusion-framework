@@ -231,6 +231,43 @@ wiring by implementing the optional `INavigationProvider.connectTelemetry` metho
 
 ## Report your own operational outcomes
 
+For a module, prefer `createOperationalReporter` from
+`@equinor/fusion-framework-module-telemetry/utils`. It builds the records described below,
+resolves the provider lazily on every report, and keeps delivery failures away from the
+business operation, reporting them once as a sanitized console warning. Return `undefined`
+from the provider callback to record nothing, for example before telemetry connects or after
+the owning provider is disposed. The framework's HTTP, query, service discovery, services,
+roles, MSAL, MSAL Node, Azure Identity and SignalR instrumentation all use it.
+
+```ts
+import { TelemetryLevel, type ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
+
+let telemetry: ITelemetryProvider | undefined; // connected in postInitialize
+const report = createOperationalReporter(() => telemetry);
+
+const started = performance.now();
+try {
+  await exportReport();
+  report({ module: 'reports', operation: 'export', outcome: 'success', duration: performance.now() - started });
+} catch (error) {
+  // One duration metric plus one sanitized exception; the original error is rethrown unchanged.
+  report({ module: 'reports', operation: 'export', outcome: 'failure', duration: performance.now() - started });
+  throw error;
+}
+
+// A notification has no measured boundary. Severity defaults to Error for a failure and
+// Information otherwise; set Warning for a recoverable degradation.
+report({
+  module: 'reports',
+  operation: 'fallback',
+  outcome: 'success',
+  notification: true,
+  level: TelemetryLevel.Warning,
+});
+```
+
+The lower-level builders are available when you need to track records yourself.
 Use `createOperationalRecords` for a measured terminal outcome: it returns one
 `fusion.<module>.<operation>.duration` metric and, on failure, one sanitized
 `.failure` exception. The metric is always reported at `Information` and carries the

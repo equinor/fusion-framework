@@ -191,7 +191,7 @@ Operational helpers are not re-exported from the root; import them from the
 | `/console-adapter` | `ConsoleAdapter` | Console-based adapter with colour-coded output. |
 | `/application-insights-adapter` | `ApplicationInsightsAdapter` | Microsoft Application Insights adapter. |
 | `/schemas` | `parseTelemetryItem`, schema objects, `DiagnosticContext` | Zod schemas, a parser for telemetry items, and the diagnostic envelope types. |
-| `/utils` | `createOperationalRecords`, `createDiagnosticContext`, `mergeTelemetryItem` | Operational record builders and helpers for metadata merging and event mapping. |
+| `/utils` | `createOperationalReporter`, `createOperationalRecords`, `createDiagnosticContext`, `mergeTelemetryItem` | Operational record builders and helpers for metadata merging and event mapping. |
 | `/integrations` | `createHttpTelemetry`, `observeQueryTelemetry` | Optional HTTP and query operational instrumentation. |
 | `/mock` | `enableTelemetryMock`, `MockTelemetryAdapter` | In-process telemetry recorder for deterministic tests. |
 

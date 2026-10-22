@@ -1,5 +1,5 @@
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { createOperationalTelemetry } from './create-operational-telemetry.js';
+import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
 
 /** Static operation label recorded for each instrumented provider method. */
 const operations = {
@@ -41,7 +41,7 @@ export function connectAuthTelemetry<T extends Partial<Record<InstrumentedMethod
   if (!telemetry) {
     return disconnect;
   }
-  const report = createOperationalTelemetry('msal-node', () => (active ? telemetry : undefined));
+  const report = createOperationalReporter(() => (active ? telemetry : undefined));
   const target = provider as Record<InstrumentedMethod | 'dispose', unknown>;
   const dispose = target.dispose;
   // Provider teardown is the lifecycle owner, so disposal also stops reporting.
@@ -64,10 +64,20 @@ export function connectAuthTelemetry<T extends Partial<Record<InstrumentedMethod
       const started = performance.now();
       try {
         const result = await original.apply(this, args);
-        report({ operation, outcome: 'success', duration: performance.now() - started });
+        report({
+          module: 'msal-node',
+          operation,
+          outcome: 'success',
+          duration: performance.now() - started,
+        });
         return result;
       } catch (error) {
-        report({ operation, outcome: 'failure', duration: performance.now() - started });
+        report({
+          module: 'msal-node',
+          operation,
+          outcome: 'failure',
+          duration: performance.now() - started,
+        });
         throw error;
       }
     };
