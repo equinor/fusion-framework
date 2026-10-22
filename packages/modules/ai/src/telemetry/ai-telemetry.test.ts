@@ -162,10 +162,10 @@ const createTelemetry = (track = vi.fn<(item: TelemetryItem) => void>()) => {
   return { track, telemetry };
 };
 
-const setup = () => {
+const setup = async () => {
   const { track, telemetry } = createTelemetry();
   const provider = new AiProvider({ strategies } as never);
-  provider.connectTelemetry(telemetry);
+  await provider.connectTelemetry(telemetry);
   const model = (chunks: string[], options?: ConstructorParameters<typeof FakeModel>[1]) => {
     nextModel = new FakeModel(chunks, options);
     return provider.useModel('deployment', { strategy: 'custom' });
@@ -183,7 +183,7 @@ const setup = () => {
 
 describe('AI execution telemetry', () => {
   it('reports one terminal record per invoke and returns the original result', async () => {
-    const { model, outcomes, track } = setup();
+    const { model, outcomes, track } = await setup();
     const llm = model(['one', 'two']);
 
     await expect(llm.invoke(SENTINEL)).resolves.toBe('two');
@@ -199,7 +199,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('reports failures once with a controlled exception and rethrows the original error', async () => {
-    const { model, outcomes, track } = setup();
+    const { model, outcomes, track } = await setup();
     const error = new Error(`${SENTINEL} completion failed`);
 
     await expect(model(['partial'], { failure: error }).invoke(SENTINEL)).rejects.toBe(error);
@@ -212,7 +212,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('classifies an aborted invocation as cancelled, not failed', async () => {
-    const { model, outcomes } = setup();
+    const { model, outcomes } = await setup();
     const controller = new AbortController();
     const pending = model(['a'], { hang: true }).invoke(SENTINEL, { signal: controller.signal });
 
@@ -223,7 +223,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('measures an observable stream until its terminal outcome without per-chunk records', async () => {
-    const { model, outcomes } = setup();
+    const { model, outcomes } = await setup();
     const chunks = Array.from({ length: 50 }, (_, index) => `${SENTINEL}-${index}`);
     const received: unknown[] = [];
 
@@ -238,7 +238,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('reports observable stream errors and unsubscription distinctly', async () => {
-    const { model, outcomes } = setup();
+    const { model, outcomes } = await setup();
     const error = new Error('stream broke');
 
     await new Promise<void>((resolve) => {
@@ -258,7 +258,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('keeps LangChain stream() a readable stream and measures consumption', async () => {
-    const { model, outcomes } = setup();
+    const { model, outcomes } = await setup();
 
     const stream = await model(['a', 'b', 'c']).stream('q');
     expect(stream).toBeInstanceOf(IterableReadableStream);
@@ -278,7 +278,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('reports stream failures without leaking chunk or error content', async () => {
-    const { model, outcomes, track, setupModelFromNext } = setup();
+    const { model, outcomes, track, setupModelFromNext } = await setup();
     const error = new Error(`${SENTINEL}-error`);
     model(['unused']);
     // A rejecting iterator, as LangChain chat model streams produce on transport errors.
@@ -301,7 +301,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('covers tool-bound runnables and LangChain composition', async () => {
-    const { model, outcomes, track } = setup();
+    const { model, outcomes, track } = await setup();
     const llm = model(['answer']);
 
     await expect(llm.bindTools([]).invoke(SENTINEL)).resolves.toContain('tool-result');
@@ -323,7 +323,7 @@ describe('AI execution telemetry', () => {
   });
 
   it('reports embeddings and searches once each without vectors or documents', async () => {
-    const { provider, outcomes, track } = setup();
+    const { provider, outcomes, track } = await setup();
     const embed = provider.useEmbed();
     const index = provider.useIndex('docs', { strategy: 'custom-index' });
 
@@ -366,7 +366,7 @@ describe('AI execution telemetry', () => {
       }),
     );
     const provider = new AiProvider({ strategies } as never);
-    provider.connectTelemetry(telemetry);
+    await provider.connectTelemetry(telemetry);
     nextModel = new FakeModel(['ok']);
     const llm = provider.useModel('m', { strategy: 'custom' });
 
@@ -377,8 +377,21 @@ describe('AI execution telemetry', () => {
     expect(JSON.stringify(warn.mock.calls)).not.toContain(SENTINEL);
   });
 
+  it('ignores a connection superseded while its reporter loads', async () => {
+    const { track, telemetry } = createTelemetry();
+    const provider = new AiProvider({ strategies } as never);
+    const loading = provider.connectTelemetry(telemetry);
+    await provider.connectTelemetry(undefined);
+    await loading;
+    nextModel = new FakeModel(['a']);
+
+    expect(provider.useModel('m', { strategy: 'custom' })).toBe(nextModel);
+    await nextModel.invoke('q');
+    expect(track).not.toHaveBeenCalled();
+  });
+
   it('stops reporting after the provider is disposed', async () => {
-    const { provider, model, track } = setup();
+    const { provider, model, track } = await setup();
     const llm = model(['a']);
 
     provider.dispose();

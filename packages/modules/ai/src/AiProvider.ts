@@ -10,7 +10,7 @@ import {
   STRATEGY_TYPE,
 } from './lib/strategies/index.js';
 import type { EmbedStrategy, ModelStrategy, Strategy } from './lib/strategies/index.js';
-import { type AiReport, createAiReporter } from './telemetry/create-ai-reporter.js';
+import type { AiReport } from './telemetry/create-ai-reporter.js';
 import { type InstrumentationPlan, instrumentAiClient } from './telemetry/instrument-ai-client.js';
 
 /** @internal Measured execution methods of a model or a tool-bound model runnable. */
@@ -87,8 +87,9 @@ export interface IAiProvider {
    * Called by the module after initialization. Clients created afterwards report
    * `fusion.ai.<operation>.duration` outcomes; `undefined` leaves clients uninstrumented.
    * @param telemetry - Available host telemetry provider.
+   * @returns Resolves once diagnostics are active, or immediately without telemetry.
    */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): Promise<void>;
 }
 
 /**
@@ -113,7 +114,9 @@ export interface IAiProvider {
 export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IAiProvider {
   readonly #strategies: Strategy[];
   #telemetry?: ITelemetryProvider;
-  readonly #report: AiReport = createAiReporter(() => this.#telemetry);
+  #report?: AiReport;
+  /** Increments on every (re)connection and on disposal, so stale async connections stop. */
+  #connection = 0;
 
   /**
    * @param config - Resolved AI module configuration with service URI and token factory.
@@ -123,13 +126,39 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
     this.#strategies = config.strategies ?? [];
     // Executions finishing after disposal must not report to a torn-down host.
     this._addTeardown(() => {
+      this.#connection++;
       this.#telemetry = undefined;
+      this.#report = undefined;
     });
   }
 
-  /** {@inheritDoc IAiProvider.connectTelemetry} */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+  /**
+   * {@inheritDoc IAiProvider.connectTelemetry}
+   *
+   * The reporter depends on the optional telemetry peer, so it is loaded only when a provider
+   * is given; without telemetry the peer is never imported.
+   */
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#connection;
+    this.#telemetry = undefined;
+    this.#report = undefined;
+    // Without telemetry, clients stay exactly as the strategies create them.
+    if (!telemetry) {
+      return;
+    }
+    let createAiReporter: (telemetry: () => ITelemetryProvider | undefined) => AiReport;
+    try {
+      ({ createAiReporter } = await import('./telemetry/create-ai-reporter.js'));
+    } catch {
+      console.warn('AI operational telemetry is unavailable');
+      return;
+    }
+    // A later connection, disconnection or disposal supersedes this one.
+    if (connection !== this.#connection) {
+      return;
+    }
     this.#telemetry = telemetry;
+    this.#report = createAiReporter(() => this.#telemetry);
   }
 
   /**
@@ -142,7 +171,8 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
    * @returns The instrumented client, or `client` itself without telemetry.
    */
   #instrument<T>(client: T, plan: InstrumentationPlan): T {
-    return this.#telemetry ? instrumentAiClient(client, plan, this.#report) : client;
+    const report = this.#report;
+    return report ? instrumentAiClient(client, plan, report) : client;
   }
 
   /** {@inheritDoc IAiProvider.useModel} */

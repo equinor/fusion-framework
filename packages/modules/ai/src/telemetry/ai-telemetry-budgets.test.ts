@@ -62,7 +62,7 @@ async function createModel(
       },
     ],
   } as never);
-  provider.connectTelemetry(capture ? modules.telemetry : undefined);
+  await provider.connectTelemetry(capture ? modules.telemetry : undefined);
   return {
     model: provider.useModel('m', { strategy: 'budget' }),
     records: () => records,
