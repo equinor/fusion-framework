@@ -21,7 +21,7 @@ const Styled = {
 export const EquinorLoader = ({
   children,
   text,
-}: React.PropsWithChildren<{ readonly text: string }>): JSX.Element => {
+}: React.PropsWithChildren<{ readonly text: string }>): React.JSX.Element => {
   return (
     <Styled.Wrapper>
       <Progress.Star aria-label={text} />

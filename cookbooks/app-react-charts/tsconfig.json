@@ -13,6 +13,9 @@
     },
     {
       "path": "../../packages/modules/navigation"
+    },
+    {
+      "path": "../../packages/react/ag-charts"
     }
   ],
   "include": ["src/**/*"],

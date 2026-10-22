@@ -1,4 +1,4 @@
-import { test as baseTest } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
+import { test as baseTest } from './test-app';
 import { createOpenApiMockMiddleware } from '@equinor/fusion-framework-module-http/mock';
 import type { AppMockConfigureFn } from '@equinor/fusion-framework-app/mock';
 import { apiMock } from '../mocks/api-mock';

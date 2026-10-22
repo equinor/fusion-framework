@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo } from 'react';
+import { type JSX, useCallback, useEffect, useId, useMemo } from 'react';
 import {
   ContextProvider,
   ContextSearch,

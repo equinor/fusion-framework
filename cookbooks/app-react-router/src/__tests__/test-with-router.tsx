@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { test as baseTest } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
+import { test as baseTest } from './test-app';
 import { Router } from '@equinor/fusion-framework-react-router';
 import type { RouteObject } from '@equinor/fusion-framework-react-router';
 

@@ -72,7 +72,7 @@ pnpm --filter @equinor/fusion-framework-cookbook-app-react-router serve --mock h
 | Route HMR | While the demo index is open in dev, temporarily edit its heading, observe the changed heading without navigation, then restore it. | Passed in the browser; Vite also emitted a `js-update` for the route module. Temporary edit restored. |
 | Legacy explicit routes | `pnpm --filter @equinor/fusion-framework-cookbook-app-react-router-legacy build`; `pnpm exec tsc --project cookbooks/app-react-router-legacy/tsconfig.json --noEmit`; run its `dev` script with the same mock endpoint and navigate Home / errorElement / ErrorBoundary. | Build and typecheck passed; both loader and render error boundaries passed browser smoke tests. No legacy startup or route declarations changed. |
 | Conventions | `pnpm exec fusion-lint lint cookbooks/app-react-router`; Biome check of the modified TypeScript files | Passed. |
-| Standalone DSL cookbook typecheck | `pnpm exec tsc --project cookbooks/app-react-router/tsconfig.json --noEmit` | **Not green:** 17 existing diagnostics in old test-fixture/navigation types, error views, markdown JSX and action data. None points at the new middleware example. This remains migration acceptance work; runtime/type-test success above does not replace this check. |
+| Standalone DSL cookbook typecheck | `pnpm exec tsc --project cookbooks/app-react-router/tsconfig.json --noEmit` | Passed with 0 diagnostics. Tests type `app.navigation` through the shared `src/__tests__/test-app.ts` fixture, and the middleware route exports are annotated as `MiddlewareFunction[]`. |
 
 Migration and release communication remain tracked by
 [the upgrade task](https://github.com/equinor/fusion-core-tasks/issues/1626).

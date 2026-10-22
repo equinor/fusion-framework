@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { configureHttpClient } from '@equinor/fusion-framework-module-http';
@@ -10,8 +9,6 @@ const environment = 'ci';
 const configurator = new ModulesConfigurator();
 
 const importWithoutVite = (path: string) => import(/* @vite-ignore */ path);
-
-configurator.logger.level = process.env.NODE_ENV === 'development' ? 4 : 1;
 
 configurator.addConfig(
   configureHttpClient('service_discovery', {
@@ -28,20 +25,21 @@ enableServiceDiscovery(configurator, async (builder) => {
 });
 
 configurator.addConfig(
-  configureMsal(
-    {
-      tenantId: '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
-      clientId: '9b707e3a-3e90-41ed-a47e-652a1e3b53d0',
-      redirectUri: '/authentication/login-callback',
-    },
-    { requiresAuth: true },
-  ),
+  configureMsal((builder) => {
+    builder.setClientConfig({
+      auth: {
+        tenantId: '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
+        clientId: '9b707e3a-3e90-41ed-a47e-652a1e3b53d0',
+        redirectUri: '/authentication/login-callback',
+      },
+    });
+    builder.setRequiresAuth(true);
+  }),
 );
 
 (async () => {
   const el = document.getElementById('app');
   const ref = await configurator.initialize();
   const { render } = await importWithoutVite('../src/index.tsx');
-  // @ts-expect-error
   render(el, ref);
 })();

@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
+import { test } from './test-app';
 
 import App from '../App';
 

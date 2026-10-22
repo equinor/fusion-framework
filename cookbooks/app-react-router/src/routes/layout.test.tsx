@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { test } from '@equinor/fusion-framework-vitest-plugin-react-app/test';
+import { test } from '../__tests__/test-app';
 import { Router } from '@equinor/fusion-framework-react-router';
 import type { RouteObject } from '@equinor/fusion-framework-react-router';
 

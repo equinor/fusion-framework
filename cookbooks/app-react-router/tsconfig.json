@@ -35,5 +35,5 @@
     }
   ],
   "include": ["src/**/*", "src/types/**/*"],
-  "exclude": ["node_modules", "lib", "src/**/*.{test,spec}.{ts,tsx}"]
+  "exclude": ["node_modules", "lib"]
 }

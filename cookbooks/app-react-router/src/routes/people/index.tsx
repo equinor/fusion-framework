@@ -177,7 +177,7 @@ export function ErrorElement(props: ErrorElementProps) {
     <Styled.ErrorContainer>
       <Styled.ErrorTitle variant="h2">⚠️ Error Encountered</Styled.ErrorTitle>
       <Styled.ErrorMessage>
-        <strong>Error:</strong> {error.message}
+        <strong>Error:</strong> {error instanceof Error ? error.message : String(error)}
       </Styled.ErrorMessage>
       <Button variant="contained" onClick={onClick}>
         Clear Search and Try Again
@@ -187,7 +187,7 @@ export function ErrorElement(props: ErrorElementProps) {
 }
 
 export default function PeoplePage(
-  props: RouteComponentProps<PeoplePageLoaderData, { error: string }>,
+  props: RouteComponentProps<PeoplePageLoaderData, { error: string } | undefined>,
 ) {
   const { loaderData, actionData } = props;
   const [searchParams, setSearchParams] = useSearchParams();
