@@ -3,6 +3,7 @@ import {
   createMiddleware,
   Link,
   type LoaderFunctionArgs,
+  type MiddlewareFunction,
   type RouteComponentProps,
 } from '@equinor/fusion-framework-react-router';
 import { demoContext } from '../demo-context';
@@ -15,7 +16,7 @@ export const handle = {
   },
 };
 
-export const middleware = [
+export const middleware: MiddlewareFunction[] = [
   createMiddleware(async ({ context }, next) => {
     const execution = context.get(demoContext);
     execution.events.push('report:before');

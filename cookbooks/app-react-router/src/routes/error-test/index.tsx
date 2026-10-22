@@ -102,11 +102,11 @@ export function ErrorElement({ error }: ErrorElementProps) {
     <Styled.ErrorContainer>
       <Styled.ErrorTitle variant="h1">⚠️ Error Encountered</Styled.ErrorTitle>
       <Styled.ErrorMessage>
-        <strong>Error Message:</strong> {error.message}
+        <strong>Error Message:</strong> {error instanceof Error ? error.message : String(error)}
       </Styled.ErrorMessage>
       <Styled.ErrorDetails>
         <strong>Error Stack:</strong>
-        <Styled.ErrorStack>{error.stack}</Styled.ErrorStack>
+        <Styled.ErrorStack>{error instanceof Error ? error.stack : undefined}</Styled.ErrorStack>
       </Styled.ErrorDetails>
       <Styled.ButtonGroup>
         <Button variant="contained" onClick={handleRetry}>

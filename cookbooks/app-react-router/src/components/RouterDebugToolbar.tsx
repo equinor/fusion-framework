@@ -78,7 +78,6 @@ export const RouterDebugToolbar = () => {
                     ? (() => {
                         const fd = routerNavigation.formData as FormData;
                         const result: Record<string, string> = {};
-                        // @ts-expect-error - FormData.entries() exists at runtime
                         for (const [key, value] of fd.entries()) {
                           result[key] = String(value);
                         }

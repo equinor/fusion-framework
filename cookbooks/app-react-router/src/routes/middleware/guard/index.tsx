@@ -4,10 +4,11 @@ import {
   Outlet,
   redirect,
   type ErrorElementProps,
+  type MiddlewareFunction,
 } from '@equinor/fusion-framework-react-router';
 import { demoContext } from '../demo-context';
 
-export const middleware = [
+export const middleware: MiddlewareFunction[] = [
   createMiddleware(async ({ context, signal }, next) => {
     const execution = { events: ['layout:before'], viewer: 'Demo reader' };
     context.set(demoContext, execution);

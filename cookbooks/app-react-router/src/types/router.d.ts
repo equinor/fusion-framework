@@ -10,4 +10,11 @@ declare module '@equinor/fusion-framework-react-router' {
     /** Icon to display in the navigation */
     icon?: IconData;
   }
+
+  interface RouterHandle {
+    /** Optional sidebar overrides; `path` replaces the URL derived from the route tree */
+    navigation?: {
+      path?: string;
+    };
+  }
 }
