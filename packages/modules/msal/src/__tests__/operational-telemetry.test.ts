@@ -4,6 +4,8 @@ import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framewor
 import type { IMsalClient } from '../MsalClient.interface';
 import type { MsalConfig } from '../MsalConfigurator';
 import { MsalProvider } from '../MsalProvider';
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+import { module as msalModule } from '../module';
 
 const sentinel = 'privacy-sentinel-a8e2';
 
@@ -177,5 +179,45 @@ describe('MsalProvider operational telemetry', () => {
     await expect(
       new MsalProvider(config).acquireToken({ request: { scopes: ['a'] } }),
     ).resolves.toBe(result);
+  });
+
+  it('disposes only the provider it created when the host disposes the module', async () => {
+    const { provider: telemetry, items } = createTelemetry();
+    let resolve!: (value: unknown) => void;
+    const client = {
+      clientId: 'client-id',
+      initialize: vi.fn(async () => undefined),
+      getActiveAccount: vi.fn(() => null),
+      acquireToken: vi.fn(() => new Promise((r) => (resolve = r))),
+    } as unknown as IMsalClient;
+    const host = new ModulesConfigurator([msalModule]);
+    host.configure({
+      module: msalModule,
+      configure: (builder) => builder.setClient(client).setTelemetry(telemetry),
+    });
+    const hostInstance = await host.initialize();
+
+    // An app reusing the host's provider through a proxy must not dispose it.
+    const app = new ModulesConfigurator([msalModule]);
+    app.configure({
+      module: msalModule,
+      configure: (builder) => builder.setTelemetryScope(['app']),
+    });
+    const appInstance = await app.initialize({ auth: hostInstance.auth });
+    await app.dispose(appInstance);
+    await expect(
+      Promise.all([
+        hostInstance.auth.acquireToken({ request: { scopes: ['a'] } }),
+        Promise.resolve().then(() => resolve({ accessToken: 'token' })),
+      ]),
+    ).resolves.toBeDefined();
+    expect(operational(items)).toEqual(['fusion.msal.acquire-token.duration:success']);
+
+    // Disposing the host stops its own provider, including in-flight acquisition.
+    const pending = hostInstance.auth.acquireToken({ request: { scopes: ['a'] } });
+    await host.dispose(hostInstance);
+    resolve({ accessToken: 'token' });
+    await expect(pending).resolves.toEqual({ accessToken: 'token' });
+    expect(operational(items)).toHaveLength(1);
   });
 });
