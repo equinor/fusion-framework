@@ -74,6 +74,18 @@ class FakeModel extends BaseService<string, string> {
   }
 }
 
+/** Custom client whose own `batch` relies on private state. */
+class PrivateBatchModel extends FakeModel {
+  readonly #prefix = 'private';
+  /**
+   * @param inputs - Prompts.
+   * @returns Prefixed prompts, computed without invoking the model.
+   */
+  async batch(inputs: string[]): Promise<string[]> {
+    return Array.from(inputs, (input) => `${this.#prefix}:${input}`);
+  }
+}
+
 /** Custom-strategy embed client counting its executions. */
 class FakeEmbed extends BaseService<string[], number[][]> {
   /** Executions on the original client. */
@@ -348,6 +360,18 @@ describe('AI execution telemetry', () => {
     expect(exported).not.toContain('0.42');
     expect(exported).not.toContain('docs');
     expect(exported).not.toContain('deployment');
+  });
+
+  it('keeps the original receiver for custom members that use private state', async () => {
+    const { provider, track } = await setup();
+    nextModel = new PrivateBatchModel(['a']);
+    const llm = provider.useModel('m', { strategy: 'custom' });
+
+    await expect(llm.batch(['x', 'y'])).resolves.toEqual(['private:x', 'private:y']);
+    // A custom batch is not a measured entry point, and nothing broke with telemetry on.
+    expect(track).not.toHaveBeenCalled();
+    await expect(llm.invoke('q')).resolves.toBe('a');
+    expect(track).toHaveBeenCalledTimes(1);
   });
 
   it('leaves inherited object members such as constructor and toString untouched', async () => {
