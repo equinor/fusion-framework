@@ -57,10 +57,10 @@ describe('AG Grid legacy add() compatibility diagnostic', () => {
     expect(observer).toHaveBeenCalledTimes(1);
   });
 
-  it('records invocation of the patched add(), not installation, once per host lifecycle', () => {
+  it('records invocation of the patched add(), not installation, once per host lifecycle', async () => {
     const telemetry = createTelemetry();
     const provider = new AgGridProvider({});
-    provider.connectTelemetry(telemetry);
+    await provider.connectTelemetry(telemetry);
 
     expect(telemetry.trackEvent).not.toHaveBeenCalled();
     for (let index = 0; index < 100; index++) legacy().add({ ...SENTINEL, index });
@@ -83,13 +83,13 @@ describe('AG Grid legacy add() compatibility diagnostic', () => {
     expect(grids.size).toBe(100);
   });
 
-  it('bounds records to one per connected host, including another bundle patch', () => {
+  it('bounds records to one per connected host, including another bundle patch', async () => {
     applyThemeShim();
     const portal = createTelemetry();
     const app = createTelemetry();
     // A second provider sees the already-patched add() through the global observer registry.
-    new AgGridProvider({}).connectTelemetry(portal);
-    new AgGridProvider({}).connectTelemetry(app);
+    await new AgGridProvider({}).connectTelemetry(portal);
+    await new AgGridProvider({}).connectTelemetry(app);
 
     legacy().add('a');
     legacy().add('b');
@@ -98,31 +98,44 @@ describe('AG Grid legacy add() compatibility diagnostic', () => {
     expect(app.trackEvent).toHaveBeenCalledTimes(1);
   });
 
-  it('records nothing after disposal or when telemetry is disconnected', () => {
+  it('records nothing after disposal or when telemetry is disconnected', async () => {
     const disposed = createTelemetry();
     const disconnected = createTelemetry();
+    const disposedWhileLoading = createTelemetry();
+    const disconnectedWhileLoading = createTelemetry();
     const first = new AgGridProvider({});
-    first.connectTelemetry(disposed);
+    await first.connectTelemetry(disposed);
     first.dispose();
     const second = new AgGridProvider({});
-    second.connectTelemetry(disconnected);
-    second.connectTelemetry(undefined);
+    await second.connectTelemetry(disconnected);
+    await second.connectTelemetry(undefined);
+    // Disposal or disconnection while the reporter is still loading wins the race.
+    const third = new AgGridProvider({});
+    const loading = third.connectTelemetry(disposedWhileLoading);
+    third.dispose();
+    await loading;
+    const fourth = new AgGridProvider({});
+    const reconnecting = fourth.connectTelemetry(disconnectedWhileLoading);
+    await fourth.connectTelemetry(undefined);
+    await reconnecting;
 
     legacy().add('a');
 
     expect(disposed.trackEvent).not.toHaveBeenCalled();
     expect(disconnected.trackEvent).not.toHaveBeenCalled();
+    expect(disposedWhileLoading.trackEvent).not.toHaveBeenCalled();
+    expect(disconnectedWhileLoading.trackEvent).not.toHaveBeenCalled();
     expect(grids.get('a')).toBe(true);
   });
 
-  it('preserves add() when telemetry delivery fails', () => {
+  it('preserves add() when telemetry delivery fails', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const failing = createTelemetry(
       vi.fn(() => {
         throw new Error(SENTINEL.secret);
       }),
     );
-    new AgGridProvider({}).connectTelemetry(failing);
+    await new AgGridProvider({}).connectTelemetry(failing);
 
     expect(legacy().add('a')).toBe(grids);
 
@@ -131,12 +144,12 @@ describe('AG Grid legacy add() compatibility diagnostic', () => {
     expect(JSON.stringify(warn.mock.calls)).not.toContain(SENTINEL.secret);
   });
 
-  it('does not patch or observe a foreign add() implementation', () => {
+  it('does not patch or observe a foreign add() implementation', async () => {
     const foreignAdd = vi.fn();
     Object.assign(grids, { add: foreignAdd });
     const telemetry = createTelemetry();
 
-    new AgGridProvider({}).connectTelemetry(telemetry);
+    await new AgGridProvider({}).connectTelemetry(telemetry);
     legacy().add('a');
 
     expect(foreignAdd).toHaveBeenCalledWith('a');

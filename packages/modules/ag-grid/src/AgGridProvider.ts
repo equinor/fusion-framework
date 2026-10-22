@@ -6,7 +6,6 @@ import type { ITelemetryProvider } from '@equinor/fusion-framework-module-teleme
 import type { AgGridConfig } from './AgGridConfigurator.interface.js';
 import { applyThemeShim } from './apply-theme-shim.js';
 import { observeLegacyAdd } from './observe-legacy-add.js';
-import { reportLegacyAdd } from './report-legacy-add.js';
 import { version } from './version.js';
 
 /**
@@ -26,8 +25,9 @@ export interface IAgGridProvider {
    *
    * Called by the module after initialization; `undefined` leaves AG Grid without diagnostics.
    * @param telemetry - Available host telemetry provider.
+   * @returns Resolves once diagnostics are active, or immediately without telemetry.
    */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): Promise<void>;
 }
 
 /**
@@ -46,6 +46,8 @@ export interface IAgGridProvider {
  */
 export class AgGridProvider extends BaseModuleProvider<AgGridConfig> implements IAgGridProvider {
   #stopLegacyAddObservation?: VoidFunction;
+  /** Increments on every (re)connection and on disposal, so stale async connections stop. */
+  #connection = 0;
 
   /**
    * The AG Grid enterprise license key, if configured.
@@ -72,6 +74,10 @@ export class AgGridProvider extends BaseModuleProvider<AgGridConfig> implements 
    */
   constructor(protected _config: AgGridConfig) {
     super({ version, config: _config });
+    // Disposal supersedes a connection that is still loading its reporter.
+    this._addTeardown(() => {
+      this.#connection++;
+    });
     this._init();
   }
 
@@ -81,13 +87,29 @@ export class AgGridProvider extends BaseModuleProvider<AgGridConfig> implements 
    * One record per provider bounds volume regardless of how many grids mount; the observation
    * ends after that record, on reconnection, or on disposal, and never changes grid behavior.
    *
+   * The reporter depends on the optional telemetry peer, so it is loaded only when a provider
+   * is given; without telemetry the peer is never imported.
+   *
    * @param telemetry - Available host telemetry provider; `undefined` disables the diagnostic.
+   * @returns Resolves once the diagnostic is active, or immediately without telemetry.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#connection;
     this.#stopLegacyAddObservation?.();
     this.#stopLegacyAddObservation = undefined;
     // Without telemetry the shim keeps working; there is simply nothing to report to.
     if (!telemetry) {
+      return;
+    }
+    let reportLegacyAdd: (telemetry: ITelemetryProvider) => void;
+    try {
+      ({ reportLegacyAdd } = await import('./report-legacy-add.js'));
+    } catch {
+      console.warn('AG Grid compatibility telemetry is unavailable');
+      return;
+    }
+    // A later connection, disconnection or disposal supersedes this one.
+    if (connection !== this.#connection) {
       return;
     }
     const stopObserving = observeLegacyAdd(() => {

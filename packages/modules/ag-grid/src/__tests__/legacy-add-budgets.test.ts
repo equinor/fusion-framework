@@ -21,13 +21,13 @@ function p95(samples: number[]): number {
 }
 
 /** Mounts {@link CALLS} grids through the patched legacy `add()` and returns the duration. */
-function mountGrids(capture: boolean, trackEvent: () => void): number {
+async function mountGrids(capture: boolean, trackEvent: () => void): Promise<number> {
   const grids = new Map<unknown, unknown>();
   vi.stubGlobal('window', { agStyleInjectionState: { grids } });
   // Only the members used by the AG Grid diagnostic are faked.
   const telemetry = { source: { hostId: 'budget' }, trackEvent } as unknown as ITelemetryProvider;
   const provider = new AgGridProvider({});
-  provider.connectTelemetry(capture ? telemetry : undefined);
+  await provider.connectTelemetry(capture ? telemetry : undefined);
   const add = (grids as Map<unknown, unknown> & { add: (key: unknown) => void }).add;
   const start = performance.now();
   // Each call stands for one legacy grid registering its style injection.
@@ -38,14 +38,14 @@ function mountGrids(capture: boolean, trackEvent: () => void): number {
 }
 
 describe('AG Grid legacy add() telemetry budgets', () => {
-  it('emits one record per host for repeated legacy usage within the workload gate', () => {
+  it('emits one record per host for repeated legacy usage within the workload gate', async () => {
     const trackEvent = vi.fn();
     const base: number[] = [];
     const measured: number[] = [];
     // Paired warm-up and measured runs with only telemetry capture toggled.
     for (let run = 0; run < WARMUP + RUNS; run++) {
-      const off = mountGrids(false, trackEvent);
-      const on = mountGrids(true, trackEvent);
+      const off = await mountGrids(false, trackEvent);
+      const on = await mountGrids(true, trackEvent);
       // Warm-up runs are discarded.
       if (run >= WARMUP) {
         base.push(off);
