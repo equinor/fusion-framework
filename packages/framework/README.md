@@ -82,6 +82,30 @@ configurator.addConfig({ module: myCustomModule, configure: (b) => { /* … */ }
 const fusion = await init(configurator);
 ```
 
+### Diagnose HTTP transport failures
+
+`FrameworkConfigurator` instruments the framework's HTTP clients with
+`createHttpTelemetry` from `@equinor/fusion-framework-module-telemetry/integrations`.
+Each actual fetch attempt produces one `fusion.http.request.duration` metric with a
+`success`, `failure` (rejected fetch or non-2xx response) or `cancelled` (aborted signal)
+outcome, and a failed attempt adds one sanitized `fusion.http.request.failure`. URLs,
+headers, bodies, tokens and original errors are never recorded.
+
+The middleware is appended after every configuration callback, so retry middleware you
+register wraps it and every retry is its own attempt. Timing ends when `fetch` resolves,
+not when a streamed body finishes. Token acquisition is reported separately by the auth
+module, and service discovery by its own records. Telemetry is connected after
+initialization, so requests made while modules initialize are not recorded. Exporter
+requests marked with `markTelemetryExportRequest` are excluded, and a client configured
+with its own `middlewareHandler` is not instrumented. No exporter is created.
+
+```ts
+// Opt out of framework HTTP diagnostics; other operational telemetry is unchanged.
+const configurator = new FrameworkConfigurator({ httpTelemetry: false });
+```
+
+App modules configure their own HTTP module, which this setting does not instrument.
+
 ## Built-in modules
 
 The framework ships with the following modules enabled by default:

@@ -118,6 +118,25 @@ AZURE_TENANT_ID=your-tenant-id
 AZURE_REDIRECT_URI=https://your-app.com/callback
 ```
 
+## Operational telemetry
+
+When the telemetry module is available, the provider records safe terminal outcomes as
+`fusion.msal.<operation>.duration` metrics: `acquire-token`, `login`, `logout`,
+`handle-redirect` and `exchange-auth-code`. Outcomes are `success`, `failure` or
+`cancelled`; MSAL's `user_cancelled` error and a suppressed acquisition in MSAL's hidden
+iframe are cancellations. A failure adds one sanitized `.failure` exception, and a failed
+silent login before the interactive fallback adds a `fusion.msal.silent-login-fallback`
+warning. Tokens, scopes, accounts, usernames, login hints, auth codes and original errors
+are never recorded. Return values and thrown errors are unchanged. Token acquisition for a
+telemetry export request, marked with `markTelemetryExportRequest`, is not recorded, so an
+exporter using an authenticated Fusion HTTP client does not generate records to export.
+
+These records replace the legacy `module-msal.acquireToken` measurement and the
+`acquireToken-failed`, `logout.failed`, `handleRedirect.failed`,
+`initialize.auth-code-exchange-failed` and `login.silent-failed` exceptions. Remaining
+legacy `module-msal.*` events no longer include `username`, requested or default `scopes`,
+or the logout `redirectUri`, and `canLoginSilently` is a boolean.
+
 ## Testing
 
 Import from `@equinor/fusion-framework-module-msal/mock` to authenticate in-process instead of against Entra ID. The real configurator, provider and schema validation still run — only the client that would contact Entra ID is substituted.
