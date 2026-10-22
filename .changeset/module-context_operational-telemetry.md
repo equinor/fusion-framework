@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-module-context": minor
+"@equinor/fusion-framework-module-context": major
 ---
 
 Report context selection through host telemetry. Each queued `setCurrentContext`
