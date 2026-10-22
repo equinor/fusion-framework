@@ -1,0 +1,137 @@
+import { describe, expect, it, vi } from 'vitest';
+import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
+import type { IMsalClient } from '../MsalClient.interface';
+import type { MsalConfig } from '../MsalConfigurator';
+import { MsalProvider } from '../MsalProvider';
+
+const sentinel = 'privacy-sentinel-a8e2';
+
+/** Telemetry double collecting every record and event the provider emits. */
+const createTelemetry = () => {
+  const items: TelemetryItem[] = [];
+  const provider = {
+    source: { source: 'framework', hostId: 'host-1' },
+    measure: vi.fn(() => ({ measure: vi.fn() })),
+    track: (item: TelemetryItem) => items.push(item),
+    trackEvent: (item: TelemetryItem) => items.push(item),
+    trackException: (item: TelemetryItem) => items.push(item),
+  } as unknown as ITelemetryProvider;
+  return { provider, items };
+};
+
+/** Operational records only, as `name:outcome`, in emission order. */
+const operational = (items: TelemetryItem[]): string[] =>
+  items
+    .filter((item) => item.name.startsWith('fusion.msal.'))
+    .map((item) => `${item.name}:${item.diagnostic?.outcome}`);
+
+const account = { username: `${sentinel}@example.com`, homeAccountId: sentinel };
+
+const createProvider = (client: Partial<Record<keyof IMsalClient, unknown>>) => {
+  const { provider: telemetry, items } = createTelemetry();
+  const config: MsalConfig = {
+    client: {
+      clientId: 'client-id',
+      getActiveAccount: vi.fn(() => account),
+      ...client,
+    } as unknown as IMsalClient,
+    version: '7.0.0',
+    requiresAuth: false,
+    telemetry: { provider: telemetry, metadata: {}, scope: ['framework'] },
+  };
+  return { provider: new MsalProvider(config), items };
+};
+
+describe('MsalProvider operational telemetry', () => {
+  it('records token acquisition without tokens, scopes or account data', async () => {
+    const result = { accessToken: `token-${sentinel}`, account };
+    const acquireToken = vi.fn(async () => result);
+    const { provider, items } = createProvider({ acquireToken });
+
+    await expect(
+      provider.acquireToken({ request: { scopes: [`api://${sentinel}/.default`] } }),
+    ).resolves.toBe(result);
+
+    expect(operational(items)).toEqual(['fusion.msal.acquire-token.duration:success']);
+    expect(JSON.stringify(items.filter((item) => item.name.startsWith('fusion.')))).not.toContain(
+      sentinel,
+    );
+  });
+
+  it('rethrows token failures with one sanitized exception and classifies user cancellation', async () => {
+    const failure = Object.assign(new Error(`AADSTS for ${sentinel}`), { errorCode: 'x' });
+    const cancelled = Object.assign(new Error('cancelled'), { errorCode: 'user_cancelled' });
+    const acquireToken = vi.fn().mockRejectedValueOnce(failure).mockRejectedValueOnce(cancelled);
+    const { provider, items } = createProvider({ acquireToken });
+
+    await expect(provider.acquireToken({ request: { scopes: ['a'] } })).rejects.toBe(failure);
+    await expect(provider.acquireToken({ request: { scopes: ['a'] } })).rejects.toBe(cancelled);
+
+    expect(operational(items)).toEqual([
+      'fusion.msal.acquire-token.duration:failure',
+      'fusion.msal.acquire-token.failure:failure',
+      'fusion.msal.acquire-token.duration:cancelled',
+    ]);
+    // Legacy raw-error exceptions are replaced, so each failure counts once.
+    expect(items.filter((item) => item.name === 'module-msal.acquireToken-failed')).toHaveLength(0);
+    expect(JSON.stringify(items)).not.toContain(sentinel);
+  });
+
+  it('records silent-login fallback and the terminal login outcome once', async () => {
+    const result = { account };
+    const ssoSilent = vi.fn().mockRejectedValue(new Error(`hint ${sentinel}`));
+    const loginPopup = vi.fn(async () => result);
+    const { provider, items } = createProvider({ ssoSilent, loginPopup });
+
+    await expect(
+      provider.login({ behavior: 'popup', request: { scopes: ['a'], loginHint: sentinel } }),
+    ).resolves.toBe(result);
+
+    expect(operational(items)).toEqual([
+      'fusion.msal.silent-login-fallback:failure',
+      'fusion.msal.login.duration:success',
+    ]);
+    expect(JSON.stringify(items.filter((item) => item.name.startsWith('fusion.')))).not.toContain(
+      sentinel,
+    );
+  });
+
+  it('records logout and redirect outcomes without account identifiers', async () => {
+    const logout = vi
+      .fn()
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new Error(sentinel));
+    const handleRedirectPromise = vi.fn(async () => ({ account }));
+    const { provider, items } = createProvider({ logout, handleRedirectPromise });
+
+    await expect(provider.logout()).resolves.toBe(true);
+    await expect(provider.logout()).resolves.toBe(false);
+    await expect(provider.handleRedirect()).resolves.toEqual({ account });
+
+    expect(operational(items)).toEqual([
+      'fusion.msal.logout.duration:success',
+      'fusion.msal.logout.duration:failure',
+      'fusion.msal.logout.failure:failure',
+      'fusion.msal.handle-redirect.duration:success',
+    ]);
+    expect(JSON.stringify(items)).not.toContain(sentinel);
+  });
+
+  it('keeps authentication behavior unchanged without telemetry', async () => {
+    const result = { accessToken: 'token' };
+    const config: MsalConfig = {
+      client: {
+        clientId: 'client-id',
+        getActiveAccount: vi.fn(() => null),
+        acquireToken: vi.fn(async () => result),
+      } as unknown as IMsalClient,
+      version: '7.0.0',
+      requiresAuth: false,
+      telemetry: { metadata: {}, scope: [] },
+    };
+
+    await expect(
+      new MsalProvider(config).acquireToken({ request: { scopes: ['a'] } }),
+    ).resolves.toBe(result);
+  });
+});

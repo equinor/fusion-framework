@@ -85,6 +85,10 @@ export const module: ServicesModule = {
     }
     return new ApiProvider({ createClient: config.createClient });
   },
+  postInitialize: async ({ instance, modules }) => {
+    // Telemetry connects after initialization so client creation never waits for it.
+    instance.connectTelemetry?.(modules.telemetry);
+  },
 };
 
 /**

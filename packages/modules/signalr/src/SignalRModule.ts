@@ -43,6 +43,10 @@ export const module: SignalRModule = {
     const config = await (init.config as SignalRConfigurator).createConfig(init);
     return new SignalRModuleProvider(config);
   },
+  postInitialize: async ({ instance, modules }) => {
+    // Telemetry connects after initialization so hub setup never waits for it.
+    instance.connectTelemetry?.(modules.telemetry);
+  },
 };
 
 export default module;

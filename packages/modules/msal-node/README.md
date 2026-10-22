@@ -96,6 +96,16 @@ const token = await modules.auth.acquireAccessToken({
 });
 ```
 
+## Operational telemetry
+
+When a telemetry module is registered alongside this module, the provider records
+`acquireAccessToken`, `login` and `logout` as `fusion.msal-node.acquire-token.duration`, `fusion.msal-node.login.duration`
+and `fusion.msal-node.logout.duration`, with one sanitized `.failure` exception per failure.
+An interactive login started by a token request is also recorded as its own `login`.
+Tokens, scopes, accounts, device codes and original errors are never recorded, and results
+and errors are unchanged. Static `token_only` providers are never instrumented. Without
+telemetry the provider is left untouched; the package remains Node-compatible either way.
+
 ## Testing
 
 `token_only` mode already avoids real Azure AD traffic, but it is rigid: a single

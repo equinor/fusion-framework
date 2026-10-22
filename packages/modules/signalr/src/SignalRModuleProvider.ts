@@ -1,11 +1,16 @@
 import { HubConnectionBuilder, type HubConnection, AbortError } from '@microsoft/signalr';
 import { Observable, shareReplay } from 'rxjs';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import {
+  TelemetryLevel,
+  type ITelemetryProvider,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import type { SignalRConfig } from './SignalRModuleConfigBuilder.js';
 
 import { Topic } from './lib/Topic.js';
 import { version } from './version.js';
+import { createOperationalTelemetry } from './create-operational-telemetry.js';
 
 /**
  * Public interface for the SignalR module provider.
@@ -35,6 +40,18 @@ export interface ISignalRProvider {
    * ```
    */
   connect<T>(hubId: string, methodName: string): Topic<T>;
+
+  /**
+   * Connects optional operational telemetry for hub connection lifecycles.
+   *
+   * Records `fusion.signalr.connect.duration`, `reconnect.duration` and
+   * `disconnect.duration` outcomes, plus a `connection-lost` notification when a
+   * connection closes unexpectedly. Teardown during start is `cancelled`, not a failure.
+   * Hub names, URLs, tokens and messages are never recorded.
+   *
+   * @param telemetry - Host telemetry provider, or `undefined` to record nothing.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
 }
 
 /**
@@ -62,6 +79,15 @@ export class SignalRModuleProvider
   constructor(config: SignalRConfig) {
     super({ version, config });
     this.#config = config;
+    this._addTeardown(() => this.connectTelemetry(undefined));
+  }
+
+  #telemetry?: ITelemetryProvider;
+  #report = createOperationalTelemetry('signalr', () => this.#telemetry);
+
+  /** {@inheritDoc ISignalRProvider.connectTelemetry} */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry = telemetry;
   }
 
   /**
@@ -112,13 +138,64 @@ export class SignalRModuleProvider
       builder.configureLogging(config.logLevel || LOG_LEVEL_CRITICAL);
 
       const connection = builder.build();
+      // Lifecycle state classifies close callbacks; it never changes connection behavior.
+      let connected = false;
+      let stopping = false;
+      let reconnectStarted: number | undefined;
 
+      connection.onreconnecting(() => {
+        reconnectStarted = performance.now();
+      });
+      connection.onreconnected(() => {
+        // Only reconnects observed from their start have a measurable duration.
+        if (reconnectStarted !== undefined) {
+          this.#report({
+            operation: 'reconnect',
+            outcome: 'success',
+            duration: performance.now() - reconnectStarted,
+          });
+          reconnectStarted = undefined;
+        }
+      });
+      connection.onclose((error) => {
+        // A close while reconnecting ends that reconnect attempt.
+        if (reconnectStarted !== undefined) {
+          this.#report({
+            operation: 'reconnect',
+            outcome: stopping ? 'cancelled' : 'failure',
+            duration: performance.now() - reconnectStarted,
+          });
+          reconnectStarted = undefined;
+        } else if (connected && !stopping && error) {
+          // An established connection lost without teardown is a live-connection failure.
+          this.#report({
+            operation: 'connection-lost',
+            outcome: 'failure',
+            level: TelemetryLevel.Error,
+          });
+        }
+        connected = false;
+      });
+
+      const connectStarted = performance.now();
       connection
         .start()
         .then(() => {
+          connected = true;
+          this.#report({
+            operation: 'connect',
+            outcome: 'success',
+            duration: performance.now() - connectStarted,
+          });
           observer.next(connection);
         })
         .catch((error: unknown) => {
+          // Teardown during start is an expected cancellation, not a failure.
+          this.#report({
+            operation: 'connect',
+            outcome: error instanceof AbortError || stopping ? 'cancelled' : 'failure',
+            duration: performance.now() - connectStarted,
+          });
           // Swallow expected teardown aborts; re-throw anything else
           if (error instanceof AbortError) {
             // AbortError is expected during teardown — safe to ignore
@@ -129,7 +206,31 @@ export class SignalRModuleProvider
 
       // Stop the connection and clean up the cache entry on unsubscribe
       const teardown = () => {
-        connection.stop();
+        stopping = true;
+        const wasConnected = connected;
+        const stopStarted = performance.now();
+        const stopped = connection.stop();
+        // Disconnect is measured only for established connections; a pending start is
+        // reported as a cancelled connect instead.
+        if (wasConnected) {
+          stopped?.then(
+            () =>
+              this.#report({
+                operation: 'disconnect',
+                outcome: 'success',
+                duration: performance.now() - stopStarted,
+              }),
+            (error: unknown) => {
+              this.#report({
+                operation: 'disconnect',
+                outcome: 'failure',
+                duration: performance.now() - stopStarted,
+              });
+              // Observing the failure must not hide it from existing rejection handling.
+              throw error;
+            },
+          );
+        }
         observer.complete();
         delete this.#hubConnections[hubId];
       };

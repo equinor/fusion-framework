@@ -2,6 +2,7 @@ import type { Module } from '@equinor/fusion-framework-module';
 import { AuthConfigurator } from './AuthConfigurator.js';
 import { AuthProvider } from './AuthProvider.js';
 import { AuthTokenProvider } from './AuthTokenProvider.js';
+import { connectAuthTelemetry } from './connect-auth-telemetry.js';
 import { AuthProviderInteractive } from './AuthProviderInteractive.js';
 import { AuthProviderDeviceCode } from './AuthProviderDeviceCode.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
@@ -54,6 +55,13 @@ export const module: MsalNodeModule = {
 
       default:
         return new AuthProvider(config.client);
+    }
+  },
+  postInitialize: async ({ instance, modules }) => {
+    // A static token involves no acquisition and must never be observed. The prototype check
+    // is deliberate: provider `instanceof` is duck-typed and matches every module provider.
+    if (!Object.prototype.isPrototypeOf.call(AuthTokenProvider.prototype, instance)) {
+      connectAuthTelemetry(instance, modules.telemetry);
     }
   },
 };

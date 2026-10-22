@@ -23,6 +23,7 @@ import type {
 
 import type { AccountInfo, AuthenticationResult } from './types.js';
 import { resolveVersion } from './versioning/resolve-version.js';
+import { createOperationalTelemetry } from './create-operational-telemetry.js';
 import { version } from './version.js';
 import type { MsalModuleVersion } from './static.js';
 
@@ -60,6 +61,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     scope: string[];
   };
   #requiresAuth?: boolean;
+  /** Safe operational outcomes; never carries accounts, scopes, codes, tokens or raw errors. */
+  #report = createOperationalTelemetry('msal', () => this.#telemetry?.provider);
   #authCode?: string;
   #loginHint?: string;
 
@@ -206,6 +209,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     // Priority 0: Exchange auth code if provided by backend
     // This must happen before the requiresAuth check so tokens are cached
     if (this.#authCode) {
+      const exchangeStarted = performance.now();
       try {
         this._trackEvent('initialize.exchanging-auth-code', TelemetryLevel.Information);
 
@@ -230,20 +234,21 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         // Successfully exchanged auth code - set active account
         if (result.account) {
           this.#client.setActiveAccount(result.account);
-          this._trackEvent('initialize.auth-code-exchanged-account', TelemetryLevel.Information, {
-            properties: {
-              username: result.account.username,
-            },
-          });
+          // Account identifiers are never recorded; the event only marks the transition.
+          this._trackEvent('initialize.auth-code-exchanged-account', TelemetryLevel.Information);
         }
-      } catch (error) {
-        // Auth code exchange failed - log and fall back to standard flows
-        this._trackException('initialize.auth-code-exchange-failed', TelemetryLevel.Warning, {
-          exception: error instanceof Error ? error : new Error(String(error)),
-          properties: {
-            message: error instanceof Error ? error.message : String(error),
-            reason: 'Auth code exchange failed, falling back to standard authentication flows',
-          },
+        this.#report({
+          operation: 'exchange-auth-code',
+          outcome: 'success',
+          duration: performance.now() - exchangeStarted,
+        });
+      } catch {
+        // Auth code exchange failed - record a sanitized outcome and fall back to standard flows.
+        // The original error may describe the code or account, so it is never recorded.
+        this.#report({
+          operation: 'exchange-auth-code',
+          outcome: 'failure',
+          duration: performance.now() - exchangeStarted,
         });
         // Continue to requiresAuth check - will trigger standard login if needed
       } finally {
@@ -262,11 +267,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         // Successfully authenticated via redirect - set as active account
         // This means the user was redirected to Microsoft and came back authenticated
         this.#client.setActiveAccount(handleRedirectResult.account);
-        this._trackEvent('initialize.active-account-set-by-callback', TelemetryLevel.Information, {
-          properties: {
-            username: handleRedirectResult.account.username,
-          },
-        });
+        this._trackEvent('initialize.active-account-set-by-callback', TelemetryLevel.Information);
       } else if (!this.#client.hasValidClaims) {
         // Priority 2: No valid session found - attempt automatic login
         // This handles first-time app load when no authentication state exists
@@ -277,11 +278,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         if (loginResult?.account) {
           // Automatic login successful - set as active account
           this.#client.setActiveAccount(loginResult.account);
-          this._trackEvent('initialize.active-account-set-by-login', TelemetryLevel.Information, {
-            properties: {
-              username: loginResult.account.username,
-            },
-          });
+          this._trackEvent('initialize.active-account-set-by-login', TelemetryLevel.Information);
         }
       }
       // Priority 3: If hasValidClaims is true, user is already authenticated - no action needed
@@ -402,10 +399,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       }
     }
 
+    const started = performance.now();
     try {
-      const measurement = this._trackMeasurement('acquireToken', TelemetryLevel.Information, {
-        properties: telemetryProperties,
-      });
       // Merge account, original request options, and resolved scopes.
       // Account ensures context awareness, request preserves custom options, scopes uses resolved value.
       const result = await this.#client.acquireToken({
@@ -413,22 +408,28 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         silent,
         request: { ...inputRequest, account, scopes },
       });
-      measurement?.measure();
+      this.#report({
+        operation: 'acquire-token',
+        outcome: 'success',
+        duration: performance.now() - started,
+      });
       return result;
     } catch (error) {
       // Inside MSAL's hidden iframe, silent acquisition may fail and the client
       // would fall back to acquireTokenRedirect which throws "block_iframe_reload".
-      // Suppress this — the parent frame handles interactive auth.
+      // Suppress this — the parent frame handles interactive auth, so it is not a failure.
+      this.#report({
+        operation: 'acquire-token',
+        outcome: inIframe || isUserCancellation(error) ? 'cancelled' : 'failure',
+        duration: performance.now() - started,
+      });
+      // The hidden iframe defers to the parent frame instead of rethrowing.
       if (inIframe) {
         this._trackEvent('acquireToken.suppressed-in-iframe', TelemetryLevel.Debug, {
           properties: telemetryProperties,
         });
         return undefined;
       }
-      this._trackException('acquireToken-failed', TelemetryLevel.Error, {
-        exception: error as Error,
-        properties: telemetryProperties,
-      });
       throw error;
     }
   }
@@ -520,18 +521,51 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       properties: telemetryProperties,
     });
 
+    const started = performance.now();
+    try {
+      const result = await this.#login(request, behavior, Boolean(canLoginSilently));
+      this.#report({
+        operation: 'login',
+        outcome: 'success',
+        duration: performance.now() - started,
+      });
+      return result;
+    } catch (error) {
+      this.#report({
+        operation: 'login',
+        outcome: isUserCancellation(error) ? 'cancelled' : 'failure',
+        duration: performance.now() - started,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Runs the silent-then-interactive login flow measured by {@link login}.
+   * @param request - Resolved login request.
+   * @param behavior - Interactive fallback behavior.
+   * @param canLoginSilently - Whether a silent attempt is possible.
+   * @returns The login result, or `undefined` for a redirect that navigates away.
+   * @throws The original MSAL error, or an error for an unsupported behavior.
+   */
+  async #login(
+    request: LoginOptions['request'] & { scopes: string[] },
+    behavior: LoginOptions['behavior'],
+    canLoginSilently: boolean,
+  ): Promise<LoginResult> {
     // Attempt silent authentication first if conditions are met
     // This provides better UX by avoiding unnecessary popups/redirects
     if (canLoginSilently) {
       try {
         return await this.#client.ssoSilent(request);
-      } catch (error) {
-        // Silent login failed - track for monitoring but continue to interactive flow
-        this._trackException('login.silent-failed', TelemetryLevel.Warning, {
-          exception: error as Error,
-          properties: telemetryProperties,
+      } catch {
+        // Silent login failed - a recoverable degradation, recorded without the original error,
+        // which may contain account hints. Fall through to interactive authentication.
+        this.#report({
+          operation: 'silent-login-fallback',
+          outcome: 'failure',
+          level: TelemetryLevel.Warning,
         });
-        // Fall through to interactive authentication
       }
     }
 
@@ -582,14 +616,22 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       },
     });
 
+    const started = performance.now();
     try {
       // Logout the specific account (or current account if none specified)
       await this.#client.logout({ account: this.account ?? undefined, ...options });
+      this.#report({
+        operation: 'logout',
+        outcome: 'success',
+        duration: performance.now() - started,
+      });
       return true; // Success
-    } catch (error) {
-      // Logout failed - track error but don't throw to avoid breaking app flow
-      this._trackException('logout.failed', TelemetryLevel.Error, {
-        exception: error as Error,
+    } catch {
+      // Logout failed - record a sanitized outcome but don't throw to avoid breaking app flow
+      this.#report({
+        operation: 'logout',
+        outcome: 'failure',
+        duration: performance.now() - started,
       });
     }
     return false; // Failed
@@ -619,27 +661,27 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async handleRedirect(): Promise<AuthenticationResult | null> {
+    const started = performance.now();
     try {
       // Process any pending redirect from authentication flow
       const result = await this.client.handleRedirectPromise();
-      // Only track/log when a redirect result is actually returned
+      // Only a returned result completes a redirect flow; no pending redirect is skipped work.
       if (result) {
-        // Track successful redirect completion for monitoring
-        this._trackEvent('handleRedirect.success', TelemetryLevel.Information, {
-          properties: {
-            username: result.account?.username,
-          },
+        // Track successful redirect completion without account identifiers
+        this._trackEvent('handleRedirect.success', TelemetryLevel.Information);
+        this.#report({
+          operation: 'handle-redirect',
+          outcome: 'success',
+          duration: performance.now() - started,
         });
       }
       return result;
     } catch (error) {
-      this._trackException('handleRedirect.failed', TelemetryLevel.Warning, {
-        exception: error instanceof Error ? error : new Error(String(error)),
-        properties: {
-          message: error instanceof Error ? error.message : String(error),
-          reason:
-            'Redirect response could not be processed; continuing with standard authentication',
-        },
+      // The response could not be processed; standard authentication continues.
+      this.#report({
+        operation: 'handle-redirect',
+        outcome: isUserCancellation(error) ? 'cancelled' : 'failure',
+        duration: performance.now() - started,
       });
       return null;
     }
@@ -785,4 +827,13 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       ...options,
     });
   }
+}
+
+/**
+ * Detects MSAL's user-cancellation error, an intended stop rather than a failure.
+ * @param error - Error thrown by an MSAL flow.
+ * @returns `true` when the user closed or cancelled the interaction.
+ */
+function isUserCancellation(error: unknown): boolean {
+  return (error as { errorCode?: unknown } | undefined)?.errorCode === 'user_cancelled';
 }

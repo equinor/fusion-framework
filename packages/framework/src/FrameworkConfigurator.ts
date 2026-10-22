@@ -22,6 +22,7 @@ import telemetry, {
   type ITelemetryConfigurator,
 } from '@equinor/fusion-framework-module-telemetry';
 
+import { connectHttpTelemetry } from './connect-http-telemetry.js';
 import type { FusionModules } from './types.js';
 import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
 import { version } from './version.js';
@@ -35,6 +36,12 @@ export interface FrameworkConfiguratorOptions {
    * mock builder in tests. Defaults to a new `TelemetryConfigurator`.
    */
   telemetry?: ITelemetryConfigurator;
+  /**
+   * Records one safe `fusion.http.request.duration` metric per transport attempt of the
+   * framework's HTTP clients, plus a sanitized failure on error. Defaults to `true`; set
+   * `false` to keep framework HTTP traffic out of operational telemetry.
+   */
+  httpTelemetry?: boolean;
 }
 
 /**
@@ -117,6 +124,10 @@ export class FrameworkConfigurator<
       module: telemetry,
       configurator: builder,
     });
+    // Explicit opt-out only; HTTP telemetry never creates an exporter by itself.
+    if (options?.httpTelemetry !== false) {
+      connectHttpTelemetry(this);
+    }
   }
 
   /**

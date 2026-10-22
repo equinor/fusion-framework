@@ -4,6 +4,7 @@ import { AuthProviderDefaultCredential } from './AuthProviderDefaultCredential.j
 import { ensureCachePersistencePlugin } from './ensure-cache-persistence-plugin.js';
 import { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 import { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
+import { connectAuthTelemetry } from './connect-auth-telemetry.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
 
 /**
@@ -47,6 +48,13 @@ export const module: AzureIdentityModule = {
 
       default:
         return new AuthProviderDefaultCredential();
+    }
+  },
+  postInitialize: async ({ instance, modules }) => {
+    // A static token involves no acquisition and must never be observed. The prototype check
+    // is deliberate: provider `instanceof` is duck-typed and matches every module provider.
+    if (!Object.prototype.isPrototypeOf.call(AuthProviderTokenOnly.prototype, instance)) {
+      connectAuthTelemetry(instance, modules.telemetry);
     }
   },
 };

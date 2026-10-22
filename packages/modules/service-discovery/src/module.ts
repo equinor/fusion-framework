@@ -68,6 +68,13 @@ export const module: ServiceDiscoveryModule = {
     // return service discovery provider
     return new ServiceDiscoveryProvider(config, httpModule);
   },
+  postInitialize: async ({ instance, modules, ref }) => {
+    // A child reusing its parent's client leaves reporting to the parent, so each
+    // resolution is recorded once, by the host that owns the client.
+    if (instance.client !== ref?.serviceDiscovery?.client) {
+      instance.connectTelemetry?.(modules.telemetry);
+    }
+  },
 };
 
 /**

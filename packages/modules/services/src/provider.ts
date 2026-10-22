@@ -1,5 +1,7 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import { createOperationalTelemetry } from './create-operational-telemetry.js';
 import type { ClientMethod } from './types.js';
 
 import type { ApiClientFactory } from './types.js';
@@ -71,6 +73,17 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
   createAppStateClient<TMethod extends keyof ClientMethod>(
     method: TMethod,
   ): Promise<AppStateApiClient<TMethod, TClient>>;
+
+  /**
+   * Connects optional operational telemetry for API client selection.
+   *
+   * Records one `fusion.services.create-client.duration` per client creation, plus one
+   * sanitized failure when no client can be selected. Service names, URIs and errors are
+   * not recorded; discovery resolution and HTTP attempts are reported by their own modules.
+   *
+   * @param telemetry - Host telemetry provider, or `undefined` to record nothing.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
 }
 
 /**
@@ -127,10 +140,40 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
    * Creates a services provider from an HTTP client factory.
    *
    * @param config - Provider configuration containing the client factory.
+   * @throws Never directly; created factories rethrow the original client-creation error.
    */
   constructor(config: ApiProviderConfig<TClient>) {
     super({ version, config });
-    this._createClientFn = config.createClient;
+    const createClient = config.createClient;
+    // Measured at the factory boundary so named, discovered and custom clients count alike.
+    this._createClientFn = async (name) => {
+      const started = performance.now();
+      try {
+        const client = await createClient(name);
+        this.#report({
+          operation: 'create-client',
+          outcome: 'success',
+          duration: performance.now() - started,
+        });
+        return client;
+      } catch (error) {
+        this.#report({
+          operation: 'create-client',
+          outcome: 'failure',
+          duration: performance.now() - started,
+        });
+        throw error;
+      }
+    };
+    this._addTeardown(() => this.connectTelemetry(undefined));
+  }
+
+  #telemetry?: ITelemetryProvider;
+  #report = createOperationalTelemetry('services', () => this.#telemetry);
+
+  /** {@inheritDoc IApiProvider.connectTelemetry} */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry = telemetry;
   }
 
   /**

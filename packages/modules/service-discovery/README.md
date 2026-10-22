@@ -89,6 +89,21 @@ The entry point has **no test-runner dependency**, and ships no mocking API of i
 
 See [Testing](./docs/testing.md) for the full builder API, local-mock-server setup and runner guidance, or [`@equinor/fusion-framework/mock`](../../framework/docs/testing.md) to mock every framework boundary at once.
 
+## Operational telemetry
+
+When the telemetry module is available, the provider connects to it after initialization
+and records one `fusion.service-discovery.resolve.duration` metric per resolution, with a
+sanitized `.failure` exception when resolution throws. Notifications explain where the list
+came from: `fusion.service-discovery.cache-hit`, `fusion.service-discovery.fallback` (last
+known good list served instead of a failure) and `fusion.service-discovery.cooldown` (failed
+fast during backoff, without a network attempt). `fusion.service-discovery.unknown-service`
+marks a key that is not registered. Keys, URIs, scopes and errors are never recorded.
+
+The HTTP attempt behind a network resolution is reported by HTTP telemetry, not repeated
+here. A child host that reuses its parent's client leaves reporting to the parent, so each
+resolution is recorded once. Custom clients opt in by exposing `diagnostic$`, an observable of
+`ServiceDiscoveryDiagnostic`.
+
 ## Key Concepts
 
 ### Inheritance
