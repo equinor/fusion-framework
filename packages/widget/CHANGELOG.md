@@ -1,5 +1,35 @@
 # Change Log
 
+## 2.1.0-next.0
+
+### Minor Changes
+
+- e98f6ec: Capture bounded widget lifecycle outcomes with a random host ID, without widget
+  manifest identity or version, inheriting eligible parent telemetry without creating an exporter.
+  Explicit widget exporters suppress ancestor fallback exporters, not ordinary
+  parent destinations. Preserve configuration failures while reporting safe diagnostics.
+  
+  Ref: #5803.
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module-widget@16.1.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 2.0.7
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # Change Log
 
+## 7.0.4-next.0
+
+### Patch Changes
+
+- Updated dependencies [73aa0c5]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-bookmark@4.2.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+  - @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 7.0.3
 
 ### Patch Changes

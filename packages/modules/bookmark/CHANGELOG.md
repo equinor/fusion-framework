@@ -1,5 +1,37 @@
 # Change Log
 
+## 4.2.0-next.0
+
+### Minor Changes
+
+- 73aa0c5: Report bookmark operations through host telemetry. The provider records one
+  `fusion.bookmark.<operation>.duration` outcome for `get`, `list`, `apply`, `create`,
+  `update`, `delete`, `favourite-add`, `favourite-remove` and `payload-resolve`.
+  Create, update and delete are measured from the call, because their requests start
+  immediately, whether or not the caller subscribes; `get` (bookmark metadata) and
+  `payload-resolve` are measured per executed fetch. A listener canceling the matching event is recorded as `cancelled` with
+  reason `listener`, not as a failure; a mutation whose caller unsubscribes before it is
+  sent is `cancelled` with reason `abandoned`; operations interrupted by disposal are
+  `cancelled` with reason `disposed`. Superseded metadata and payload fetches record
+  `cancelled` with reason `superseded`.
+  Bookmark names, ids,
+  payloads and error messages are never included.
+  
+  Custom providers opt in through the optional `IBookmarkProvider.connectTelemetry`
+  method. Bookmark results, errors and event cancellation behave as before.
+  
+  `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency. It is loaded only when host telemetry connects, so the module still imports and runs without it; `connectTelemetry` returns a promise that resolves once the connection applies.
+  
+  Ref: #5805.
+
+### Patch Changes
+
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 4.1.5
 
 ### Patch Changes

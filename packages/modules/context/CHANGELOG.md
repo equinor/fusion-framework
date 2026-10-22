@@ -1,5 +1,39 @@
 # Change Log
 
+## 9.1.0-next.0
+
+### Minor Changes
+
+- 73aa0c5: Report context selection through host telemetry. Each queued `setCurrentContext`
+  task records one `fusion.context.select.duration` outcome, and each resolution
+  attempt records `fusion.context.resolve.duration`: selection-driven, direct
+  `resolveContext`/`resolveContextAsync` calls and configured resolvers (`by: 'item'`),
+  and the lookup behind `setCurrentContextById` (`by: 'id'`). Validation failures without
+  resolution are failures with reason `validation`; a listener canceling
+  `onSetContextResolve`, `onSetContextResolved` or `onCurrentContextChange` is recorded
+  as `cancelled` with reason `listener`, never as a failure. Superseded, unsubscribed and
+  disposed tasks are `cancelled`; re-setting the current item without validation is
+  skipped work and records nothing. Context ids, titles and values are never included.
+  
+  Custom providers opt in through the optional `IContextProvider.connectTelemetry` method.
+  Context behavior, results and thrown errors are unchanged.
+  
+  Ref: #5805.
+
+### Patch Changes
+
+- 30d15f2: Clarify that explicit query context routing takes precedence over registered custom path hooks.
+  
+  Refs: https://github.com/equinor/fusion-framework/issues/5608
+- ea519ce: Revalidate a parent context even when its ID matches the child's current context, allowing an unsupported context type to resolve to the type configured by the child app.
+  
+  Fixes: https://github.com/equinor/fusion-core-tasks/issues/2202
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 9.0.2
 
 ### Patch Changes

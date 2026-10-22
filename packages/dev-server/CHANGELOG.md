@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.3.3-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-vite-plugin-spa@5.2.4-next.0
+
 ## 2.3.2
 
 ### Patch Changes

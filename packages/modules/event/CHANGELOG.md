@@ -1,5 +1,16 @@
 # Change Log
 
+## 6.1.4-next.0
+
+### Patch Changes
+
+- e98f6ec: Keep the event provider alive through business and telemetry teardown so diagnostic
+  health reporting remains available while exporters flush and shut down.
+  
+  Ref: #5803.
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 6.1.3
 
 ### Patch Changes
