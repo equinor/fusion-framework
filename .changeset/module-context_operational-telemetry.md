@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-module-context": major
+"@equinor/fusion-framework-module-context": minor
 ---
 
 Report context selection through host telemetry. Each queued `setCurrentContext`
@@ -15,11 +15,5 @@ skipped work and records nothing. Context ids, titles and values are never inclu
 
 Custom providers opt in through the optional `IContextProvider.connectTelemetry` method.
 Context behavior, results and thrown errors are unchanged.
-
-**Migration:** the existing `Context::postInitialize.resolveInitialContext` exception
-now carries a controlled `ContextResolutionError` instead of the original error, and
-`Context::postInitialize.initialContextResolved` reports `properties.resolved` instead
-of `properties.contextId`. The original error is still logged locally when telemetry
-is absent.
 
 Ref: #5805.

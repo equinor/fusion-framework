@@ -125,14 +125,9 @@ export const module: ContextModule = {
                 const exception = err instanceof Error ? err : new Error(String(err));
                 // report through telemetry when available, otherwise fall back to console.warn below
                 if (telemetry) {
-                  // The outcome is measured by `fusion.context.select`; this exported record
-                  // keeps a controlled message so context data in the original error stays local.
-                  const sanitized = new Error('Context initial resolution failed');
-                  sanitized.name = 'ContextResolutionError';
-                  sanitized.stack = undefined;
                   telemetry.trackException({
                     name: 'Context::postInitialize.resolveInitialContext',
-                    exception: sanitized,
+                    exception,
                     level: TelemetryLevel.Warning,
                     scope: ['context', TelemetryScope.Framework],
                   });
@@ -151,8 +146,7 @@ export const module: ContextModule = {
                   name: 'Context::postInitialize.initialContextResolved',
                   level: TelemetryLevel.Debug,
                   scope: ['context', TelemetryScope.Framework],
-                  // Whether a context was resolved, never the context identity itself.
-                  properties: { resolved: !!item },
+                  properties: { contextId: item ? item.id : 'none' },
                 });
               },
               complete: () => {
