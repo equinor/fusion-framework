@@ -5,8 +5,21 @@ import { mockFramework } from '../mock/mock-framework.js';
 
 const sentinel = 'privacy-sentinel-3f9c';
 
-/** Starts a framework whose test adapter collects every exported operational HTTP record. */
-const setup = async () => {
+/** Retries once on 503, standing in for application retry middleware. */
+const retry = async (
+  uri: string,
+  init: RequestInit,
+  next: (uri: string, init: RequestInit) => Promise<Response>,
+): Promise<Response> => {
+  const response = await next(uri, init);
+  return response.status === 503 ? next(uri, init) : response;
+};
+
+/**
+ * Starts a framework whose test adapter collects every exported operational HTTP record.
+ * @param register - Where the application registers its retry middleware.
+ */
+const setup = async (register: 'configure' | 'async-on-configured' = 'configure') => {
   const items: TelemetryItem[] = [];
   const fusion = await mockFramework((config) => {
     enableTelemetry(config, {
@@ -20,11 +33,16 @@ const setup = async () => {
       },
     });
     config.configureHttpClient('remote', { baseUri: `https://${sentinel}.example.com` });
-    // Application retry middleware registered by configuration wraps the instrumentation.
-    config.http.addMiddleware(async (uri, init, next) => {
-      const response = await next(uri, init);
-      return response.status === 503 ? next(uri, init) : response;
-    });
+    // Application retry middleware wraps the instrumentation wherever it is registered.
+    if (register === 'configure') {
+      config.http.addMiddleware(retry);
+    } else {
+      config.onConfigured(async (configs) => {
+        // Settling later than the framework's own callbacks must not change the order.
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        configs.http.addMiddleware(retry);
+      });
+    }
   });
   return {
     fusion,
@@ -62,6 +80,27 @@ describe('framework HTTP telemetry', () => {
     expect(http().filter((item) => item.name === 'fusion.http.request.failure')).toHaveLength(1);
     expect(durations[0].diagnostic).toMatchObject({ source: 'framework', module: 'http' });
     expect(JSON.stringify(http())).not.toContain(sentinel);
+    await fusion.modules.dispose();
+  });
+
+  it('keeps telemetry innermost when retry middleware is added by a later async callback', async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(null, { status: 503 }))
+      .mockResolvedValueOnce(new Response(null, { status: 200 }));
+    vi.stubGlobal('fetch', fetch);
+    const { fusion, http } = await setup('async-on-configured');
+
+    await fusion.modules.http.createClient('remote').fetch('/items');
+
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await vi.waitFor(() =>
+      expect(
+        http()
+          .filter((item) => item.name === 'fusion.http.request.duration')
+          .map((item) => item.diagnostic?.outcome),
+      ).toEqual(['failure', 'success']),
+    );
     await fusion.modules.dispose();
   });
 

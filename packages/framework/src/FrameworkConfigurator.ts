@@ -1,4 +1,9 @@
-import { type AnyModule, ModulesConfigurator } from '@equinor/fusion-framework-module';
+import {
+  type AnyModule,
+  type CombinedModules,
+  type ModulesConfig,
+  ModulesConfigurator,
+} from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
 
@@ -22,7 +27,7 @@ import telemetry, {
   type ITelemetryConfigurator,
 } from '@equinor/fusion-framework-module-telemetry';
 
-import { connectHttpTelemetry } from './connect-http-telemetry.js';
+import { connectHttpTelemetry, type HostHttpTelemetry } from './connect-http-telemetry.js';
 import type { FusionModules } from './types.js';
 import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
 import { version } from './version.js';
@@ -126,8 +131,31 @@ export class FrameworkConfigurator<
     });
     // Explicit opt-out only; HTTP telemetry never creates an exporter by itself.
     if (options?.httpTelemetry !== false) {
-      connectHttpTelemetry(this);
+      this.#httpTelemetry = connectHttpTelemetry(this);
     }
+  }
+
+  /** Framework HTTP telemetry, installed once every configuration callback has settled. */
+  #httpTelemetry?: HostHttpTelemetry;
+
+  /**
+   * Configures modules, then installs HTTP telemetry as the innermost middleware.
+   *
+   * Post-configure callbacks run concurrently, so installing after the whole configure phase
+   * is the only point where every application middleware, including retry middleware added
+   * from asynchronous callbacks, is already registered.
+   *
+   * @param ref - Optional reference forwarded to module configuration.
+   * @returns The final module configuration map.
+   * @template T - Additional modules included in the configuration type.
+   * @template R - Reference type forwarded to module configuration.
+   */
+  protected override async _configure<T, R extends TRef = TRef>(
+    ref?: R,
+  ): Promise<ModulesConfig<CombinedModules<T, FusionModules<TModules>>>> {
+    const config = await super._configure<T, R>(ref);
+    this.#httpTelemetry?.install(config);
+    return config;
   }
 
   /**
