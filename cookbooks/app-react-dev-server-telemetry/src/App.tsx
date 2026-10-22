@@ -1,18 +1,47 @@
-import type { ReactElement } from 'react';
+import { useEffect, type ReactElement } from 'react';
 
-import { Router } from '@equinor/fusion-framework-react-router';
-
-import routes from './routes';
+import {
+  TelemetryLevel,
+  TelemetryScope,
+  type TelemetryModule,
+} from '@equinor/fusion-framework-module-telemetry';
+import { useAppModule } from '@equinor/fusion-framework-react-app';
 
 /**
- * Renders the cookbook routes. The router navigates through the app's navigation module, which
- * reports each navigation to telemetry without route paths, search parameters or state.
- * @returns The routed cookbook application.
+ * Records telemetry through the framework's telemetry module. The app adds no adapter or exporter;
+ * the dev server exports these items when `FUSION_DEV_SERVER_OTLP_ENDPOINT` is set.
+ * @returns A button that records a telemetry event each time it is clicked.
  * @example
  * ```tsx
  * <App />
  * ```
  */
-export const App = (): ReactElement => <Router routes={routes} />;
+export const App = (): ReactElement => {
+  const telemetry = useAppModule<TelemetryModule>('telemetry');
+
+  useEffect(() => {
+    telemetry.trackEvent({
+      name: 'cookbook_mounted',
+      level: TelemetryLevel.Information,
+      scope: [TelemetryScope.Application],
+    });
+  }, [telemetry]);
+
+  /** Records a user interaction so the collector can prove app events are delivered. */
+  const sendTelemetryEvent = (): void => {
+    telemetry.trackEvent({
+      name: 'cookbook_button_click',
+      level: TelemetryLevel.Information,
+      scope: [TelemetryScope.Application],
+      properties: { source: 'cookbook' },
+    });
+  };
+
+  return (
+    <button type="button" onClick={sendTelemetryEvent}>
+      Send telemetry event
+    </button>
+  );
+};
 
 export default App;

@@ -11,19 +11,6 @@ Routing and navigation module for **Fusion Framework** with observable state man
 - **Navigation blocking** — intercept navigations with `history.block()` and optionally retry.
 - **Telemetry & events** — dispatches `NavigateEvent` / `NavigatedEvent` and tracks actions via the telemetry module.
 
-## Safe operational telemetry
-
-After initialization, navigation connects available host telemetry without waiting
-for it during startup. Explicit `setTelemetry(provider)` takes precedence;
-`setTelemetry(undefined)` disables automatic hookup. Automatic wiring reports
-`Navigation::navigated` without per-action debug chatter.
-
-Telemetry no longer includes locations, previous locations, route state, or action
-payloads. Detailed explicit-provider action events use the static `Navigation::action`
-name with the controlled action type only. Update consumers of the old dynamic names
-or payload fields. Navigation business events and routing behavior are unchanged.
-See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
-
 ## Installation
 
 ```sh

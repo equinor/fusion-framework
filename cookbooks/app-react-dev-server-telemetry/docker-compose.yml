@@ -1,13 +1,12 @@
 # Aspire standalone dashboard, the OpenTelemetry collector for this cookbook. It is unsecured and
 # bound to loopback, so the dev server and agents can reach it without a token. Telemetry is held
-# in memory only and is lost when the container stops. Override the host ports with
-# ASPIRE_UI_PORT, ASPIRE_OTLP_GRPC_PORT and ASPIRE_OTLP_HTTP_PORT when another stack uses them.
+# in memory only and is lost when the container stops.
 services:
   telemetry:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:13.6.1
     ports:
-      - "127.0.0.1:${ASPIRE_UI_PORT:-18888}:18888"
-      - "127.0.0.1:${ASPIRE_OTLP_GRPC_PORT:-18889}:18889"
-      - "127.0.0.1:${ASPIRE_OTLP_HTTP_PORT:-18890}:18890"
+      - "127.0.0.1:18888:18888"
+      - "127.0.0.1:18889:18889"
+      - "127.0.0.1:18890:18890"
     environment:
       ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"

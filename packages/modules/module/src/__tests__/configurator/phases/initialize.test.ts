@@ -66,27 +66,6 @@ describe('initialize phase', () => {
   // ─── runInitializePhase ────────────────────────────────────────────────
 
   describe('runInitializePhase', () => {
-    it('returns the attempt-owned provider map without creating a second registry', async () => {
-      const provider = {};
-      const instances: Record<string, unknown> = {};
-      const ctx = makeCtx([{ name: 'alpha', initialize: () => provider }], { instances });
-
-      const result = await runInitializePhase(ctx, { alpha: {} });
-
-      expect(result).toBe(instances);
-      expect(instances.alpha).toBe(provider);
-      expect(Object.isSealed(instances)).toBe(true);
-    });
-
-    it('seals the same attempt-owned map when no modules are registered', async () => {
-      const instances: Record<string, unknown> = {};
-      const result = await runInitializePhase(makeCtx([], { instances }), {});
-
-      expect(result).toBe(instances);
-      expect(Object.isSealed(instances)).toBe(true);
-      expect(instances).toEqual({});
-    });
-
     it('calls initialize() for each module', async () => {
       const initSpy = vi.fn(async () => ({ name: 'alpha', version: '1.0.0' }));
       const mod: AnyModule = { name: 'alpha', initialize: initSpy };

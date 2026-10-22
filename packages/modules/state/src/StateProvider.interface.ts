@@ -1,5 +1,4 @@
 import type { ObservableInput } from 'rxjs';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import type { AllowedValue, StateItem } from './types.js';
 
@@ -112,11 +111,4 @@ export interface IStateProvider<TType extends AllowedValue = AllowedValue> {
    * @returns A promise of the clear operation.
    */
   clear(): Promise<StorageResult[]>;
-
-  /**
-   * Connects host telemetry for operational state records once all providers exist.
-   * Optional: mock and custom providers may omit it.
-   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
-   */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }

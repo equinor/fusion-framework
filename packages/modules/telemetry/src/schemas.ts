@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { TelemetryLevel, TelemetryType } from '../static.js';
-import { diagnosticContext } from './diagnostic-context.js';
+import { TelemetryLevel, TelemetryType } from './static.js';
 
 /**
  * Schema for a telemetry item, defining the structure and validation rules for telemetry data.
@@ -14,7 +13,6 @@ import { diagnosticContext } from './diagnostic-context.js';
  */
 export const TelemetryItemSchema = z.object({
   name: z.string().describe('The name of the telemetry item.'),
-  diagnostic: diagnosticContext.optional(),
   type: z.nativeEnum(TelemetryType).describe('The type of telemetry. Defaults to Custom.'),
   level: z
     .nativeEnum(TelemetryLevel)
@@ -83,3 +81,7 @@ export const TelemetryMetricSchema = TelemetryItemSchema.extend({
 export const TelemetryCustomEventSchema = TelemetryEventSchema.extend({
   type: z.literal(TelemetryType.Custom),
 }).passthrough();
+
+// Re-exported from its own file to satisfy single-export-per-file while
+// preserving the public `./schemas` subpath export surface.
+export { parseTelemetryItem } from './parse-telemetry-item.js';

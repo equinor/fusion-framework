@@ -4,7 +4,6 @@ import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types.js';
 import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface.js';
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
 import type { BookmarkState } from './create-bookmark-store.js';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Arguments for creating a bookmark via {@link IBookmarkProvider.createBookmark}.
@@ -178,11 +177,4 @@ export interface IBookmarkProvider {
     eventName: TType,
     callback: (event: BookmarkProviderEventMap[TType]) => void,
   ): VoidFunction;
-
-  /**
-   * Connects host telemetry for operational bookmark records once all providers exist.
-   * Optional: mock and custom providers may omit it.
-   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
-   */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }

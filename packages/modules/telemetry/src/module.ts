@@ -8,14 +8,6 @@ import { TelemetryConfigurator } from './TelemetryConfigurator.js';
 import { TelemetryProvider } from './TelemetryProvider.js';
 
 /**
- * Creates a reference-independent builder for either preparation or normal configuration.
- * @returns A fresh telemetry configuration builder.
- */
-function createTelemetryConfigurator(): TelemetryConfigurator {
-  return new TelemetryConfigurator();
-}
-
-/**
  * Represents the Telemetry module within the framework.
  *
  * @remarks
@@ -50,13 +42,11 @@ export type TelemetryModule = Module<
  *   - @param args - Initialization arguments, including configuration and module dependencies.
  *   - @returns A promise that resolves to an instance of ITelemetryProvider.
  */
-export const module: TelemetryModule = {
+export const module = {
   name: 'telemetry',
-  disposePhase: 'diagnostics',
-  prepare: createTelemetryConfigurator,
-  configure: createTelemetryConfigurator,
+  configure: () => new TelemetryConfigurator(),
   initialize: async (args): Promise<ITelemetryProvider> => {
-    const config = await args.config.createConfigAsync(args);
+    const config = await (args.config as TelemetryConfigurator).createConfigAsync(args);
     const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
     const provider = new TelemetryProvider(config, { event });
     await provider.initialize({
@@ -74,7 +64,7 @@ export const module: TelemetryModule = {
   dispose: async ({ instance }: { instance: ITelemetryProvider }): Promise<void> => {
     await instance.dispose?.();
   },
-};
+} satisfies TelemetryModule;
 
 export default module;
 

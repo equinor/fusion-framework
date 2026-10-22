@@ -1,5 +1,4 @@
 import type { Module } from '@equinor/fusion-framework-module';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 import { StateModuleConfigurator } from './StateModuleConfigurator.js';
 import StateProvider from './StateProvider.js';
@@ -23,15 +22,6 @@ export const module: StateModule = {
     const provider = new StateProvider(config, { event });
     await provider.initialize();
     return provider;
-  },
-  postInitialize: async ({ instance, modules }) => {
-    // Telemetry stays optional and is never awaited during state initialization.
-    const { telemetry } = modules as { telemetry?: ITelemetryProvider };
-    await instance.connectTelemetry?.(telemetry);
-  },
-  dispose: ({ instance }) => {
-    // Releases only the provider's own teardowns, such as telemetry observers.
-    (instance as { dispose?: VoidFunction }).dispose?.();
   },
 };
 

@@ -61,8 +61,6 @@
   "dependencies": {
     "@azure/msal-node": "^7.0.0",
     "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
-    "@equinor/fusion-observable": "workspace:^",
     "open": "^11.0.0"
   },
   "optionalDependencies": {

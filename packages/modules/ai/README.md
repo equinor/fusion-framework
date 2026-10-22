@@ -141,41 +141,6 @@ Every service exposes two invocation modes:
 
 Services also implement the LangChain `RunnableInterface`, so they can be composed into LangChain chains, pipelines, and streaming iterators (`for await...of`).
 
-## Diagnose AI executions with telemetry
-
-When the host has the telemetry module, clients returned by `useModel`, `useEmbed` and
-`useIndex` report one safe terminal record per actual execution, from built-in and custom
-strategies alike. Creating a client records nothing. Without telemetry, the strategy's own
-client is returned unchanged.
-
-| Execution | Record |
-|---|---|
-| `invoke` on a model or a `bindTools(...)` runnable | `fusion.ai.model-invoke.duration` |
-| `invoke$`, `stream` or `transform` on a model or tool-bound runnable | `fusion.ai.model-stream.duration` |
-| `embedQuery`, `embedDocuments`, `invoke` or `invoke$` on an embed client | `fusion.ai.embed.duration` |
-| `invoke` or `invoke$` on an index, or `invoke` on its `asRetriever()` | `fusion.ai.search.duration` |
-
-Each record carries `success`, `failure` or `cancelled` in its `diagnostic` envelope. A
-failure adds one `.failure` exception with a controlled message. An aborted `signal`, an
-unsubscribed observable or a stream the consumer stops reading is `cancelled`, not a failure.
-A stream's duration ends when it completes, fails or is cancelled, not at the first chunk;
-time to first result is not recorded. An `invoke$` call is one execution, timed from the
-call because clients may start their request before it is subscribed; its first subscription
-ends the record, and resubscribing adds none. A search includes its query embedding and produces no
-separate embed record. Chains, `batch` and other LangChain composition reach the measured
-`invoke`, so each underlying model call is recorded.
-
-Records never contain prompts, completions, chunks, embeddings, retrieved documents, tool
-calls or arguments, model, deployment, index or strategy names, or original errors. Streams
-produce no per-chunk records. Results, errors and cancellation behave exactly as without
-telemetry, including when telemetry delivery fails. Executions that finish after the module
-is disposed are not recorded.
-
-Not covered: clients constructed directly (for example `new AzureOpenAIModel(...)`), index
-`addDocuments`/`deleteDocuments`, LangChain `streamEvents`, tools' own execution, a custom
-client's own `batch` implementation, and read-only, non-configurable own methods, which are
-left unwrapped.
-
 ## Error handling
 
 | Error class | When thrown |

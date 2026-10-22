@@ -53,9 +53,6 @@ import { BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js
 
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
 import { version } from './version.js';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
-import { trackMutation } from './integrations/track-mutation.js';
 
 import type {
   BookmarkCreateArgs,
@@ -95,9 +92,6 @@ export class BookmarkProvider
 
   /** collection of subscriptions for bookmark events */
   #subscriptions = new Subscription();
-
-  /** optional operational telemetry; never carries bookmark names, ids or payloads */
-  #telemetry = new OperationalTelemetry('bookmark');
 
   /**
    * @deprecated
@@ -330,7 +324,6 @@ export class BookmarkProvider
     this.#store = createBookmarkStore({
       client: config.client,
       initial: { currentBookmark: this._parent?.currentBookmark ?? null },
-      telemetry: this.#telemetry,
     });
 
     // add teardown logic for disposing the store
@@ -609,7 +602,6 @@ export class BookmarkProvider
    * @throws {BookmarkProviderError} When a timeout occurs during the fetch operation
    */
   public getAllBookmarks(): Observable<Bookmarks> {
-    // Measured per subscription, since each subscriber triggers its own fetch.
     return new Observable<Bookmarks>((observer) => {
       this._log?.debug('fetching all bookmarks');
 
@@ -684,7 +676,7 @@ export class BookmarkProvider
 
       // Step 5: Subscribe to the request stream and forward results to observer
       request$.subscribe(observer);
-    }).pipe(this.#telemetry.measure('list'));
+    });
   }
 
   /**
@@ -731,7 +723,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for change to ${next?.id ?? 'none'}, from ${current?.id ?? 'none'}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.info(error.message);
           throw error;
         }
@@ -750,7 +741,6 @@ export class BookmarkProvider
         this._log?.error(error.message, error);
         throw error;
       }),
-      this.#telemetry.measure('apply', { clear: bookmark_or_id === null }),
     );
   }
 
@@ -831,7 +821,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for creating bookmark: ${ref}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.info(error.message);
           throw error;
         }
@@ -840,21 +829,12 @@ export class BookmarkProvider
       }),
     );
 
-    const tracker = trackMutation(
-      this.#telemetry,
-      'create',
-      action$,
-      bookmarkActions.createBookmark,
-    );
-
     // Start the creation process immediately
     const createSubscription = dispatch$.subscribe({
       error: (error) => {
-        tracker.fail(error);
         this._log?.error(`Failed to prepare bookmark creation: ${ref}`, error);
       },
       next: (newBookmark) => {
-        tracker.dispatched();
         // request the store to create the bookmark
         this.#store.next(bookmarkActions.createBookmark(newBookmark, { ref }));
       },
@@ -894,7 +874,6 @@ export class BookmarkProvider
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the create subscription when the result observable is unsubscribed
       subscriber.add(() => createSubscription.unsubscribe());
-      subscriber.add(tracker.abandon);
 
       // Emit the created bookmark
       request$.subscribe(subscriber);
@@ -975,7 +954,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for updating bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.warn(error.message, updates);
           throw error;
         }
@@ -984,21 +962,12 @@ export class BookmarkProvider
       }),
     );
 
-    const tracker = trackMutation(
-      this.#telemetry,
-      'update',
-      action$,
-      bookmarkActions.updateBookmark,
-    );
-
     // Start the update process immediately
     const updateSubscription = dispatch$.subscribe({
       error: (error) => {
-        tracker.fail(error);
         this._log?.error(`Failed to prepare bookmark update: ${bookmarkId}`, error);
       },
       next: (updates) => {
-        tracker.dispatched();
         // trigger the store to update the bookmark
         this.#store.next(bookmarkActions.updateBookmark({ bookmarkId, updates }, { ref }));
       },
@@ -1045,7 +1014,6 @@ export class BookmarkProvider
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the update subscription when the result observable is unsubscribed
       subscriber.add(() => updateSubscription.unsubscribe());
-      subscriber.add(tracker.abandon);
 
       // Emit the updated bookmark
       request$.subscribe(subscriber);
@@ -1124,7 +1092,6 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for removing bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
           this._log?.warn(error.message);
           throw error;
         }
@@ -1132,21 +1099,12 @@ export class BookmarkProvider
       }),
     );
 
-    const tracker = trackMutation(
-      this.#telemetry,
-      'delete',
-      action$,
-      bookmarkActions.deleteBookmark,
-    );
-
     // Start the deletion process immediately
     const deleteSubscription = dispatch$.subscribe({
       error: (error) => {
-        tracker.fail(error);
         this._log?.error(`Failed to prepare bookmark deletion: ${bookmarkId}`, error);
       },
       next: (bookmark) => {
-        tracker.dispatched();
         // request the store to delete the bookmark
         this.#store.next(bookmarkActions.deleteBookmark(bookmark.id, { ref }));
       },
@@ -1186,7 +1144,6 @@ export class BookmarkProvider
     return new Observable<void>((subscriber) => {
       // Clean up the delete subscription when the result observable is unsubscribed
       subscriber.add(() => deleteSubscription.unsubscribe());
-      subscriber.add(tracker.abandon);
 
       // Emit the deletion result
       request$.subscribe(subscriber);
@@ -1233,7 +1190,6 @@ export class BookmarkProvider
             const error = new BookmarkProviderError(
               `event: ${type} was canceled by listener for adding favourite bookmark: ${bookmarkId}, ref: ${ref}`,
             );
-            OperationalTelemetry.markCancellation(error, 'listener');
             this._log?.info(error.message);
             throw error;
           }
@@ -1287,8 +1243,7 @@ export class BookmarkProvider
       return request$.subscribe(subscriber);
     });
 
-    // Measured per subscription, since this operation is cold and starts per subscriber.
-    return result$.pipe(this.#telemetry.measure('favourite-add'));
+    return result$;
   }
 
   /**
@@ -1333,7 +1288,6 @@ export class BookmarkProvider
             const error = new BookmarkProviderError(
               `event: ${type} was canceled by listener for removing favourite bookmark: ${bookmarkId}, ref: ${ref}`,
             );
-            OperationalTelemetry.markCancellation(error, 'listener');
             this._log?.warn(error.message);
             throw error;
           }
@@ -1391,8 +1345,7 @@ export class BookmarkProvider
       request$.subscribe(subscriber);
     });
 
-    // Measured per subscription, since this operation is cold and starts per subscriber.
-    return result$.pipe(this.#telemetry.measure('favourite-remove'));
+    return result$;
   }
 
   /**
@@ -1593,28 +1546,10 @@ export class BookmarkProvider
   }
 
   /**
-   * Connects host telemetry for operational bookmark records.
-   *
-   * Reports one `fusion.bookmark.<operation>.duration` outcome per attempted `get`, `list`,
-   * `apply`, `create`, `update`, `delete`, `favourite-add`, `favourite-remove` and
-   * `payload-resolve` operation. A listener canceling the matching event is recorded as
-   * `cancelled` with reason `listener`, never as a failure; a mutation abandoned before it is
-   * sent is `cancelled` with reason `abandoned`. Bookmark names, ids, payloads and
-   * error messages are never included.
-   *
-   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
-   */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
-    return this.#telemetry.connect(telemetry ? () => telemetry : undefined);
-  }
-
-  /**
    * Disposes the BookmarkProvider.
    */
   dispose(): void {
     this._log?.debug('disposing BookmarkProvider');
-    // Operations interrupted by disposal are cancellations; nothing is reported afterwards.
-    this.#telemetry.close({ reason: 'disposed' });
     super.dispose();
     this.#subscriptions.unsubscribe();
   }

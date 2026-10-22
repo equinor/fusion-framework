@@ -7,9 +7,6 @@
   },
   "references": [
     {
-      "path": "../telemetry"
-    },
-    {
       "path": "../../utils/query"
     },
     {

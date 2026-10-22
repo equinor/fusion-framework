@@ -35,30 +35,6 @@ describe('ModulesConfigurator', () => {
       expect(configurator.modules[0]).toBe(replacement);
     });
 
-    it('warns when a different descriptor replaces a prepared registration', () => {
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const configurator = new ModulesConfigurator();
-      const [events, cleanup] = collectEvents(configurator.event$);
-      const original = { ...createMockModule('alpha'), prepare: () => ({}) } as AnyModule;
-      configurator.addConfig({ module: original, prepare: () => {} });
-      // Re-registering the same descriptor is additive and must stay silent.
-      configurator.addConfig({ module: original, prepare: () => {} });
-      expect(warn).not.toHaveBeenCalled();
-
-      configurator.addConfig({ module: createMockModule('alpha') });
-      cleanup();
-      expect(warn).toHaveBeenCalledExactlyOnceWith(
-        'Prepared configuration for module "alpha" was replaced',
-      );
-      expect(events).toContainEqual(
-        expect.objectContaining({
-          name: expect.stringContaining(ModuleConfiguratorEventName.PreparedConfigReplaced),
-          properties: { moduleName: 'alpha' },
-        }),
-      );
-      warn.mockRestore();
-    });
-
     it('replaces previous module callbacks when the same module name is registered again', async () => {
       const configurator = new ModulesConfigurator();
       const original = createMockModule('alpha');

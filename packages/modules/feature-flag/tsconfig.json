@@ -9,9 +9,6 @@
   "exclude": ["node_modules", "lib"],
   "references": [
     {
-      "path": "../telemetry"
-    },
-    {
       "path": "../module"
     },
     {

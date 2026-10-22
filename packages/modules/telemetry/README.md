@@ -4,10 +4,6 @@ Unified telemetry module for the Fusion Framework. Provides a consistent API for
 
 ## Features
 
-For framework, app and widget lifecycle diagnostics, routing guarantees, safe metadata,
-optional HTTP/query integration, and migration guidance, see
-[Operational telemetry](./docs/operational-telemetry.md).
-
 - **Adapter-based architecture** — ship with Console and Application Insights adapters, or build your own by extending `BaseTelemetryAdapter`.
 - **Hierarchical providers** — child providers relay telemetry to a parent, with automatic metadata merging.
 - **Zod-validated schemas** — every telemetry item is parsed and validated at runtime.
@@ -170,7 +166,6 @@ without the optional `fallback` property retain their existing behavior.
 | `enableTelemetry` | Function | Registers the telemetry module on a configurator. |
 | `TelemetryModule` / `telemetryModule` | Type / Object | Module definition for the framework module system. |
 | `ITelemetryProvider` | Interface | Provider for tracking events, exceptions, metrics, and measurements. |
-| `TelemetryConnectable` | Interface | Optional `connectTelemetry` capability for module providers that report operational telemetry. |
 | `ITelemetryConfigurator` | Interface | Configurator for adapters, metadata, scopes, and parent providers. |
 | `Measurement` / `IMeasurement` | Class / Interface | Utility for tracking elapsed time with dispose support. |
 | `TelemetryType` | Enum | `Event`, `Exception`, `Metric`, `Custom`. |
@@ -178,11 +173,6 @@ without the optional `fallback` property retain their existing behavior.
 | `TelemetryScope` | Enum | `Framework`, `Application`. |
 | `TelemetryItem` | Type | Zod-inferred base telemetry item shape. |
 | `TelemetryEvent` / `TelemetryException` / `TelemetryMetric` / `TelemetryCustomEvent` | Types | Specialised item types inferred from Zod schemas. |
-| `TelemetryConfigurator` | Class | Configuration builder hosts prepare before initialization. |
-| `StartupCapture` | Class | Captures a host's startup lifecycle before any provider exists. |
-
-Operational helpers are not re-exported from the root; import them from the
-`/utils`, `/schemas` and `/integrations` sub-paths below.
 
 ### Sub-path exports
 
@@ -191,9 +181,8 @@ Operational helpers are not re-exported from the root; import them from the
 | `/adapter` | `BaseTelemetryAdapter`, `ITelemetryAdapter` | Base class and interface for building custom adapters. |
 | `/console-adapter` | `ConsoleAdapter` | Console-based adapter with colour-coded output. |
 | `/application-insights-adapter` | `ApplicationInsightsAdapter` | Microsoft Application Insights adapter. |
-| `/schemas` | `parseTelemetryItem`, schema objects, `DiagnosticContext` | Zod schemas, a parser for telemetry items, and the diagnostic envelope types. |
-| `/utils` | `createOperationalTelemetry`, `createOperationalRecords`, `createDiagnosticContext`, `mergeTelemetryItem` | Operational record builders and helpers for metadata merging and event mapping. |
-| `/integrations` | `createHttpTelemetry`, `observeQueryTelemetry` | Optional HTTP and query operational instrumentation. |
+| `/schemas` | `parseTelemetryItem`, schema objects | Zod schemas and a parser for telemetry items. |
+| `/utils` | `mapConfiguratorEvents`, `mergeTelemetryItem`, `applyMetadata` | Internal helpers for metadata merging and event mapping. |
 | `/mock` | `enableTelemetryMock`, `MockTelemetryAdapter` | In-process telemetry recorder for deterministic tests. |
 
 ## Testing
@@ -234,8 +223,7 @@ The telemetry module is configured through `ITelemetryConfigurator`, which provi
 | `setAdapter(id, adapter)` | Register a telemetry adapter. |
 | `configureAdapter(id, fn)` | Register an adapter via async factory. |
 | `setMetadata(extractor)` | Attach a metadata extractor (value, function, or observable). |
-| `setDefaultScope(scope)` | Set the default scope array for custom items; built-in operational records keep their captured scope. |
-| `setSource(source)` | Supply the composition root's framework, app or widget origin. Standard hosts set this automatically. |
+| `setDefaultScope(scope)` | Set the default scope array applied to all items. |
 | `setParent(provider)` | Set a parent provider for hierarchical relay. |
 | `attachItems(items$)` | Pipe an observable stream of items into the provider. |
 | `setFilter(filter)` | Set adapter and/or relay filter functions. |

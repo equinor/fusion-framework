@@ -153,8 +153,6 @@
     "directory": "packages/modules/services"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
-    "@equinor/fusion-observable": "workspace:^",
     "odata-query": "^8.0.4",
     "zod": "^4.4.3"
   },

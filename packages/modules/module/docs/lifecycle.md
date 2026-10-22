@@ -16,11 +16,7 @@ sequenceDiagram
     participant Cfg as ModulesConfigurator
     participant Mod as Module (each)
 
-    App->>Cfg: addConfig({ module, prepare?, configure?, afterConfig?, afterInit? })
-    opt Synchronous preparation requested
-        Cfg->>Mod: module.prepare() or supplied configurator
-        Cfg->>App: prepare(configBuilder) before addConfig returns
-    end
+    App->>Cfg: addConfig({ module, configure?, afterConfig?, afterInit? })
     App->>Cfg: onConfigured(cb) / onInitialized(cb)
     App->>Cfg: initialize(ref?)
 
@@ -51,71 +47,15 @@ sequenceDiagram
 
 ---
 
-## Registration - Prepare (synchronous)
-
-Use `addConfig({ module, prepare, configure })` when configuration must take effect
-before `initialize()`, such as enabling host lifecycle capture before user startup
-code can throw. The orchestrator owns creation and reuse of the builder, and passes
-it into the synchronous `prepare` callback. It does not expose a builder lookup API.
-
-Modules opt in with a synchronous, reference-independent `module.prepare()` factory.
-The factory runs only when preparation is requested, once per registered descriptor
-in that host. Alternatively, the host supplies its own builder through
-`addConfig({ module, configurator, prepare, configure })`, bypassing both factories.
-The preparation callback completes before `addConfig` returns; `configure` still
-runs during `initialize(ref)` and may be asynchronous.
-
-```ts
-import { StartupCapture, telemetryModule } from '@equinor/fusion-framework-module-telemetry';
-
-const source = { source: 'framework', hostId: crypto.randomUUID() };
-
-const capture = new StartupCapture(configurator, { source });
-configurator.addConfig({
-  module: telemetryModule,
-  prepare: (builder) => {
-    builder.setSource(source);
-    builder.attachLifecycleItems(capture.items);
-  },
-  configure: (builder) => {
-    builder.setDefaultScope(['framework']);
-  },
-});
-```
-
-Ordinary `module.configure(ref)` factories are never invoked early: preparation
-without an opt-in factory or supplied builder throws. Preparation cannot depend on
-`ref`, which is not available until initialization. Promise-returning factories and
-callbacks are rejected with a preparation failure event; eventual promise rejections
-are reported without exporting their raw errors.
-
-Registration is atomic with respect to preparation: if preparation throws, `addConfig`
-rethrows and the host keeps its previous registration for that module name, including
-its callbacks and builder. A first registration that fails is not added at all.
-
-The normal configure phase uses the prepared object without calling the ordinary
-factory. Configuration callbacks, `postConfigure`, `afterConfig` and initialization
-still run normally against that exact object. Re-registering the same descriptor
-retains the builder unless another is explicitly supplied; each registration's
-preparation callback runs immediately and configure callbacks remain additive.
-Replacing the descriptor removes the previous builder and deferred callbacks.
-
-Prepared configuration is host-owned, not a per-attempt factory result. Create it
-for the host lifecycle that needs it, and release subscriptions acquired before
-initialization if startup is abandoned or the module is replaced. Without
-preparation, the normal factory-created, per-initialization lifecycle is unchanged.
-
 ## Phase 1 — Configure
 
-The configure phase builds config for every module before anything initializes.
-It reuses prepared builders and calls `module.configure(ref?)` for the remaining
-modules, then runs the registered configuration callbacks.
+The configure phase builds config for every module before anything initializes. The framework calls `module.configure(ref?)` to create a fresh `ConfigBuilder` for each module, then invites consumers to mutate it.
 
 ### What runs and in what order
 
-1. **`module.configure(ref?)`** — Unless configuration was prepared, the module creates a new builder, synchronously or asynchronously. The `ref` parameter carries whatever was passed to `initialize(ref)` — typically a parent framework instance.
+1. **`module.configure(ref?)`** — The module creates and returns a new config builder instance. This is a synchronous factory call. The `ref` parameter carries whatever was passed to `initialize(ref)` — typically a parent framework instance.
 
-2. **`addConfig({ configure })` callback** — The consumer's callback receives the config builder and can call typed setter methods on it (`builder.setBaseUrl(...)`, `builder.setCredentials(...)`, etc.). These callbacks run concurrently and are awaited before initialization.
+2. **`addConfig({ configure })` callback** — The consumer's callback receives the config builder and can call typed setter methods on it (`builder.setBaseUrl(...)`, `builder.setCredentials(...)`, etc.). This is where application-level configuration lives.
 
 3. **`module.postConfigure(configMap)`** — Runs after all consumer `configure` callbacks have settled. Receives the full map of all modules' resolved configs. Use this to apply defaults that depend on what other modules configured, or to validate your own config.
 
@@ -183,46 +123,6 @@ After plugins have settled, the promise returned by `configurator.initialize()` 
 Dispose is **not** called automatically. It is your responsibility to call `configurator.dispose(instance, ref?)` when the application tears down — for example, when a React application unmounts, or when a service worker is replaced.
 
 The framework first runs plugin teardowns returned by `registerPlugin` callbacks. It then calls `module.dispose({ instance, modules, ref })` for each registered module. This is the right place to cancel subscriptions, close WebSocket connections, clear caches, and release any other resources the provider holds.
-
-Disposal uses three fixed `disposePhase` values, in this order:
-
-- `default` (used when omitted): ordinary module cleanup, including HTTP, caches and authentication.
-- `diagnostics`: telemetry drains pending records and shuts down exporters.
-- `events`: the event bus closes after diagnostic health reporting finishes.
-
-Hooks run concurrently within each phase. The infrastructure phases are reserved
-for diagnostic and event providers, not for expressing dependencies between ordinary
-modules. There are no numeric priorities or additional phases after event shutdown.
-An unsupported phase supplied at runtime emits a warning, marks the host teardown
-as failed, and runs that provider's cleanup in the default phase rather than skipping it.
-
-Repeated disposal joins the same promise rather than rerunning hooks. The host's
-terminal disposal measurement ends after ordinary module/plugin teardown and excludes
-diagnostic sink shutdown.
-
-When initialization fails, startup rejects with the first failure without waiting for
-slower initializers, and providers created so far are disposed in the same order.
-Providers that finish after the rejection are disposed individually once they
-resolve. The same attempt-owned provider map is used for initialization and rollback;
-providers from an earlier attempt are not included.
-Overrides of `_initialize` must forward its `instances` argument to `super` to retain
-this rollback ownership.
-
-Plugin teardowns are owned by the instance whose initialization registered them.
-Disposing one instance, or rolling back a failed attempt, never runs another
-instance's plugin cleanup. Overrides of `_registerPlugins` should forward its
-`teardowns` argument to `super`; teardowns from overrides that do not are kept in a
-shared list and run with the next disposal, as before.
-
-Module authors still need to bound their
-own asynchronous work; the framework cannot forcibly cancel arbitrary promises.
-
-Export transports using the shared HTTP client can call
-`markTelemetryExportRequest(init)` from `@equinor/fusion-framework-module` to identify
-their exporter-owned request. Operational instrumentation checks the
-`telemetryExportRequest` symbol to avoid instrumenting telemetry delivery itself.
-This is request ownership, not a global switch disabling diagnostics. The marker
-survives option copies without becoming an HTTP header or serialized payload field.
 
 `BaseModuleProvider` exposes a `subscription: Subscription` property (RxJS `Subscription`) that collects disposables. Adding to `this.subscription` inside `initialize` means they are automatically cleaned up when the provider's `dispose()` method is called — you do not need to track them separately.
 

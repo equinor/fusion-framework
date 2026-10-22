@@ -31,25 +31,6 @@ import { version } from './version.js';
 import isEqual from 'fast-deep-equal';
 import type { ModuleType } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import type { Subscription } from 'rxjs';
-import {
-  OperationalTelemetry,
-  type OperationalProperties,
-} from './integrations/OperationalTelemetry.js';
-import { observeSyncHealth } from './integrations/observe-sync-health.js';
-
-/**
- * Counts storage results reporting an error, without reading keys or values.
- * @param result - A single result, an array of results, or another response shape.
- * @returns The number of error results.
- */
-const countStorageErrors = (result: unknown): number =>
-  // Bulk operations return arrays; single operations and other responses are one entry.
-  (Array.isArray(result) ? result : [result]).filter(
-    (entry) =>
-      !!entry && typeof entry === 'object' && 'status' in entry && entry.status === 'error',
-  ).length;
 
 /**
  * Provides a state management interface backed by a storage implementation.
@@ -76,11 +57,6 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
   #storage: IStorage;
 
   #event?: ModuleType<EventModule>;
-
-  /** Optional operational telemetry; never carries keys, values or arguments. */
-  #telemetry = new OperationalTelemetry('state');
-
-  #syncHealth?: Subscription;
 
   /**
    * Creates a new StateProvider instance.
@@ -123,7 +99,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @returns Promise that resolves with the storage operation result
    */
   public storeItem(item: StateItem<TType>): Promise<StorageResult> {
-    return this.#measure('store', () => this.#storage.putItem(item), { count: 1 });
+    return this.#storage.putItem(item);
   }
 
   /**
@@ -135,16 +111,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @param items - Array of state items to store
    * @returns Promise that resolves with an array of storage operation results
    */
-  public storeItems(items: StateItem<TType>[]): Promise<StorageResult[]> {
-    return this.#measure('store', () => this.#storeItems(items), { count: items.length });
-  }
-
-  /**
-   * Stores items in bulk when supported, otherwise one by one.
-   * @param items - Items to store.
-   * @returns One storage result per item.
-   */
-  async #storeItems(items: StateItem<TType>[]): Promise<StorageResult[]> {
+  public async storeItems(items: StateItem<TType>[]): Promise<StorageResult[]> {
     // Check if the storage implementation supports bulk operations
     if (typeof this.#storage.putItems === 'function') {
       // Use optimized bulk operation if available
@@ -169,7 +136,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
   public removeItem(item_or_id: Pick<StateItem, 'key'> | string): Promise<StorageResult> {
     // Normalize parameter - accept either a key string or an object with key property
     const item = typeof item_or_id === 'string' ? { key: item_or_id } : item_or_id;
-    return this.#measure('remove', () => this.#storage.removeItem(item), { count: 1 });
+    return this.#storage.removeItem(item);
   }
 
   /**
@@ -181,16 +148,9 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @param items - Array of item keys (as strings or objects with key property)
    * @returns Promise that resolves with an array of storage operation results
    */
-  public removeItems(items: Array<Pick<StateItem, 'key'> | string>): Promise<StorageResult[]> {
-    return this.#measure('remove', () => this.#removeItems(items), { count: items.length });
-  }
-
-  /**
-   * Removes items in bulk when supported, otherwise one by one.
-   * @param items - Item keys, or objects with a key.
-   * @returns One storage result per item.
-   */
-  async #removeItems(items: Array<Pick<StateItem, 'key'> | string>): Promise<StorageResult[]> {
+  public async removeItems(
+    items: Array<Pick<StateItem, 'key'> | string>,
+  ): Promise<StorageResult[]> {
     // Normalize all items to objects with key property for consistent storage interface
     const keys = items.map((item) => (typeof item === 'string' ? { key: item } : item));
     // Check if the storage implementation supports bulk remove operations
@@ -216,7 +176,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @returns Promise that resolves with the item if found, null otherwise
    */
   public getItem<T extends TType = TType>(key: string): Promise<StateItem<T> | null> {
-    return this.#measure('get', () => this.#storage.item<T>(key));
+    return this.#storage.item<T>(key);
   }
 
   /**
@@ -229,7 +189,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
   public getAllItems<T extends TType = TType>(
     options?: RetrieveItemsOptions,
   ): Promise<RetrievedItemsResponse<T>> {
-    return this.#measure('list', () => this.#storage.allItems<T>(options));
+    return this.#storage.allItems<T>(options);
   }
 
   /**
@@ -335,15 +295,7 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    *
    * @returns Promise that resolves with an array of storage operation results
    */
-  public clear(): Promise<StorageResult[]> {
-    return this.#measure('clear', () => this.#clear());
-  }
-
-  /**
-   * Clears storage in bulk when supported, otherwise item by item.
-   * @returns One storage result per removed item.
-   */
-  async #clear(): Promise<StorageResult[]> {
+  public async clear(): Promise<StorageResult[]> {
     // Check if the storage implementation supports optimized bulk clear operation
     if (typeof this.#storage.clear === 'function') {
       // Use optimized bulk clear if available
@@ -360,79 +312,6 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
           // Convert any removal errors to error result objects to maintain consistent return type
           .catch((error) => ({ status: 'error', error }) as StorageResult),
       ),
-    );
-  }
-
-  /**
-   * Connects host telemetry for operational state records once all providers exist.
-   *
-   * Each `get`, `list`, `store`, `remove` and `clear` call reports one
-   * `fusion.state.<operation>.duration` outcome; error results returned by the storage count
-   * as failures with reason `storage-error`. Synchronization is summarized in one-minute
-   * windows through bounded `sync-status`, `sync-error` and `sync-activity` notifications;
-   * every (re)connection or disconnection starts a fresh observation period. Keys, values,
-   * arguments and error messages are never included.
-   *
-   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
-   */
-  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
-    // Every (re)connection starts a fresh observation period: the previous period is
-    // summarized to the telemetry it was gathered for, then its observer is released.
-    this.#syncHealth?.unsubscribe();
-    this.#syncHealth = undefined;
-    await this.#telemetry.connect(telemetry ? () => telemetry : undefined);
-    // Disconnected or closed scopes, or a newer connection, keep no observer on storage events.
-    if (this.#telemetry.active && !this.#syncHealth) {
-      this.#syncHealth = observeSyncHealth(this.#storage.events$, this.#telemetry);
-    }
-  }
-
-  /**
-   * Releases operational telemetry: the final sync summary is reported, pending operations
-   * are recorded as cancelled, and nothing is emitted afterwards. Storage is not disposed.
-   */
-  public dispose(): void {
-    this.#syncHealth?.unsubscribe();
-    this.#telemetry.close({ reason: 'disposed' });
-    super.dispose();
-  }
-
-  /**
-   * Times a storage call while returning a promise that settles exactly like the original.
-   * Synchronous throws stay synchronous, and the caller keeps the rejection it would have seen.
-   * @template T - The storage result type, returned unchanged.
-   * @param operation - Static operation label.
-   * @param run - The storage call.
-   * @param properties - Allowlisted summary fields, such as an item count.
-   * @returns The storage result, unchanged.
-   * @throws The original synchronous storage error, unchanged.
-   */
-  #measure<T>(
-    operation: string,
-    run: () => Promise<T>,
-    properties?: OperationalProperties,
-  ): Promise<T> {
-    const end = this.#telemetry.start(operation, properties);
-    let pending: Promise<T>;
-    try {
-      pending = run();
-    } catch (error) {
-      end('failure');
-      throw error;
-    }
-    return pending.then(
-      (result) => {
-        const failed = countStorageErrors(result);
-        end(
-          failed > 0 ? 'failure' : 'success',
-          failed > 0 ? { reason: 'storage-error', failed } : undefined,
-        );
-        return result;
-      },
-      (error: unknown) => {
-        end('failure');
-        throw error;
-      },
     );
   }
 }

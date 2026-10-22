@@ -88,16 +88,7 @@
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "typescript": "^7.0.2",
     "vitest": "catalog:vitest"
-  },
-  "peerDependencies": {
-    "@equinor/fusion-framework-module-telemetry": "workspace:^"
-  },
-  "peerDependenciesMeta": {
-    "@equinor/fusion-framework-module-telemetry": {
-      "optional": true
-    }
   }
 }

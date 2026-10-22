@@ -66,7 +66,6 @@ configurator.event$.pipe(
 | Event name | Level | When it fires |
 |---|---|---|
 | `ModuleConfigurator.module.configAdded` | `debug` | A module is registered via `addConfig` |
-| `ModuleConfigurator.module.preparedConfigReplaced` | `warning` | A different descriptor with the same module name replaces a registration that had a prepared builder, discarding it. Usually a duplicate package copy; also logged with `console.warn` |
 | `ModuleConfigurator.onConfigured.added` | `debug` | An `onConfigured` callback is registered |
 | `ModuleConfigurator.onInitialized.added` | `debug` | An `onInitialized` callback is registered |
 | `ModuleConfigurator.plugin.added` | `debug` | A plugin callback is registered |

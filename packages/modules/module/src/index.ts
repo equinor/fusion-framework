@@ -18,7 +18,6 @@ export type {
   IModulesConfig,
   Module,
   ModuleConfigType,
-  ModuleDisposePhase,
   ModuleEvent,
   ModuleEventLevel,
   ModuleInitializerArgs,
@@ -43,8 +42,6 @@ export type { IModuleProvider } from './lib/provider/IModuleProvider.js';
 export type { DotPath, DotPathType, DotPathUnion } from './utils/dot-path.js';
 
 export { initializeModules } from './initialize-modules.js';
-export { telemetryExportRequest } from './utils/telemetry-export-request.js';
-export { markTelemetryExportRequest } from './utils/mark-telemetry-export-request.js';
 
 export { ModuleConsoleLogger, IModuleConsoleLogger } from './ModuleConsoleLogger.js';
 

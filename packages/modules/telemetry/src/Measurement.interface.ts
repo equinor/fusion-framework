@@ -1,5 +1,5 @@
 import type z from 'zod';
-import type { TelemetryMetricSchema } from './schemas/telemetry-item-schema.js';
+import type { TelemetryMetricSchema } from './schemas.js';
 
 /**
  * Represents the data structure for additional telemetry measurement.

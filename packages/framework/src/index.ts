@@ -38,7 +38,6 @@ export {
    */
   FrameworkConfigurator as FusionConfigurator,
 } from './FrameworkConfigurator.js';
-export type { FrameworkConfiguratorOptions } from './FrameworkConfigurator.js';
 
 export type { FusionModules, FusionModulesInstance, Fusion, FusionRenderFn } from './types.js';
 

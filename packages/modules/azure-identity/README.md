@@ -113,16 +113,6 @@ await framework.auth.logout();
 
 Returns a pre-obtained token string. `login()` and `logout()` throw.
 
-## Operational telemetry
-
-When a telemetry module is registered alongside this module, the provider records
-`acquireToken` (which `acquireAccessToken` uses), `login` and `logout` as `fusion.azure-identity.acquire-token.duration`, `fusion.azure-identity.login.duration`
-and `fusion.azure-identity.logout.duration`, with one sanitized `.failure` exception per failure.
-Tokens, scopes, accounts, device codes and original errors are never recorded, and results
-and errors are unchanged. Static `token_only` providers are never instrumented, and calls for a telemetry export
-request, marked with `markTelemetryExportRequest`, are not recorded. Without
-telemetry the provider is left untouched; the package remains Node-compatible either way.
-
 ## Testing
 
 `token_only` mode already avoids real Azure AD traffic, but it is rigid: a single

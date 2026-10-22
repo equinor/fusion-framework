@@ -7,12 +7,10 @@ import {
 } from './configurator.js';
 import { type IHttpClientProvider, HttpClientProvider } from './provider.js';
 
-import {
-  markTelemetryExportRequest,
-  telemetryExportRequest,
-  type Module,
-  type ModuleConfigType,
-  type IModuleConfigurator,
+import type {
+  Module,
+  ModuleConfigType,
+  IModuleConfigurator,
 } from '@equinor/fusion-framework-module';
 
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
@@ -87,12 +85,9 @@ export const module: HttpMsalModule = {
         // only attempt to acquire a token when the request actually declares scopes
         if (scopes.length) {
           /** TODO(#5143): should be try catch, check caller for handling */
-          const options = { request: { scopes } };
-          // A token for telemetry delivery belongs to the export, so it carries the same
-          // request-local marker; auth telemetry then skips it instead of recording the export.
-          const accessToken = await authProvider.acquireAccessToken(
-            telemetryExportRequest in request ? markTelemetryExportRequest(options) : options,
-          );
+          const accessToken = await authProvider.acquireAccessToken({
+            request: { scopes },
+          });
           // without a token there's nothing to attach, fall through to the default request
           if (accessToken) {
             const headers = new Headers(request.headers);

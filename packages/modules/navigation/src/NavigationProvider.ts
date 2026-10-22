@@ -16,9 +16,9 @@ import {
   TelemetryScope,
   type ITelemetryProvider,
 } from '@equinor/fusion-framework-module-telemetry';
-import { createDiagnosticContext } from '@equinor/fusion-framework-module-telemetry/utils';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import { NavigatedEvent } from './NavigatedEvent.js';
+import { pathToString } from './lib/utils/index.js';
 import type { BaseHistory } from './lib/index.js';
 
 /**
@@ -106,8 +106,6 @@ export class NavigationProvider
   #state$: Observable<NavigationUpdate>;
 
   #telemetry?: ITelemetryProvider;
-  #autoTelemetry = true;
-  #telemetryFailureReported = false;
   #event?: IEventModuleProvider;
 
   /**
@@ -136,8 +134,9 @@ export class NavigationProvider
    * @returns The underlying `History` instance.
    */
   public get navigator(): History {
-    this._trackNavigationEvent({
+    this.#telemetry?.trackException({
       name: 'Navigation::navigator.deprecated',
+      exception: new Error('navigator is deprecated, use history instead'),
       level: TelemetryLevel.Warning,
       scope: ['navigation', TelemetryScope.Framework],
     });
@@ -184,12 +183,12 @@ export class NavigationProvider
     this.#basename = normalizedBasename || undefined;
     this.#event = eventProvider;
     this.#telemetry = telemetry;
-    this.#autoTelemetry = args.config.autoTelemetry !== false && telemetry === undefined;
 
     // History is required - validate and track error if missing
     if (!history) {
-      this._trackNavigationEvent({
+      this.#telemetry?.trackException({
         name: 'Navigation::history.required',
+        exception: new Error('no history provided!'),
         level: TelemetryLevel.Error,
         scope: ['navigation', TelemetryScope.Application],
       });
@@ -233,27 +232,30 @@ export class NavigationProvider
           ),
         );
         // track telemetry for navigation changes
-        this._trackNavigationEvent({
+        this.#telemetry?.trackEvent({
           name: 'Navigation::navigated',
           level: TelemetryLevel.Information,
           scope: ['navigation', TelemetryScope.Application],
           properties: {
             action: current.action,
+            location: pathToString(current.location),
+            previousLocation: pathToString(previous.location),
           },
         });
       }),
     );
 
     // Track all navigation actions for debugging (if telemetry is enabled)
-    if (this.#telemetry || this.#autoTelemetry) {
+    if (this.#telemetry) {
       this._addTeardown(
         this.#history.action$.subscribe((action) => {
-          this._trackNavigationEvent({
-            name: 'Navigation::action',
+          this.#telemetry?.trackEvent({
+            name: `Navigation::action:${action.type}`,
             level: TelemetryLevel.Debug,
             scope: ['navigation', TelemetryScope.Framework],
             properties: {
               type: action.type,
+              action: action,
             },
           });
         }),
@@ -265,49 +267,6 @@ export class NavigationProvider
   }
 
   /**
-   * Connects optional telemetry only after providers exist, without an initialization dependency.
-   * Explicit configuration, including `setTelemetry(undefined)`, takes precedence.
-   * @param telemetry - Available host telemetry provider.
-   */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
-    // Explicit providers and explicit disablement override automatic host wiring.
-    if (this.#autoTelemetry) {
-      this.#telemetry = telemetry;
-    }
-  }
-
-  /**
-   * Keeps diagnostic failures out of navigation subscriptions.
-   * @param item - Static event identity and allowlisted action type, never a route payload.
-   */
-  protected _trackNavigationEvent(item: Parameters<ITelemetryProvider['trackEvent']>[0]): void {
-    // Default host wiring emits navigation outcomes, not per-action debug chatter.
-    if (this.#autoTelemetry && item.level === TelemetryLevel.Debug) {
-      return;
-    }
-    try {
-      const source = this.#telemetry?.source;
-      // Hosts with identity get a safe envelope; custom providers without one receive the event as-is.
-      // Error-level notifications, such as a missing history, report the failure they describe.
-      const diagnostic = source
-        ? createDiagnosticContext({
-            source,
-            module: 'navigation',
-            operation: 'notification',
-            outcome: item.level >= TelemetryLevel.Error ? 'failure' : 'success',
-          })
-        : undefined;
-      this.#telemetry?.trackEvent({ ...item, diagnostic });
-    } catch {
-      // Repeated navigation must not amplify an unavailable diagnostic sink.
-      if (!this.#telemetryFailureReported) {
-        this.#telemetryFailureReported = true;
-        console.warn('Navigation telemetry delivery failed');
-      }
-    }
-  }
-
-  /**
    * Creates a router instance from route configuration.
    *
    * @deprecated Use `@equinor/fusion-framework-react-router` instead.
@@ -316,7 +275,7 @@ export class NavigationProvider
    * @returns A configured and initialized {@link Router} instance with basename applied
    */
   public createRouter(routes: AgnosticRouteObject[]) {
-    this._trackNavigationEvent({
+    this.#telemetry?.trackEvent({
       name: 'Navigation::createRouter',
       level: TelemetryLevel.Warning,
       scope: ['navigation', 'deprecated', TelemetryScope.Application],

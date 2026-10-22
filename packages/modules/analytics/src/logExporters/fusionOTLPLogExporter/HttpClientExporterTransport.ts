@@ -1,7 +1,6 @@
 import type { IExporterTransport, ExportResponse } from '@opentelemetry/otlp-exporter-base';
 
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { markTelemetryExportRequest } from '@equinor/fusion-framework-module';
 
 /**
  * Checks whether a failed HTTP status code is eligible for automatic retry.
@@ -82,17 +81,11 @@ export class HttpClientExporterTransport implements IExporterTransport {
     const timeout = setTimeout(() => abortController.abort(), timeoutMillis);
 
     try {
-      const response = await this.httpClient.fetch(
-        this.path,
-        // Mark the request as telemetry delivery so HTTP instrumentation skips it;
-        // otherwise every export would record a request that is exported in turn, an
-        // endless feedback loop. The marker is per request, so app traffic stays observed.
-        markTelemetryExportRequest({
-          method: 'POST',
-          body: new Blob([data.slice().buffer], { type: 'application/json' }),
-          signal: abortController.signal,
-        }),
-      );
+      const response = await this.httpClient.fetch(this.path, {
+        method: 'POST',
+        body: new Blob([data.slice().buffer], { type: 'application/json' }),
+        signal: abortController.signal,
+      });
 
       // A 2xx response means the export succeeded outright
       if (response.ok) {

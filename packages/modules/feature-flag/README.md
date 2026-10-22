@@ -115,18 +115,6 @@ builder.addPlugin(
 | `featureFlagMockModule` | Module descriptor for manual registration. |
 | `FeatureFlagMockConfigurator` | Builder with `addFeature`/`setFeatures` for seeding flags in-memory. |
 
-## Operational telemetry
-
-When the host registers telemetry, each `toggleFeature`/`toggleFeatures` call reports
-one `fusion.feature-flag.toggle.duration` outcome with `requested`, `applied`,
-`rejected` (unregistered or read-only) and `cancelled` (listener veto or superseded
-listener work) counts. Bulk toggles retain their existing latest-only application
-behavior; superseded listeners count as cancelled before the call's outcome is exported. A call
-whose applicable flags were all vetoed is `cancelled`; a toggle still awaiting listeners
-when the module is disposed is `cancelled` with reason `disposed`. The module now disposes
-its provider at host teardown, which also releases plugin connections. Reads such as `hasFeature` are
-never recorded, and feature keys and values are never exported. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
-
 ## Testing
 
 Import from `@equinor/fusion-framework-module-feature-flag/mock` to seed flags in-memory instead of depending on `localStorage` or the URL. The real `FeatureFlagProvider`, toggling, and subscriptions still run — only the flag source is substituted.

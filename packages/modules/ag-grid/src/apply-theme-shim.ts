@@ -1,4 +1,9 @@
-import { legacyAddObservers, type MapWithAdd } from './legacy-add-observers.js';
+/**
+ * Extends a `Map` with an optional `add` API to support legacy Set-like usage.
+ */
+type MapWithAdd = Map<unknown, unknown> & {
+  add?: (key: unknown) => Map<unknown, unknown>;
+};
 
 /**
  * Ensures `window.agStyleInjectionState` is shimmed for AG Grid compatibility.
@@ -10,10 +15,6 @@ import { legacyAddObservers, type MapWithAdd } from './legacy-add-observers.js';
  * In setups with multiple bundles (for example module federation), both shapes can
  * appear on the same page. To avoid runtime crashes, this shims the existing
  * instance in-place so it supports both APIs.
- *
- * Calls to the patched `add()` notify observers registered with {@link observeLegacyAdd},
- * after the map has been updated, so usage of the legacy assumption can be measured
- * without changing what `add()` does or returns.
  */
 export const applyThemeShim = (): void => {
   // Nothing to shim outside a browser environment (e.g. SSR)
@@ -29,19 +30,10 @@ export const applyThemeShim = (): void => {
 
     // Patch in the legacy `add` method so both Set- and Map-based callers keep working
     if (typeof grids.add !== 'function') {
-      const observers = new Set<() => void>();
-      grids[legacyAddObservers] = observers;
       grids.add = (key: unknown): Map<unknown, unknown> => {
+        // TODO(#5081): Add telemetry when available. This should log when `add` is missing
+        // and we patch Map-based grid state for legacy AG Grid assumptions (requested marker: ">35").
         grids.set(key, true);
-        // #5081: report that a caller still relies on the legacy Set-like `add()` (AG Grid >35),
-        // so the shim can be removed once usage stops. Observers never alter map behavior.
-        for (const observer of observers) {
-          try {
-            observer();
-          } catch {
-            // Diagnostics must not break grid style injection.
-          }
-        }
         return grids;
       };
     }

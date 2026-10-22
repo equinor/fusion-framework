@@ -7,9 +7,6 @@
   },
   "references": [
     {
-      "path": "../modules/telemetry"
-    },
-    {
       "path": "../framework"
     },
     {

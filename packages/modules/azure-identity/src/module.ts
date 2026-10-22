@@ -4,11 +4,7 @@ import { AuthProviderDefaultCredential } from './AuthProviderDefaultCredential.j
 import { ensureCachePersistencePlugin } from './ensure-cache-persistence-plugin.js';
 import { AuthProviderInteractiveBrowser } from './AuthProviderInteractiveBrowser.js';
 import { AuthProviderTokenOnly } from './AuthProviderTokenOnly.js';
-import { connectAuthTelemetry } from './connect-auth-telemetry.js';
 import type { IAuthProvider } from './AuthProvider.interface.js';
-
-/** Telemetry disconnects owned by each initialized provider, released on module disposal. */
-const telemetryConnections = new WeakMap<object, () => void>();
 
 /**
  * Azure Identity authentication module for the Fusion Framework.
@@ -52,18 +48,6 @@ export const module: AzureIdentityModule = {
       default:
         return new AuthProviderDefaultCredential();
     }
-  },
-  postInitialize: async ({ instance, modules }) => {
-    // A static token involves no acquisition and must never be observed. The prototype check
-    // is deliberate: provider `instanceof` is duck-typed and matches every module provider.
-    if (!Object.prototype.isPrototypeOf.call(AuthProviderTokenOnly.prototype, instance)) {
-      telemetryConnections.set(instance, connectAuthTelemetry(instance, modules.telemetry));
-    }
-  },
-  dispose: ({ instance }) => {
-    // Only telemetry is detached; provider disposal itself is unchanged.
-    telemetryConnections.get(instance)?.();
-    telemetryConnections.delete(instance);
   },
 };
 

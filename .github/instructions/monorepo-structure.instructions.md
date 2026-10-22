@@ -14,9 +14,6 @@ applyTo: "packages/**/*.{ts,tsx,json}"
 - **New packages**: Place under the correct category (`app`, `framework`, `modules`, `react`, `utils`, `vite-plugins`, etc.) and follow naming conventions.
 - **New public packages**: Declare `repository` (with `directory`) and `publishConfig.access`. A maintainer must reserve the name with `pnpm npm-trust add <name>` before the first release, or publishing fails. See `.agents/skills/custom-npm-publishing/SKILL.md`.
 - **Modules**: Implement module interfaces, export configuration and types, and add tests (plus React hooks if applicable).
-- **Module source roots**: Keep module entry points and core contracts/configurators/providers at the root. Place new lifecycle internals in `lib/`, pure helpers in `utils/`, validation schemas in `schemas/`, and optional integrations in `integrations/`. Preserve public entry-point exports; do not reorganize unrelated pre-existing files during a feature change.
-- **Module preparation**: Use synchronous `addConfig({ prepare })` callbacks with an explicitly supplied builder or an opt-in, reference-independent `module.prepare()` factory. Ordinary `configure(ref)` factories must not run early. Keep builder storage internal; use lifecycle callbacks or owner-held references rather than public registry lookups.
-- **Reactive state classes**: A `FlowSubject`-backed state class keeps its actions, reducer and flows in companion files named after the class: `<Class>.actions.ts`, `<Class>.reducer.ts` and `<Class>.flows.ts`, next to `<Class>.ts`. Behaviour belongs in flows over `action$`/`state$`, not in the consuming class, which stays a thin facade. These suffixes are exempt from `filename-convention` in `fusion-lint.config.json`, so the companion name follows the class rather than the export. Keep per-item hot paths (for example telemetry records) on synchronous streams; flow outcomes are delivered on the `asyncScheduler`, so code under fake timers must advance timers to settle them.
 
 ## Package Organization
 
@@ -103,3 +100,4 @@ Modules follow specific patterns:
 - Utils: `@equinor/fusion-*`
 
 The full package list lives in `CODEMAP.md`. Consult it instead of listing directories.
+

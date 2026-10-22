@@ -59,7 +59,6 @@
   "devDependencies": {
     "@equinor/eds-tokens": "^2.2.0",
     "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "ag-grid-community": "~36.2.0",
     "ag-grid-enterprise": "~36.2.0",
     "typescript": "^7.0.2"
@@ -67,14 +66,10 @@
   "peerDependencies": {
     "@equinor/eds-tokens": "^2.0.0",
     "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "ag-grid-community": ">=36.0.0",
     "ag-grid-enterprise": ">=36.0.0"
   },
   "peerDependenciesMeta": {
-    "@equinor/fusion-framework-module-telemetry": {
-      "optional": true
-    },
     "ag-charts-enterprise": {
       "optional": true
     }

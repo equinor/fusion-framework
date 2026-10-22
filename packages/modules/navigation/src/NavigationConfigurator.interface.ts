@@ -32,8 +32,6 @@ export interface INavigationConfigurator {
    * and errors for monitoring and debugging.
    */
   telemetry?: ITelemetryProvider;
-  /** Resolve available telemetry after initialization unless explicitly configured or disabled. */
-  autoTelemetry?: boolean;
 
   /**
    * Event provider for dispatching {@link NavigateEvent} and {@link NavigatedEvent}.

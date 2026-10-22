@@ -1,4 +1,5 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from, lastValueFrom } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
 
@@ -34,7 +35,6 @@ async function initializeModule(
 ): Promise<readonly [string, unknown]> {
   const { config, ref, requireInstance, hasModule, registerEvent } = ctx;
   const key = module.name;
-  const moduleInitStart = performance.now();
 
   // Modules must expose an initialize method to participate in the initialize phase
   if (!module.initialize) {
@@ -49,7 +49,6 @@ async function initializeModule(
         moduleVersion: module.version?.toString() || 'unknown',
       },
       error,
-      metric: performance.now() - moduleInitStart,
     });
     throw error;
   }
@@ -64,25 +63,14 @@ async function initializeModule(
     },
   });
 
-  let instance: unknown;
-  try {
-    instance = await module.initialize({
-      ref,
-      config: (config as Record<string, unknown>)[key],
-      requireInstance,
-      hasModule,
-    });
-  } catch (error) {
-    registerEvent({
-      level: ModuleEventLevel.Error,
-      name: ModuleConfiguratorEventName.ModuleInitializeError,
-      message: 'Module initialization failed',
-      properties: { moduleName: module.name },
-      metric: performance.now() - moduleInitStart,
-      error,
-    });
-    throw error;
-  }
+  const moduleInitStart = performance.now();
+
+  const instance = await (module.initialize({
+    ref,
+    config: (config as Record<string, unknown>)[key],
+    requireInstance,
+    hasModule,
+  }) as Promise<unknown>);
 
   // Warn when providers deviate from the expected base class — these modules
   // may lack version tracking and standard provider interfaces.
@@ -134,8 +122,7 @@ async function initializeModule(
 /**
  * Runs the initialize lifecycle phase for all registered modules.
  *
- * Initializes all modules concurrently and rejects on the first failure; providers that
- * finish afterwards are passed to `onLateProvider` for cleanup. Cross-module
+ * Initializes all modules **concurrently** using `mergeMap`. Cross-module
  * dependency ordering is handled lazily through `requireInstance`, which
  * waits for a peer module's `initialize` call to complete before resolving.
  *
@@ -156,12 +143,12 @@ export async function runInitializePhase<T>(
   config: unknown,
   ref?: unknown,
 ): Promise<T> {
-  const { modules, registerEvent, instances = {}, onLateProvider } = ctx;
+  const { modules, registerEvent } = ctx;
 
   // Fast-path: no modules registered — return a sealed empty instance immediately
   // to avoid a subscribe/lastValueFrom race on an already-completed observable.
   if (modules.length === 0) {
-    return Object.seal(instances) as T;
+    return Object.seal({}) as T;
   }
 
   // Extract module names for dependency lookups before any module has initialized
@@ -176,58 +163,65 @@ export async function runInitializePhase<T>(
 
   // Initialize all modules concurrently; modules that depend on peers will
   // suspend inside requireInstance until the dependency resolves.
+  const init$ = from(modules).pipe(
+    mergeMap((module) =>
+      initializeModule(module, { config, ref, requireInstance, hasModule, registerEvent }),
+    ),
+  );
+
   const initStart = performance.now();
-  let failed = false;
-  // Start every initializer at once; peers wait on each other through requireInstance.
-  const initializers = modules.map(async (module) => {
-    const [name, provider] = await initializeModule(module, {
-      config,
-      ref,
-      requireInstance,
-      hasModule,
-      registerEvent,
-    });
-    // Rollback already owns `instances`; a late provider is handed off rather than leaked.
-    if (failed) {
-      onLateProvider?.(module, provider);
-      return;
-    }
-    instances[name] = provider;
-    instance$.next({ ...instances } as Partial<T>);
+
+  // Accumulate module providers into the shared instance subject as each resolves.
+  // Completing the subject signals that all modules are initialized.
+  init$.subscribe({
+    next: ([name, module]) => {
+      // Merge the newly initialized module into the shared instance map without dropping peers
+      const nextInstance = Object.assign(instance$.value, { [name]: module });
+      instance$.next(nextInstance);
+    },
+    error: (err) => {
+      registerEvent({
+        level: ModuleEventLevel.Error,
+        name: ModuleConfiguratorEventName.ModuleInitializeError,
+        message: `Failed to initialize module ${err.name || 'unknown'}`,
+        error: err,
+      });
+      instance$.error(err);
+    },
+    complete: () => {
+      const loadTime = Math.round(performance.now() - initStart);
+      registerEvent({
+        level: ModuleEventLevel.Debug,
+        name: ModuleConfiguratorEventName.ModuleInitializeComplete,
+        message: `All modules initialized in ${loadTime}ms`,
+        properties: {
+          modules: Object.keys(instance$.value).join(', '),
+          loadTime,
+        },
+        metric: loadTime,
+      });
+      instance$.complete();
+    },
   });
-  try {
-    // Reject on the first failure: a sibling that never settles must not hang startup.
-    await Promise.all(initializers);
-  } catch (error) {
-    failed = true;
-    // Reject outstanding dependency waits instead of waiting for their timeout.
-    instance$.error(error);
-    throw error;
-  }
-  instance$.complete();
-  const initTime = Math.round(performance.now() - initStart);
-  registerEvent({
-    level: ModuleEventLevel.Debug,
-    name: ModuleConfiguratorEventName.ModuleInitializeComplete,
-    message: 'All modules initialized',
-    properties: { modules: Object.keys(instances).join(', '), loadTime: initTime },
-    metric: initTime,
-  });
+
+  const instanceInitStart = performance.now();
+  const instance = await lastValueFrom(instance$);
+  const initTime = Math.round(performance.now() - instanceInitStart);
 
   registerEvent({
     level: ModuleEventLevel.Debug,
     name: ModuleConfiguratorEventName.InitializeComplete,
     message: `Modules instance created in ${initTime}ms`,
     properties: {
-      modules: Object.keys(instances).join(', '),
+      modules: Object.keys(instance).join(', '),
       initTime,
     },
     metric: initTime,
   });
 
-  Object.seal(instances);
+  Object.seal(instance);
 
-  return instances as T;
+  return instance as T;
 }
 
 export default runInitializePhase;

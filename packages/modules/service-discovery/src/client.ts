@@ -9,15 +9,9 @@ import {
   from,
   lastValueFrom,
   map,
-  Subject,
   type MonoTypeOperatorFunction,
-  type Observable,
   type ObservableInput,
 } from 'rxjs';
-import type {
-  ServiceDiscoveryDiagnostic,
-  ServiceDiscoveryResolveOrigin,
-} from './ServiceDiscoveryDiagnostic.js';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 import { ApiServices } from './api-services.js';
 
@@ -49,15 +43,6 @@ export interface IServiceDiscoveryClient {
    * @returns An array of {@link Service} objects.
    */
   resolveServices(allow_cache?: boolean): Promise<Service[]>;
-
-  /**
-   * Optional stream of safe resolution outcomes used for operational telemetry.
-   *
-   * Emits one `resolve` outcome per {@link resolveServices} call, classified by where the
-   * list came from, and one `unknown-service` notification per unmatched key. Contains no
-   * keys, URIs, scopes or errors. Custom clients without it are not instrumented.
-   */
-  readonly diagnostic$?: Observable<ServiceDiscoveryDiagnostic>;
 }
 
 /**
@@ -154,11 +139,6 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
 
   #failure?: FailureState;
   #lastKnownGood?: { services: Service[]; receivedAt: number };
-  #diagnostic = new Subject<ServiceDiscoveryDiagnostic>();
-
-  /** {@inheritDoc IServiceDiscoveryClient.diagnostic$} */
-  public readonly diagnostic$: Observable<ServiceDiscoveryDiagnostic> =
-    this.#diagnostic.asObservable();
 
   /** Sub-path appended to the HTTP client's base URI when fetching services. */
   public readonly endpoint?: string;
@@ -191,7 +171,6 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
 
   /** {@inheritDoc IServiceDiscoveryClient.resolveServices} */
   public async resolveServices(allow_cache?: boolean): Promise<Service[]> {
-    const started = performance.now();
     // Fail fast while cooling down so retry/reload/render loops never reach the network
     if (this.#failure && Date.now() < this.#failure.retryAt) {
       return this.#resolveFallback(
@@ -200,35 +179,26 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
           retryAt: this.#failure.retryAt,
           attempt: this.#failure.attempt,
         }),
-        started,
-        'cooldown',
       );
     }
 
     const startedAt = Date.now();
-    let record: { status: string; value: Service[] };
     try {
       // firstValueFrom returns the cached snapshot; lastValueFrom waits for
       // the freshest value from the query
       const fn = allow_cache ? firstValueFrom : lastValueFrom;
-      record = await fn(this.#query.query());
+      const record = await fn(this.#query.query());
+      // Only a fresh response proves discovery works; a cached (possibly expired) snapshot must
+      // not reset the failure streak or renew the age of the fallback list
+      if (record.status === 'complete') {
+        this.#failure = undefined;
+        this.#lastKnownGood = { services: record.value, receivedAt: Date.now() };
+      }
+      return record.value;
     } catch (error) {
       this.#registerFailure(error, startedAt);
-      return this.#resolveFallback(error, started, 'network');
+      return this.#resolveFallback(error);
     }
-    // Only a fresh response proves discovery works; a cached (possibly expired) snapshot must
-    // not reset the failure streak or renew the age of the fallback list
-    if (record.status === 'complete') {
-      this.#failure = undefined;
-      this.#lastKnownGood = { services: record.value, receivedAt: Date.now() };
-    }
-    this.#emit({
-      type: 'resolve',
-      outcome: 'success',
-      origin: record.status === 'complete' ? 'network' : 'cache',
-      duration: performance.now() - started,
-    });
-    return record.value;
   }
 
   /**
@@ -267,46 +237,16 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
    * otherwise rethrows the given error.
    *
    * @param error - Error to throw when no usable fallback exists.
-   * @param started - `performance.now()` timestamp when resolution started.
-   * @param failedOrigin - Classification reported when no fallback can be served.
    * @returns The last known good service list.
    * @throws The provided `error` when no service list younger than 24 hours exists.
    */
-  #resolveFallback(
-    error: unknown,
-    started: number,
-    failedOrigin: Extract<ServiceDiscoveryResolveOrigin, 'network' | 'cooldown'>,
-  ): Service[] {
+  #resolveFallback(error: unknown): Service[] {
     const lastKnownGood = this.#lastKnownGood;
     // Prefer a recent service list over an error so callers have nothing to retry
     if (lastKnownGood && Date.now() - lastKnownGood.receivedAt <= staleIfErrorMs) {
-      this.#emit({
-        type: 'resolve',
-        outcome: 'success',
-        origin: 'fallback',
-        duration: performance.now() - started,
-      });
       return lastKnownGood.services;
     }
-    this.#emit({
-      type: 'resolve',
-      outcome: 'failure',
-      origin: failedOrigin,
-      duration: performance.now() - started,
-    });
     throw error;
-  }
-
-  /**
-   * Publishes a safe diagnostic outcome without letting an observer affect resolution.
-   * @param diagnostic - Classified outcome without keys, URIs, scopes or errors.
-   */
-  #emit(diagnostic: ServiceDiscoveryDiagnostic): void {
-    try {
-      this.#diagnostic.next(diagnostic);
-    } catch {
-      // Observers are diagnostic only; resolution results must stay unchanged.
-    }
   }
 
   /** {@inheritDoc IServiceDiscoveryClient.resolveService} */
@@ -316,7 +256,6 @@ export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
     const service = services.find((s) => s.key === key);
     // Fail loudly when the requested key doesn't resolve to a known service
     if (!service) {
-      this.#emit({ type: 'unknown-service' });
       throw Error(`Failed to resolve service, invalid key [${key}]`);
     }
     return service;

@@ -23,7 +23,6 @@ import type { NavigationModule } from './module.js';
  */
 const navigationConfigSchema = z
   .object({
-    autoTelemetry: z.boolean().optional(),
     basename: z
       .string()
       .optional()
@@ -181,11 +180,8 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
    * @returns The configurator instance for method chaining
    */
   public setTelemetry(
-    telemetryOrCallback: ITelemetryProvider | ConfigBuilderCallback<ITelemetryProvider> | undefined,
+    telemetryOrCallback: ITelemetryProvider | ConfigBuilderCallback<ITelemetryProvider>,
   ): this {
-    // Automatic host wiring stays on by default; any explicit choice, including
-    // `undefined` to opt out, replaces it so host telemetry is never connected twice.
-    this._set('autoTelemetry', false);
     const fn =
       typeof telemetryOrCallback === 'function'
         ? telemetryOrCallback

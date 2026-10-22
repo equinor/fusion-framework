@@ -1,10 +1,11 @@
-import type { ApiAccountActiveAccessRoleAssignmentV1 } from '@equinor/fusion-services/roles';
+import { TelemetryLevel, TelemetryScope } from '@equinor/fusion-framework-module-telemetry';
 import { describe, expect, it, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 
 import { ActivateClaimableRoleAssignmentError } from '../errors/ActivateClaimableRoleAssignmentError.js';
 import { ClaimableRoleAssignmentActivationEvent } from '../ClaimableRoleAssignmentActivationEvent.js';
 import type { IRolesClient } from '../RolesClient.js';
+import { RolesError } from '../errors/RolesError.js';
 import { RolesProvider } from '../RolesProvider.js';
 import { RolesClient } from '../RolesClient.js';
 import { HttpClient } from '@equinor/fusion-framework-module-http/client';
@@ -26,17 +27,6 @@ const createClient = (): IRolesClient => ({
   getRequiredAccessRoleStatuses: vi.fn(),
   getAccessRoles: vi.fn(),
 });
-
-/** Telemetry double carrying a host identity so operational records are produced. */
-const createTelemetry = () => ({
-  source: { source: 'framework', hostId: 'host-1' },
-  track: vi.fn(),
-  trackEvent: vi.fn(),
-});
-
-/** Names of every record the provider sent to the telemetry double, in order. */
-const recordNames = (telemetry: ReturnType<typeof createTelemetry>): string[] =>
-  telemetry.track.mock.calls.map(([item]) => `${item.name}:${item.diagnostic.outcome}`);
 
 describe('RolesProvider', () => {
   it('converts custom client page observables into a lazy async iterator', async () => {
@@ -117,7 +107,7 @@ describe('RolesProvider', () => {
     vi.spyOn(httpClient, 'json$')
       .mockReturnValueOnce(of({ value: [{ name: 'First.Role' }], nextPage: 'next' }))
       .mockReturnValueOnce(throwError(() => cause));
-    const telemetry = createTelemetry();
+    const telemetry = { trackEvent: vi.fn(), trackException: vi.fn() };
     const provider = new RolesProvider(
       {
         client: new RolesClient(httpClient, () => 'account-id'),
@@ -128,13 +118,11 @@ describe('RolesProvider', () => {
 
     await pages.next();
     await expect(pages.next()).rejects.toMatchObject({ name: 'RolesError', cause });
-    expect(recordNames(telemetry)).toEqual([
-      'fusion.roles.get-access-roles.duration:success',
-      'fusion.roles.get-access-roles.duration:failure',
-      'fusion.roles.get-access-roles.failure:failure',
-    ]);
-    // The original error stays on the thrown error, never in the exported record.
-    expect(JSON.stringify(telemetry.track.mock.calls)).not.toContain('second page failed');
+    expect(telemetry.trackException).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'RolesProvider.getAccessRoles',
+      }),
+    );
     provider.dispose();
   });
 
@@ -143,11 +131,9 @@ describe('RolesProvider', () => {
     const page = new Subject<unknown>();
     const json = vi.spyOn(httpClient, 'json$').mockReturnValue(page);
     const controller = new AbortController();
-    const telemetry = createTelemetry();
-    const provider = new RolesProvider(
-      { client: new RolesClient(httpClient, () => 'account-id') },
-      { telemetry },
-    );
+    const provider = new RolesProvider({
+      client: new RolesClient(httpClient, () => 'account-id'),
+    });
     const pages = provider.getAccessRoles(controller.signal);
     const pendingPage = pages.next();
     const assertion = expect(pendingPage).rejects.toMatchObject({ name: 'RolesError' });
@@ -158,38 +144,7 @@ describe('RolesProvider', () => {
     expect(page.observed).toBe(false);
     expect(json).toHaveBeenCalledOnce();
     await expect(pages.next()).resolves.toEqual({ done: true, value: undefined });
-    expect(recordNames(telemetry)).toEqual(['fusion.roles.get-access-roles.duration:cancelled']);
     provider.dispose();
-  });
-
-  it('still accepts the earlier trackEvent and trackException telemetry dependency', async () => {
-    const client = createClient();
-    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(of([]));
-    // The pre-operational dependency shape must keep type-checking for constructor callers.
-    const telemetry = { trackEvent: vi.fn(), trackException: vi.fn() };
-    const provider = new RolesProvider({ client }, { telemetry });
-
-    await expect(provider.getActiveAccessRoleAssignments()).resolves.toEqual([]);
-    // Without `track` there is no operational record, and nothing breaks.
-    expect(telemetry.trackEvent).not.toHaveBeenCalled();
-    expect(telemetry.trackException).not.toHaveBeenCalled();
-    provider.dispose();
-  });
-
-  it('stops reporting operations once the provider is disposed', async () => {
-    const client = createClient();
-    const result = new Subject<ApiAccountActiveAccessRoleAssignmentV1[]>();
-    vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(result);
-    const telemetry = createTelemetry();
-    const provider = new RolesProvider({ client }, { telemetry });
-
-    const pending = provider.getActiveAccessRoleAssignments();
-    provider.dispose();
-    result.next([]);
-    result.complete();
-
-    await expect(pending).resolves.toEqual([]);
-    expect(telemetry.track).not.toHaveBeenCalled();
   });
 
   it('exposes role operations through the initialized client', async () => {
@@ -207,7 +162,10 @@ describe('RolesProvider', () => {
       of([{ name: 'Reports.Read', exists: true, claimableAssignments: [] }]),
     );
     const dispatchEvent = vi.fn(async (event: ClaimableRoleAssignmentActivationEvent) => event);
-    const telemetry = createTelemetry();
+    const telemetry = {
+      trackEvent: vi.fn(),
+      trackException: vi.fn(),
+    };
     const provider = new RolesProvider(
       { client },
       {
@@ -243,18 +201,13 @@ describe('RolesProvider', () => {
       hours: 2,
     });
     expect(dispatchEvent).toHaveBeenCalledOnce();
-    expect(recordNames(telemetry)).toEqual([
-      'fusion.roles.get-active-access-role-assignments.duration:success',
-      'fusion.roles.get-consolidated-claimable-role-assignments.duration:success',
-      'fusion.roles.get-consolidated-role-assignments.duration:success',
-      'fusion.roles.activate-claimable-role-assignment.duration:success',
-      'fusion.roles.deactivate-claimable-role-assignment.duration:success',
-      'fusion.roles.get-required-access-role-statuses.duration:success',
-    ]);
-    // Role, assignment and account identifiers never reach telemetry.
-    expect(JSON.stringify(telemetry.track.mock.calls)).not.toMatch(
-      /Reports\.|"claimable-role"|Test activation/,
-    );
+    expect(telemetry.trackEvent).toHaveBeenCalledWith({
+      name: 'RolesProvider.activateClaimableRoleAssignment',
+      level: TelemetryLevel.Debug,
+      scope: ['roles', TelemetryScope.Framework],
+      properties: { outcome: 'success' },
+    });
+    expect(telemetry.trackException).not.toHaveBeenCalled();
   });
 
   it('does not activate a role when the claim event is canceled', async () => {
@@ -266,8 +219,7 @@ describe('RolesProvider', () => {
       }
       return event;
     });
-    const telemetry = createTelemetry();
-    const provider = new RolesProvider({ client }, { event: { dispatchEvent }, telemetry });
+    const provider = new RolesProvider({ client }, { event: { dispatchEvent } });
 
     const claim = provider.activateClaimableRoleAssignment({
       assignmentId: 'claimable-role',
@@ -281,10 +233,6 @@ describe('RolesProvider', () => {
     await expect(claim).rejects.toBeInstanceOf(ActivateClaimableRoleAssignmentError);
     expect(client.activateClaimableRoleAssignment).not.toHaveBeenCalled();
     expect(dispatchEvent).toHaveBeenCalledOnce();
-    // A listener veto is an intended stop, not an unexpected failure.
-    expect(recordNames(telemetry)).toEqual([
-      'fusion.roles.activate-claimable-role-assignment.duration:cancelled',
-    ]);
   });
 
   it('checks active access-role names for the authenticated account', async () => {
@@ -410,42 +358,48 @@ describe('RolesProvider', () => {
     const client = createClient();
     const error = new Error('request failed');
     vi.mocked(client.getActiveAccessRoleAssignments).mockReturnValue(throwError(() => error));
-    const telemetry = createTelemetry();
+    const telemetry = {
+      trackEvent: vi.fn(),
+      trackException: vi.fn(),
+    };
     const provider = new RolesProvider({ client }, { telemetry });
 
     await expect(provider.getActiveAccessRoleAssignments()).rejects.toMatchObject({
       name: 'RolesError',
       cause: error,
     });
-    expect(recordNames(telemetry)).toEqual([
-      'fusion.roles.get-active-access-role-assignments.duration:failure',
-      'fusion.roles.get-active-access-role-assignments.failure:failure',
-    ]);
-    expect(telemetry.track.mock.calls[1][0].exception).toMatchObject({
-      name: 'OperationalError',
-      message: 'fusion.roles.get-active-access-role-assignments failed',
+    expect(telemetry.trackException).toHaveBeenCalledWith({
+      name: 'RolesProvider.getActiveAccessRoleAssignments',
+      exception: expect.any(RolesError),
+      level: TelemetryLevel.Error,
+      scope: ['roles', TelemetryScope.Framework],
+      properties: { outcome: 'failure' },
     });
+    expect(telemetry.trackEvent).not.toHaveBeenCalled();
   });
 
   it('reports and propagates consolidated-role-assignment client failures', async () => {
     const client = createClient();
     const error = new Error('request failed');
     vi.mocked(client.getConsolidatedRoleAssignments).mockReturnValue(throwError(() => error));
-    const telemetry = createTelemetry();
+    const telemetry = {
+      trackEvent: vi.fn(),
+      trackException: vi.fn(),
+    };
     const provider = new RolesProvider({ client }, { telemetry });
 
     await expect(provider.getConsolidatedRoleAssignments()).rejects.toMatchObject({
       name: 'RolesError',
       cause: error,
     });
-    expect(recordNames(telemetry)).toEqual([
-      'fusion.roles.get-consolidated-role-assignments.duration:failure',
-      'fusion.roles.get-consolidated-role-assignments.failure:failure',
-    ]);
-    expect(telemetry.track.mock.calls[1][0].exception).toMatchObject({
-      name: 'OperationalError',
-      message: 'fusion.roles.get-consolidated-role-assignments failed',
+    expect(telemetry.trackException).toHaveBeenCalledWith({
+      name: 'RolesProvider.getConsolidatedRoleAssignments',
+      exception: expect.any(RolesError),
+      level: TelemetryLevel.Error,
+      scope: ['roles', TelemetryScope.Framework],
+      properties: { outcome: 'failure' },
     });
+    expect(telemetry.trackEvent).not.toHaveBeenCalled();
   });
 
   it('classifies client activation failures as claim errors', async () => {

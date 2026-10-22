@@ -55,9 +55,7 @@
   },
   "dependencies": {
     "@azure/identity": "^4.9.1",
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
-    "@equinor/fusion-observable": "workspace:^"
+    "@equinor/fusion-framework-module": "workspace:^"
   },
   "optionalDependencies": {
     "@azure/identity-cache-persistence": "^1.3.0",

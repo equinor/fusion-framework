@@ -33,15 +33,6 @@ export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> 
 // @todo(#5145) - create a BaseModule which implements this interface
 
 /**
- * Teardown phase of a module, disposed in the fixed order `default`, `diagnostics`, then `events`.
- *
- * Modules within one phase dispose concurrently. `diagnostics` and `events` are reserved for
- * infrastructure that must outlive ordinary module teardown, so telemetry can record it and the
- * event bus can carry it; they are not a dependency-ordering mechanism for ordinary modules.
- */
-export type ModuleDisposePhase = 'default' | 'diagnostics' | 'events';
-
-/**
  * Interface which describes the structure of a module
  *
  * @template TKey name of the module
@@ -59,19 +50,6 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    * uniq name of module, used as attribute name on module instances
    */
   name: TKey;
-  /**
-   * Teardown phase; see {@link ModuleDisposePhase}. Omitted phases use `default`.
-   */
-  disposePhase?: ModuleDisposePhase;
-
-  /**
-   * Creates a reference-independent configuration builder for synchronous preparation.
-   * Opt in only when the builder can exist before `initialize(ref)` is called.
-   * Invoked on the first registration with a preparation callback, unless an explicit
-   * builder was supplied. Ordinary configure factories keep their existing lifecycle.
-   * @returns The builder shared by preparation, configuration and initialization.
-   */
-  prepare?: () => TConfig;
 
   /**
    * _[optional]_
