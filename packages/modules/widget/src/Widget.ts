@@ -16,6 +16,7 @@ import {
   Observable,
   Subscription,
   combineLatest,
+  defer,
   firstValueFrom,
   lastValueFrom,
   of,
@@ -414,7 +415,12 @@ export class Widget {
           },
         }),
       );
-    }).pipe(this.#telemetry()?.measure('load') ?? identity);
+    }).pipe((source) =>
+      defer(() => {
+        // A cold load may be created before the provider receives its telemetry connection.
+        return source.pipe(this.#telemetry()?.measure('load') ?? identity);
+      }),
+    );
   }
   /**
    * Retrieves the widget script module as a `Promise`.

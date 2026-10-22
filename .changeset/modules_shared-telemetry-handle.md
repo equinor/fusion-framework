@@ -16,4 +16,7 @@ Preserve record names, outcomes, summary properties, volume budgets and navigati
 explicit telemetry precedence. Optional peers remain lazily loaded, and disposed providers
 cannot report late outcomes.
 
+Cold app/widget loads, context resolution and bookmark requests resolve telemetry when
+subscribed, including observables created before the first telemetry connection.
+
 Refs #5837.

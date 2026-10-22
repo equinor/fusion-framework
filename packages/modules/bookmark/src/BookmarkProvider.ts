@@ -687,7 +687,12 @@ export class BookmarkProvider
 
       // Step 5: Subscribe to the request stream and forward results to observer
       request$.subscribe(observer);
-    }).pipe(this.#telemetry?.measure('list') ?? identity);
+    }).pipe((source) =>
+      defer(() => {
+        // The provider may connect after this cold request is created.
+        return source.pipe(this.#telemetry?.measure('list') ?? identity);
+      }),
+    );
   }
 
   /**
@@ -753,7 +758,13 @@ export class BookmarkProvider
         this._log?.error(error.message, error);
         throw error;
       }),
-      this.#telemetry?.measure('apply', { clear: bookmark_or_id === null }) ?? identity,
+      (source) =>
+        defer(() => {
+          // The provider may connect after this cold request is created.
+          return source.pipe(
+            this.#telemetry?.measure('apply', { clear: bookmark_or_id === null }) ?? identity,
+          );
+        }),
     );
   }
 
@@ -1290,8 +1301,10 @@ export class BookmarkProvider
       return request$.subscribe(subscriber);
     });
 
-    // Measured per subscription, since this operation is cold and starts per subscriber.
-    return result$.pipe(this.#telemetry?.measure('favourite-add') ?? identity);
+    return defer(() => {
+      // Resolve telemetry per subscription, including connections made after request creation.
+      return result$.pipe(this.#telemetry?.measure('favourite-add') ?? identity);
+    });
   }
 
   /**
@@ -1394,8 +1407,10 @@ export class BookmarkProvider
       request$.subscribe(subscriber);
     });
 
-    // Measured per subscription, since this operation is cold and starts per subscriber.
-    return result$.pipe(this.#telemetry?.measure('favourite-remove') ?? identity);
+    return defer(() => {
+      // Resolve telemetry per subscription, including connections made after request creation.
+      return result$.pipe(this.#telemetry?.measure('favourite-remove') ?? identity);
+    });
   }
 
   /**

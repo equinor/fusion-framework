@@ -11,6 +11,7 @@ import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 import type { AppModuleProvider } from '../AppModuleProvider.js';
 import {
   combineLatest,
+  defer,
   of,
   Subscription,
   firstValueFrom,
@@ -709,7 +710,12 @@ export class App<
           },
         }),
       );
-    }).pipe(this.#telemetry()?.measure('load') ?? identityOperator);
+    }).pipe((source) =>
+      defer(() => {
+        // A cold load may be created before the provider receives its telemetry connection.
+        return source.pipe(this.#telemetry()?.measure('load') ?? identityOperator);
+      }),
+    );
   }
 
   /** @inheritdoc */

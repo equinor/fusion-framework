@@ -481,8 +481,10 @@ export class ContextProvider
         }
         throw error;
       }
-      // Values, errors and cancellation pass through unchanged; only the outcome is recorded.
-      return result.pipe(this.#telemetry?.measure('resolve', { by: 'item' }) ?? identity);
+      return defer(() => {
+        // Resolve the optional handle per subscription without deferring synchronous factory errors.
+        return result.pipe(this.#telemetry?.measure('resolve', { by: 'item' }) ?? identity);
+      });
     };
     // override validateContext if configured
     if (config.validateContext) {

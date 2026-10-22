@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { asyncScheduler, identity, lastValueFrom, observeOn, Subject, switchMap } from 'rxjs';
+import { asyncScheduler, identity, lastValueFrom, observeOn, of, Subject, switchMap } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
   enableTelemetry,
@@ -13,7 +13,7 @@ import { WidgetManifestLoadError } from '../WidgetManifestLoadError.js';
 import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 import { measureStage } from '../integrations/measure-stage.js';
 import widgetModule from '../module.js';
-import type { IClient, WidgetManifest } from '../types.js';
+import type { IClient, WidgetManifest, WidgetScriptModule } from '../types.js';
 
 const SENTINEL = 'sentinel-secret';
 
@@ -60,6 +60,33 @@ const summary = (items: TelemetryItem[]) =>
   items.map((item) => [item.name, item.diagnostic?.outcome, item.properties?.reason]);
 
 describe('widget load-stage telemetry', () => {
+  it('measures a load created before telemetry connects on each later subscription', async () => {
+    const { modules, records } = await createTelemetry();
+    const provider = new WidgetModuleProvider({
+      config: { client: createClient(async ({ widgetKey }) => manifest(widgetKey)) },
+    });
+    const widget = provider.getWidget('late-widget');
+    vi.spyOn(widget, 'getWidgetModule').mockReturnValue(of({} as WidgetScriptModule));
+    const load$ = widget.initialize();
+
+    await provider.connectTelemetry(modules.telemetry);
+    await lastValueFrom(load$);
+    await lastValueFrom(load$);
+
+    expect(
+      records().filter((record) => record.name === 'fusion.widget.load.duration'),
+    ).toMatchObject([
+      { diagnostic: { outcome: 'success' }, properties: { widgetKey: 'late-widget' } },
+      { diagnostic: { outcome: 'success' }, properties: { widgetKey: 'late-widget' } },
+    ]);
+    expect(records()).toContainEqual(
+      expect.objectContaining({ name: 'fusion.widget.load-manifest.duration' }),
+    );
+    widget.dispose();
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('connects a widget created before its provider receives a telemetry scope', async () => {
     const { modules, records } = await createTelemetry();
     const provider = new WidgetModuleProvider({
