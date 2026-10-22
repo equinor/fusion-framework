@@ -87,4 +87,41 @@ describe('observable execution measurement', () => {
     const outcomes = report.mock.calls.map(([, outcome]) => outcome);
     expect(outcomes).toEqual(['cancelled']);
   });
+
+  it('records one success when a generator is fully consumed', async () => {
+    const report = vi.fn<AiReport>();
+    async function* chunks(): AsyncGenerator<string> {
+      yield 'a';
+      yield 'b';
+    }
+
+    const generator = measureExecution('generator', 'model-stream', report, undefined, () =>
+      chunks(),
+    ) as AsyncGenerator<string>;
+
+    await expect(Array.fromAsync(generator)).resolves.toEqual(['a', 'b']);
+    // Check the terminal outcome without reading or asserting on emitted chunk values.
+    const outcomes = report.mock.calls.map(([, outcome]) => outcome);
+    expect(outcomes).toEqual(['success']);
+  });
+
+  it('rethrows a generator failure unchanged and records it once', async () => {
+    const report = vi.fn<AiReport>();
+    const failure = new Error('stream failed');
+    async function* chunks(): AsyncGenerator<string> {
+      yield 'a';
+      throw failure;
+    }
+
+    const generator = measureExecution('generator', 'model-stream', report, undefined, () =>
+      chunks(),
+    ) as AsyncGenerator<string>;
+
+    await expect(generator.next()).resolves.toEqual({ value: 'a', done: false });
+    await expect(generator.next()).rejects.toBe(failure);
+    await expect(generator.next()).resolves.toEqual({ value: undefined, done: true });
+    // Check the terminal outcome without reading or asserting on emitted chunk values.
+    const outcomes = report.mock.calls.map(([, outcome]) => outcome);
+    expect(outcomes).toEqual(['failure']);
+  });
 });

@@ -1,12 +1,12 @@
 import {
-  catchError,
   defer,
-  from,
   lastValueFrom,
   type MonoTypeOperatorFunction,
   type Observable,
+  of,
+  shareReplay,
+  switchMap,
   tap,
-  throwError,
 } from 'rxjs';
 import { IterableReadableStream } from '@langchain/core/utils/stream';
 import type { OperationalOutcome } from '@equinor/fusion-framework-module-telemetry/schemas';
@@ -129,11 +129,12 @@ export function measureExecution(
 }
 
 /**
- * Observes each pull of an async generator through RxJS while preserving its pull-based contract.
+ * Measures a LangChain `transform` generator while keeping it pull-based.
  *
- * LangChain's `transform` contract returns an `AsyncGenerator`, so the adapter must remain
- * pull-based. Each `next`, `return` or `throw` operation is measured with a one-value RxJS
- * pipeline; it does not subscribe ahead, buffer chunks, or alter consumer cancellation.
+ * LangChain chains consume `transform` as an `AsyncGenerator`, so this returns one.
+ * Each step is delegated to the source unchanged and observed through RxJS; nothing is
+ * prefetched or buffered. Timing starts at the first pull, because a generator does no
+ * work until it is iterated.
  *
  * @param source - Generator returned by the original client.
  * @param operation - Static operation label.
@@ -147,82 +148,42 @@ function observeGenerator(
   report: AiReport,
   signal: AbortSignal | undefined,
 ): AsyncGenerator<unknown> {
-  const iterator = source[Symbol.asyncIterator]();
-  let recorder: RecordOutcome | undefined;
-  let completed = false;
-  const getRecorder = (): RecordOutcome => {
-    recorder ??= startExecution(operation, report);
-    return recorder;
-  };
-  const pull = <T>(next: () => PromiseLike<T>, observe: (result: T) => void): Promise<T> => {
-    const source$ = defer(() => from(next()));
-    // A one-result pipeline observes a pull without prefetching or buffering chunks.
-    const result$ = source$.pipe(
-      tap(observe),
-      catchError((error: unknown) => {
-        // Preserve the source error while recording the failed pull once.
-        completed = true;
-        getRecorder()(classify(error, signal));
-        return throwError(() => error);
-      }),
+  // Start timing at the first pull and reuse that one recorder for every later step.
+  const recorder$ = defer(() => of(startExecution(operation, report))).pipe(shareReplay(1));
+
+  const step = (
+    run: () => Promise<IteratorResult<unknown>>,
+    outcomeWhenDone: OperationalOutcome,
+  ): Promise<IteratorResult<unknown>> => {
+    // Run one generator step; record an outcome only when the source ends or fails.
+    const step$ = recorder$.pipe(
+      switchMap((record) =>
+        defer(run)
+          // Observe the step without changing its result or error.
+          .pipe(
+            tap({
+              next: (result) => {
+                // Ordinary chunks are not recorded; only the final step ends the execution.
+                if (result.done) record(outcomeWhenDone);
+              },
+              error: (error: unknown) => record(classify(error, signal)),
+            }),
+          ),
+      ),
     );
-    return lastValueFrom(result$);
+    return lastValueFrom(step$);
   };
-  const observeNext = (result: IteratorResult<unknown>): void => {
-    // Record success only when the source reports natural completion.
-    if (result.done) {
-      completed = true;
-      getRecorder()('success');
-    }
-  };
-  const output: AsyncGenerator<unknown> = {
-    next(value?: unknown): Promise<IteratorResult<unknown>> {
-      // Do not pull a source again after its terminal result.
-      if (completed) {
-        return Promise.resolve({ value: undefined, done: true });
-      }
-      return pull(() => iterator.next(value), observeNext);
-    },
-    return(value?: unknown): Promise<IteratorResult<unknown>> {
-      // Repeated close calls are harmless after the source is terminal.
-      if (completed) {
-        return Promise.resolve({ value, done: true });
-      }
-      const close = iterator.return
-        ? (): PromiseLike<IteratorResult<unknown>> => iterator.return(value)
-        : (): PromiseLike<IteratorResult<unknown>> => Promise.resolve({ value, done: true });
-      return pull(close, (result) => {
-        // The consumer intentionally stopped before normal exhaustion.
-        if (result.done) {
-          completed = true;
-          getRecorder()('cancelled');
-        }
-      });
-    },
-    throw(error?: unknown): Promise<IteratorResult<unknown>> {
-      // A completed source cannot accept another injected error.
-      if (completed) {
-        return Promise.reject(error);
-      }
-      // Preserve the caller's error when the source has no throw handler.
-      if (!iterator.throw) {
-        completed = true;
-        getRecorder()(classify(error, signal));
-        return Promise.reject(error);
-      }
-      return pull(
-        () => iterator.throw?.(error) as PromiseLike<IteratorResult<unknown>>,
-        observeNext,
-      );
-    },
-    [Symbol.asyncIterator](): AsyncGenerator<unknown> {
-      return output;
-    },
-    [Symbol.asyncDispose](): Promise<void> {
-      return output.return(undefined).then(() => undefined);
+
+  const generator: AsyncGenerator<unknown> = {
+    next: (value?: unknown) => step(() => source.next(value), 'success'),
+    return: (value?: unknown) => step(() => source.return(value), 'cancelled'),
+    throw: (error?: unknown) => step(() => source.throw(error), 'success'),
+    [Symbol.asyncIterator]: () => generator,
+    [Symbol.asyncDispose]: async () => {
+      await generator.return(undefined);
     },
   };
-  return output;
+  return generator;
 }
 
 /**
