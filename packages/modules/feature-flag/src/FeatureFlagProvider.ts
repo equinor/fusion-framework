@@ -6,7 +6,6 @@ import {
   map,
   pairwise,
   reduce,
-  finalize,
   switchMap,
 } from 'rxjs';
 
@@ -29,6 +28,7 @@ import { normalizeFlags } from './utils/normalize-flags.js';
 import type { FeatureSelectorFn } from './utils/selectors.js';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import { summarizeToggle } from './integrations/summarize-toggle.js';
 
 /**
  * Custom equality comparison for two feature flag snapshots.
@@ -228,70 +228,37 @@ export class FeatureFlagProvider
    * @throws The original error when dispatching a toggle event fails, after recording it.
    */
   public async toggleFeatures(values: Array<{ key: string; enabled: boolean }>): Promise<void> {
-    // Counts only: feature keys and values are never part of operational records.
-    const counts = { requested: values.length, rejected: 0, cancelled: 0 };
-    const end = this.#telemetry.start('toggle');
-
     // get current features from the state
     const { features } = this.#state.value;
 
     // create an observable from the provided values
     const onToggle = from(values).pipe(
       //  notify event observers that a feature is about to be toggled - parallel execution
-      switchMap((value) => {
-        let active = true;
-        let settled = false;
-        const pending = (async () => {
-          try {
-            const feature = features[value.key];
-            // Skip flags that aren't registered, or that are marked readonly.
-            if (!feature) {
-              counts.rejected++;
-              console.warn(`toggling flag [${value.key}] which is not registered`);
-              settled = true;
-              return;
-            } else if (feature.readonly) {
-              counts.rejected++;
-              console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
-              settled = true;
-              return;
-            }
-            // Notify event observers that a feature is about to be toggled; they may cancel it.
-            const event = await this.#event?.dispatchEvent('onFeatureFlagToggle', {
-              source: this,
-              detail: {
-                feature,
-                enable: value.enabled,
-              },
-              cancelable: true,
-            });
-            // switchMap stops observing displaced promises, but they still finish in the background.
-            if (!active) {
-              return;
-            }
-            settled = true;
-            // Listener approval only counts if this promise is still observed by switchMap.
-            if (!event?.canceled) {
-              return value;
-            }
-            counts.cancelled++;
-            console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
-          } catch (error) {
-            settled = true;
-            throw error;
-          }
-        })();
-        // Teardown runs immediately on supersession, before the final promise settles.
-        return from(pending).pipe(
-          finalize(() => {
-            // Account for an event listener that was still pending when switchMap replaced it.
-            if (!settled) {
-              active = false;
-              settled = true;
-              counts.cancelled++;
-            }
-          }),
-        );
+      switchMap(async (value) => {
+        const feature = features[value.key];
+        // skip flags that aren't registered, or that are marked readonly
+        if (!feature) {
+          console.warn(`toggling flag [${value.key}] which is not registered`);
+          return;
+        } else if (feature.readonly) {
+          console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
+          return;
+        }
+        // notify event observers that a feature is about to be toggled - can be canceled
+        const event = await this.#event?.dispatchEvent('onFeatureFlagToggle', {
+          source: this,
+          detail: {
+            feature,
+            enable: value.enabled,
+          },
+          cancelable: true,
+        });
+        // only apply the toggle if no observer canceled the event
+        if (!event?.canceled) {
+          return value;
+        } else {
+          console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
+        }
       }),
       // filter out undefined values
       filter((x): x is { key: string; enabled: boolean } => !!x),
@@ -299,22 +266,23 @@ export class FeatureFlagProvider
       reduce((acc, value) => acc.concat([value]), [] as Array<{ key: string; enabled: boolean }>),
     );
 
+    // Counts are derived from the request and its result, so the toggle flow stays unchanged.
+    const end = this.#telemetry.start('toggle');
     let toggledFeatures: Array<{ key: string; enabled: boolean }>;
     try {
       // wait for the onToggle observable to complete and get the toggled features
       toggledFeatures = await lastValueFrom(onToggle);
     } catch (error) {
-      end('failure', counts);
+      end('failure', summarizeToggle(values, features));
       throw error;
     }
 
     // dispatch the toggle values to the state
     this.#state.next(actions.toggleFeatures(toggledFeatures));
 
-    const applied = toggledFeatures.length;
-    // A request where listeners vetoed everything that could apply is a cancellation;
-    // rejected (unregistered or read-only) flags are reported as counts, not failures.
-    end(applied === 0 && counts.cancelled > 0 ? 'cancelled' : 'success', { ...counts, applied });
+    const summary = summarizeToggle(values, features, toggledFeatures.length);
+    // Listeners vetoing everything that could apply is a cancellation, not a success.
+    end(summary.applied === 0 && summary.cancelled > 0 ? 'cancelled' : 'success', summary);
   }
 
   /**

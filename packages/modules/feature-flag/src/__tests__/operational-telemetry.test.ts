@@ -102,17 +102,10 @@ describe('feature-flag operational telemetry', () => {
     await expect(provider.toggleFeature({ key: `${SENTINEL}-a`, enabled: true })).rejects.toBe(
       original,
     );
+    // Without a result, only the request's own counts are known.
     expect(summary()).toEqual([
-      [
-        'fusion.feature-flag.toggle.duration',
-        'failure',
-        { requested: 1, rejected: 0, cancelled: 0 },
-      ],
-      [
-        'fusion.feature-flag.toggle.failure',
-        'failure',
-        { requested: 1, rejected: 0, cancelled: 0 },
-      ],
+      ['fusion.feature-flag.toggle.duration', 'failure', { requested: 1, rejected: 0 }],
+      ['fusion.feature-flag.toggle.failure', 'failure', { requested: 1, rejected: 0 }],
     ]);
     await modules.dispose();
   });
