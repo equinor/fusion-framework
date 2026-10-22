@@ -170,6 +170,7 @@ without the optional `fallback` property retain their existing behavior.
 | `enableTelemetry` | Function | Registers the telemetry module on a configurator. |
 | `TelemetryModule` / `telemetryModule` | Type / Object | Module definition for the framework module system. |
 | `ITelemetryProvider` | Interface | Provider for tracking events, exceptions, metrics, and measurements. |
+| `TelemetryConnectable` | Interface | Optional `connectTelemetry` capability for module providers that report operational telemetry. |
 | `ITelemetryConfigurator` | Interface | Configurator for adapters, metadata, scopes, and parent providers. |
 | `Measurement` / `IMeasurement` | Class / Interface | Utility for tracking elapsed time with dispose support. |
 | `TelemetryType` | Enum | `Event`, `Exception`, `Metric`, `Custom`. |
@@ -191,7 +192,7 @@ Operational helpers are not re-exported from the root; import them from the
 | `/console-adapter` | `ConsoleAdapter` | Console-based adapter with colour-coded output. |
 | `/application-insights-adapter` | `ApplicationInsightsAdapter` | Microsoft Application Insights adapter. |
 | `/schemas` | `parseTelemetryItem`, schema objects, `DiagnosticContext` | Zod schemas, a parser for telemetry items, and the diagnostic envelope types. |
-| `/utils` | `createOperationalReporter`, `createOperationalRecords`, `createDiagnosticContext`, `mergeTelemetryItem` | Operational record builders and helpers for metadata merging and event mapping. |
+| `/utils` | `createOperationalTelemetry`, `createOperationalRecords`, `createDiagnosticContext`, `mergeTelemetryItem` | Operational record builders and helpers for metadata merging and event mapping. |
 | `/integrations` | `createHttpTelemetry`, `observeQueryTelemetry` | Optional HTTP and query operational instrumentation. |
 | `/mock` | `enableTelemetryMock`, `MockTelemetryAdapter` | In-process telemetry recorder for deterministic tests. |
 

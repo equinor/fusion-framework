@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { TelemetryLevel } from '../static.js';
 import type { TelemetryItem } from '../types.js';
-import { createOperationalReporter, type OperationalTelemetryTarget } from '../utils/index.js';
+import {
+  createOperationalReporter,
+  type OperationalTelemetryTarget,
+} from '../utils/create-operational-reporter.js';
+import { createOperationalTelemetry } from '../utils/index.js';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -77,5 +81,47 @@ describe('createOperationalReporter', () => {
 
     expect(anonymous.items).toHaveLength(0);
     expect(warn).toHaveBeenCalledOnce();
+  });
+});
+
+describe('createOperationalTelemetry', () => {
+  it('binds the module label and reports only while connected', () => {
+    const target = createTarget();
+    const telemetry = createOperationalTelemetry('reports');
+
+    telemetry.report({ operation: 'export', outcome: 'success', duration: 1 });
+    expect(telemetry.connected).toBe(false);
+
+    telemetry.connect(target);
+    telemetry.report({ operation: 'export', outcome: 'success', duration: 1 });
+    telemetry.report({
+      operation: 'fallback',
+      outcome: 'success',
+      notification: true,
+      level: TelemetryLevel.Warning,
+    });
+
+    expect(telemetry.connected).toBe(true);
+    expect(target.items.map((item) => [item.name, item.diagnostic?.module])).toEqual([
+      ['fusion.reports.export.duration', 'reports'],
+      ['fusion.reports.fallback', 'reports'],
+    ]);
+  });
+
+  it('stops permanently on disconnect, ignoring a late connection', () => {
+    const target = createTarget();
+    const telemetry = createOperationalTelemetry('reports');
+    telemetry.connect(target);
+
+    telemetry.disconnect();
+    telemetry.connect(target);
+    telemetry.report({ operation: 'export', outcome: 'success', duration: 1 });
+
+    expect(telemetry.connected).toBe(false);
+    expect(target.items).toHaveLength(0);
+  });
+
+  it('rejects a dynamic module label when the handle is created', () => {
+    expect(() => createOperationalTelemetry('https://example.com')).toThrow(RangeError);
   });
 });

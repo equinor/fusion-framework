@@ -4,13 +4,14 @@ import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import {
   TelemetryLevel,
   type ITelemetryProvider,
+  type TelemetryConnectable,
 } from '@equinor/fusion-framework-module-telemetry';
 
 import type { SignalRConfig } from './SignalRModuleConfigBuilder.js';
 
 import { Topic } from './lib/Topic.js';
 import { version } from './version.js';
-import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 
 /**
  * Public interface for the SignalR module provider.
@@ -19,7 +20,7 @@ import { createOperationalReporter } from '@equinor/fusion-framework-module-tele
  * through an RxJS-based {@link Topic}. Connections are reference-counted
  * and automatically torn down when all subscribers unsubscribe.
  */
-export interface ISignalRProvider {
+export interface ISignalRProvider extends TelemetryConnectable {
   /**
    * Connect to a SignalR hub method and return an observable {@link Topic}.
    *
@@ -40,18 +41,6 @@ export interface ISignalRProvider {
    * ```
    */
   connect<T>(hubId: string, methodName: string): Topic<T>;
-
-  /**
-   * Connects optional operational telemetry for hub connection lifecycles.
-   *
-   * Records `fusion.signalr.connect.duration`, `reconnect.duration` and
-   * `disconnect.duration` outcomes, plus a `connection-lost` notification when a
-   * connection closes unexpectedly. Teardown during start is `cancelled`, not a failure.
-   * Hub names, URLs, tokens and messages are never recorded.
-   *
-   * @param telemetry - Host telemetry provider, or `undefined` to record nothing.
-   */
-  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
 }
 
 /**
@@ -79,15 +68,23 @@ export class SignalRModuleProvider
   constructor(config: SignalRConfig) {
     super({ version, config });
     this.#config = config;
-    this._addTeardown(() => this.connectTelemetry(undefined));
+    this._addTeardown(() => this.#telemetry.disconnect());
   }
 
-  #telemetry?: ITelemetryProvider;
-  #report = createOperationalReporter(() => this.#telemetry);
+  #telemetry = createOperationalTelemetry('signalr');
 
-  /** {@inheritDoc ISignalRProvider.connectTelemetry} */
+  /**
+   * Connects optional operational telemetry for hub connection lifecycles.
+   *
+   * Records `fusion.signalr.connect.duration`, `reconnect.duration` and
+   * `disconnect.duration` outcomes, plus a `connection-lost` notification when a
+   * connection closes unexpectedly. Teardown during start is `cancelled`, not a failure.
+   * Hub names, URLs, tokens and messages are never recorded.
+   *
+   * @param telemetry - Host telemetry provider, or `undefined` to record nothing.
+   */
   public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
-    this.#telemetry = telemetry;
+    this.#telemetry.connect(telemetry);
   }
 
   /**
@@ -149,8 +146,7 @@ export class SignalRModuleProvider
       connection.onreconnected(() => {
         // Only reconnects observed from their start have a measurable duration.
         if (reconnectStarted !== undefined) {
-          this.#report({
-            module: 'signalr',
+          this.#telemetry.report({
             operation: 'reconnect',
             outcome: 'success',
             duration: performance.now() - reconnectStarted,
@@ -161,8 +157,7 @@ export class SignalRModuleProvider
       connection.onclose(() => {
         // A close while reconnecting ends that reconnect attempt.
         if (reconnectStarted !== undefined) {
-          this.#report({
-            module: 'signalr',
+          this.#telemetry.report({
             operation: 'reconnect',
             outcome: stopping ? 'cancelled' : 'failure',
             duration: performance.now() - reconnectStarted,
@@ -171,8 +166,7 @@ export class SignalRModuleProvider
         } else if (connected && !stopping) {
           // Teardown is the only intentional stop, so any other close of an established
           // connection is a loss, including a graceful server close without an error.
-          this.#report({
-            module: 'signalr',
+          this.#telemetry.report({
             notification: true,
             operation: 'connection-lost',
             outcome: 'failure',
@@ -188,8 +182,7 @@ export class SignalRModuleProvider
         .then(() => {
           // A start that settles after teardown was cancelled; the observer is already complete.
           if (stopping) {
-            this.#report({
-              module: 'signalr',
+            this.#telemetry.report({
               operation: 'connect',
               outcome: 'cancelled',
               duration: performance.now() - connectStarted,
@@ -197,8 +190,7 @@ export class SignalRModuleProvider
             return;
           }
           connected = true;
-          this.#report({
-            module: 'signalr',
+          this.#telemetry.report({
             operation: 'connect',
             outcome: 'success',
             duration: performance.now() - connectStarted,
@@ -207,8 +199,7 @@ export class SignalRModuleProvider
         })
         .catch((error: unknown) => {
           // Teardown during start is an expected cancellation, not a failure.
-          this.#report({
-            module: 'signalr',
+          this.#telemetry.report({
             operation: 'connect',
             outcome: error instanceof AbortError || stopping ? 'cancelled' : 'failure',
             duration: performance.now() - connectStarted,
@@ -232,15 +223,13 @@ export class SignalRModuleProvider
         if (wasConnected) {
           stopped?.then(
             () =>
-              this.#report({
-                module: 'signalr',
+              this.#telemetry.report({
                 operation: 'disconnect',
                 outcome: 'success',
                 duration: performance.now() - stopStarted,
               }),
             (error: unknown) => {
-              this.#report({
-                module: 'signalr',
+              this.#telemetry.report({
                 operation: 'disconnect',
                 outcome: 'failure',
                 duration: performance.now() - stopStarted,

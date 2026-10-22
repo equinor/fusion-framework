@@ -21,7 +21,7 @@ import type { RequiredAccessRoleStatus } from './RequiredAccessRoleStatus.js';
 import { ClaimableRoleAssignmentActivationEvent } from './ClaimableRoleAssignmentActivationEvent.js';
 import { RolesError } from './errors/RolesError.js';
 import { version } from './version.js';
-import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 import { defer, fromEvent, lastValueFrom, takeUntil } from 'rxjs';
 
 /**
@@ -289,7 +289,8 @@ export class RolesProvider
 {
   private readonly client: IRolesClient;
   private readonly dependencies: RolesProviderDependencies;
-  readonly #report: ReturnType<typeof createOperationalReporter>;
+  /** Safe operational outcomes; never carries account, assignment or role identifiers. */
+  readonly #telemetry = createOperationalTelemetry('roles');
 
   /**
    * Creates a Roles provider around a client initialized during module initialization.
@@ -301,13 +302,11 @@ export class RolesProvider
     super({ version, config });
     this.client = config.client;
     this.dependencies = dependencies;
-    let reporting = true;
-    this.#report = createOperationalReporter(() =>
-      reporting ? dependencies.telemetry : undefined,
-    );
+    // Telemetry is resolved before construction, so bootstrap role checks are reported too.
+    this.#telemetry.connect(dependencies.telemetry);
     this._addTeardown(() => {
       // In-flight operations must not report into a torn-down telemetry host.
-      reporting = false;
+      this.#telemetry.disconnect();
       this.client.dispose?.();
     });
   }
@@ -552,16 +551,14 @@ export class RolesProvider
     const name = operationName(operation);
     try {
       const result = await execute();
-      this.#report({
-        module: 'roles',
+      this.#telemetry.report({
         operation: name,
         outcome: 'success',
         duration: performance.now() - started,
       });
       return result;
     } catch (error) {
-      this.#report({
-        module: 'roles',
+      this.#telemetry.report({
         operation: name,
         outcome: isCancelled?.() ? 'cancelled' : 'failure',
         duration: performance.now() - started,

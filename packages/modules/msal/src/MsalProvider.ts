@@ -23,7 +23,7 @@ import type {
 
 import type { AccountInfo, AuthenticationResult } from './types.js';
 import { resolveVersion } from './versioning/resolve-version.js';
-import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 import { version } from './version.js';
 import type { MsalModuleVersion } from './static.js';
 
@@ -62,11 +62,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   };
   #requiresAuth?: boolean;
   /** Safe operational outcomes; never carries accounts, scopes, codes, tokens or raw errors. */
-  #report = createOperationalReporter(() =>
-    this.#reporting ? this.#telemetry?.provider : undefined,
-  );
-  /** Cleared on dispose so in-flight flows cannot report into a torn-down host. */
-  #reporting = true;
+  #operational = createOperationalTelemetry('msal');
   #authCode?: string;
   #loginHint?: string;
 
@@ -151,9 +147,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     });
     this.#requiresAuth = config.requiresAuth;
     this.#telemetry = config.telemetry;
-    this._addTeardown(() => {
-      this.#reporting = false;
-    });
+    this.#operational.connect(config.telemetry?.provider);
+    // In-flight flows must not report into a torn-down telemetry host.
+    this._addTeardown(() => this.#operational.disconnect());
     this.#loginHint = config.loginHint;
 
     // Extract auth code from config if present
@@ -244,8 +240,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
           // Account identifiers are never recorded; the event only marks the transition.
           this._trackEvent('initialize.auth-code-exchanged-account', TelemetryLevel.Information);
         }
-        this.#report({
-          module: 'msal',
+        this.#operational.report({
           operation: 'exchange-auth-code',
           outcome: 'success',
           duration: performance.now() - exchangeStarted,
@@ -253,8 +248,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       } catch {
         // Auth code exchange failed - record a sanitized outcome and fall back to standard flows.
         // The original error may describe the code or account, so it is never recorded.
-        this.#report({
-          module: 'msal',
+        this.#operational.report({
           operation: 'exchange-auth-code',
           outcome: 'failure',
           duration: performance.now() - exchangeStarted,
@@ -417,8 +411,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
         silent,
         request: { ...inputRequest, account, scopes },
       });
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'acquire-token',
         outcome: 'success',
         duration: performance.now() - started,
@@ -428,8 +421,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       // Inside MSAL's hidden iframe, silent acquisition may fail and the client
       // would fall back to acquireTokenRedirect which throws "block_iframe_reload".
       // Suppress this — the parent frame handles interactive auth, so it is not a failure.
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'acquire-token',
         outcome: inIframe || isUserCancellation(error) ? 'cancelled' : 'failure',
         duration: performance.now() - started,
@@ -536,16 +528,14 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     const started = performance.now();
     try {
       const result = await this.#login(request, behavior, Boolean(canLoginSilently));
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'login',
         outcome: 'success',
         duration: performance.now() - started,
       });
       return result;
     } catch (error) {
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'login',
         outcome: isUserCancellation(error) ? 'cancelled' : 'failure',
         duration: performance.now() - started,
@@ -575,8 +565,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       } catch {
         // Silent login failed - a recoverable degradation, recorded without the original error,
         // which may contain account hints. Fall through to interactive authentication.
-        this.#report({
-          module: 'msal',
+        this.#operational.report({
           notification: true,
           operation: 'silent-login-fallback',
           outcome: 'failure',
@@ -633,8 +622,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     try {
       // Logout the specific account (or current account if none specified)
       await this.#client.logout({ account: this.account ?? undefined, ...options });
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'logout',
         outcome: 'success',
         duration: performance.now() - started,
@@ -642,8 +630,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       return true; // Success
     } catch {
       // Logout failed - record a sanitized outcome but don't throw to avoid breaking app flow
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'logout',
         outcome: 'failure',
         duration: performance.now() - started,
@@ -682,8 +669,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       const result = await this.client.handleRedirectPromise();
       // Processing ran even without a pending redirect, so success is measured either way;
       // otherwise failures would be over-represented in the outcome ratio.
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'handle-redirect',
         outcome: 'success',
         duration: performance.now() - started,
@@ -695,8 +681,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       return result;
     } catch (error) {
       // The response could not be processed; standard authentication continues.
-      this.#report({
-        module: 'msal',
+      this.#operational.report({
         operation: 'handle-redirect',
         outcome: isUserCancellation(error) ? 'cancelled' : 'failure',
         duration: performance.now() - started,

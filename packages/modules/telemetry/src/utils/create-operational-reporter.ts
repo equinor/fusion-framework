@@ -34,7 +34,8 @@ export type OperationalTelemetryTarget = Pick<
 >;
 
 /**
- * Creates a reporter for a module's built-in operational outcomes.
+ * Creates a reporter for a module's built-in operational outcomes. Internal building block of
+ * `createOperationalTelemetry` and the shared HTTP and query integrations.
  *
  * Each measured report becomes one `fusion.<module>.<operation>.duration` metric, plus one
  * sanitized `.failure` exception on failure; each notification becomes one
@@ -50,26 +51,6 @@ export type OperationalTelemetryTarget = Pick<
  * @param provider - Lazy provider resolution avoids startup dependency cycles.
  * @returns A reporter accepting only allowlisted outcome inputs.
  * @throws No errors escape; invalid providers are reported once outside the export pipeline.
- * @example
- * ```ts
- * import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
- * import { createOperationalReporter } from '@equinor/fusion-framework-module-telemetry/utils';
- *
- * let telemetry: ITelemetryProvider | undefined; // connected after initialization
- * const report = createOperationalReporter(() => telemetry);
- *
- * const started = performance.now();
- * try {
- *   await exportReport();
- *   report({ module: 'reports', operation: 'export', outcome: 'success', duration: performance.now() - started });
- * } catch (error) {
- *   report({ module: 'reports', operation: 'export', outcome: 'failure', duration: performance.now() - started });
- *   throw error;
- * }
- *
- * // A recoverable degradation without a measured boundary.
- * report({ module: 'reports', operation: 'fallback', outcome: 'success', notification: true, level: TelemetryLevel.Warning });
- * ```
  */
 export function createOperationalReporter(
   provider: () => OperationalTelemetryTarget | undefined,
