@@ -132,7 +132,8 @@ are never recorded. Return values and thrown errors are unchanged.
 These records replace the legacy `module-msal.acquireToken` measurement and the
 `acquireToken-failed`, `logout.failed`, `handleRedirect.failed`,
 `initialize.auth-code-exchange-failed` and `login.silent-failed` exceptions. Remaining
-legacy `module-msal.*` events no longer include `username`.
+legacy `module-msal.*` events no longer include `username`, requested or default `scopes`,
+or the logout `redirectUri`, and `canLoginSilently` is a boolean.
 
 ## Testing
 

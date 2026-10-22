@@ -14,6 +14,8 @@ results and thrown errors are unchanged.
 **Migration:** these records replace the `module-msal.acquireToken` measurement and the
 `acquireToken-failed`, `logout.failed`, `handleRedirect.failed`,
 `initialize.auth-code-exchange-failed` and `login.silent-failed` exceptions. Remaining
-`module-msal.*` events no longer include `username`.
+`module-msal.*` events no longer include `username`, requested or default `scopes`, or the
+logout `redirectUri`; `canLoginSilently` is now a boolean rather than the login hint or
+account it was derived from.
 
 Ref: #5804.
