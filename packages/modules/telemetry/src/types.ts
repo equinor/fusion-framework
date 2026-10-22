@@ -9,7 +9,7 @@ import type {
   TelemetryExceptionSchema,
   TelemetryMetricSchema,
   TelemetryCustomEventSchema,
-} from './schemas.js';
+} from './schemas/telemetry-item-schema.js';
 
 /**
  * Arguments passed to a {@link MetadataExtractor} when resolving metadata for a telemetry item.
@@ -108,5 +108,5 @@ export type TelemetryCustomEvent = z.infer<typeof TelemetryCustomEventSchema>;
  */
 export interface TelemetryAdapter {
   readonly identifier: string;
-  processItem(item: TelemetryItem): void;
+  processItem(item: TelemetryItem): void | Promise<void>;
 }

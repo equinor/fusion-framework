@@ -45,9 +45,11 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-framework-module-widget": "workspace:^"
   },
   "devDependencies": {
+    "vitest": "catalog:vitest",
     "typescript": "^7.0.2"
   }
 }

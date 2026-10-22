@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Subject } from 'rxjs';
 
-import { ModuleEventLevel, type AnyModule, type ModuleEvent } from '../../../types.js';
+import {
+  ModuleEventLevel,
+  type AnyModule,
+  type ModuleDisposePhase,
+  type ModuleEvent,
+} from '../../../types.js';
 import type { FrameworkPluginTeardown } from '../../plugin/index.js';
 import { ModuleConfiguratorEventName } from '../module-configurator-event-name.js';
+
+/** Fixed teardown order: ordinary modules first, so diagnostics and events can still record them. */
+const disposePhaseOrder: readonly ModuleDisposePhase[] = ['default', 'diagnostics', 'events'];
 
 function getPluginTeardownName(teardown: FrameworkPluginTeardown): string {
   return typeof teardown === 'function' ? teardown.name || 'anonymous' : 'dispose';
@@ -40,9 +48,9 @@ export interface DisposePhaseContext {
 /**
  * Runs the dispose lifecycle phase for all registered modules.
  *
- * Calls each module's `dispose` hook (if defined) concurrently via
- * `Promise.allSettled` so one failing module cannot block others from
- * being torn down. After all hooks settle, the event stream is completed.
+ * Calls module `dispose` hooks concurrently within each fixed phase:
+ * default, diagnostics, then events. Rejections are isolated through
+ * `Promise.allSettled`. After all hooks settle, the event stream is completed.
  *
  * @param ctx - The dispose phase context.
  * @param instance - The initialized module instance map to tear down.
@@ -56,6 +64,8 @@ export async function runDisposePhase(
   ref?: unknown,
 ): Promise<void> {
   const { modules, registerEvent, event$, pluginTeardowns = [] } = ctx;
+  const start = performance.now();
+  let failed = false;
 
   registerEvent({
     level: ModuleEventLevel.Debug,
@@ -86,6 +96,7 @@ export async function runDisposePhase(
           properties: { name },
         });
       } catch (err) {
+        failed = true;
         registerEvent({
           level: ModuleEventLevel.Warning,
           name: ModuleConfiguratorEventName.PluginDisposeError,
@@ -104,52 +115,84 @@ export async function runDisposePhase(
     properties: { count: modules.length },
   });
 
-  // Dispose all modules concurrently; failures are isolated per module so
-  // one bad teardown cannot leave other modules in an inconsistent state.
-  await Promise.allSettled(
-    modules
-      // Only process modules that define a dispose hook
-      .filter((module) => !!module.dispose)
-      // Dispose each module that defines the hook
-      .map(async (module) => {
-        // Narrow the type for TypeScript; the filter above already guarantees this
-        if (!module.dispose) return;
-        try {
-          await module.dispose({
-            ref,
-            modules: instance,
-            instance: instance[module.name],
-          });
-          registerEvent({
-            level: ModuleEventLevel.Debug,
-            name: ModuleConfiguratorEventName.ModuleDisposed,
-            message: `Module ${module.name} disposed successfully`,
-            properties: {
-              moduleName: module.name,
-              moduleVersion: module.version?.toString() || 'unknown',
-            },
-          });
-        } catch (err) {
-          registerEvent({
-            level: ModuleEventLevel.Warning,
-            name: ModuleConfiguratorEventName.ModuleDisposeError,
-            message: `Module ${module.name} dispose failed`,
-            properties: {
-              moduleName: module.name,
-              moduleVersion: module.version?.toString() || 'unknown',
-            },
-            error: err,
-          });
-        }
-      }),
-  );
+  const groups: Record<ModuleDisposePhase, AnyModule[]> = {
+    default: [],
+    diagnostics: [],
+    events: [],
+  };
+  // Partition once so invalid runtime input cannot silently omit a provider's cleanup.
+  for (const module of modules) {
+    const phase = module.disposePhase ?? 'default';
+    // Only named lifecycle phases may delay cleanup until infrastructure shutdown.
+    if (disposePhaseOrder.includes(phase)) {
+      groups[phase].push(module);
+    } else {
+      failed = true;
+      registerEvent({
+        level: ModuleEventLevel.Warning,
+        name: ModuleConfiguratorEventName.ModulesDispose,
+        message: `Unsupported disposal phase for module ${module.name}; disposing during the default phase`,
+        properties: { moduleName: module.name },
+        error: new TypeError('Unsupported module disposal phase'),
+      });
+      groups.default.push(module);
+    }
+  }
 
-  registerEvent({
-    level: ModuleEventLevel.Debug,
-    name: ModuleConfiguratorEventName.ModulesDisposed,
-    message: 'Module dispose complete',
-    properties: { count: modules.length },
-  });
+  // Diagnostic infrastructure stays alive through ordinary module teardown.
+  for (const phase of disposePhaseOrder) {
+    await Promise.allSettled(
+      groups[phase]
+        // Only process modules that define a dispose hook
+        .filter((module) => !!module.dispose)
+        // Dispose each module that defines the hook
+        .map(async (module) => {
+          // Narrow the type for TypeScript; the filter above already guarantees this
+          if (!module.dispose) return;
+          const moduleStart = performance.now();
+          try {
+            await module.dispose({
+              ref,
+              modules: instance,
+              instance: instance[module.name],
+            });
+            registerEvent({
+              level: ModuleEventLevel.Debug,
+              name: ModuleConfiguratorEventName.ModuleDisposed,
+              metric: performance.now() - moduleStart,
+              message: `Module ${module.name} disposed successfully`,
+              properties: {
+                moduleName: module.name,
+                moduleVersion: module.version?.toString() || 'unknown',
+              },
+            });
+          } catch (err) {
+            failed = true;
+            registerEvent({
+              level: ModuleEventLevel.Warning,
+              name: ModuleConfiguratorEventName.ModuleDisposeError,
+              metric: performance.now() - moduleStart,
+              message: `Module ${module.name} dispose failed`,
+              properties: {
+                moduleName: module.name,
+                moduleVersion: module.version?.toString() || 'unknown',
+              },
+              error: err,
+            });
+          }
+        }),
+    );
+    // Emit exactly one host outcome before flushing sinks, including when no sinks exist.
+    if (phase === 'default') {
+      registerEvent({
+        level: failed ? ModuleEventLevel.Warning : ModuleEventLevel.Information,
+        name: ModuleConfiguratorEventName.ModulesDisposed,
+        message: 'Default module disposal complete; flushing lifecycle sinks',
+        metric: performance.now() - start,
+        properties: { count: modules.length, failed },
+      });
+    }
+  }
 
   // Complete the event stream last so all dispose events are captured before
   // any subscriber teardown triggered by completion.

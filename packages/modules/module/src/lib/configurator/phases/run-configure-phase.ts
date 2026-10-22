@@ -6,8 +6,8 @@ import { runPostConfigureHooks } from './run-post-configure-hooks.js';
  * Runs the full configure lifecycle phase for a set of modules.
  *
  * Orchestrates three sub-steps in order:
- * 1. {@link createModuleConfigs} — call each module's `configure(ref)` factory.
- * 2. Apply all user-registered config callbacks (`_configs`) sequentially.
+ * 1. {@link createModuleConfigs} — reuse prepared builders or call `configure(ref)` factories.
+ * 2. Apply all user-registered config callbacks (`_configs`) concurrently.
  * 3. {@link runPostConfigureHooks} — call `postConfigure` and `afterConfiguration` hooks.
  *
  * @param ctx - The configure phase context.

@@ -19,6 +19,8 @@ import { ModuleConfiguratorEventName } from '../module-configurator-event-name.j
 export interface ConfigurePhaseContext<TRef> {
   /** All registered modules to configure. */
   modules: AnyModule[];
+  /** Prepared configuration builders declared at registration; factories are skipped for these keys. */
+  configurators?: ReadonlyMap<AnyModule, unknown>;
   /** User-registered config mutation callbacks (from `addConfig`). */
   configs: ModulesConfiguratorConfigCallback<TRef>[];
   /**
@@ -66,7 +68,10 @@ export async function createModuleConfigs<TRef>(
     mergeMap(async (module) => {
       const configStart = performance.now();
       try {
-        const configurator = await module.configure?.(ref);
+        // Explicitly registered builders must not be replaced by another factory-created instance.
+        const configurator = ctx.configurators?.has(module)
+          ? ctx.configurators.get(module)
+          : await module.configure?.(ref);
         const configLoadTime = Math.round(performance.now() - configStart);
         registerEvent({
           level: ModuleEventLevel.Debug,

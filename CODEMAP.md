@@ -204,6 +204,8 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Change auth behavior | `packages/modules/msal/src`, `packages/modules/azure-identity/src` |
 | Change routing or route DSL | `packages/react/router/src`, `packages/vite-plugins/react-router/src`, `packages/modules/navigation/src` |
 | Change module registration/init | `packages/modules/module/src` |
+| Change synchronous module preparation before initialization | `packages/modules/module/src/lib/configurator/phases/run-prepare-phase.ts`, lifecycle contract in `packages/modules/module/docs/lifecycle.md` |
+| Change operational telemetry capture or shared instrumentation | `packages/modules/telemetry/src/TelemetryProviderState.ts` (engine, with `.actions`/`.reducer`/`.flows` companions), `packages/modules/telemetry/src/lib`, `packages/modules/telemetry/src/integrations`, `packages/modules/telemetry/src/utils`, `packages/modules/telemetry/src/schemas` |
 | Change React provider or hooks wiring | `packages/react/framework/src`, `packages/react/modules/module/src` |
 | Change app loading or manifests | `packages/modules/app/src`, `packages/app/src` |
 | Change build/dev CLI behavior | `packages/cli/src`, `packages/vite-plugins/spa/src` |

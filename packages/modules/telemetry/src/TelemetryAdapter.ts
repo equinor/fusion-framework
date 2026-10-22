@@ -14,7 +14,7 @@ import type { TelemetryItem } from './types.js';
 export interface ITelemetryAdapter {
   /** Skip relayed records already handled by a child's explicitly configured adapters. */
   readonly fallback?: boolean;
-  processItem(item: TelemetryItem): void;
+  processItem(item: TelemetryItem): void | Promise<void>;
   initialize(): Promise<void>;
   /** Flushes pending telemetry and releases adapter resources when supported. */
   shutdown?(): Promise<void>;
@@ -59,8 +59,9 @@ export abstract class BaseTelemetryAdapter implements ITelemetryAdapter {
    * Otherwise, it delegates the processing of the item to the internal `_processItem` method.
    *
    * @param item - The telemetry item to be processed.
+   * @returns The processing promise, when asynchronous, so failures and shutdown remain owned.
    */
-  public processItem(item: TelemetryItem): void {
+  public processItem(item: TelemetryItem): void | Promise<void> {
     // If the adapter is not initialized, do not process the item
     if (!this.#initialized) {
       return;
@@ -72,7 +73,7 @@ export abstract class BaseTelemetryAdapter implements ITelemetryAdapter {
     }
 
     // Delegate the processing of the item to the internal `_processItem` method
-    this._processItem(item);
+    return this._processItem(item);
   }
 
   /**
@@ -116,5 +117,5 @@ export abstract class BaseTelemetryAdapter implements ITelemetryAdapter {
     // Default implementation - no-op for adapters that don't need initialization
   }
 
-  protected abstract _processItem(item: TelemetryItem): void;
+  protected abstract _processItem(item: TelemetryItem): void | Promise<void>;
 }

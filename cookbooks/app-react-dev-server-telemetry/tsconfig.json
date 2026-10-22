@@ -10,10 +10,16 @@
       "path": "../../packages/react/app"
     },
     {
+      "path": "../../packages/modules/navigation"
+    },
+    {
       "path": "../../packages/modules/telemetry"
     },
     {
       "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/react/router"
     }
   ],
   "include": ["src/**/*"],
