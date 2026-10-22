@@ -126,6 +126,19 @@ describe('MsalProvider operational telemetry', () => {
     expect(JSON.stringify(items)).not.toContain(sentinel);
   });
 
+  it('stops reporting once the provider is disposed, even for in-flight flows', async () => {
+    let resolve!: (value: unknown) => void;
+    const acquireToken = vi.fn(() => new Promise((r) => (resolve = r)));
+    const { provider, items } = createProvider({ acquireToken });
+
+    const pending = provider.acquireToken({ request: { scopes: ['a'] } });
+    provider.dispose();
+    resolve({ accessToken: 'token' });
+
+    await expect(pending).resolves.toEqual({ accessToken: 'token' });
+    expect(operational(items)).toEqual([]);
+  });
+
   it('keeps authentication behavior unchanged without telemetry', async () => {
     const result = { accessToken: 'token' };
     const config: MsalConfig = {

@@ -62,7 +62,11 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   };
   #requiresAuth?: boolean;
   /** Safe operational outcomes; never carries accounts, scopes, codes, tokens or raw errors. */
-  #report = createOperationalTelemetry('msal', () => this.#telemetry?.provider);
+  #report = createOperationalTelemetry('msal', () =>
+    this.#reporting ? this.#telemetry?.provider : undefined,
+  );
+  /** Cleared on dispose so in-flight flows cannot report into a torn-down host. */
+  #reporting = true;
   #authCode?: string;
   #loginHint?: string;
 
@@ -147,6 +151,9 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     });
     this.#requiresAuth = config.requiresAuth;
     this.#telemetry = config.telemetry;
+    this._addTeardown(() => {
+      this.#reporting = false;
+    });
     this.#loginHint = config.loginHint;
 
     // Extract auth code from config if present
