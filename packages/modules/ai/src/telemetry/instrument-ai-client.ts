@@ -1,6 +1,6 @@
 import { Runnable, RunnableBinding } from '@langchain/core/runnables';
 import { BaseService } from '../lib/BaseService.js';
-import type { AiOperation, AiReport } from './create-ai-reporter.js';
+import type { AiOperation, AiReport } from './types.js';
 import { type ExecutionKind, measureExecution } from './measure-execution.js';
 
 /**

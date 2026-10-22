@@ -231,6 +231,22 @@ wiring by implementing the optional `INavigationProvider.connectTelemetry` metho
 
 ## Wire telemetry into a module
 
+With a built-in provider, obtain a connected handle directly:
+
+```ts
+const scope = telemetry.scope('reports');
+const end = scope.start('export', { count: 3 });
+await exportReports();
+end('success');
+scope.close({ reason: 'disposed' });
+```
+
+`ITelemetryProvider.scope` is optional so existing custom providers remain compatible.
+The calling module owns the returned scope's lifetime. All handle types are exported from
+the telemetry package root as type-only imports; consumers do not need to import a utilities
+namespace. `createOperationalTelemetry` remains available for standalone handles and legacy
+custom providers.
+
 Every framework module wires operational telemetry the same way, in three steps:
 
 1. **Own a handle.** The provider creates one with `createOperationalTelemetry(module)` from
@@ -296,7 +312,69 @@ A handle reports two kinds of outcome:
 - **Notification:** `{ operation, outcome, notification: true, level? }` records one
   `fusion.<module>.<operation>` event without a fabricated duration. Severity defaults to
   `Error` for a failure and `Information` otherwise; set `TelemetryLevel.Warning` for a
-  recoverable degradation, such as serving a fallback.
+  recoverable degradation, such as serving a fallback. Named levels (`'debug'`, `'information'`,
+  `'warning'`, `'error'`, `'critical'`) avoid a runtime enum import in optional integrations.
+
+Both report shapes accept `properties: OperationalProperties`: a caller-defined allowlist of
+primitive strings, numbers and booleans, such as controlled reason codes, counts or validated
+static identity. This is not a payload capture API. Never pass arguments, user data, URLs,
+configuration bodies or raw error text. Measured failures copy the same summary onto the
+duration metric and sanitized exception.
+
+### Measure owned operations
+
+Use `start(operation, properties?)` for a manual boundary, or `measure<T>(operation, properties?)`
+for a cold observable. Each subscription is measured independently; values, errors and
+completion pass through unchanged. Completion, including empty completion, is success.
+Unsubscribing before a value is cancellation; after a value it is success. Failure and
+cancellation are classified through up to five error causes with `classifyOperationalError`.
+`markOperationalCancellation` and `markOperationalReason` attach controlled classifications
+weakly without mutating the caller's error.
+
+```ts
+const owner = createOperationalTelemetry('reports');
+owner.connect(modules.telemetry);
+const scope = owner.createScope({
+  identity: () => ({ reportVersion: loadedVersion }),
+});
+const end = scope.start('export', { count: 3 });
+try {
+  await exportReports();
+  end('success');
+} catch (error) {
+  const { outcome, reason } = scope.classifyError(error);
+  end(outcome, reason ? { reason } : undefined);
+  throw error;
+}
+// End-time identity includes values learned during the operation.
+scope.close({ reason: 'unloaded' });
+owner.disconnect();
+```
+
+Each scope retains at most **256** pending operations. `reserve` returns `undefined` without a
+provider, after closure or at capacity, so module-specific observers can skip allocating
+subscriptions. `start` returns a no-op in those cases. Saturation warns once locally and does
+not affect business execution. A terminal callback can be called repeatedly, but only the
+first call records. `cancelPending` cancels current attempts while keeping the scope open.
+
+`createScope({ identity })` creates an independent child whose target follows the parent.
+Identity resolves at the operation's end; terminal properties override identity and initial
+properties. Validate identity with `safeOperationalIdentity` (also available as
+`scope.safeIdentity`) before including it. `own` releases diagnostic subscriptions or teardown
+functions on closure. `close(properties?)` cancels all in-flight owned work, including nested
+child scopes, then stops reporting permanently; `disconnect()` closes without extra properties.
+Closing a child leaves its siblings and parent intact. Idle children are not retained by their
+parent, but still cannot report after the parent closes.
+
+### Preserve optional peers
+
+If telemetry is an optional peer, use only type imports at module load time and dynamically
+resolve the handle inside `connectTelemetry`: prefer `telemetry.scope(module)`; only import
+`createOperationalTelemetry` lazily for custom providers without `scope`. Keep the handle across
+reconnections, clear the target with `connect(undefined)` for temporary disconnection, and
+close it on disposal. Guard the awaited import with a connection generation and a disposed
+flag: a stale import must not reconnect a disposed provider or replace a newer target.
+Import failure produces a sanitized local warning, never a business failure.
 
 Reports never accept arguments, payloads or errors, and never throw. Delivery failures,
 including a custom provider without host `source` identity, produce one sanitized console
@@ -307,8 +385,12 @@ When a dependency is already resolved during initialization, connect it in the c
 instead, as the Roles and MSAL providers do, so outcomes from initialization itself are
 reported. `connected` reports whether records are currently delivered.
 
-The framework's service discovery, services, roles, MSAL, MSAL Node, Azure Identity and
-SignalR modules all follow this pattern. HTTP and query use the integrations described above.
+The framework's service discovery, services, roles, MSAL, MSAL Node, Azure Identity, SignalR,
+AI, AG Grid, app, widget, context, bookmark, state and feature-flag modules follow this pattern.
+Navigation extends `TelemetryConnectable` while retaining its existing `Navigation::*`
+notifications and explicit `setTelemetry` precedence. HTTP and query use the integrations
+described above. Stage/request/synchronization observers remain module-specific and delegate
+their measurements and delivery to the shared handle.
 
 ## Report your own operational outcomes
 

@@ -12,14 +12,22 @@ import type { FlowSubject } from '@equinor/fusion-observable';
 
 import { createState } from './state/create-state.js';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
-import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom, of } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  combineLatest,
+  firstValueFrom,
+  lastValueFrom,
+  of,
+  identity,
+} from 'rxjs';
 import type WidgetModuleProvider from './WidgetModuleProvider.js';
 import type { WidgetModuleConfig } from './WidgetModuleConfigurator.js';
 
-import {
+import type {
   OperationalTelemetry,
-  type OperationalProperties,
-} from './integrations/OperationalTelemetry.js';
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import './events.js';
 
@@ -56,7 +64,8 @@ export class Widget {
 
   #subscription = new Subscription();
 
-  #telemetry: OperationalTelemetry;
+  #telemetry: () => OperationalTelemetry | undefined;
+  #unloaded = false;
 
   /**
    * Current snapshot of the widget's internal state (manifest, config, modules, status).
@@ -89,7 +98,7 @@ export class Widget {
       config?: WidgetModuleConfig;
       event?: ModuleType<EventModule>;
       widgetPrams?: GetWidgetParameters['args'];
-      telemetry?: OperationalTelemetry;
+      telemetry?: OperationalTelemetry | (() => OperationalTelemetry | undefined);
     },
   ) {
     this.name = value.name;
@@ -97,9 +106,15 @@ export class Widget {
     this.config = args.config;
     // Each widget owns a child scope of the provider's telemetry, so disposing one cannot
     // cancel another widget's stages, while provider disposal still closes stages in flight.
-    this.#telemetry =
-      args.telemetry?.createScope({ identity: () => this.#identity() }) ??
-      new OperationalTelemetry('widget');
+    let scope: OperationalTelemetry | undefined;
+    this.#telemetry = () => {
+      // Widgets created before telemetry connects still acquire a scope on their first later request.
+      if (!this.#unloaded) {
+        const parent = typeof args.telemetry === 'function' ? args.telemetry() : args.telemetry;
+        scope ??= parent?.createScope({ identity: () => this.#identity() });
+      }
+      return scope;
+    };
     this.#state = createState(value, args.provider, this.#telemetry);
     args.event && this.#registerEvents(args.event);
   }
@@ -109,11 +124,8 @@ export class Widget {
    * @returns The validated widget key and loaded version, when available.
    */
   #identity(): OperationalProperties {
-    const key = OperationalTelemetry.safeIdentity(this.name);
-    const version = OperationalTelemetry.safeIdentity(
-      this.#state.value.manifest?.version,
-      'version',
-    );
+    const key = this.#telemetry()?.safeIdentity(this.name);
+    const version = this.#telemetry()?.safeIdentity(this.#state.value.manifest?.version, 'version');
     // Unsafe or missing identity is omitted rather than exported.
     return {
       ...(key ? { widgetKey: key } : {}),
@@ -402,7 +414,7 @@ export class Widget {
           },
         }),
       );
-    }).pipe(this.#telemetry.measure('load'));
+    }).pipe(this.#telemetry()?.measure('load') ?? identity);
   }
   /**
    * Retrieves the widget script module as a `Promise`.
@@ -437,7 +449,8 @@ export class Widget {
    */
   public dispose() {
     // Stages interrupted by disposal are cancellations; nothing is emitted afterwards.
-    this.#telemetry.close({ reason: 'unloaded' });
+    this.#telemetry()?.close({ reason: 'unloaded' });
+    this.#unloaded = true;
     this.#subscription.unsubscribe();
   }
 }

@@ -86,6 +86,11 @@ See [Usage & Error Handling](docs/usage.md) for full CRUD examples, subscription
 
 ## Operational telemetry
 
+`IStateProvider` extends `TelemetryConnectable`. The provider uses
+`telemetry.scope('state')`, with a lazy factory fallback for older custom providers,
+and closes the handle on disposal. The synchronization health
+observer remains local and sends its existing bounded summaries through the handle.
+
 When the host registers telemetry, each `getItem`, `getAllItems`, `storeItem(s)`,
 `removeItem(s)` and `clear` call reports one `fusion.state.<operation>.duration` outcome
 (`get`, `list`, `store`, `remove`, `clear`) with an item `count`. Storage error results
@@ -125,4 +130,3 @@ custom `IStorage` implementations.
 - [Events](docs/events.md): state change, sync, and operation events dispatched through the `event` module
 - [API Reference](docs/api-reference.md): supported value types, and the full `StateProvider`, `StateItem`, and result-type reference
 - [Performance](docs/performance.md): prefix filtering, batching, and sync tuning tips
-

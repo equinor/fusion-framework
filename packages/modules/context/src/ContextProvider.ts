@@ -1,5 +1,6 @@
 import {
   defer,
+  identity,
   EMPTY,
   lastValueFrom,
   Observable,
@@ -34,8 +35,11 @@ import type {
 } from '@equinor/fusion-framework-module-event';
 import Query from '@equinor/fusion-query';
 import type { SemVer } from 'semver';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Interface representing a provider for managing and interacting with context items within an application.
@@ -68,7 +72,7 @@ import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
  *
  * @template T - The shape of the context item data.
  */
-export interface IContextProvider {
+export interface IContextProvider extends TelemetryConnectable {
   /** DANGER */
   readonly contextClient: ContextClient;
   /** DANGER */
@@ -366,7 +370,10 @@ export class ContextProvider
 
   #subscriptions = new Subscription();
 
-  #telemetry = new OperationalTelemetry('context');
+  #telemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   #contextType?: ContextModuleConfig['contextType'];
   #contextFilter: ContextModuleConfig['contextFilter'];
@@ -466,13 +473,16 @@ export class ContextProvider
         result = resolveContext(item);
       } catch (error) {
         // Resolver factories may throw before returning an observable; retain the sync contract.
-        const end = this.#telemetry.start('resolve', { by: 'item' });
-        const { outcome, reason } = OperationalTelemetry.classifyError(error);
-        end(outcome, reason ? { reason } : undefined);
+        const end = this.#telemetry?.start('resolve', { by: 'item' });
+        const classified = this.#telemetry?.classifyError(error);
+        // Classification is only needed while an optional handle exists.
+        if (classified) {
+          end?.(classified.outcome, classified.reason ? { reason: classified.reason } : undefined);
+        }
         throw error;
       }
       // Values, errors and cancellation pass through unchanged; only the outcome is recorded.
-      return result.pipe(this.#telemetry.measure('resolve', { by: 'item' }));
+      return result.pipe(this.#telemetry?.measure('resolve', { by: 'item' }) ?? identity);
     };
     // override validateContext if configured
     if (config.validateContext) {
@@ -658,7 +668,7 @@ export class ContextProvider
           // filter out invalid items and set as current context
           .pipe(
             // The by-id lookup is its own resolution attempt, measured before selection.
-            this.#telemetry.measure('resolve', { by: 'id' }),
+            this.#telemetry?.measure('resolve', { by: 'id' }) ?? identity,
             // filter out invalid context items
             filter((item): item is ContextItem => !!item),
             // set current context with validation and resolution
@@ -723,7 +733,7 @@ export class ContextProvider
       }
       // Measured upstream of the abort signal, so queue replacement and caller
       // unsubscription record a cancellation rather than a success or failure.
-      const end = this.#telemetry.start('select', {
+      const end = this.#telemetry?.start('select', {
         clear: context === null,
         validate: opt?.validate === true,
         resolve: opt?.resolve === true,
@@ -731,19 +741,25 @@ export class ContextProvider
       let emitted = false;
       // The change-event veto has a detached error path; end this tracker at that boundary.
       return this._setCurrentContext(context, opt, () =>
-        end('cancelled', { reason: 'listener' }),
+        end?.('cancelled', { reason: 'listener' }),
       ).pipe(
         tap({
           next: () => {
             emitted = true;
           },
-          complete: () => end('success'),
+          complete: () => end?.('success'),
           error: (error: unknown) => {
-            const { outcome, reason } = OperationalTelemetry.classifyError(error);
-            end(outcome, reason ? { reason } : undefined);
+            const classified = this.#telemetry?.classifyError(error);
+            // Classification is only needed while an optional handle exists.
+            if (classified) {
+              end?.(
+                classified.outcome,
+                classified.reason ? { reason: classified.reason } : undefined,
+              );
+            }
           },
         }),
-        finalize(() => end(emitted ? 'success' : 'cancelled')),
+        finalize(() => end?.(emitted ? 'success' : 'cancelled')),
       );
     }).pipe(
       // send context item which was set to the caller
@@ -837,12 +853,9 @@ export class ContextProvider
             detail: { context },
           });
           // emit error and complete
-          return subscriber.error(
-            OperationalTelemetry.markReason(
-              Error('failed to validate provided context'),
-              'validation',
-            ),
-          );
+          const error = Error('failed to validate provided context');
+          this.#telemetry?.markReason(error, 'validation');
+          return subscriber.error(error);
         }
         // if resolve is enabled, attempt to resolve the invalid context before setting it
         if (opt.resolve) {
@@ -860,10 +873,9 @@ export class ContextProvider
                 });
                 // check if event was canceled and abort if so
                 if (event?.canceled) {
-                  throw OperationalTelemetry.markCancellation(
-                    Error('resolving of context was canceled'),
-                    'listener',
-                  );
+                  const error = Error('resolving of context was canceled');
+                  this.#telemetry?.markCancellation(error, 'listener');
+                  throw error;
                 }
                 return context;
               }),
@@ -887,10 +899,9 @@ export class ContextProvider
                 });
                 // check if event was canceled and abort if so
                 if (event?.canceled) {
-                  throw OperationalTelemetry.markCancellation(
-                    Error('resolving of context was canceled'),
-                    'listener',
-                  );
+                  const error = Error('resolving of context was canceled');
+                  this.#telemetry?.markCancellation(error, 'listener');
+                  throw error;
                 }
                 return resolved;
               }),
@@ -918,10 +929,9 @@ export class ContextProvider
             // check if event was canceled and abort if so
             if (event?.canceled) {
               onCancelled?.();
-              throw OperationalTelemetry.markCancellation(
-                Error('change of context was aborted'),
-                'listener',
-              );
+              const error = Error('change of context was aborted');
+              this.#telemetry?.markCancellation(error, 'listener');
+              throw error;
             }
 
             return context;
@@ -1141,7 +1151,9 @@ export class ContextProvider
    */
   dispose() {
     // Tasks interrupted by disposal are cancellations; nothing is reported afterwards.
-    this.#telemetry.close({ reason: 'disposed' });
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#telemetry?.close({ reason: 'disposed' });
     this.#subscriptions.unsubscribe();
     this.#contextClient.dispose();
   }
@@ -1157,8 +1169,39 @@ export class ContextProvider
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
-    return this.#telemetry.connect(telemetry ? () => telemetry : undefined);
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#telemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('context') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('context');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for context: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
   }
 }
 

@@ -13,10 +13,10 @@ import {
 import { actions, type Actions } from './actions.js';
 import type { AppBundleState, AppBundleStateInitial } from './types.js';
 import type { AppModuleProvider } from '../AppModuleProvider.js';
-import {
+import type {
   OperationalTelemetry,
-  type OperationalProperties,
-} from '../integrations/OperationalTelemetry.js';
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
 import { measureStage } from '../integrations/measure-stage.js';
 
 /**
@@ -34,7 +34,7 @@ import { measureStage } from '../integrations/measure-stage.js';
 export const createState = (
   value: AppBundleStateInitial,
   provider: AppModuleProvider,
-  telemetry?: OperationalTelemetry,
+  telemetry?: OperationalTelemetry | (() => OperationalTelemetry | undefined),
 ): FlowSubject<AppBundleState, Actions> => {
   const reducer = createReducer(value);
 
@@ -52,7 +52,10 @@ export const createState = (
         (action): OperationalProperties => {
           const version =
             actions.fetchManifest.success.match(action) &&
-            OperationalTelemetry.safeIdentity(action.payload.build?.version, 'version');
+            (typeof telemetry === 'function' ? telemetry() : telemetry)?.safeIdentity(
+              action.payload.build?.version,
+              'version',
+            );
           return version ? { appVersion: version } : {};
         },
       ),

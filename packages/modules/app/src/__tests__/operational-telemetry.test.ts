@@ -14,6 +14,7 @@ import type { AppModule } from '../module';
 import type { IAppClient } from '../AppClient';
 import { AppManifestError } from '../errors';
 import type { AppManifest } from '../types';
+import { AppModuleProvider } from '../AppModuleProvider.js';
 
 const SENTINEL = 'sentinel-secret';
 
@@ -93,6 +94,24 @@ const summary = (items: TelemetryItem[]) =>
   items.map((item) => [item.name, item.diagnostic?.outcome, item.properties?.reason]);
 
 describe('app load-stage telemetry', () => {
+  it('connects an app created before its provider receives a telemetry scope', async () => {
+    const { modules, records } = await setup(createClient());
+    const provider = new AppModuleProvider({
+      config: { client: createClient(), assetUri: '/assets' },
+    });
+    provider.setCurrentApp('late-app');
+    const app = required(provider.current);
+    await provider.connectTelemetry(modules.telemetry);
+    await app.getManifestAsync();
+    await vi.waitFor(() => expect(records()).toHaveLength(1));
+    expect(records()[0]).toMatchObject({
+      name: 'fusion.app.load-manifest.duration',
+      properties: { appKey: 'late-app', appVersion: '1.2.3' },
+    });
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('records each load stage once with static app identity and no payload data', async () => {
     const { modules, records, processItem } = await setup(createClient());
     modules.app.setCurrentApp('my-app');

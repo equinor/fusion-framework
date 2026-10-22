@@ -1,5 +1,8 @@
 import type { ObservableInput } from 'rxjs';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import type { AllowedValue, StateItem } from './types.js';
 
@@ -34,7 +37,8 @@ export type StateRetrieveOptions = {
  * All storage and removal operations return a {@link StorageResult} or an array of results, indicating
  * the outcome of each operation.
  */
-export interface IStateProvider<TType extends AllowedValue = AllowedValue> {
+export interface IStateProvider<TType extends AllowedValue = AllowedValue>
+  extends TelemetryConnectable {
   /**
    * @optional
    * Initializes the state provider.

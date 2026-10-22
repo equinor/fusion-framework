@@ -22,6 +22,11 @@ import type { TelemetrySource } from './schemas/diagnostic-context.js';
 import type { Observable } from 'rxjs';
 import { TelemetryProviderState } from './TelemetryProviderState.js';
 import type { TelemetryInitializeArgs } from './TelemetryProviderState.actions.js';
+import {
+  createOperationalTelemetry,
+  type OperationalTelemetry,
+  type OperationalTelemetryOptions,
+} from './utils/create-operational-telemetry.js';
 
 /**
  * The telemetry provider applications and modules use to track events, exceptions, metrics
@@ -103,6 +108,13 @@ export class TelemetryProvider
    */
   public initialize(args?: TelemetryInitializeArgs): Promise<void> {
     return this.#state.initialize(args);
+  }
+
+  /** {@inheritDoc ITelemetryProvider.scope} */
+  public scope(module: string, options?: OperationalTelemetryOptions): OperationalTelemetry {
+    const scope = createOperationalTelemetry(module, options);
+    scope.connect(this);
+    return scope;
   }
 
   /**

@@ -34,6 +34,27 @@ const asModel = (): IModel => model as unknown as IModel;
 const strategies = [{ name: 'echo', type: STRATEGY_TYPE.MODEL, createModel: asModel }];
 
 describe('AI without the optional telemetry peer', () => {
+  it('uses a provider-supplied scope without importing the optional peer', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { AiProvider } = await import('../AiProvider.js');
+    const provider = new AiProvider({ strategies } as never);
+    const handle = { connect: vi.fn(), disconnect: vi.fn(), report: vi.fn() };
+    const scope = vi.fn(() => handle);
+    await provider.connectTelemetry({ scope } as never);
+    const client = provider.useModel('m', { strategy: 'echo' });
+    await expect(client.invoke('hello')).resolves.toBe('hello');
+    expect(scope).toHaveBeenCalledWith('ai');
+    expect(handle.report).toHaveBeenCalledWith(
+      expect.objectContaining({
+        operation: 'model-invoke',
+        outcome: 'success',
+      }),
+    );
+    provider.dispose();
+    expect(handle.disconnect).toHaveBeenCalledOnce();
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('loads and runs AI executions without telemetry', async () => {
     const { AiProvider } = await import('../AiProvider.js');
     const provider = new AiProvider({ strategies } as never);

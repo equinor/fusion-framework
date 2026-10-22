@@ -160,6 +160,11 @@ Themes configured in a parent scope (portal) are automatically inherited by chil
 
 ### Legacy `add()` compatibility telemetry
 
+`IAgGridProvider` extends `TelemetryConnectable`. The provider obtains its shared handle
+through `telemetry.scope('ag-grid')`, with a lazy factory fallback for older custom providers,
+for the existing notification, and disconnects
+it on teardown. The shim and its one-notification observation budget are unchanged.
+
 The provider patches a legacy `Set`-style `add()` onto AG Grid's shared `Map`-shaped
 `agStyleInjectionState.grids` when it is missing, so bundles built for older AG Grid keep
 working. When the host has the telemetry module, the first call to that patched `add()` in

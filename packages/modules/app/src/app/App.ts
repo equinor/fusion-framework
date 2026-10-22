@@ -9,7 +9,14 @@ import type {
 import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider.js';
-import { combineLatest, of, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
+import {
+  combineLatest,
+  of,
+  Subscription,
+  firstValueFrom,
+  lastValueFrom,
+  identity as identityOperator,
+} from 'rxjs';
 import { defaultIfEmpty, last, map, switchMap } from 'rxjs/operators';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
@@ -22,10 +29,10 @@ import isEqual from 'fast-deep-equal';
 
 import { filterEmpty } from './filter-empty.js';
 
-import {
+import type {
   OperationalTelemetry,
-  type OperationalProperties,
-} from '../integrations/OperationalTelemetry.js';
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import './events.js';
 
@@ -282,7 +289,7 @@ export class App<
   #state: FlowSubject<AppBundleState, Actions>;
 
   /** Operational records of this app; closed when it unloads or its provider disposes. */
-  #telemetry: OperationalTelemetry;
+  #telemetry: () => OperationalTelemetry | undefined;
 
   //#region === streams ===
 
@@ -398,17 +405,16 @@ export class App<
     args: {
       provider: AppModuleProvider;
       event?: ModuleType<EventModule>;
-      telemetry?: OperationalTelemetry;
+      telemetry?: OperationalTelemetry | (() => OperationalTelemetry | undefined);
     },
   ) {
+    const parent = (): OperationalTelemetry | undefined =>
+      typeof args.telemetry === 'function' ? args.telemetry() : args.telemetry;
     // Only static identity is exported; manifests, config and settings are never read for telemetry.
     // Resolved when an operation ends, so it includes the version once the manifest is loaded.
     const identity = (): OperationalProperties => {
-      const key = OperationalTelemetry.safeIdentity(this.#state.value.appKey);
-      const version = OperationalTelemetry.safeIdentity(
-        this.#state.value.manifest?.build?.version,
-        'version',
-      );
+      const key = parent()?.safeIdentity(this.#state.value.appKey);
+      const version = parent()?.safeIdentity(this.#state.value.manifest?.build?.version, 'version');
       // Unsafe or missing identity is omitted rather than exported.
       return {
         ...(key ? { appKey: key } : {}),
@@ -417,7 +423,15 @@ export class App<
     };
     // Each app owns a child scope of the provider's telemetry, so unloading one app cannot
     // cancel another app's stages, while provider disposal still closes stages in flight.
-    const telemetry = args.telemetry?.createScope({ identity }) ?? new OperationalTelemetry('app');
+    let scope: OperationalTelemetry | undefined;
+    let unloaded = false;
+    const telemetry = (): OperationalTelemetry | undefined => {
+      // Apps created before telemetry connects still acquire a scope on their first later request.
+      if (!unloaded) {
+        scope ??= parent()?.createScope({ identity });
+      }
+      return scope;
+    };
     this.#telemetry = telemetry;
     this.#state = createState(value, args.provider, telemetry);
 
@@ -449,14 +463,13 @@ export class App<
       );
     }
 
-    let unloaded = false;
     this.dispose = () => {
       // Repeated disposal keeps its existing behavior but records only the first unload.
       const first = !unloaded;
       unloaded = true;
       // Teardown has separate ownership so closing load reporting never waits for its promise.
-      const unloadTelemetry = first ? args.telemetry?.createScope({ identity }) : undefined;
-      telemetry.close({ ...identity(), reason: 'unloaded' });
+      const unloadTelemetry = first ? parent()?.createScope({ identity }) : undefined;
+      scope?.close({ ...identity(), reason: 'unloaded' });
       const endUnload = unloadTelemetry?.start('unload');
       subscriptions?.unsubscribe();
       // tear down modules of application, if an instance was loaded
@@ -696,7 +709,7 @@ export class App<
           },
         }),
       );
-    }).pipe(this.#telemetry.measure('load'));
+    }).pipe(this.#telemetry()?.measure('load') ?? identityOperator);
   }
 
   /** @inheritdoc */

@@ -1,4 +1,4 @@
-import { beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { asyncScheduler, identity, lastValueFrom, observeOn, Subject, switchMap } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
@@ -10,7 +10,7 @@ import {
 
 import { WidgetModuleProvider } from '../WidgetModuleProvider.js';
 import { WidgetManifestLoadError } from '../WidgetManifestLoadError.js';
-import { OperationalTelemetry } from '../integrations/OperationalTelemetry.js';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 import { measureStage } from '../integrations/measure-stage.js';
 import widgetModule from '../module.js';
 import type { IClient, WidgetManifest } from '../types.js';
@@ -18,9 +18,6 @@ import type { IClient, WidgetManifest } from '../types.js';
 const SENTINEL = 'sentinel-secret';
 
 afterEach(() => vi.restoreAllMocks());
-
-// Scopes built directly with a provider record once the optional peer's builders are loaded.
-beforeAll(() => OperationalTelemetry.load());
 
 const manifest = (name: string): WidgetManifest =>
   ({
@@ -63,6 +60,24 @@ const summary = (items: TelemetryItem[]) =>
   items.map((item) => [item.name, item.diagnostic?.outcome, item.properties?.reason]);
 
 describe('widget load-stage telemetry', () => {
+  it('connects a widget created before its provider receives a telemetry scope', async () => {
+    const { modules, records } = await createTelemetry();
+    const provider = new WidgetModuleProvider({
+      config: { client: createClient(async ({ widgetKey }) => manifest(widgetKey)) },
+    });
+    const widget = provider.getWidget('late-widget');
+    await provider.connectTelemetry(modules.telemetry);
+    await lastValueFrom(widget.getManifest());
+    expect(records()).toHaveLength(1);
+    expect(records()[0]).toMatchObject({
+      name: 'fusion.widget.load-manifest.duration',
+      properties: { widgetKey: 'late-widget', widgetVersion: '2.0.1' },
+    });
+    widget.dispose();
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('records manifest and config stages with static identity only', async () => {
     const { modules, records, processItem } = await createTelemetry();
     const provider = new WidgetModuleProvider({
@@ -151,7 +166,8 @@ describe('widget load-stage telemetry', () => {
 
   it('keeps each outcome with its own request when delivery is queued behind a newer one', async () => {
     const { modules, records } = await createTelemetry();
-    const telemetry = new OperationalTelemetry('widget', () => modules.telemetry);
+    const telemetry = createOperationalTelemetry('widget');
+    telemetry.connect(modules.telemetry);
     type StageAction = { type: string; payload?: unknown };
     const outcomes = {
       success: { match: (action: StageAction) => action.type === 'fetch_manifest::success' },

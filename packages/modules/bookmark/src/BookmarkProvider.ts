@@ -1,4 +1,4 @@
-import { Observable, Subscription, forkJoin, from, lastValueFrom, of, defer } from 'rxjs';
+import { Observable, Subscription, forkJoin, from, lastValueFrom, of, defer, identity } from 'rxjs';
 
 import {
   filter,
@@ -54,7 +54,7 @@ import { BookmarkFlowError, BookmarkProviderError } from './BookmarkFlowError.js
 import type { BookmarkProviderEventMap } from './BookmarkProvider.events.js';
 import { version } from './version.js';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import { trackMutation } from './integrations/track-mutation.js';
 
 import type {
@@ -97,7 +97,10 @@ export class BookmarkProvider
   #subscriptions = new Subscription();
 
   /** optional operational telemetry; never carries bookmark names, ids or payloads */
-  #telemetry = new OperationalTelemetry('bookmark');
+  #telemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   /**
    * @deprecated
@@ -330,7 +333,7 @@ export class BookmarkProvider
     this.#store = createBookmarkStore({
       client: config.client,
       initial: { currentBookmark: this._parent?.currentBookmark ?? null },
-      telemetry: this.#telemetry,
+      telemetry: () => this.#telemetry,
     });
 
     // add teardown logic for disposing the store
@@ -684,7 +687,7 @@ export class BookmarkProvider
 
       // Step 5: Subscribe to the request stream and forward results to observer
       request$.subscribe(observer);
-    }).pipe(this.#telemetry.measure('list'));
+    }).pipe(this.#telemetry?.measure('list') ?? identity);
   }
 
   /**
@@ -731,7 +734,7 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for change to ${next?.id ?? 'none'}, from ${current?.id ?? 'none'}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
+          this.#telemetry?.markCancellation(error, 'listener');
           this._log?.info(error.message);
           throw error;
         }
@@ -750,7 +753,7 @@ export class BookmarkProvider
         this._log?.error(error.message, error);
         throw error;
       }),
-      this.#telemetry.measure('apply', { clear: bookmark_or_id === null }),
+      this.#telemetry?.measure('apply', { clear: bookmark_or_id === null }) ?? identity,
     );
   }
 
@@ -831,7 +834,7 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for creating bookmark: ${ref}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
+          this.#telemetry?.markCancellation(error, 'listener');
           this._log?.info(error.message);
           throw error;
         }
@@ -975,7 +978,7 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for updating bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
+          this.#telemetry?.markCancellation(error, 'listener');
           this._log?.warn(error.message, updates);
           throw error;
         }
@@ -1124,7 +1127,7 @@ export class BookmarkProvider
           const error = new BookmarkProviderError(
             `event: ${type} was canceled by listener for removing bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-          OperationalTelemetry.markCancellation(error, 'listener');
+          this.#telemetry?.markCancellation(error, 'listener');
           this._log?.warn(error.message);
           throw error;
         }
@@ -1233,7 +1236,7 @@ export class BookmarkProvider
             const error = new BookmarkProviderError(
               `event: ${type} was canceled by listener for adding favourite bookmark: ${bookmarkId}, ref: ${ref}`,
             );
-            OperationalTelemetry.markCancellation(error, 'listener');
+            this.#telemetry?.markCancellation(error, 'listener');
             this._log?.info(error.message);
             throw error;
           }
@@ -1288,7 +1291,7 @@ export class BookmarkProvider
     });
 
     // Measured per subscription, since this operation is cold and starts per subscriber.
-    return result$.pipe(this.#telemetry.measure('favourite-add'));
+    return result$.pipe(this.#telemetry?.measure('favourite-add') ?? identity);
   }
 
   /**
@@ -1333,7 +1336,7 @@ export class BookmarkProvider
             const error = new BookmarkProviderError(
               `event: ${type} was canceled by listener for removing favourite bookmark: ${bookmarkId}, ref: ${ref}`,
             );
-            OperationalTelemetry.markCancellation(error, 'listener');
+            this.#telemetry?.markCancellation(error, 'listener');
             this._log?.warn(error.message);
             throw error;
           }
@@ -1392,7 +1395,7 @@ export class BookmarkProvider
     });
 
     // Measured per subscription, since this operation is cold and starts per subscriber.
-    return result$.pipe(this.#telemetry.measure('favourite-remove'));
+    return result$.pipe(this.#telemetry?.measure('favourite-remove') ?? identity);
   }
 
   /**
@@ -1604,8 +1607,39 @@ export class BookmarkProvider
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
-    return this.#telemetry.connect(telemetry ? () => telemetry : undefined);
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#telemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('bookmark') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('bookmark');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for bookmark: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
   }
 
   /**
@@ -1614,7 +1648,9 @@ export class BookmarkProvider
   dispose(): void {
     this._log?.debug('disposing BookmarkProvider');
     // Operations interrupted by disposal are cancellations; nothing is reported afterwards.
-    this.#telemetry.close({ reason: 'disposed' });
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#telemetry?.close({ reason: 'disposed' });
     super.dispose();
     this.#subscriptions.unsubscribe();
   }

@@ -1,5 +1,5 @@
 import { filter, take, type Observable } from 'rxjs';
-import { OperationalTelemetry } from './OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import type { RequestOutcomes } from './measure-request.js';
 
 /** Telemetry hooks of one mutation measured from the provider call. */
@@ -28,14 +28,14 @@ const idle: MutationTracker = { fail: () => {}, dispatched: () => {}, abandon: (
  * @returns Hooks for the preparation error, dispatch and abandonment paths.
  */
 export function trackMutation<TAction>(
-  telemetry: OperationalTelemetry,
+  telemetry: OperationalTelemetry | undefined,
   operation: string,
   action$: Observable<TAction>,
   outcomes: RequestOutcomes<TAction>,
 ): MutationTracker {
-  const end = telemetry.reserve(operation);
+  const end = telemetry?.reserve(operation);
   // Without a reserved timer (telemetry absent, closed or at capacity), add no observer.
-  if (!end) {
+  if (!end || !telemetry) {
     return idle;
   }
   let sent = false;
@@ -49,7 +49,7 @@ export function trackMutation<TAction>(
   return {
     fail: (error) => {
       subscription.unsubscribe();
-      const { outcome, reason } = OperationalTelemetry.classifyError(error);
+      const { outcome, reason } = telemetry.classifyError(error);
       end(outcome, reason ? { reason } : undefined);
     },
     dispatched: () => {
