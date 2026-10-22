@@ -670,15 +670,16 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     try {
       // Process any pending redirect from authentication flow
       const result = await this.client.handleRedirectPromise();
-      // Only a returned result completes a redirect flow; no pending redirect is skipped work.
+      // Processing ran even without a pending redirect, so success is measured either way;
+      // otherwise failures would be over-represented in the outcome ratio.
+      this.#report({
+        operation: 'handle-redirect',
+        outcome: 'success',
+        duration: performance.now() - started,
+      });
+      // The legacy event marks only a completed redirect flow, without account identifiers.
       if (result) {
-        // Track successful redirect completion without account identifiers
         this._trackEvent('handleRedirect.success', TelemetryLevel.Information);
-        this.#report({
-          operation: 'handle-redirect',
-          outcome: 'success',
-          duration: performance.now() - started,
-        });
       }
       return result;
     } catch (error) {

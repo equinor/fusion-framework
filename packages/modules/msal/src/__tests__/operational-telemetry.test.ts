@@ -108,7 +108,10 @@ describe('MsalProvider operational telemetry', () => {
       .fn()
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(new Error(sentinel));
-    const handleRedirectPromise = vi.fn(async () => ({ account }));
+    const handleRedirectPromise = vi
+      .fn()
+      .mockResolvedValueOnce({ account })
+      .mockResolvedValueOnce(null);
     const { provider, items } = createProvider({ logout, handleRedirectPromise });
 
     await expect(provider.logout({ redirectUri: `https://${sentinel}.test/?q=1` })).resolves.toBe(
@@ -116,11 +119,14 @@ describe('MsalProvider operational telemetry', () => {
     );
     await expect(provider.logout()).resolves.toBe(false);
     await expect(provider.handleRedirect()).resolves.toEqual({ account });
+    // No pending redirect is still a completed, measured operation.
+    await expect(provider.handleRedirect()).resolves.toBeNull();
 
     expect(operational(items)).toEqual([
       'fusion.msal.logout.duration:success',
       'fusion.msal.logout.duration:failure',
       'fusion.msal.logout.failure:failure',
+      'fusion.msal.handle-redirect.duration:success',
       'fusion.msal.handle-redirect.duration:success',
     ]);
     expect(JSON.stringify(items)).not.toContain(sentinel);
