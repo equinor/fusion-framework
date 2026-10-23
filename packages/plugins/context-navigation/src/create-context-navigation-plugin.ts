@@ -1,4 +1,4 @@
-import { Subscription, startWith, pairwise, map } from 'rxjs';
+import { EMPTY, Subscription, startWith, pairwise, map, switchMap } from 'rxjs';
 
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 import type { IContextProvider } from '@equinor/fusion-framework-module-context';
@@ -6,7 +6,7 @@ import type { IEventModuleProvider } from '@equinor/fusion-framework-module-even
 import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 import type { ContextNavigationConfig } from './types.js';
-import { getCurrentURL, resolveAdapter } from './helpers/index.js';
+import { getCurrentURL, normalizePathFromURL, resolveAdapter } from './helpers/index.js';
 import type { OwnNavigationTokens } from './apply-navigation.js';
 import { activeAppNavigationEvents } from './operators/active-app-navigation-events.js';
 import {
@@ -14,6 +14,7 @@ import {
   handlePushModeGuard,
   handleReplaceModeGuard,
   isInAppScope,
+  urlIdentifiesContext,
   type GuardTickDeps,
 } from './guard-handlers/index.js';
 import { reconcile } from './reconcile.js';
@@ -56,7 +57,9 @@ export type ContextNavigationEventSource = typeof eventSource;
  * using the first matching adapter.
  *
  * **URL guard** — watches browser navigation state and detects when the URL no
- * longer reflects the active context. Behavior depends on `navigationOptions.replace`:
+ * longer reflects the active context. If the adapter reports `appOwnsUrl`, the URL is
+ * the source of truth: routes without context are left alone and a context found in the
+ * URL is applied. Otherwise behavior depends on `navigationOptions.replace`:
  *
  * - `replace: true` (default) — each context change replaces the current history entry,
  *   so there is no meaningful back/forward stack within the context history. If the URL
@@ -125,6 +128,67 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
     // Guard needs the context provider to drive context from URL in push mode.
     const guardDeps: GuardTickDeps = { ...deps, context };
 
+    // At most one URL-driven context lookup runs at a time. It belongs to the URL that
+    // started it: once the user is somewhere else, its result is stale and must not apply.
+    let pendingLookup: { path: string; subscription: Subscription } | undefined;
+
+    /** Stop URL-driven work when its app or location is no longer current. */
+    const cancelPendingLookup = (): void => {
+      pendingLookup?.subscription.unsubscribe();
+      pendingLookup = undefined;
+    };
+    subscriptions.add(cancelPendingLookup);
+
+    // Observe lifecycle changes before resolved-app filtering: dismissal and loading
+    // must cancel old work even when no navigation event reaches the URL guard.
+    subscriptions.add(
+      app.current$
+        .pipe(
+          switchMap((currentApp) => {
+            cancelPendingLookup();
+            return currentApp ? currentApp.instance$ : EMPTY;
+          }),
+        )
+        .subscribe(() => cancelPendingLookup()),
+    );
+
+    // Register before the guard so an outgoing navigation cancels stale work even
+    // when the destination has no context module or its modules are unresolved.
+    subscriptions.add(
+      navigation.state$.subscribe(() => {
+        const currentURL = getCurrentURL(navigation, config.origin);
+        // Location changes invalidate a lookup even when resolved-app events are filtered out.
+        if (pendingLookup && pendingLookup.path !== normalizePathFromURL(currentURL)) {
+          log(`URL guard: navigation left [${pendingLookup.path}] — canceling its lookup.`);
+          cancelPendingLookup();
+        }
+      }),
+    );
+
+    /**
+     * Start at most one cancelable lookup for the current location.
+     * @param urlContextId - Context identity decoded from the app URL.
+     * @param payload - App modules and routing policy used by the guard.
+     * @param currentURL - Location that owns the pending lookup.
+     */
+    const resolveContextFromURL = (
+      urlContextId: string,
+      payload: Parameters<typeof handlePushModeGuard>[1],
+      currentURL: URL,
+    ): void => {
+      const path = normalizePathFromURL(currentURL);
+      // The same URL is already being resolved (repeated navigation event) — don't start again.
+      if (pendingLookup?.path === path && !pendingLookup.subscription.closed) {
+        return;
+      }
+      cancelPendingLookup();
+      const subscription = handlePushModeGuard(urlContextId, payload, currentURL, guardDeps);
+      // Synchronously completed lookups need no lifecycle tracking.
+      if (subscription && !subscription.closed) {
+        pendingLookup = { path, subscription };
+      }
+    };
+
     subscriptions.add(
       // activeAppNavigationEvents$ emits the current app key and modules
       // on every navigation state change, filtering out null/unresolved states.
@@ -132,8 +196,8 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
         ({ appModules, appKey, routingStrategy }) => {
           const appContext = appModules.context;
 
-          // No active context means nothing to guard — bail early.
-          if (!appContext?.currentContext) {
+          // No context module means nothing to guard — bail early.
+          if (!appContext) {
             return;
           }
 
@@ -165,28 +229,59 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
 
           const activeContext = appContext.currentContext;
           const urlContextId = adapter.decode(currentURL);
+          const appOwnsUrl = adapter.appOwnsUrl === true;
+          const payload = { appKey, appModules, routingStrategy };
+
+          // No active context: only an app-owned URL that carries a context needs action
+          // (e.g. a link from a page without context) — apply the context from the URL.
+          if (!activeContext) {
+            // Only app-owned routes can bootstrap context when none is selected.
+            if (appOwnsUrl && urlContextId !== null) {
+              log(`URL guard: no active context, applying [${urlContextId}] from URL`);
+              resolveContextFromURL(urlContextId, payload, currentURL);
+            }
+            return;
+          }
 
           // If the URL already encodes the active context, state is in sync — done.
           if (urlContextId === activeContext.id) {
             return;
           }
 
-          // Decision branch: push mode vs replace mode determines how we reconcile drift.
-          if (urlContextId !== null && config.navigationOptions?.replace === false) {
-            // Push mode: URL has a different context ID, meaning the user navigated
-            // via browser back/forward. Drive context FROM the URL to stay in sync.
-            handlePushModeGuard(
-              urlContextId,
-              { appKey, appModules, routingStrategy },
+          // The app owns this route and it has no context (e.g. a list page) — not drift.
+          if (urlContextId === null && appOwnsUrl) {
+            log(`URL guard: [${currentURL.pathname}] has no context — leaving it alone.`);
+            return;
+          }
+
+          // The URL may identify the active context by key or slug instead of id.
+          // In sync only when the adapter itself writes that value for the active context.
+          if (
+            urlContextId !== null &&
+            urlIdentifiesContext({
+              adapter,
+              appKey,
+              context: activeContext,
+              urlContextValue: urlContextId,
               currentURL,
-              guardDeps,
-            );
+            })
+          ) {
+            return;
+          }
+
+          // The URL holds a different context. Drive context FROM the URL when:
+          // - push mode: the user navigated via browser back/forward, or
+          // - the app owns its URL: the app navigated to another context's route.
+          const urlDrivesContext = config.navigationOptions?.replace === false || appOwnsUrl;
+          // Keep URL authority separate from the legacy replace-mode correction policy.
+          if (urlContextId !== null && urlDrivesContext) {
+            resolveContextFromURL(urlContextId, payload, currentURL);
             return;
           }
 
           // Replace mode (default): URL diverged from active context (external redirect,
           // stripped segment, etc.). Re-assert the active context INTO the URL.
-          handleReplaceModeGuard({ appKey, appModules, routingStrategy }, currentURL, guardDeps);
+          handleReplaceModeGuard(payload, currentURL, guardDeps);
         },
       ),
     );

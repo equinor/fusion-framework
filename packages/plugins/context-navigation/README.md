@@ -78,6 +78,32 @@ builder.setContextPathGenerator((context, pathname) => {
 When these hooks are registered, the plugin's custom adapter picks them up
 automatically — no manifest `contextRouting` declaration needed.
 
+The app owns its URL shape, so the URL is the source of truth for the URL guard:
+
+- A route where the extractor returns no context (e.g. a list page such as
+  `/categories`) is a route **without** context. The URL guard does not put
+  the active context back into it.
+- A route where the extractor returns a context that is not active (e.g. a link
+  from a list page to `/app/{key}`) applies that context, in both push and
+  replace mode and also when no context is active.
+- Clearing context while on a route without context keeps the user there.
+  Clearing context on a route that has context navigates to the app root.
+- Selecting a context while on a route without context still navigates to the
+  path from `generatePathFromContext`.
+
+The extracted value does not have to be the context id. If it is a key or slug,
+the URL guard treats the URL as in sync when `generatePathFromContext` writes
+that same value for the active context. So navigating within the same context
+does not resolve it again. A generator that returns the path unchanged doesn't
+prove anything, so the guard resolves the value from the URL instead.
+Repeated keys in unrelated route segments do not trigger another lookup.
+
+When the URL guard resolves a context from the URL, the lookup belongs to that
+URL. If the user navigates elsewhere before the lookup finishes, the guard
+cancels it: a late result neither changes the context nor redirects the user.
+App dismissal, app switches, and module loading also cancel pending lookups,
+even before the next navigation event or when the destination has no context module.
+
 ## For Portal Developers
 
 The rest of this README covers portal-level setup and configuration.
@@ -203,7 +229,7 @@ enableContextNavigation(configurator, (builder) => {
 | `registerAdapter(adapter)` | Built-in set | Register a navigation adapter (object or factory). First match wins. |
 | `setPortalName(name)` | `'Portal'` | Name used in debug log output. |
 | `setOrigin(origin)` | `window.location.origin` | Origin for constructing absolute URLs. |
-| `setUrlGuard(enabled)` | `true` | Re-sync context if an external navigation drops it from the URL. With `replace: false`, back/forward navigations update context from the URL instead of overwriting it. |
+| `setUrlGuard(enabled)` | `true` | Re-sync context if an external navigation drops it from the URL. With `replace: false`, back/forward navigations update context from the URL instead of overwriting it. Apps with custom path hooks always have the URL treated as the source of truth (see [Custom URL shapes](#custom-url-shapes)). |
 | `setDebug(enabled)` | `false` | Enable verbose `console.debug` output. |
 | `setNullContextUrl(urlOrFn)` | — | Function (or static string) that returns the URL to navigate to when context is cleared. Receives `{ appKey, currentURL }`. |
 | `setRequireValidContext(enabled)` | `false` | Validate the context against the app's context module (`validateContext`) before navigating. If validation fails, navigation is skipped. |
