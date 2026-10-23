@@ -12,8 +12,9 @@ const PROBE_SEGMENT = '__fusion-context-probe__';
  * Apps with custom path hooks can put an alias in the URL, so the decoded value differs
  * from `context.id` while the URL still belongs to the active context. Encoding the active
  * context against the current URL is not proof on its own: a generator that keeps the path
- * unchanged would match any URL. So the decoded value is first replaced with a placeholder,
- * and the URL counts as the context's only when the adapter writes the same value back.
+ * unchanged would match any URL. Each matching segment is probed individually with a
+ * placeholder, leaving unrelated occurrences intact. The URL counts as the context's only
+ * when the probe changes the decoded value and the adapter writes the original value back.
  *
  * Only whole path segments after the app base path are probed. When the value does not fill
  * a whole segment, the function returns `false` and the caller resolves the context instead.
@@ -41,15 +42,24 @@ export function urlIdentifiesContext(args: {
   }
 
   const segments = currentURL.pathname.slice(appBase.length).split('/');
-  if (!segments.includes(urlContextValue)) {
-    return false;
-  }
+  // Probe only one candidate at a time so a repeated key in the route tail stays intact.
+  return segments.some((segment, index) => {
+    // Nonmatching route segments cannot encode the alias being checked.
+    if (segment !== urlContextValue) {
+      return false;
+    }
 
-  const probeURL = new URL(currentURL.href);
-  probeURL.pathname = `${appBase}${segments
-    .map((segment) => (segment === urlContextValue ? PROBE_SEGMENT : segment))
-    .join('/')}`;
+    const probeSegments = [...segments];
+    probeSegments[index] = PROBE_SEGMENT;
+    const probeURL = new URL(currentURL.href);
+    probeURL.pathname = `${appBase}${probeSegments.join('/')}`;
 
-  const encoded = adapter.encode({ context, currentURL: probeURL });
-  return !!encoded && normalizePathFromURL(encoded) === normalizePathFromURL(currentURL);
+    // An unrelated occurrence must not let a path-preserving generator prove identity.
+    if (adapter.decode(probeURL) === urlContextValue) {
+      return false;
+    }
+
+    const encoded = adapter.encode({ context, currentURL: probeURL });
+    return !!encoded && normalizePathFromURL(encoded) === normalizePathFromURL(currentURL);
+  });
 }

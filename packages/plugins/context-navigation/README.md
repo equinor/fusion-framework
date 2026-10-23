@@ -96,10 +96,13 @@ the URL guard treats the URL as in sync when `generatePathFromContext` writes
 that same value for the active context. So navigating within the same context
 does not resolve it again. A generator that returns the path unchanged doesn't
 prove anything, so the guard resolves the value from the URL instead.
+Repeated keys in unrelated route segments do not trigger another lookup.
 
 When the URL guard resolves a context from the URL, the lookup belongs to that
 URL. If the user navigates elsewhere before the lookup finishes, the guard
 cancels it: a late result neither changes the context nor redirects the user.
+App dismissal, app switches, and module loading also cancel pending lookups,
+even before the next navigation event or when the destination has no context module.
 
 ## For Portal Developers
 
