@@ -16,7 +16,7 @@
   "devDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
-    "@equinor/fusion-react-styles": "^2.1.0",
+    "@equinor/fusion-react-styles": "^2.1.10",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "react": "catalog:react",
