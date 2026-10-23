@@ -84,6 +84,15 @@ await client.json('/items', {
 
 That request uses both the configured `defaultScopes` and the request-specific scopes.
 
+Scoped requests fail before reaching the network with `MissingAccessTokenException` if no
+auth module is registered or token acquisition returns no access token. Token acquisition
+errors propagate unchanged. Import the exception from
+`@equinor/fusion-framework-module-http` or its `/errors` entry point.
+
+Migration: handle the rejection instead of relying on an anonymous request after failed
+authentication. For intentionally anonymous endpoints, use a client without `defaultScopes`
+and omit request scopes. Unscoped requests retain caller-supplied authorization headers.
+
 ## Direct Module Integration
 
 If you are configuring modules directly instead of using higher-level framework helpers, use the package exports.
