@@ -9,6 +9,16 @@ import {
   type OperationalRecordArgs,
 } from './create-operational-records.js';
 import { operationalScope } from './operational-scope.js';
+import type { OperationalProperties } from './operational-properties.js';
+
+/** Named levels keep optional integrations independent of runtime enum imports. */
+const notificationLevels = {
+  debug: TelemetryLevel.Debug,
+  information: TelemetryLevel.Information,
+  warning: TelemetryLevel.Warning,
+  error: TelemetryLevel.Error,
+  critical: TelemetryLevel.Critical,
+};
 
 /**
  * One outcome reported by an optional integration; the host identity comes from the provider.
@@ -24,7 +34,9 @@ export type OperationalReport =
        * `failure` outcome and `Information` otherwise; use `Warning` for a recoverable
        * degradation, such as serving a fallback instead of failing.
        */
-      level?: TelemetryLevel;
+      level?: TelemetryLevel | keyof typeof notificationLevels;
+      /** Caller-allowlisted primitive summaries, never payloads or raw errors. */
+      properties?: OperationalProperties;
     });
 
 /** Provider members the reporter uses, so callers can pass a narrowed provider. */
@@ -73,10 +85,11 @@ export function createOperationalReporter(
         target.trackEvent({
           name: `fusion.${report.module}.${report.operation}`,
           level:
-            report.level ??
+            (typeof report.level === 'string' ? notificationLevels[report.level] : report.level) ??
             (report.outcome === 'failure' ? TelemetryLevel.Error : TelemetryLevel.Information),
           scope: operationalScope(source),
           diagnostic: createDiagnosticContext({ ...report, source }),
+          ...(report.properties ? { properties: { ...report.properties } } : {}),
         });
         return;
       }

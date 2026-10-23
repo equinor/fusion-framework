@@ -51,11 +51,19 @@ describe('createOperationalReporter', () => {
       notification: true,
       level: TelemetryLevel.Warning,
     });
+    report({
+      module: 'reports',
+      operation: 'compatibility',
+      outcome: 'success',
+      notification: true,
+      level: 'warning',
+    });
 
     expect(target.items.map((item) => [item.name, item.level])).toEqual([
       ['fusion.reports.hit', TelemetryLevel.Information],
       ['fusion.reports.lost', TelemetryLevel.Error],
       ['fusion.reports.fallback', TelemetryLevel.Warning],
+      ['fusion.reports.compatibility', TelemetryLevel.Warning],
     ]);
     // Severity is the event's own field, never part of the allowlisted envelope.
     expect(target.items[2].diagnostic).not.toHaveProperty('level');
@@ -85,6 +93,16 @@ describe('createOperationalReporter', () => {
 });
 
 describe('createOperationalTelemetry', () => {
+  it('preserves callback-safe connect, report and disconnect methods', () => {
+    const target = createTarget();
+    const { connect, report, disconnect } = createOperationalTelemetry('reports');
+    connect(target);
+    report({ operation: 'export', outcome: 'success', duration: 1 });
+    disconnect();
+    report({ operation: 'export', outcome: 'failure', duration: 1 });
+    expect(target.items.map((item) => item.name)).toEqual(['fusion.reports.export.duration']);
+  });
+
   it('binds the module label and reports only while connected', () => {
     const target = createTarget();
     const telemetry = createOperationalTelemetry('reports');

@@ -143,6 +143,11 @@ Services also implement the LangChain `RunnableInterface`, so they can be compos
 
 ## Diagnose AI executions with telemetry
 
+`IAiProvider` extends `TelemetryConnectable`. `connectTelemetry` obtains a shared handle
+through `telemetry.scope('ai')`, with a lazy factory fallback for older custom providers,
+and provider teardown disconnects it. Execution wrappers
+remain AI-specific; record construction and delivery use the shared telemetry implementation.
+
 When the host has the telemetry module, clients returned by `useModel`, `useEmbed` and
 `useIndex` report one safe terminal record per actual execution, from built-in and custom
 strategies alike. Creating a client records nothing. Without telemetry, the strategy's own

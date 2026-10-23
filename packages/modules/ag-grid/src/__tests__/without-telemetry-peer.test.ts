@@ -15,6 +15,29 @@ afterEach(() => {
 });
 
 describe('AG Grid without the optional telemetry peer', () => {
+  it('uses a provider-supplied scope without importing utilities or severity enums', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const grids = new Map<unknown, unknown>();
+    vi.stubGlobal('window', { agStyleInjectionState: { grids } });
+    const { AgGridProvider } = await import('../AgGridProvider.js');
+    const provider = new AgGridProvider({});
+    const handle = { connect: vi.fn(), disconnect: vi.fn(), report: vi.fn() };
+    const scope = vi.fn(() => handle);
+    await provider.connectTelemetry({ scope } as never);
+    (grids as Map<unknown, unknown> & { add: (key: unknown) => unknown }).add('a');
+    expect(scope).toHaveBeenCalledWith('ag-grid');
+    expect(handle.report).toHaveBeenCalledWith({
+      operation: 'legacy-add',
+      outcome: 'success',
+      notification: true,
+      level: 'warning',
+    });
+    expect(grids.get('a')).toBe(true);
+    provider.dispose();
+    expect(handle.disconnect).toHaveBeenCalledOnce();
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('loads, initializes and keeps the legacy add() shim working', async () => {
     const grids = new Map<unknown, unknown>();
     vi.stubGlobal('window', { agStyleInjectionState: { grids } });

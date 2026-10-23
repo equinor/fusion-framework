@@ -50,6 +50,28 @@ const setup = async () => {
 };
 
 describe('state operational telemetry', () => {
+  it('cancels pending storage work on disposal and ignores completion or reconnection afterwards', async () => {
+    const { modules, storage, provider, summary } = await setup();
+    let release: (() => void) | undefined;
+    vi.spyOn(storage, 'putItem').mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          release = () => resolve({ status: 'success', key: SENTINEL });
+        }),
+    );
+    const pending = provider.storeItem({ key: SENTINEL, value: SENTINEL });
+    provider.dispose();
+    expect(summary()).toEqual([
+      ['fusion.state.store.duration', 'cancelled', { count: 1, reason: 'disposed' }],
+    ]);
+    release?.();
+    await expect(pending).resolves.toMatchObject({ status: 'success' });
+    await provider.connectTelemetry(modules.telemetry);
+    await provider.storeItem({ key: SENTINEL, value: 1 });
+    expect(summary()).toHaveLength(1);
+    await modules.dispose();
+  });
+
   it('records one outcome per operation with counts but no keys or values', async () => {
     const { modules, provider, processItem, summary } = await setup();
     await provider.storeItem({ key: SENTINEL, value: SENTINEL });

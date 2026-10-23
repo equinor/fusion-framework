@@ -117,6 +117,11 @@ builder.addPlugin(
 
 ## Operational telemetry
 
+`IFeatureFlagProvider` extends `TelemetryConnectable`. The provider uses
+`telemetry.scope('feature-flag')`, with a lazy factory fallback for older custom providers;
+closing the handle cancels pending toggles once and prevents
+late reporting. Toggle summaries remain specific to this module.
+
 When the host registers telemetry, each `toggleFeature`/`toggleFeatures` call reports
 one `fusion.feature-flag.toggle.duration` outcome with `requested`, `applied`,
 `rejected` (unregistered or read-only) and `cancelled` (listener veto or superseded

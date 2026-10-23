@@ -6,7 +6,7 @@ import type { Flow } from '@equinor/fusion-observable';
 import { bookmarkActions as actions, type BookmarkActions } from '../bookmark-actions.js';
 import type { BookmarkState } from '../create-bookmark-store.js';
 import type { IBookmarkClient } from '../BookmarkClient.interface.js';
-import type { OperationalTelemetry } from '../integrations/OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import { measureRequest } from '../integrations/measure-request.js';
 
 import { handleFetchBookmark } from './handle-fetch-bookmark.js';
@@ -28,7 +28,7 @@ import { handleAddBookmarkAsFavorite } from './handle-add-bookmark-as-favorite.j
  */
 export const bookmarkApiFlows = (
   api: IBookmarkClient,
-  telemetry?: OperationalTelemetry,
+  telemetry?: () => OperationalTelemetry | undefined,
 ): Flow<BookmarkActions, BookmarkState> => {
   /**
    * Combines multiple Bookmark-related observable flows into a single observable stream.

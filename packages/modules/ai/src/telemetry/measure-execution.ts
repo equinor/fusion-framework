@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 import { IterableReadableStream } from '@langchain/core/utils/stream';
 import type { OperationalOutcome } from '@equinor/fusion-framework-module-telemetry/schemas';
-import type { AiOperation, AiReport } from './create-ai-reporter.js';
+import type { AiOperation, AiReport } from './types.js';
 
 /**
  * Shape of an instrumented method's result, which decides where the execution ends:

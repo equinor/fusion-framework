@@ -209,6 +209,11 @@ Available events:
 
 ## Operational telemetry
 
+`IBookmarkProvider` extends `TelemetryConnectable`. The provider uses
+`telemetry.scope('bookmark')`, with a lazy factory fallback for older custom providers,
+and closes the handle on disposal. Fetch and mutation observers
+remain local, delegating bounded timing, cancellation classification and delivery to the handle.
+
 When the host registers telemetry, the provider reports one
 `fusion.bookmark.<operation>.duration` outcome for `get`, `list`, `apply`, `create`,
 `update`, `delete`, `favourite-add`, `favourite-remove` and `payload-resolve`.

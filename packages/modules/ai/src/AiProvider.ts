@@ -1,5 +1,9 @@
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
 import { version } from './version.js';
 import type { AIModuleConfig } from './AiConfigurator.js';
@@ -10,7 +14,7 @@ import {
   STRATEGY_TYPE,
 } from './lib/strategies/index.js';
 import type { EmbedStrategy, ModelStrategy, Strategy } from './lib/strategies/index.js';
-import type { AiOperation, AiReport } from './telemetry/create-ai-reporter.js';
+import type { AiOperation, AiReport } from './telemetry/types.js';
 import { type InstrumentationPlan, instrumentAiClient } from './telemetry/instrument-ai-client.js';
 import type { ExecutionKind } from './telemetry/measure-execution.js';
 
@@ -70,7 +74,7 @@ const DEFAULT_MODEL = 'gpt-5.1-chat' as const;
  * All three factory methods create a fresh client instance on each call,
  * binding them to the resolved service URI and MSAL token factory.
  */
-export interface IAiProvider {
+export interface IAiProvider extends TelemetryConnectable {
   /**
    * Creates a language model client backed by the Fusion AI service.
    *
@@ -129,10 +133,11 @@ export interface IAiProvider {
  */
 export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IAiProvider {
   readonly #strategies: Strategy[];
-  #telemetry?: ITelemetryProvider;
+  #telemetry?: OperationalTelemetry;
   #report?: AiReport;
   /** Increments on every (re)connection and on disposal, so stale async connections stop. */
   #connection = 0;
+  #disposed = false;
 
   /**
    * @param config - Resolved AI module configuration with service URI and token factory.
@@ -143,6 +148,8 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
     // Executions finishing after disposal must not report to a torn-down host.
     this._addTeardown(() => {
       this.#connection++;
+      this.#disposed = true;
+      this.#telemetry?.disconnect();
       this.#telemetry = undefined;
       this.#report = undefined;
     });
@@ -156,25 +163,36 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
    */
   public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
     const connection = ++this.#connection;
-    this.#telemetry = undefined;
+    this.#telemetry?.connect(undefined);
     this.#report = undefined;
     // Without telemetry, clients stay exactly as the strategies create them.
-    if (!telemetry) {
+    if (!telemetry || this.#disposed) {
       return;
     }
-    let createAiReporter: (telemetry: () => ITelemetryProvider | undefined) => AiReport;
+    let handle: OperationalTelemetry;
     try {
-      ({ createAiReporter } = await import('./telemetry/create-ai-reporter.js'));
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('ai') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('ai');
     } catch {
       console.warn('AI operational telemetry is unavailable');
       return;
     }
     // A later connection, disconnection or disposal supersedes this one.
     if (connection !== this.#connection) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
       return;
     }
-    this.#telemetry = telemetry;
-    this.#report = createAiReporter(() => this.#telemetry);
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
+    this.#report = (operation, outcome, duration) =>
+      handle.report({ operation, outcome, duration });
   }
 
   /**

@@ -119,6 +119,11 @@ Each error includes a `type` property (`'not_found'`, `'unauthorized'`, `'delete
 
 ## Operational telemetry
 
+The provider implements `TelemetryConnectable` and obtains its shared handle through
+`telemetry.scope('app')`, with a lazy factory fallback for older custom providers.
+Each app owns a child scope; stage observers stay local,
+while timing, safe identity and disposal use the shared telemetry implementation.
+
 When the host registers telemetry, every app reports one `fusion.app.<stage>.duration`
 outcome per attempted stage: `load-manifest`, `load-config`, `load-settings`,
 `update-settings`, `import`, `load`, and `unload` when the app is replaced or cleared.

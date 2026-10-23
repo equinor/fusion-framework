@@ -13,6 +13,9 @@ Routing and navigation module for **Fusion Framework** with observable state man
 
 ## Safe operational telemetry
 
+`INavigationProvider` extends the shared `TelemetryConnectable` contract. Navigation retains
+its existing `Navigation::*` notifications rather than adopting new operational record names.
+
 After initialization, navigation connects available host telemetry without waiting
 for it during startup. Explicit `setTelemetry(provider)` takes precedence;
 `setTelemetry(undefined)` disables automatic hookup. Automatic wiring reports

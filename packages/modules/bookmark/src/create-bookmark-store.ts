@@ -6,7 +6,7 @@ import { createBookmarkReducer } from './create-bookmark-reducer.js';
 import { bookmarkApiFlows } from './bookmark-flows/index.js';
 import type { IBookmarkClient } from './BookmarkClient.interface.js';
 import type { Bookmark, BookmarkWithoutData } from './types.js';
-import type { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Internal state shape managed by the bookmark store.
@@ -50,7 +50,7 @@ export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions>;
 export const createBookmarkStore = (args: {
   initial?: Partial<BookmarkState>;
   client: IBookmarkClient;
-  telemetry?: OperationalTelemetry;
+  telemetry?: () => OperationalTelemetry | undefined;
 }): BookmarkStore => {
   // create the store
   const store = new FlowSubject<BookmarkState, BookmarkActions>(

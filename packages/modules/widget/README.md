@@ -112,6 +112,11 @@ provider.getWidgetConfig('my-widget').subscribe((config) => {
 
 ## Operational telemetry
 
+The provider implements `TelemetryConnectable` and obtains its shared handle through
+`telemetry.scope('widget')`, with a lazy factory fallback for older custom providers.
+Each widget owns a child scope; stage observers stay local,
+while timing, safe identity and disposal use the shared telemetry implementation.
+
 When the host registers telemetry, every widget reports one
 `fusion.widget.<stage>.duration` outcome for `load-manifest`, `load-config`, `import`
 and `load`, the outcome of each `initialize()` subscription (`cancelled` when the caller

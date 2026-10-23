@@ -89,6 +89,11 @@ modules.context.clearCurrentContext();
 
 ## Operational telemetry
 
+`IContextProvider` extends `TelemetryConnectable`. The provider uses
+`telemetry.scope('context')`, falling back to the lazily loaded factory for older custom
+providers, and closes the shared handle on disposal;
+selection/resolution observation remains in the context module.
+
 When the host registers telemetry, each queued `setCurrentContext` task reports one
 `fusion.context.select.duration` outcome. Each resolution attempt reports
 `fusion.context.resolve.duration`, whether it comes from selection, a direct

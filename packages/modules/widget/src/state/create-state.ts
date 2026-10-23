@@ -7,10 +7,10 @@ import { handleFetchManifest, handleImportWidget, handleFetchConfig } from './fl
 import { actions, type Actions } from './actions.js';
 import type { WidgetState, WidgetStateInitial } from '../types.js';
 import type WidgetModuleProvider from '../WidgetModuleProvider.js';
-import {
+import type {
   OperationalTelemetry,
-  type OperationalProperties,
-} from '../integrations/OperationalTelemetry.js';
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
 import { measureStage } from '../integrations/measure-stage.js';
 
 /**
@@ -29,7 +29,7 @@ import { measureStage } from '../integrations/measure-stage.js';
 export const createState = (
   value: WidgetStateInitial,
   provider: WidgetModuleProvider,
-  telemetry?: OperationalTelemetry,
+  telemetry?: OperationalTelemetry | (() => OperationalTelemetry | undefined),
 ): FlowSubject<WidgetState, Actions> => {
   const reducer = createReducer(value);
   const state = new FlowSubject<WidgetState, Actions>(reducer);
@@ -43,7 +43,10 @@ export const createState = (
         (action): OperationalProperties => {
           const version =
             actions.fetchManifest.success.match(action) &&
-            OperationalTelemetry.safeIdentity(action.payload.version, 'version');
+            (typeof telemetry === 'function' ? telemetry() : telemetry)?.safeIdentity(
+              action.payload.version,
+              'version',
+            );
           return version ? { widgetVersion: version } : {};
         },
       ),

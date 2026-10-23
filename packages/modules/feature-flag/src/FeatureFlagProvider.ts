@@ -26,8 +26,11 @@ import type { FeatureFlagConfig } from './types.js';
 import type { IFeatureFlag } from './FeatureFlag.js';
 import { normalizeFlags } from './utils/normalize-flags.js';
 import type { FeatureSelectorFn } from './utils/selectors.js';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import { summarizeToggle } from './integrations/summarize-toggle.js';
 
 /**
@@ -42,7 +45,7 @@ export type CompareFeature = (a: IFeatureFlag | undefined, b: IFeatureFlag | und
 /**
  * Represents a feature flag provider.
  */
-export interface IFeatureFlagProvider {
+export interface IFeatureFlagProvider extends TelemetryConnectable {
   /**
    * The collection of features managed by the provider.
    */
@@ -122,7 +125,10 @@ export class FeatureFlagProvider
   #event?: ModuleType<EventModule>;
 
   /** Optional operational telemetry; never carries feature keys or values. */
-  #telemetry = new OperationalTelemetry('feature-flag');
+  #telemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   /** @returns All currently registered feature flags, keyed by flag key. */
   get features(): Record<string, IFeatureFlag> {
@@ -267,13 +273,13 @@ export class FeatureFlagProvider
     );
 
     // Counts are derived from the request and its result, so the toggle flow stays unchanged.
-    const end = this.#telemetry.start('toggle');
+    const end = this.#telemetry?.start('toggle');
     let toggledFeatures: Array<{ key: string; enabled: boolean }>;
     try {
       // wait for the onToggle observable to complete and get the toggled features
       toggledFeatures = await lastValueFrom(onToggle);
     } catch (error) {
-      end('failure', summarizeToggle(values, features));
+      end?.('failure', summarizeToggle(values, features));
       throw error;
     }
 
@@ -282,7 +288,7 @@ export class FeatureFlagProvider
 
     const summary = summarizeToggle(values, features, toggledFeatures.length);
     // Listeners vetoing everything that could apply is a cancellation, not a success.
-    end(summary.applied === 0 && summary.cancelled > 0 ? 'cancelled' : 'success', summary);
+    end?.(summary.applied === 0 && summary.cancelled > 0 ? 'cancelled' : 'success', summary);
   }
 
   /**
@@ -294,8 +300,39 @@ export class FeatureFlagProvider
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
-    return this.#telemetry.connect(telemetry ? () => telemetry : undefined);
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#telemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('feature-flag') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('feature-flag');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for feature-flag: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
   }
 
   /**
@@ -304,7 +341,9 @@ export class FeatureFlagProvider
    * connections and toggle listeners are released as before.
    */
   public override dispose(): void {
-    this.#telemetry.close({ reason: 'disposed' });
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#telemetry?.close({ reason: 'disposed' });
     super.dispose();
   }
 
