@@ -11,7 +11,10 @@ import {
 
 import type { ModuleType } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import type {
   AppConfig,
@@ -23,7 +26,7 @@ import type {
 } from './types.js';
 
 import { App, filterEmpty, type IApp } from './app/App.js';
-import { OperationalTelemetry } from './integrations/OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import type { AppModuleConfig } from './AppConfigurator.js';
 import type { AppBundleStateInitial } from './app/types.js';
 import type { IAppClient } from './AppClient.js';
@@ -46,7 +49,10 @@ import { version } from './version.js';
  * app automatically disposes the previous one. Subscribe to {@link current$} for
  * reactive updates.
  */
-export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
+export class AppModuleProvider
+  extends BaseModuleProvider<AppModuleConfig>
+  implements TelemetryConnectable
+{
   /**
    * Shallow-compares two app manifests by JSON serialization.
    *
@@ -73,7 +79,10 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    * Operational telemetry shared by every app this provider creates. Each app derives its own
    * scope, so connecting here applies to all apps and disposing closes their stages in flight.
    */
-  readonly #appTelemetry = new OperationalTelemetry('app');
+  #appTelemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   /**
    * The current active application instance.
@@ -236,7 +245,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
         {
           provider: this,
           event: this.#event,
-          telemetry: this.#appTelemetry,
+          telemetry: () => this.#appTelemetry,
         },
       );
       this.#current$.next(newApp as CurrentApp);
@@ -250,7 +259,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
         {
           provider: this,
           event: this.#event,
-          telemetry: this.#appTelemetry,
+          telemetry: () => this.#appTelemetry,
         },
       );
       this.#current$.next(newApp as CurrentApp);
@@ -287,7 +296,7 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
     return new App(value, {
       provider: this,
       event: this.#event,
-      telemetry: this.#appTelemetry,
+      telemetry: () => this.#appTelemetry,
     });
   }
 
@@ -301,8 +310,39 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
    *
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
-  public connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
-    return this.#appTelemetry.connect(telemetry ? () => telemetry : undefined);
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#appTelemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#appTelemetry ??
+        telemetry.scope?.('app') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('app');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for app: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#appTelemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#appTelemetry = handle;
+    this.#appTelemetry.connect(telemetry);
   }
 
   /**
@@ -312,7 +352,9 @@ export class AppModuleProvider extends BaseModuleProvider<AppModuleConfig> {
     // Stages still in flight are recorded as cancelled while telemetry is available, and
     // their observers released. Apps that outlive the provider then report nothing; app
     // business teardown is unchanged.
-    this.#appTelemetry.close({ reason: 'disposed' });
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#appTelemetry?.close({ reason: 'disposed' });
     super.dispose();
     this.#subscription.unsubscribe();
   }

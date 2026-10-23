@@ -8,6 +8,13 @@ For framework, app and widget lifecycle diagnostics, routing guarantees, safe me
 optional HTTP/query integration, and migration guidance, see
 [Operational telemetry](./docs/operational-telemetry.md).
 
+Framework modules obtain a connected handle with `telemetry.scope('app')` and implement the
+`TelemetryConnectable` provider contract. The shared handle supports primitive summary
+properties, bounded measured operations, observable measurement and owned child scopes.
+Closing a scope cancels its in-flight operations exactly once and prevents late reporting.
+For custom providers without `scope`, modules lazily load `createOperationalTelemetry` from
+the `/utils` entry point; no runtime telemetry import is needed for built-in providers.
+
 - **Adapter-based architecture** — ship with Console and Application Insights adapters, or build your own by extending `BaseTelemetryAdapter`.
 - **Hierarchical providers** — child providers relay telemetry to a parent, with automatic metadata merging.
 - **Zod-validated schemas** — every telemetry item is parsed and validated at runtime.

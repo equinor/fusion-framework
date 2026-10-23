@@ -33,10 +33,10 @@ import type { ModuleType } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import type { Subscription } from 'rxjs';
-import {
+import type {
   OperationalTelemetry,
-  type OperationalProperties,
-} from './integrations/OperationalTelemetry.js';
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
 import { observeSyncHealth } from './integrations/observe-sync-health.js';
 
 /**
@@ -78,7 +78,10 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
   #event?: ModuleType<EventModule>;
 
   /** Optional operational telemetry; never carries keys, values or arguments. */
-  #telemetry = new OperationalTelemetry('state');
+  #telemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   #syncHealth?: Subscription;
 
@@ -376,11 +379,42 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
    */
   public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
     // Every (re)connection starts a fresh observation period: the previous period is
     // summarized to the telemetry it was gathered for, then its observer is released.
     this.#syncHealth?.unsubscribe();
     this.#syncHealth = undefined;
-    await this.#telemetry.connect(telemetry ? () => telemetry : undefined);
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#telemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('state') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('state');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for state: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
     // Disconnected or closed scopes, or a newer connection, keep no observer on storage events.
     if (this.#telemetry.active && !this.#syncHealth) {
       this.#syncHealth = observeSyncHealth(this.#storage.events$, this.#telemetry);
@@ -393,7 +427,9 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    */
   public dispose(): void {
     this.#syncHealth?.unsubscribe();
-    this.#telemetry.close({ reason: 'disposed' });
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#telemetry?.close({ reason: 'disposed' });
     super.dispose();
   }
 
@@ -412,25 +448,25 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
     run: () => Promise<T>,
     properties?: OperationalProperties,
   ): Promise<T> {
-    const end = this.#telemetry.start(operation, properties);
+    const end = this.#telemetry?.start(operation, properties);
     let pending: Promise<T>;
     try {
       pending = run();
     } catch (error) {
-      end('failure');
+      end?.('failure');
       throw error;
     }
     return pending.then(
       (result) => {
         const failed = countStorageErrors(result);
-        end(
+        end?.(
           failed > 0 ? 'failure' : 'success',
           failed > 0 ? { reason: 'storage-error', failed } : undefined,
         );
         return result;
       },
       (error: unknown) => {
-        end('failure');
+        end?.('failure');
         throw error;
       },
     );

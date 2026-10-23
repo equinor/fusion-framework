@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { firstValueFrom, lastValueFrom, NEVER } from 'rxjs';
+import { firstValueFrom, lastValueFrom, NEVER, type Observable } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import eventModule, { type EventModule } from '@equinor/fusion-framework-module-event';
 import {
@@ -17,7 +17,7 @@ const SENTINEL = 'sentinel-secret';
 afterEach(() => vi.restoreAllMocks());
 
 /** Real event bus and host telemetry; records are observed at the exported boundary. */
-const setup = async () => {
+const setup = async (withTelemetry = true) => {
   const config = new ModulesConfigurator();
   const processItem = vi.fn<(item: TelemetryItem) => void>();
   config.addConfig({ module: eventModule });
@@ -43,7 +43,9 @@ const setup = async () => {
       Object.assign(draft, { secret: SENTINEL });
     }
   });
-  await provider.connectTelemetry(modules.telemetry);
+  if (withTelemetry) {
+    await provider.connectTelemetry(modules.telemetry);
+  }
   const records = () =>
     processItem.mock.calls
       .map(([item]) => item)
@@ -62,6 +64,33 @@ const durations = (rows: unknown[][]) =>
     ]);
 
 describe('bookmark operational telemetry', () => {
+  it.each(['list', 'apply', 'favourite-add', 'favourite-remove'] as const)(
+    'measures %s created before telemetry connects per subscription',
+    async (operation) => {
+      const { modules, provider, summary } = await setup(false);
+      const created = await lastValueFrom(provider.createBookmark({ name: 'a', payload: {} }));
+      const result$: Observable<unknown> = {
+        list: provider.getAllBookmarks(),
+        apply: provider.setCurrentBookmark(null),
+        'favourite-add': provider.addBookmarkToFavorites(created.id),
+        'favourite-remove': provider.removeBookmarkAsFavorite(created.id),
+      }[operation];
+
+      await provider.connectTelemetry(modules.telemetry);
+      const first = result$.subscribe();
+      first.unsubscribe();
+      const second = result$.subscribe();
+      second.unsubscribe();
+
+      expect(durations(summary()).filter(([name]) => name === operation)).toEqual([
+        [operation, 'cancelled'],
+        [operation, 'cancelled'],
+      ]);
+      provider.dispose();
+      await modules.dispose();
+    },
+  );
+
   it('records CRUD, apply, favourite and payload outcomes without bookmark data', async () => {
     const { modules, provider, processItem, summary } = await setup();
     const created = await lastValueFrom(

@@ -1,5 +1,8 @@
 import { defer, finalize, identity, tap, type MonoTypeOperatorFunction } from 'rxjs';
-import type { OperationalProperties, OperationalTelemetry } from './OperationalTelemetry.js';
+import type {
+  OperationalProperties,
+  OperationalTelemetry,
+} from '@equinor/fusion-framework-module-telemetry';
 
 /** Static error classifications that are safe to export as a reason code. */
 const reasons: Record<string, string> = {
@@ -40,7 +43,7 @@ export interface StageOutcomes<TAction extends StageAction> {
  * @returns An operator to apply to the flow's per-request inner observable.
  */
 export function measureStage<TAction extends StageAction>(
-  telemetry: OperationalTelemetry | undefined,
+  telemetry: OperationalTelemetry | (() => OperationalTelemetry | undefined) | undefined,
   operation: string,
   outcomes: StageOutcomes<TAction>,
   describeSuccess?: (action: TAction) => OperationalProperties,
@@ -51,7 +54,7 @@ export function measureStage<TAction extends StageAction>(
   }
   return (source) =>
     defer(() => {
-      const end = telemetry.reserve(operation);
+      const end = (typeof telemetry === 'function' ? telemetry() : telemetry)?.reserve(operation);
       // Closed scopes, absent telemetry and saturation retain no observer.
       if (!end) {
         return source;

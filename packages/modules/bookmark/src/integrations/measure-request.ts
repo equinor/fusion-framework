@@ -1,5 +1,5 @@
 import { defer, finalize, identity, tap, type MonoTypeOperatorFunction } from 'rxjs';
-import type { OperationalTelemetry } from './OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 /** Terminal action matchers of one async bookmark action, e.g. `bookmarkActions.fetchBookmark`. */
 export interface RequestOutcomes<TAction> {
@@ -22,7 +22,7 @@ export interface RequestOutcomes<TAction> {
  * @returns An operator for the flow's per-request inner observable.
  */
 export function measureRequest<TAction>(
-  telemetry: OperationalTelemetry | undefined,
+  telemetry: (() => OperationalTelemetry | undefined) | undefined,
   operation: string,
   outcomes: RequestOutcomes<TAction>,
 ): MonoTypeOperatorFunction<TAction> {
@@ -32,7 +32,7 @@ export function measureRequest<TAction>(
   }
   return (source) =>
     defer(() => {
-      const end = telemetry.reserve(operation);
+      const end = telemetry()?.reserve(operation);
       // Closed scopes, absent telemetry and saturation retain no observer.
       if (!end) {
         return source;

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom, of } from 'rxjs';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import {
   enableTelemetry,
@@ -13,7 +13,8 @@ import { enableAppModule } from '../enable-app-module';
 import type { AppModule } from '../module';
 import type { IAppClient } from '../AppClient';
 import { AppManifestError } from '../errors';
-import type { AppManifest } from '../types';
+import type { AppManifest, AppScriptModule } from '../types';
+import { AppModuleProvider } from '../AppModuleProvider.js';
 
 const SENTINEL = 'sentinel-secret';
 
@@ -93,6 +94,49 @@ const summary = (items: TelemetryItem[]) =>
   items.map((item) => [item.name, item.diagnostic?.outcome, item.properties?.reason]);
 
 describe('app load-stage telemetry', () => {
+  it('measures a load created before telemetry connects on each later subscription', async () => {
+    const { modules, records } = await setup(createClient());
+    const provider = new AppModuleProvider({
+      config: { client: createClient(), assetUri: '/assets' },
+    });
+    provider.setCurrentApp('late-app');
+    const app = required(provider.current);
+    vi.spyOn(app, 'getAppModule').mockReturnValue(of({} as AppScriptModule));
+    const load$ = app.initialize();
+
+    await provider.connectTelemetry(modules.telemetry);
+    await lastValueFrom(load$);
+    await lastValueFrom(load$);
+
+    expect(records().filter((record) => record.name === 'fusion.app.load.duration')).toMatchObject([
+      { diagnostic: { outcome: 'success' }, properties: { appKey: 'late-app' } },
+      { diagnostic: { outcome: 'success' }, properties: { appKey: 'late-app' } },
+    ]);
+    expect(records()).toContainEqual(
+      expect.objectContaining({ name: 'fusion.app.load-manifest.duration' }),
+    );
+    provider.dispose();
+    await modules.dispose();
+  });
+
+  it('connects an app created before its provider receives a telemetry scope', async () => {
+    const { modules, records } = await setup(createClient());
+    const provider = new AppModuleProvider({
+      config: { client: createClient(), assetUri: '/assets' },
+    });
+    provider.setCurrentApp('late-app');
+    const app = required(provider.current);
+    await provider.connectTelemetry(modules.telemetry);
+    await app.getManifestAsync();
+    await vi.waitFor(() => expect(records()).toHaveLength(1));
+    expect(records()[0]).toMatchObject({
+      name: 'fusion.app.load-manifest.duration',
+      properties: { appKey: 'late-app', appVersion: '1.2.3' },
+    });
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('records each load stage once with static app identity and no payload data', async () => {
     const { modules, records, processItem } = await setup(createClient());
     modules.app.setCurrentApp('my-app');

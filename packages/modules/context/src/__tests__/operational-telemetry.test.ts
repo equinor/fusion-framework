@@ -20,7 +20,7 @@ const item = (id: string, type = 'ProjectMaster'): ContextItem =>
   ({ id: `${id}-${SENTINEL}`, title: SENTINEL, type: { id: type }, value: { SENTINEL } }) as never;
 
 /** A real event bus and host telemetry, with records observed at the exported boundary. */
-const setup = async (overrides: Partial<ContextModuleConfig> = {}) => {
+const setup = async (overrides: Partial<ContextModuleConfig> = {}, withTelemetry = true) => {
   const config = new ModulesConfigurator();
   const processItem = vi.fn<(item: TelemetryItem) => void>();
   config.addConfig({ module: eventModule });
@@ -41,7 +41,9 @@ const setup = async (overrides: Partial<ContextModuleConfig> = {}) => {
     } as ContextModuleConfig,
     event: modules.event,
   });
-  await provider.connectTelemetry(modules.telemetry);
+  if (withTelemetry) {
+    await provider.connectTelemetry(modules.telemetry);
+  }
   const records = () =>
     processItem.mock.calls
       .map(([record]) => record)
@@ -52,6 +54,25 @@ const setup = async (overrides: Partial<ContextModuleConfig> = {}) => {
 };
 
 describe('context operational telemetry', () => {
+  it('measures a resolver observable created before telemetry connects per subscription', async () => {
+    const resolved = item('resolved');
+    const { modules, provider, summary } = await setup(
+      { resolveContext: () => of(resolved) },
+      false,
+    );
+    const result$ = provider.resolveContext(item('a'));
+
+    await provider.connectTelemetry(modules.telemetry);
+    await expect(lastValueFrom(result$)).resolves.toBe(resolved);
+    await expect(lastValueFrom(result$)).resolves.toBe(resolved);
+    expect(summary()).toEqual([
+      ['fusion.context.resolve.duration', 'success', undefined],
+      ['fusion.context.resolve.duration', 'success', undefined],
+    ]);
+    provider.dispose();
+    await modules.dispose();
+  });
+
   it('measures validation, resolution and selection without exporting context data', async () => {
     const { modules, provider, processItem, summary, records } = await setup({
       validateContext: (context) => context?.type.id === 'ProjectMaster',

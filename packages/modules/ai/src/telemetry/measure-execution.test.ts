@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { lastValueFrom, from, type Observable, take } from 'rxjs';
 
-import type { AiReport } from './create-ai-reporter.js';
+import type { AiReport } from './types.js';
 import { measureExecution } from './measure-execution.js';
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
