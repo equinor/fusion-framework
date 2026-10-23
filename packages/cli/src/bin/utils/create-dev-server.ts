@@ -1,12 +1,15 @@
 import type { Plugin } from 'vite';
 
 import { loadDevServerConfig, type RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+import { FileNotFoundError } from '@equinor/fusion-imports';
 
 import {
   createDevServer as createDevServerFn,
   type DevServerOptions,
   type UserConfig,
 } from '@equinor/fusion-framework-dev-server';
+import { InvalidDevServerConfigError } from '../../lib/InvalidDevServerConfigError.js';
+import { validateDevServerConfig } from '../../lib/validate-dev-server-config.js';
 
 import type { ConsoleLogger } from './ConsoleLogger.js';
 import { normalizeDevServerConfig } from './normalize-dev-server-config.js';
@@ -41,6 +44,19 @@ const createDevServerConfigWatcherPlugin = (
   };
 };
 
+/**
+ * Creates the CLI dev server from the default configuration merged with `dev-server.config`.
+ *
+ * A missing `dev-server.config` falls back to the validated defaults. A config file that cannot
+ * be loaded, or that resolves to invalid options, is logged and stops startup.
+ *
+ * @param env - Runtime environment used to locate and evaluate `dev-server.config`.
+ * @param options - App, portal, and mock settings used to build the default configuration.
+ * @param args - Optional Vite overrides and logger.
+ * @returns The created dev server.
+ * @throws {InvalidDevServerConfigError} When the resolved configuration fails validation.
+ * @throws {Error} When `dev-server.config` exists but cannot be loaded, or mock auth targets real discovery.
+ */
 export const createDevServer = async (
   env: RuntimeEnv,
   options: CreateDevServerOptions,
@@ -70,6 +86,7 @@ export const createDevServer = async (
   let config: DevServerOptions = baseConfig;
   let configWatcherPlugin: Plugin | undefined;
   try {
+    config = validateDevServerConfig(config);
     const loaded = await loadDevServerConfig(env, baseConfig);
     config = loaded.config;
     const { path } = loaded;
@@ -79,10 +96,18 @@ export const createDevServer = async (
     // Add plugin to watch the config file and restart on changes
     configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
   } catch (error) {
-    log?.warn(
-      '\nFailed to load dev server config:',
-      error instanceof Error ? error.message : String(error),
-    );
+    // A project without dev-server.config is valid and runs on the validated defaults.
+    if (error instanceof FileNotFoundError) {
+      log?.debug('\nNo dev server config found, using defaults');
+    } else {
+      // Broken or invalid config must stop startup rather than run on success-shaped defaults.
+      log?.error(
+        InvalidDevServerConfigError.is(error)
+          ? error.message
+          : `Failed to load dev server config: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      throw error;
+    }
   }
 
   // In mock mode every token is a mock token, so discovery must stay on the mock server even if
