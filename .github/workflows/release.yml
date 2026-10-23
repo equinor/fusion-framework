@@ -11,7 +11,7 @@ on:
   push:
     branches:
       - main
-      - next
+      - feat/improve-telemetry
   workflow_dispatch:
     inputs:
       tag:
@@ -44,8 +44,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # `main` publishes stable releases; `next` publishes pre-releases only
-      # while changesets pre-release mode is active.
+      # `main` publishes stable releases; the telemetry feature branch publishes
+      # pre-releases only while changesets pre-release mode is active.
       - name: Resolve release channel
         id: channel
         shell: bash
@@ -122,7 +122,7 @@ jobs:
     if: needs.select-mode.outputs.mode == 'publish'
     # Trusted publishing does not support self-hosted runners.
     runs-on: ubuntu-latest
-    # npm trusts this environment; its deployment branches are limited to main and next.
+    # npm trusts this environment; only main and feat/improve-telemetry may deploy.
     environment: npm
     permissions:
       contents: write  # Required to push release tags and create GitHub releases
@@ -168,7 +168,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     # Trusted publishing does not support self-hosted runners.
     runs-on: ubuntu-latest
-    # Snapshots share the npm trust binding, so they can only run from main or next.
+    # Snapshots share the npm trust binding and its explicit deployment branch allowlist.
     environment: npm
     permissions:
       contents: read
@@ -201,8 +201,8 @@ jobs:
       - name: Verify npm trusted publishing prerequisites
         run: pnpm npm-trust preflight
 
-      # Changesets rejects `version --snapshot` in pre mode, which `next` is in
-      # during a pre-release cycle. This job cannot push, so exiting pre mode
+      # Changesets rejects `version --snapshot` in pre mode during a pre-release
+      # cycle. This job cannot push, so exiting pre mode
       # only affects this disposable checkout.
       - name: Exit pre-release mode for the snapshot
         run: |
