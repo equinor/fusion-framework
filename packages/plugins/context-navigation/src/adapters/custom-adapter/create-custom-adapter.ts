@@ -91,9 +91,9 @@ export function createCustomAdapter(): ContextNavigationAdapterFactory {
         const appRelativePath = toAppRelative(currentURL.pathname, appBasename);
         const existingContextId = normalizeStringResult(extract(appRelativePath)) ?? undefined;
 
+        // Stay on a route without context (e.g. the app cleared context itself);
+        // leaving a context route returns to the app root.
         if (context === null) {
-          // Stay on a route without context (e.g. the app cleared context itself);
-          // leaving a context route returns to the app root.
           const url = new URL(
             existingContextId ? appBasename : currentURL.pathname,
             currentURL.origin,

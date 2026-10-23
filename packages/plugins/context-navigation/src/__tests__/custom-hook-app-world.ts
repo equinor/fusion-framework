@@ -169,12 +169,13 @@ export function createCustomHookAppWorld(opts: CustomHookAppWorldOptions) {
 
   const event = { dispatchEvent: vi.fn(async () => ({ canceled: false })) };
 
+  const activeApp = {
+    appKey: opts.appKey,
+    instance$: new BehaviorSubject<typeof appModules | undefined>(appModules),
+    manifest$: new BehaviorSubject({ build: { options: {} } }),
+  };
   const app = {
-    current$: new BehaviorSubject({
-      appKey: opts.appKey,
-      instance$: new BehaviorSubject(appModules),
-      manifest$: new BehaviorSubject({ build: { options: {} } }),
-    }),
+    current$: new BehaviorSubject<typeof activeApp | undefined>(activeApp),
   };
 
   // Dev-portal setup: URL guard on, default adapter chain.
@@ -204,6 +205,9 @@ export function createCustomHookAppWorld(opts: CustomHookAppWorldOptions) {
     base,
     history,
     context,
+    app,
+    activeApp,
+    navigation,
     teardown,
     get url() {
       return navigation.path.pathname;

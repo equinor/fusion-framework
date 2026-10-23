@@ -1,4 +1,4 @@
-import { Subscription, startWith, pairwise, map } from 'rxjs';
+import { EMPTY, Subscription, startWith, pairwise, map, switchMap } from 'rxjs';
 
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
 import type { IContextProvider } from '@equinor/fusion-framework-module-context';
@@ -132,12 +132,45 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
     // started it: once the user is somewhere else, its result is stale and must not apply.
     let pendingLookup: { path: string; subscription: Subscription } | undefined;
 
+    /** Stop URL-driven work when its app or location is no longer current. */
     const cancelPendingLookup = (): void => {
       pendingLookup?.subscription.unsubscribe();
       pendingLookup = undefined;
     };
     subscriptions.add(cancelPendingLookup);
 
+    // Observe lifecycle changes before resolved-app filtering: dismissal and loading
+    // must cancel old work even when no navigation event reaches the URL guard.
+    subscriptions.add(
+      app.current$
+        .pipe(
+          switchMap((currentApp) => {
+            cancelPendingLookup();
+            return currentApp ? currentApp.instance$ : EMPTY;
+          }),
+        )
+        .subscribe(() => cancelPendingLookup()),
+    );
+
+    // Register before the guard so an outgoing navigation cancels stale work even
+    // when the destination has no context module or its modules are unresolved.
+    subscriptions.add(
+      navigation.state$.subscribe(() => {
+        const currentURL = getCurrentURL(navigation, config.origin);
+        // Location changes invalidate a lookup even when resolved-app events are filtered out.
+        if (pendingLookup && pendingLookup.path !== normalizePathFromURL(currentURL)) {
+          log(`URL guard: navigation left [${pendingLookup.path}] — canceling its lookup.`);
+          cancelPendingLookup();
+        }
+      }),
+    );
+
+    /**
+     * Start at most one cancelable lookup for the current location.
+     * @param urlContextId - Context identity decoded from the app URL.
+     * @param payload - App modules and routing policy used by the guard.
+     * @param currentURL - Location that owns the pending lookup.
+     */
     const resolveContextFromURL = (
       urlContextId: string,
       payload: Parameters<typeof handlePushModeGuard>[1],
@@ -150,6 +183,7 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
       }
       cancelPendingLookup();
       const subscription = handlePushModeGuard(urlContextId, payload, currentURL, guardDeps);
+      // Synchronously completed lookups need no lifecycle tracking.
       if (subscription && !subscription.closed) {
         pendingLookup = { path, subscription };
       }
@@ -168,13 +202,6 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
           }
 
           const currentURL = getCurrentURL(navigation, config.origin);
-
-          // The user moved on before a URL-driven lookup settled — drop it, so a late
-          // success can't change the context and a late failure can't redirect back.
-          if (pendingLookup && pendingLookup.path !== normalizePathFromURL(currentURL)) {
-            log(`URL guard: navigation left [${pendingLookup.path}] — canceling its lookup.`);
-            cancelPendingLookup();
-          }
 
           // Scope check: only guard URLs that belong to this app's path namespace.
           // Navigations to other apps or external paths are not our responsibility.
@@ -208,6 +235,7 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
           // No active context: only an app-owned URL that carries a context needs action
           // (e.g. a link from a page without context) — apply the context from the URL.
           if (!activeContext) {
+            // Only app-owned routes can bootstrap context when none is selected.
             if (appOwnsUrl && urlContextId !== null) {
               log(`URL guard: no active context, applying [${urlContextId}] from URL`);
               resolveContextFromURL(urlContextId, payload, currentURL);
@@ -245,6 +273,7 @@ export function createContextNavigationPlugin(args: ContextNavigationPluginArgs)
           // - push mode: the user navigated via browser back/forward, or
           // - the app owns its URL: the app navigated to another context's route.
           const urlDrivesContext = config.navigationOptions?.replace === false || appOwnsUrl;
+          // Keep URL authority separate from the legacy replace-mode correction policy.
           if (urlContextId !== null && urlDrivesContext) {
             resolveContextFromURL(urlContextId, payload, currentURL);
             return;
