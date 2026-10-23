@@ -41,6 +41,41 @@ describe('TelemetryProvider', () => {
     expect(provider.getAdapter('test-adapter')).toBe(adapter);
   });
 
+  it('creates independent connected operational scopes without caller-side imports', () => {
+    const first = provider.scope('app');
+    const second = provider.scope('widget');
+    first.start('load', { count: 1 })('success');
+    first.close();
+    second.start('load')('success');
+    expect(adapter.processItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'fusion.app.load.duration',
+        properties: { count: 1 },
+        diagnostic: expect.objectContaining({ module: 'app', outcome: 'success' }),
+      }),
+    );
+    expect(adapter.processItem).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'fusion.widget.load.duration' }),
+    );
+    expect(first.connected).toBe(false);
+    expect(second.connected).toBe(true);
+    second.close();
+  });
+
+  it('validates scope labels and resolves scope identity when async work finishes', async () => {
+    expect(() => provider.scope('https://example.com')).toThrow(RangeError);
+    let version = 'initial';
+    const scope = provider.scope('app', { identity: () => ({ appVersion: version }) });
+    const end = scope.start('load');
+    await Promise.resolve();
+    version = '1.2.3';
+    end('success');
+    expect(adapter.processItem).toHaveBeenCalledWith(
+      expect.objectContaining({ properties: { appVersion: '1.2.3' } }),
+    );
+    scope.close();
+  });
+
   it('should check if adapter exists with hasAdapter', () => {
     expect(provider.hasAdapter('test-adapter')).toBe(true);
     expect(provider.hasAdapter('non-existent-adapter')).toBe(false);

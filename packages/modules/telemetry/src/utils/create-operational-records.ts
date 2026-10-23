@@ -5,11 +5,14 @@ import {
   type DiagnosticContextArgs,
 } from './create-diagnostic-context.js';
 import { operationalScope } from './operational-scope.js';
+import type { OperationalProperties } from './operational-properties.js';
 
 /** Safe terminal outcome inputs; raw operation data and errors are deliberately excluded. */
 export interface OperationalRecordArgs extends DiagnosticContextArgs {
   /** Elapsed milliseconds; zero is a valid measurement. */
   duration: number;
+  /** Caller-allowlisted primitive summaries, never operation payloads or raw errors. */
+  properties?: OperationalProperties;
 }
 
 /**
@@ -42,6 +45,7 @@ export function createOperationalRecords(args: OperationalRecordArgs): Telemetry
     value: args.duration,
     scope: operationalScope(args.source),
     diagnostic,
+    ...(args.properties ? { properties: { ...args.properties } } : {}),
   };
   // Success and cancellation do not fabricate exception records.
   if (args.outcome !== 'failure') {
@@ -59,6 +63,7 @@ export function createOperationalRecords(args: OperationalRecordArgs): Telemetry
     exception: Object.freeze(exception),
     scope: metric.scope,
     diagnostic,
+    ...(args.properties ? { properties: { ...args.properties } } : {}),
   };
   return [metric, failure];
 }

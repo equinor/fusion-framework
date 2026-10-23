@@ -17,15 +17,14 @@ describe('widget module without the optional telemetry peer', () => {
 
   it('stays uninstrumented and warns once when telemetry is offered but cannot load', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    const { OperationalTelemetry } = await import('../integrations/OperationalTelemetry.js');
-    const scope = new OperationalTelemetry('widget');
+    const { WidgetModuleProvider } = await import('../WidgetModuleProvider.js');
+    const provider = new WidgetModuleProvider({ config: {} } as never);
     const track = vi.fn();
 
-    await scope.connect(() => ({ source: { hostId: 'host' }, track }) as never);
-    await scope.connect(() => ({ source: { hostId: 'host' }, track }) as never);
+    await provider.connectTelemetry({ source: { hostId: 'host' }, track } as never);
+    await provider.connectTelemetry({ source: { hostId: 'host' }, track } as never);
 
-    expect(scope.active).toBe(false);
-    expect(scope.reserve('operation')).toBeUndefined();
+    provider.dispose();
     expect(track).not.toHaveBeenCalled();
     expect(warn).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalledWith(

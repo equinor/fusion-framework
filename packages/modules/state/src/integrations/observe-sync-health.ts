@@ -1,5 +1,5 @@
 import type { Observable, Subscription } from 'rxjs';
-import type { OperationalTelemetry } from './OperationalTelemetry.js';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 /** Static sync statuses and error types that are safe to export as labels. */
 const statuses = new Set(['active', 'paused', 'unknown']);
