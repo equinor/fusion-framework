@@ -1,5 +1,20 @@
 # Change Log
 
+## 8.1.5-next.0
+
+### Patch Changes
+
+- 03f523c: Forward the request-local telemetry export marker to token acquisition. When a request
+  marked with `markTelemetryExportRequest` declares scopes, the MSAL request handler passes
+  the same marker to `acquireAccessToken`, so authentication telemetry can skip the
+  exporter's own token request. Unmarked application requests are unchanged.
+  
+  Ref: #5804.
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 8.1.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cli-plugin-ai-chat",
-  "version": "3.0.15",
+  "version": "3.0.16-next.0",
   "description": "AI chat plugin for Fusion Framework CLI providing interactive chat with AI models",
   "main": "dist/esm/index.js",
   "type": "module",

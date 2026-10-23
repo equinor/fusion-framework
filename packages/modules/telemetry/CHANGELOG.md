@@ -1,5 +1,117 @@
 # Change Log
 
+## 8.0.0-next.0
+
+### Major Changes
+
+- e98f6ec: **Breaking:** automatic lifecycle telemetry changes its record names, payload fields,
+  severity, metadata and scopes. Dashboards, queries and relay filters built on the raw
+  configurator records must be updated (see **Migration**). The `ITelemetryProvider` and
+  configuration APIs remain compatible; custom `track*` calls are unaffected.
+  
+  Replace automatic raw configurator telemetry with bounded, sanitized operational
+  outcomes, preserving host origin, occurrence time and existing trace context across
+  asynchronous enrichment and nested routing.
+  Built-in records use a host-agnostic envelope: a lifecycle-local `hostId`, plus an
+  optional host-defined `source` kind, `hostName` and `hostVersion`. The module assumes
+  no host kind and does not default to `framework`; unclassified hosts emit records
+  without `source`. Source kinds are any lowercase kebab-case identifier, validated so
+  labels cannot carry dynamic data. Widget records omit widget manifest identity.
+  
+  Export `TelemetryConfigurator` for host-owned configuration before initialization, and
+  `StartupCapture`, which captures a host's startup lifecycle before any provider exists.
+  Hosts create the capture, attach its records with `attachLifecycleItems`, and call
+  `capture.fail()` when their own setup fails; a failed startup is reported to the host's
+  parent without exporter ownership. Exporter ownership is declared configuration:
+  `setAdapter` with a non-fallback adapter or any `configureAdapter` factory owns
+  delivery, even if the factory later fails. `enableTelemetry` captures a plain
+  configurator's lifecycle unless its host already does; `attachConfiguratorEvents: false`
+  stops lifecycle records reaching the provider without detaching the host's capture, so a
+  later `true` restores it (the last call wins); the host's own failure reporting continues.
+  Custom stream errors are reported without stopping the
+  independently owned lifecycle subscription.
+  
+  `TelemetryProvider` is now a thin facade over a `TelemetryProviderState` engine whose
+  initialization, disposal and health reporting run as `FlowSubject` flows; the
+  `ITelemetryProvider` contract is unchanged apart from the optional `source`.
+  `initialize()` and `dispose()` settle through actions delivered on the RxJS
+  `asyncScheduler`: under fake timers, advance timers (for example
+  `vi.advanceTimersByTimeAsync`) to settle them.
+  
+  Export `createDiagnosticContext` for notifications without a measured duration,
+  alongside `createOperationalRecords` for measured outcomes, from the `/utils` sub-path;
+  the shared `OperationalOutcome` type is exported from
+  `/schemas`. Both validate module, operation and source kind as static
+  kebab-case identifiers; the diagnostic schema enforces the same rule. Duration metrics
+  are reported at `Information` with the outcome attached, and only the failure exception
+  is `Error`; that exception is an `OperationalError` naming the failed operation, such
+  as `fusion.http.request failed`.
+  
+  **Migration:** dashboards using raw configurator names must query
+  `fusion.<module>.initialize.duration`, `fusion.<module>.dispose.duration`, and
+  `.failure` records instead. Built-in records no longer include arbitrary lifecycle
+  properties, original errors/stacks, dynamic metadata or custom default scopes.
+  Custom tracking retains its existing metadata behavior. Built-in records identify
+  the host through `fusion.diagnostic.hostName` and `fusion.diagnostic.source`, not
+  `fusion.app.key`; for app lifecycle records, query `hostName` where `source` is `app`.
+  Use `enableTelemetry(configurator, { attachConfiguratorEvents: false })` to opt out.
+  
+  Adapter initialization, synchronous/asynchronous processing, metadata, filters and
+  relay failures are isolated and reported out of band. Enrichment and processing are
+  bounded and shutdown awaits owned asynchronous work. Failed explicit exporters do not
+  activate ancestor fallback adapters.
+  
+  Add optional `createHttpTelemetry` and `observeQueryTelemetry` integrations, exported
+  from the new `/integrations` sub-path, with
+  request-local export exclusions and separate scheduling/execution/cache semantics.
+  See the package's operational telemetry guide for schemas, limits and migration details.
+  
+  Ref: #5803.
+
+### Minor Changes
+
+- 03f523c: Add one common pattern for wiring operational telemetry into a module.
+  
+  `createOperationalTelemetry(module)` from `@equinor/fusion-framework-module-telemetry/utils`
+  returns a handle a provider owns: `connect(provider)` after initialization, `report(...)`
+  for safe outcomes, and `disconnect()` from teardown. Disconnection is final, so work that
+  completes after disposal never reports into a torn-down host. A measured report records one
+  `fusion.<module>.<operation>.duration` metric plus one sanitized failure; a notification
+  records one event, with an optional `level` that defaults to `Error` for a failure and
+  `Information` otherwise. Reports never throw, and the module label is validated when the
+  handle is created.
+  
+  `TelemetryConnectable` declares the optional `connectTelemetry(telemetry)` provider method
+  that module descriptors call from `postInitialize`.
+  
+  ```ts
+  #telemetry = createOperationalTelemetry('reports');
+  // constructor: this._addTeardown(() => this.#telemetry.disconnect());
+  connectTelemetry(telemetry) { this.#telemetry.connect(telemetry); }
+  // module: postInitialize: async ({ instance, modules }) => instance.connectTelemetry?.(modules.telemetry)
+  ```
+  
+  See "Wire telemetry into a module" in `docs/operational-telemetry.md`.
+  
+  Ref: #5804.
+- ed0cb6b: Extend `createOperationalTelemetry` with allowlisted primitive properties, bounded measured
+  operations, observable measurement, end-time identity and independently owned child scopes.
+  Closing a handle cancels in-flight work exactly once and prevents late reporting. Export
+  shared cancellation/reason classification and safe static identity helpers.
+  
+  Add optional `ITelemetryProvider.scope(module, options)` to obtain an already connected handle
+  without importing utilities. Existing custom providers remain compatible. Notification reports
+  also accept named severity levels, avoiding runtime enum imports in optional integrations.
+  
+  Refs #5837.
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 7.2.2
 
 ### Patch Changes

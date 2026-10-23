@@ -1,5 +1,54 @@
 # Change Log
 
+## 16.1.0-next.0
+
+### Minor Changes
+
+- 73aa0c5: Report widget loading through host telemetry. Each widget now records one
+  `fusion.widget.<stage>.duration` outcome for `load-manifest`, `load-config` and
+  `import`, plus a `load` outcome for each `initialize()` subscription (`cancelled` when
+  the caller unsubscribes first). Failures add one sanitized `.failure` exception; stage
+  failures carry a static reason code. Stages still running when a widget is disposed are
+  recorded as `cancelled` (reason `unloaded`, or `disposed` when the widget module is
+  disposed), and a disposed widget emits nothing more. Records carry only the validated widget key and version,
+  never configuration bodies, URLs or error messages.
+  
+  Custom providers opt in through the optional `IWidgetModuleProvider.connectTelemetry`
+  method. Telemetry stays optional and never changes widget results or errors.
+  
+  Each stage is measured on its own request, so action creators, action shapes and flow
+  outputs are unchanged; the exported flow handlers only gain an optional trailing
+  per-request observer argument.
+  
+  `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency. It is loaded only when host telemetry connects, so the module still imports and runs without it; `connectTelemetry` returns a promise that resolves once the connection applies.
+  
+  Ref: #5805.
+
+### Patch Changes
+
+- ed0cb6b: Internal: standardize optional telemetry wiring on `TelemetryConnectable` and replace
+  module-specific operational reporters with the shared telemetry handle where applicable.
+  Preserve record names, outcomes, summary properties, volume budgets and navigation's
+  explicit telemetry precedence. Optional peers remain lazily loaded, and disposed providers
+  cannot report late outcomes.
+  
+  Cold app/widget loads, context resolution and bookmark requests resolve telemetry when
+  subscribed, including observables created before the first telemetry connection.
+  
+  Refs #5837.
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 16.0.13
 
 ### Patch Changes

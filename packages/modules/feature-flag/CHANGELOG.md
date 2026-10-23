@@ -1,5 +1,49 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 2.2.0-next.0
+
+### Minor Changes
+
+- 73aa0c5: Report feature toggles through host telemetry. Each `toggleFeature`/`toggleFeatures`
+  call records one `fusion.feature-flag.toggle.duration` outcome with `requested`,
+  `applied`, `rejected` (unregistered or read-only) and `cancelled` (listener veto or
+  superseded listener work) counts. Bulk toggles retain their existing latest-only
+  application behavior and account for discarded pending listeners before exporting counts.
+  A request where listeners vetoed every applicable flag is `cancelled`;
+  a rejected dispatch is a failure with only `requested` and `rejected` counts, and the
+  original rejection still reaches the caller.
+  A toggle still awaiting listeners at disposal is `cancelled` with reason `disposed`. The
+  module now disposes its provider at host teardown, which also releases plugin
+  connections and toggle listeners that were previously left attached.
+  Reads such as `hasFeature` and `getFeature` are not recorded, and feature keys and
+  values are never included.
+  
+  Custom providers opt in through the optional `IFeatureFlagProvider.connectTelemetry`
+  method. Toggle behavior is unchanged.
+  
+  `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency. It is loaded only when host telemetry connects, so the module still imports and runs without it; `connectTelemetry` returns a promise that resolves once the connection applies.
+  
+  Ref: #5805.
+
+### Patch Changes
+
+- ed0cb6b: Internal: standardize optional telemetry wiring on `TelemetryConnectable` and replace
+  module-specific operational reporters with the shared telemetry handle where applicable.
+  Preserve record names, outcomes, summary properties, volume budgets and navigation's
+  explicit telemetry precedence. Optional peers remain lazily loaded, and disposed providers
+  cannot report late outcomes.
+  
+  Cold app/widget loads, context resolution and bookmark requests resolve telemetry when
+  subscribed, including observables created before the first telemetry connection.
+  
+  Refs #5837.
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 2.1.3
 
 ### Patch Changes

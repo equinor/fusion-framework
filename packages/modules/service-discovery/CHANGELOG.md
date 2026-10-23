@@ -1,5 +1,36 @@
 # Change Log
 
+## 10.3.0-next.0
+
+### Minor Changes
+
+- 03f523c: Record service discovery resolution outcomes when the telemetry module is available.
+  Each resolution produces one `fusion.service-discovery.resolve.duration` metric, with a
+  sanitized failure exception when it throws, and `cache-hit`, `fallback`, `cooldown` and
+  `unknown-service` notifications explain where the result came from. Keys, URIs, scopes and
+  errors are never recorded, and HTTP attempts are left to HTTP telemetry. A child host that
+  reuses its parent's client leaves reporting to the parent, so each resolution counts once.
+  
+  `ServiceDiscoveryClient` exposes a safe `diagnostic$` stream and the provider an optional
+  `connectTelemetry(telemetry)` method; custom clients opt in by exposing `diagnostic$`.
+  Resolution results, caching, backoff and fallback behavior are unchanged.
+  
+  The module now disposes the provider it created when the host disposes it, detaching
+  its diagnostics without disposing the shared discovery client.
+  
+  Ref: #5804.
+
+### Patch Changes
+
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 10.2.0
 
 ### Minor Changes

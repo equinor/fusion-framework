@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.7-next.0
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 4.0.6
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # Change Log
 
+## 7.0.7-next.0
+
+### Patch Changes
+
+- Updated dependencies [30d15f2]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [ea519ce]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 7.0.6
 
 ### Patch Changes
