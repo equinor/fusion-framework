@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.0.10-next.0
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-react-router@2.4.8-next.0
+
 ## 5.0.9
 
 ### Patch Changes

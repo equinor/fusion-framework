@@ -1,5 +1,42 @@
 # Change Log
 
+## 13.3.0-next.0
+
+### Minor Changes
+
+- e98f6ec: Preserve app identity on built-in operational records through framework relays,
+  using the generic telemetry host fields: source kind `app`, with the manifest key and
+  build version as `hostName` and `hostVersion`. Report sanitized pre-provider
+  configuration failures to an eligible parent without replacing the original
+  application error or creating an exporter.
+  
+  Ref: #5803.
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-bookmark@4.2.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-state@2.1.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 13.2.0
 
 ### Minor Changes

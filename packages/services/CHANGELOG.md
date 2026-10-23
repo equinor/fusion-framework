@@ -1,5 +1,12 @@
 # @equinor/fusion-services
 
+## 0.3.4-next.0
+
+### Patch Changes
+
+- Updated dependencies [03f523c]
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+
 ## 0.3.3
 
 ### Patch Changes

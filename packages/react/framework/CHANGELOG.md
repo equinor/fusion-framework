@@ -1,5 +1,21 @@
 # Change Log
 
+## 9.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-feature-flag@2.2.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+  - @equinor/fusion-framework-react-module-http@12.0.4-next.0
+  - @equinor/fusion-framework-react-module-signalr@4.0.8-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 9.0.4
 
 ### Patch Changes

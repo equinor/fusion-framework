@@ -1,5 +1,26 @@
 # @equinor/fusion-framework-plugin-context-navigation
 
+## 1.0.7-next.0
+
+### Patch Changes
+
+- 30d15f2: Respect explicit query context routing when custom path hooks are registered.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/2264; https://github.com/equinor/fusion-framework/issues/5608
+- Updated dependencies [30d15f2]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [ea519ce]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 1.0.6
 
 ### Patch Changes

@@ -1,5 +1,35 @@
 # portal-analytics
 
+## 0.4.76-next.0
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [30d15f2]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [ea519ce]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [03f523c]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework-app@13.3.0-next.0
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-module-analytics@3.1.11-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-bookmark@4.2.0-next.0
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.0
+  - @equinor/fusion-framework-react-app@14.3.7-next.0
+  - @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-react-module-context@7.0.7-next.0
+  - @equinor/fusion-framework-cli@15.7.1-next.0
+  - @equinor/fusion-framework-react-router@2.4.8-next.0
+
 ## 0.4.75
 
 ### Patch Changes

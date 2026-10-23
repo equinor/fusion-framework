@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-cookbook-app-react-state
 
+## 1.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [e98f6ec]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [73aa0c5]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-module-state@2.1.0-next.0
+  - @equinor/fusion-framework-react-app@14.3.7-next.0
+  - @equinor/fusion-framework-cli@15.7.1-next.0
+  - @equinor/fusion-framework-react-router@2.4.8-next.0
+
 ## 1.0.4
 
 ### Patch Changes

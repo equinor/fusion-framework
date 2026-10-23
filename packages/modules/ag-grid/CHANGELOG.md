@@ -1,5 +1,36 @@
 # Change Log
 
+## 37.2.0-next.0
+
+### Minor Changes
+
+- 055bc12: Report use of the legacy `add()` compatibility shim through host telemetry.
+  
+  When the host has the telemetry module, the first call to the patched `agStyleInjectionState.grids.add()` in each host lifecycle emits one `fusion.ag-grid.legacy-add` warning event with the operational `diagnostic` envelope. Installing the shim records nothing, the event contains no grid data, and `add()` keeps setting the key and returning the map, even if telemetry fails. The module now disposes its provider, which stops this observation.
+  
+  `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+  
+  Refs #5081, #5806
+
+### Patch Changes
+
+- ed0cb6b: Internal: standardize optional telemetry wiring on `TelemetryConnectable` and replace
+  module-specific operational reporters with the shared telemetry handle where applicable.
+  Preserve record names, outcomes, summary properties, volume budgets and navigation's
+  explicit telemetry precedence. Optional peers remain lazily loaded, and disposed providers
+  cannot report late outcomes.
+  
+  Cold app/widget loads, context resolution and bookmark requests resolve telemetry when
+  subscribed, including observables created before the first telemetry connection.
+  
+  Refs #5837.
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 37.1.4
 
 ### Patch Changes

@@ -1,5 +1,40 @@
 # @equinor/fusion-framework-module-ai
 
+## 7.2.0-next.0
+
+### Minor Changes
+
+- 055bc12: Report safe operational telemetry for actual AI executions when the host has the telemetry module.
+  
+  Clients returned by `useModel`, `useEmbed` and `useIndex`, from built-in and custom strategies, now emit one `fusion.ai.<operation>.duration` record per invocation, stream, embedding or search, including tool-bound runnables and retrievers. Each record carries a `success`, `failure` or `cancelled` outcome, and a failure adds one sanitized exception. Records never contain prompts, completions, chunks, embeddings, documents, tool payloads, model names or original errors, and streams produce no per-chunk records. Without telemetry, the strategy's own client is returned unchanged; with telemetry, results, errors and cancellation are unchanged.
+  
+  `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
+  
+  Refs #5806
+
+### Patch Changes
+
+- ed0cb6b: Internal: standardize optional telemetry wiring on `TelemetryConnectable` and replace
+  module-specific operational reporters with the shared telemetry handle where applicable.
+  Preserve record names, outcomes, summary properties, volume budgets and navigation's
+  explicit telemetry precedence. Optional peers remain lazily loaded, and disposed providers
+  cannot report late outcomes.
+  
+  Cold app/widget loads, context resolution and bookmark requests resolve telemetry when
+  subscribed, including observables created before the first telemetry connection.
+  
+  Refs #5837.
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [03f523c]
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+- Updated dependencies [e98f6ec]
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 7.1.1
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 5.0.13-next.0
+
+### Patch Changes
+
+- ea519ce: Add an integration regression test showing that a child app resolves a same-ID parent context to its configured context type.
+- Updated dependencies [e98f6ec]
+- Updated dependencies [ed0cb6b]
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-react-app@14.3.7-next.0
+  - @equinor/fusion-framework-react-module-context@7.0.7-next.0
+  - @equinor/fusion-framework-cli@15.7.1-next.0
+
 ## 5.0.12
 
 ### Patch Changes
