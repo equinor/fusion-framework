@@ -3713,7 +3713,7 @@ importers:
         version: 1.17.17
       nock:
         specifier: ^15.0.1
-        version: 15.0.3(supports-color@10.2.2)
+        version: 15.0.4(supports-color@10.2.2)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -4366,6 +4366,7 @@ packages:
 
   '@browserbasehq/stagehand@1.14.0':
     resolution: {integrity: sha512-Hi/EzgMFWz+FKyepxHTrqfTPjpsuBS4zRy3e9sbMpBgLPv+9c0R+YZEvS7Bw4mTS66QtvvURRT6zgDGFotthVQ==}
+    deprecated: This version is no longer maintained. Please upgrade to the latest version of @browserbasehq/stagehand.
     peerDependencies:
       '@playwright/test': ^1.42.1
       deepmerge: ^4.3.1
@@ -11558,9 +11559,9 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nock@15.0.3:
-    resolution: {integrity: sha512-VowZEG2zMsqSAkS8OkJrBld3k+ddVdI+lPuuPWS+YoVrdgcp1tN8fWgIqBPWyfV0PRtxYid/IUTthxeu5RLACg==}
-    engines: {node: '>=20.12.1'}
+  nock@15.0.4:
+    resolution: {integrity: sha512-quP113SfbjFQCvYCE8eKjEFYqFuHoNTnz+JOfwUnTbqwvH7bB/Z1yLS6xxfI0s+7x86V+EptbHv22CxH065FYw==}
+    engines: {node: '>=22.20.0'}
 
   node-abi@3.94.0:
     resolution: {integrity: sha512-W5ZNO5KRPB5TkYmGVD9F6YqhsglXJzE6etpbmT+f6EQElhiX/UTG551cnsRGvLG3fyZEg9HwaDmNmj5nwJ4z9g==}
@@ -22015,7 +22016,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nock@15.0.3(supports-color@10.2.2):
+  nock@15.0.4(supports-color@10.2.2):
     dependencies:
       '@mswjs/interceptors': 0.44.0(supports-color@10.2.2)
     transitivePeerDependencies:
