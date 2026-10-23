@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.13
+
+### Patch Changes
+
+- ea519ce: Add an integration regression test showing that a child app resolves a same-ID parent context to its configured context type.
+
 ## 5.0.12
 
 ### Patch Changes
