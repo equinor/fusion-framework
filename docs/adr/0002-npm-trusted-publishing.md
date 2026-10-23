@@ -48,12 +48,20 @@ environment `npm`. Every public package trusts exactly that identity:
 `equinor/fusion-framework`, file `release.yml`, environment `npm`, with permission to publish.
 
 - A push to `main` publishes stable releases (`latest`).
-- A push to `next` publishes pre-releases when `.changeset/pre.json` exists.
+- A push to `feat/improve-telemetry` publishes pre-releases when `.changeset/pre.json` exists.
 - `workflow_dispatch` publishes a snapshot of every public package under a chosen dist-tag.
 
 The workflow uses the changesets `select-mode`, `version`, and `publish` sub-actions. Only the
 publishing jobs receive `id-token: write` and enter the `npm` environment. The environment only
-accepts deployments from `main` and `next`, so a branch cannot publish by editing the workflow.
+accepts deployments from `main` and `feat/improve-telemetry`, so other branches cannot publish by
+editing the workflow.
+
+### Amendment: telemetry prerelease branch (2026-10-23)
+
+`feat/improve-telemetry` replaces the separate `next` branch as the prerelease source, while the
+npm dist-tag remains `next`. The release workflow's push filter and the `npm` environment's
+deployment branch policy use that exact branch name. The workflow filename, environment and npm
+trusted identity are unchanged; this migration does not require re-bootstrapping package trust.
 
 The release workflow no longer configures any npm token. Trust is managed with
 `pnpm npm-trust` (`.github/scripts/npm-trusted-publishing.mjs`):
@@ -76,13 +84,15 @@ configuration.
 - Every release carries npm provenance and a recorded trusted publisher.
 - One trusted identity covers stable, pre-release, and snapshot publishing, so rarely used
   channels cannot drift into expired configurations.
-- Publishing is limited to `main` and `next` through the environment's deployment branch policy.
+- Publishing is limited to `main` and `feat/improve-telemetry` through the environment's deployment
+  branch policy.
 
 ### Negative
 
 - Renaming `release.yml`, renaming the `npm` environment, or moving publishing into another
   workflow breaks publishing for every package until trust is re-bootstrapped.
-- Snapshots can only be published from `main` or `next`, not from feature branches.
+- Snapshots can only be published from `main` or the explicitly allowed `feat/improve-telemetry`
+  branch, not from other feature branches.
 - A new package needs a maintainer with npm 2FA to run `pnpm npm-trust add` before its first
   release, and that release must happen within 2 days.
 - Trusted publishing only works on GitHub-hosted runners.
