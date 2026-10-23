@@ -25,9 +25,11 @@ catalogs:
 # @changesets/cli and @changesets/write were published <24h ago (still inside pnpm 11's
 # default minimumReleaseAge window) but are already-vetted devDependency-only build tooling
 # from the changesets v2->v3 migration (PR #5337) — exempt them so installs aren't blocked.
+# First-party Fusion packages are trusted; exempt them so new releases can be adopted immediately.
 minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@changesets/write'
+  - '@equinor/fusion-*'
 
 patchedDependencies:
   vscode-jsonrpc@8.2.1: patches/vscode-jsonrpc@8.2.1.patch
