@@ -1,3 +1,5 @@
+import type { Subscription } from 'rxjs';
+
 import { applyNavigation } from '../apply-navigation.js';
 import { resolveAdapter } from '../helpers/index.js';
 
@@ -6,41 +8,40 @@ import type { GuardTickPayload } from './guard-tick-payload.js';
 import type { GuardTickDeps } from './guard-tick-deps.js';
 
 /**
- * Handle a URL guard tick in **push mode** (`navigationOptions.replace: false`).
+ * Drive context FROM the URL.
  *
- * Intent: keep browser history and context state bidirectionally in sync.
- *
- * In push mode, each context change pushes a new history entry, so back/forward
- * navigations legitimately land on URLs with different context IDs. When the guard
- * detects a URL containing a context ID that differs from the active context, it
- * interprets this as the user having navigated through history and drives context
- * FROM the URL (rather than overwriting the URL).
+ * Used in **push mode** (`navigationOptions.replace: false`), where back/forward
+ * navigations legitimately land on URLs with different context IDs, and for adapters
+ * with `appOwnsUrl`, where the app's own navigation moves between context routes.
+ * In both cases the URL is authoritative, so the guard resolves the context from the
+ * URL instead of overwriting the URL.
  *
  * If the URL's context ID can't be resolved (stale bookmark, deleted context),
  * the function falls back to re-asserting the active context into the URL so the
- * address bar isn't left pointing at a broken resource.
+ * address bar isn't left pointing at a broken resource. Without an active context
+ * there is nothing to fall back to.
+ *
+ * The lookup runs through the cancelable `setCurrentContextById` stream. The caller
+ * unsubscribes the returned subscription when the user navigates elsewhere before the
+ * lookup settles, so a late result can neither change the context nor redirect.
  *
  * @param urlContextId - The context ID decoded from the current URL by the adapter.
  * @param payload - The active app key and resolved modules.
  * @param currentURL - The current browser URL.
  * @param deps - Shared plugin dependencies including the context provider.
+ * @returns The pending lookup, or `undefined` when no adapter matched and nothing started.
  */
 export function handlePushModeGuard(
   urlContextId: string,
   payload: GuardTickPayload,
   currentURL: URL,
   deps: GuardTickDeps,
-): void {
+): Subscription | undefined {
   const { appKey, appModules, routingStrategy } = payload;
   const { context, event, eventSource, config, log } = deps;
 
   // Resolve the active context and adapter — both are required to fall back.
   const activeContext = appModules.context.currentContext;
-
-  // No active context to fall back to — nothing to do.
-  if (!activeContext) {
-    return;
-  }
 
   const adapter = resolveAdapter(
     { appKey, appContext: appModules.context, routingStrategy, currentURL },
@@ -49,24 +50,31 @@ export function handlePushModeGuard(
 
   // No adapter matched — plugin is not responsible for this app's URL shape.
   if (!adapter) {
-    return;
+    return undefined;
   }
 
   log(`URL guard: URL has context [${urlContextId}] for [${appKey}] — setting context from URL`);
 
   // Attempt to set context from the URL-decoded ID.
   // On failure (e.g. context deleted), fall back to re-encoding the active context.
-  context.setCurrentContextByIdAsync(urlContextId).catch(() => {
-    // Mirror reconcile's validation gate: an invalid active context must not
-    // be re-encoded into the URL as a fallback.
-    if (config.requireValidContext && !appModules.context.validateContext(activeContext)) {
-      event.dispatchEvent('onContextNavigationSkipped', {
-        detail: { appKey, reason: 'invalid-app-context' } as ContextNavigationSkippedDetail,
-        source: eventSource,
-      });
-      log(`URL guard: context invalid for [${appKey}] — skipping fallback re-assert.`);
-      return;
-    }
-    applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL }, deps);
+  return context.setCurrentContextById(urlContextId).subscribe({
+    error: () => {
+      // No active context to fall back to — leave the URL as is.
+      if (!activeContext) {
+        log(`URL guard: could not resolve [${urlContextId}] for [${appKey}] — no fallback.`);
+        return;
+      }
+      // Mirror reconcile's validation gate: an invalid active context must not
+      // be re-encoded into the URL as a fallback.
+      if (config.requireValidContext && !appModules.context.validateContext(activeContext)) {
+        event.dispatchEvent('onContextNavigationSkipped', {
+          detail: { appKey, reason: 'invalid-app-context' } as ContextNavigationSkippedDetail,
+          source: eventSource,
+        });
+        log(`URL guard: context invalid for [${appKey}] — skipping fallback re-assert.`);
+        return;
+      }
+      applyNavigation({ appKey, appModules, adapter, context: activeContext, currentURL }, deps);
+    },
   });
 }
