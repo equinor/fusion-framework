@@ -2555,7 +2555,7 @@ importers:
     dependencies:
       '@azure/msal-browser':
         specifier: ^5.0.2
-        version: 5.25.1
+        version: 5.26.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -4101,8 +4101,8 @@ packages:
     resolution: {integrity: sha512-rbAE25KUfjU/s3XHUdJgceoCP5dEOpMx85J04kF+QMdta73XkuG9JGHHinch+XIoKpBdqljin+KqURpJriSzLA==}
     engines: {node: '>=22.0.0'}
 
-  '@azure/msal-browser@5.25.1':
-    resolution: {integrity: sha512-NDW2/bz2Pz71EJAlhSw+jg1kpRIWtrzj0gCzcHuG1u7iLvSOHpUc5lICkDA9x0bbeityxTneiunSBluvS+/y4w==}
+  '@azure/msal-browser@5.26.0':
+    resolution: {integrity: sha512-GYKRquzDZmZggCdStWy2bNJKnPui1upssSuznJgP+/h6Mb0ldkUkaGvaY6uSGGmZOm0CGiBQ3b5BiGy43BpXSg==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@16.14.1':
@@ -4111,6 +4111,10 @@ packages:
 
   '@azure/msal-common@16.14.2':
     resolution: {integrity: sha512-HOBR0Gfo39TMrkxNG8k6cfjRkrRjXZc3JQs3ebMWQc9S4cihuknMYra3sgmzbZB752oQBqBN9+WF7c826p2vIQ==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-common@16.14.3':
+    resolution: {integrity: sha512-tz3GvMrR9V/plb2lDdW8qaO8CPpfZevdExBKjltzzbAtyhK0eB2UIvji1aU+gkyHj3fxQ2ie+LNHyMXdmo8wOg==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-node-extensions@5.5.2':
@@ -13962,7 +13966,7 @@ snapshots:
       '@azure/core-tracing': 1.4.0
       '@azure/core-util': 1.14.0(supports-color@10.2.2)
       '@azure/logger': 1.4.0(supports-color@10.2.2)
-      '@azure/msal-browser': 5.25.1
+      '@azure/msal-browser': 5.26.0
       '@azure/msal-node': 6.0.1
       open: 11.0.4
       tslib: 2.8.1
@@ -13976,13 +13980,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/msal-browser@5.25.1':
+  '@azure/msal-browser@5.26.0':
     dependencies:
-      '@azure/msal-common': 16.14.2
+      '@azure/msal-common': 16.14.3
 
   '@azure/msal-common@16.14.1': {}
 
   '@azure/msal-common@16.14.2': {}
+
+  '@azure/msal-common@16.14.3': {}
 
   '@azure/msal-node-extensions@5.5.2':
     dependencies:
