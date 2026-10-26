@@ -360,10 +360,10 @@ importers:
     devDependencies:
       '@assistant-ui/react':
         specifier: ^0.15.0
-        version: 0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
+        version: 0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
       '@assistant-ui/react-markdown':
         specifier: ^0.14.0
-        version: 0.14.23(@assistant-ui/react@0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)
+        version: 0.14.23(@assistant-ui/react@0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -2306,7 +2306,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.1.21
+        version: 11.2.9
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2384,7 +2384,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.1.21
+        version: 11.2.9
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2486,7 +2486,7 @@ importers:
         version: link:../../utils/observable
       immer:
         specifier: ^11.0.0
-        version: 11.1.21
+        version: 11.2.9
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2767,7 +2767,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.1.17
-        version: 11.1.21
+        version: 11.2.9
       pouchdb:
         specifier: ^9.0.0
         version: 9.0.0
@@ -2868,7 +2868,7 @@ importers:
         version: link:../../utils/query
       immer:
         specifier: ^11.0.0
-        version: 11.1.21
+        version: 11.2.9
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -3567,7 +3567,7 @@ importers:
     dependencies:
       immer:
         specifier: ^11.0.0
-        version: 11.1.21
+        version: 11.2.9
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -3675,7 +3675,7 @@ importers:
         version: link:../observable
       immer:
         specifier: ^11.0.0
-        version: 11.1.21
+        version: 11.2.9
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -10697,8 +10697,8 @@ packages:
   immediate@3.3.0:
     resolution: {integrity: sha512-HR7EVodfFUdQCTIeySw+WDRFJlPcLOJbXfwwZ7Oom6tjsvZ3bOkCDJHehQC3nxJrv7+f9XecwazynjU8e4Vw3Q==}
 
-  immer@11.1.21:
-    resolution: {integrity: sha512-bZSadeCPGdaY5/qRLgr6mDSH1ra21rD3rqpiWk7+QTr4ayYPTE9qZYdLh/NdPhMe0wSrTvHD/Lk8q5EwhUs0aw==}
+  immer@11.2.9:
+    resolution: {integrity: sha512-IQ4UEtXjZjyefyWjtLEDXUSrF6T2hwjKPi6BIJl3bY/2XXW24d6cNGdXJSBOA/+KNnuiXkZY6DR0C3efolhitA==}
 
   immutable@5.1.9:
     resolution: {integrity: sha512-m8nVez3rwrgmWxtLMt1ZYXB2Lv7OKYn/disyxAlSDYAlKSlFoPPfIAmAM/M5xqL4m4C/wAPw7S2/CNaUii1Hxg==}
@@ -13849,9 +13849,9 @@ snapshots:
       - ioredis
       - redis
 
-  '@assistant-ui/react-markdown@0.14.23(@assistant-ui/react@0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)':
+  '@assistant-ui/react-markdown@0.14.23(@assistant-ui/react@0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)':
     dependencies:
-      '@assistant-ui/react': 0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
+      '@assistant-ui/react': 0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
       '@radix-ui/react-primitive': 2.1.11(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@types/hast': 3.0.5
       classnames: 2.5.1
@@ -13865,7 +13865,7 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@assistant-ui/react@0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))':
+  '@assistant-ui/react@0.15.31(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.2.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))':
     dependencies:
       '@assistant-ui/core': 0.3.31(@assistant-ui/store@0.3.22(@assistant-ui/tap@0.9.24(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(react@19.3.1))(@assistant-ui/tap@0.9.24(@types/react@19.3.0)(react@19.3.1))(@opentelemetry/api@1.9.1)(@opentelemetry/exporter-trace-otlp-http@0.222.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(@types/react@19.3.0)(react@19.3.1)
       '@assistant-ui/store': 0.3.22(@assistant-ui/tap@0.9.24(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
@@ -13878,7 +13878,7 @@ snapshots:
       react-textarea-autosize: 8.5.9(@types/react@19.3.0)(react@19.3.1)
       safe-content-frame: 0.0.34
       zod: 4.6.7
-      zustand: 5.0.15(@types/react@19.3.0)(immer@11.1.21)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
+      zustand: 5.0.15(@types/react@19.3.0)(immer@11.2.9)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
@@ -14007,7 +14007,8 @@ snapshots:
 
   '@azure/msal-common@16.14.1': {}
 
-  '@azure/msal-common@16.14.2': {}
+  '@azure/msal-common@16.14.2':
+    optional: true
 
   '@azure/msal-common@16.14.3': {}
 
@@ -21081,7 +21082,7 @@ snapshots:
 
   immediate@3.3.0: {}
 
-  immer@11.1.21: {}
+  immer@11.2.9: {}
 
   immutable@5.1.9: {}
 
@@ -24588,10 +24589,10 @@ snapshots:
 
   zone.js@0.16.3: {}
 
-  zustand@5.0.15(@types/react@19.3.0)(immer@11.1.21)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)):
+  zustand@5.0.15(@types/react@19.3.0)(immer@11.2.9)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)):
     optionalDependencies:
       '@types/react': 19.3.0
-      immer: 11.1.21
+      immer: 11.2.9
       react: 19.3.1
       use-sync-external-store: 1.7.0(react@19.3.1)
 
