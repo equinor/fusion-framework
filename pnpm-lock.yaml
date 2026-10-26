@@ -2124,7 +2124,7 @@ importers:
         version: 10.1.2
       vscode-languageserver-textdocument:
         specifier: ^1.0.12
-        version: 1.0.15
+        version: 1.0.16
     devDependencies:
       esbuild:
         specifier: ^0.28.1
