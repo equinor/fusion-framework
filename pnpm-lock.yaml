@@ -3713,7 +3713,7 @@ importers:
         version: 1.17.17
       nock:
         specifier: ^15.0.1
-        version: 15.0.4(supports-color@10.2.2)
+        version: 15.0.5(supports-color@10.2.2)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -11596,8 +11596,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nock@15.0.4:
-    resolution: {integrity: sha512-quP113SfbjFQCvYCE8eKjEFYqFuHoNTnz+JOfwUnTbqwvH7bB/Z1yLS6xxfI0s+7x86V+EptbHv22CxH065FYw==}
+  nock@15.0.5:
+    resolution: {integrity: sha512-nVeuZGS2we1PyvqbW082Qj0EB4bd//6pZk/zOPDlaTPU72qcWrqfHg3kx9JcBcH1fJxwJHjmsfuQ4mss42su4w==}
     engines: {node: '>=22.20.0'}
 
   node-abi@3.94.0:
@@ -22194,7 +22194,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nock@15.0.4(supports-color@10.2.2):
+  nock@15.0.5(supports-color@10.2.2):
     dependencies:
       '@mswjs/interceptors': 0.44.0(supports-color@10.2.2)
     transitivePeerDependencies:
