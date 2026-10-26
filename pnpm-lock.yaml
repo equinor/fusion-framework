@@ -1928,7 +1928,7 @@ importers:
         version: 2.1.9(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
-        version: 1.3.4
+        version: 1.3.5
       '@equinor/fusion-wc-person':
         specifier: ^3.5.5
         version: 3.5.6
@@ -4624,11 +4624,8 @@ packages:
   '@equinor/fusion-wc-checkbox@1.2.5':
     resolution: {integrity: sha512-ArFMIiyLIT8CoIeTZHiPqJqdyz51MFo8Gh7OpaICJxNAC+EzN70YGMmlPDZ79BEWCiN0bazljKA2JmVHMka9Ug==}
 
-  '@equinor/fusion-wc-chip@1.3.3':
-    resolution: {integrity: sha512-3PPsoTB/kwFB/eANgfoT8XOFQ/W5dZJe79UOuLlsze9PDNLrVpHe1lVAx2+hsK2YWvNltNOoI6Y+tJpBtg1ESQ==}
-
-  '@equinor/fusion-wc-chip@1.3.4':
-    resolution: {integrity: sha512-KqXE92S7NNhrQ/WPHKW+arl+HN4+yecPqqe8afBHwGr2ywCUQ/xGRtvSeq5bPvMuDgjsa7yb3Otc6OcsrWbZsg==}
+  '@equinor/fusion-wc-chip@1.3.5':
+    resolution: {integrity: sha512-1lS3Nha+lxw17Z5NhkysgvIOI6Gy8vqG6TpkPKS8BgcH8O2OTN0vjzWxq9u7itRD1t8jeScIGu9GN29dBLG2TA==}
 
   '@equinor/fusion-wc-core@2.0.3':
     resolution: {integrity: sha512-o52mbfI8ck1bJMfC+y3Hf4eyS7dJv1i/8C/bSv9cMRDRz6CgiKxrTzQhXSAFCDwm8tSQ3zQyB8EPKivyTx4KFA==}
@@ -4686,9 +4683,6 @@ packages:
 
   '@equinor/fusion-wc-radio@1.2.5':
     resolution: {integrity: sha512-op7CXHE4fXi8VAvKlIejmIBWWjuGRgiSRrwjdFqVwitj4HHgovmPclZbbv8gFBMdXtgsvBisOjDxAB8MDwH2mw==}
-
-  '@equinor/fusion-wc-ripple@1.2.3':
-    resolution: {integrity: sha512-QEcPFQcguYH1kFe8cJMqIj6XZhlBt9wkALU03FvFmI8ozruDL8Ha4BxMU/xALrYwscLayOvYZliFTYVVFqpJLg==}
 
   '@equinor/fusion-wc-ripple@1.2.4':
     resolution: {integrity: sha512-Ie3SG5MmmkHO8RcgQ39cfCtLDqsNBeNHTqJwi8yfiNZJqU9kq2IzXp+tqxbQJaM4fz08xI1okfMX7IUlzWo6Hg==}
@@ -13424,9 +13418,6 @@ packages:
   vscode-languageserver-protocol@3.18.5:
     resolution: {integrity: sha512-FW4fBMzZ99N8xeob4py0l050wgCoRgTpEq5Xcsb9lM1bc29UKGR/wSV+4knaqFxssFHajy7OzNiKP/m3U1ZEuA==}
 
-  vscode-languageserver-textdocument@1.0.15:
-    resolution: {integrity: sha512-Gsfr9S8LU3S6885cS+NaleasJ0n3V5y/SOTqHCifQiXWFw3G9w9/YItDfwHrlCz+dSZWWZ8ilYVMcJe7Sz7Sxw==}
-
   vscode-languageserver-textdocument@1.0.16:
     resolution: {integrity: sha512-qeNEuOi9a3qkqRf7Gfez2WL2VwlBTLCNekHBGO9kxPVUp9XuY15yfTJ9jwvOwKI0I2MhUUfZq95NSp+LK1CLQg==}
 
@@ -14702,20 +14693,12 @@ snapshots:
       '@material/mwc-checkbox': 0.27.0
       lit: 3.3.3
 
-  '@equinor/fusion-wc-chip@1.3.3':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.3
-      '@equinor/fusion-wc-icon': 2.4.4
-      '@equinor/fusion-wc-ripple': 1.2.3
-      '@equinor/fusion-web-theme': 0.1.10
-      lit: 3.3.2
-
-  '@equinor/fusion-wc-chip@1.3.4':
+  '@equinor/fusion-wc-chip@1.3.5':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-wc-icon': 2.4.4
       '@equinor/fusion-wc-ripple': 1.2.4
-      '@equinor/fusion-web-theme': 0.1.10
+      '@equinor/fusion-web-theme': 0.1.12
       lit: 3.3.3
 
   '@equinor/fusion-wc-core@2.0.3': {}
@@ -14821,7 +14804,7 @@ snapshots:
     dependencies:
       '@equinor/fusion-wc-button': 2.5.3
       '@equinor/fusion-wc-checkbox': 1.2.3
-      '@equinor/fusion-wc-chip': 1.3.3
+      '@equinor/fusion-wc-chip': 1.3.5
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-wc-formfield': 1.2.3
       '@equinor/fusion-wc-icon': 2.4.3
@@ -14889,12 +14872,6 @@ snapshots:
       '@equinor/fusion-web-theme': 0.1.12
       '@material/mwc-radio': 0.27.0
       lit: 3.3.3
-
-  '@equinor/fusion-wc-ripple@1.2.3':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.3
-      '@material/mwc-ripple': 0.27.0
-      lit: 3.3.2
 
   '@equinor/fusion-wc-ripple@1.2.4':
     dependencies:
@@ -24171,8 +24148,6 @@ snapshots:
     dependencies:
       vscode-jsonrpc: 10.0.0
       vscode-languageserver-types: 3.18.5
-
-  vscode-languageserver-textdocument@1.0.15: {}
 
   vscode-languageserver-textdocument@1.0.16: {}
 
