@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.0.3
+
+### Patch Changes
+
+- 30d15f2: Clarify that explicit query context routing takes precedence over registered custom path hooks.
+  
+  Refs: https://github.com/equinor/fusion-framework/issues/5608
+- ea519ce: Revalidate a parent context even when its ID matches the child's current context, allowing an unsupported context type to resolve to the type configured by the child app.
+  
+  Fixes: https://github.com/equinor/fusion-core-tasks/issues/2202
+
 ## 9.0.2
 
 ### Patch Changes

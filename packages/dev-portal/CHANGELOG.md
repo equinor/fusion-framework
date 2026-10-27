@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.9
+
+### Patch Changes
+
+- Updated dependencies [30d15f2]
+- Updated dependencies [ea519ce]
+- Updated dependencies [e9838fb]
+- Updated dependencies [30d15f2]
+  - @equinor/fusion-framework-module-context@9.0.3
+  - @equinor/fusion-framework-plugin-context-navigation@1.1.0
+  - @equinor/fusion-framework@9.0.6
+  - @equinor/fusion-framework-module-analytics@3.1.11
+  - @equinor/fusion-framework-app@13.2.1
+
 ## 11.1.8
 
 ### Patch Changes
