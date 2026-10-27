@@ -128,6 +128,9 @@ This tests the candidate without merging its maintenance workflow or policy into
 Dispatch `pr.yml` on the reviewed candidate branch, with `head_sha` equal to that branch's exact event commit
 and `pr_number` identifying the PR. Supply `greenkeeper_orchestrator_image`, `greenkeeper_image` and
 `greenkeeper_gateway_image` as reviewed immutable image digests.
+The trial defaults pin the orchestrator, Node sandbox and gateway published from Greenkeeper revision
+`fb5646553ad7d8537df1addaa0d45be14c6d13b5`, including bounded large-lockfile conflict evidence.
+Production still uses the explicitly configured environment image variables.
 
 Before Azure authentication, the smoke job authenticates to GHCR with Framework's job token
 and pulls all three pinned images. `packages: read` alone does not grant access to another repository's package.

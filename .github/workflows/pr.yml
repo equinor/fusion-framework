@@ -27,15 +27,15 @@ on:
       greenkeeper_orchestrator_image:
         description: Reviewed immutable trusted orchestrator image for the smoke test
         type: string
-        default: ''
+        default: 'ghcr.io/equinor/fusion-poc-greenkeeper@sha256:4b6b0e4f148e5d5e063c1719ab04265062fcef6e611cd2d91c5bab04cbe7d753'
       greenkeeper_image:
         description: Matching immutable sandbox image for the smoke test
         type: string
-        default: ''
+        default: 'ghcr.io/equinor/fusion-poc-greenkeeper@sha256:b2be6e94bf3958946b484970a194e98b4a6a3e2e0e89f04bdd791efd995dd103'
       greenkeeper_gateway_image:
         description: Matching immutable credential-gateway image for the smoke test
         type: string
-        default: ''
+        default: 'ghcr.io/equinor/fusion-poc-greenkeeper@sha256:a8a6c11124d35de36dfa6a5651b0aa6d9cc57be3e91ee91e3099f4a205157ed8'
 
 concurrency:
   group: pr-${{ github.event_name }}-${{ inputs.pr_number || github.event.pull_request.number }}
