@@ -1,4 +1,4 @@
-import { BehaviorSubject, EMPTY, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, Subject, of, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-module-app';
@@ -66,10 +66,10 @@ function createHarness(configOverrides: Partial<ContextNavigationConfig> = {}): 
     dispatchEvent: vi.fn(async () => ({ canceled: false })),
   } as unknown as ContextNavigationPluginArgs['event'];
 
-  // Test double — only currentContext$ and setCurrentContextByIdAsync are accessed
+  // Test double — only currentContext$ and setCurrentContextById are accessed
   const context = {
     currentContext$: EMPTY,
-    setCurrentContextByIdAsync: vi.fn(async () => undefined),
+    setCurrentContextById: vi.fn(() => of(undefined)),
   } as unknown as ContextNavigationPluginArgs['context'];
 
   // Test double — only current$ is accessed by the plugin under test
@@ -463,9 +463,9 @@ describe('createContextNavigationPlugin', () => {
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
-      // Test double — only setCurrentContextByIdAsync is called by the URL guard
+      // Test double — only setCurrentContextById is called by the URL guard
       const context = {
-        setCurrentContextByIdAsync: vi.fn(async () => undefined),
+        setCurrentContextById: vi.fn(() => of(undefined)),
       } as unknown as ContextNavigationPluginArgs['context'];
 
       // Test double — only dispatchEvent is called by the plugin
@@ -490,7 +490,7 @@ describe('createContextNavigationPlugin', () => {
       navigationState$.next({});
 
       await vi.waitFor(() => {
-        expect(context.setCurrentContextByIdAsync).toHaveBeenCalledWith('url-ctx');
+        expect(context.setCurrentContextById).toHaveBeenCalledWith('url-ctx');
       });
 
       teardown();
@@ -530,7 +530,7 @@ describe('createContextNavigationPlugin', () => {
         } as unknown as ContextNavigationPluginArgs['navigation'];
         // The guard invokes this test double only when the query context changes.
         const context = {
-          setCurrentContextByIdAsync: vi.fn(async () => undefined),
+          setCurrentContextById: vi.fn(() => of(undefined)),
         } as unknown as ContextNavigationPluginArgs['context'];
         // Plugin setup dispatches navigation events through this test double.
         const event = {
@@ -551,13 +551,11 @@ describe('createContextNavigationPlugin', () => {
         navigationState$.next({});
 
         await vi.waitFor(() => {
-          expect(context.setCurrentContextByIdAsync).toHaveBeenCalledTimes(
-            expectedContextId ? 1 : 0,
-          );
+          expect(context.setCurrentContextById).toHaveBeenCalledTimes(expectedContextId ? 1 : 0);
         });
         // A changed query ID resolves; an unchanged ID does not.
         if (expectedContextId) {
-          expect(context.setCurrentContextByIdAsync).toHaveBeenCalledWith(expectedContextId);
+          expect(context.setCurrentContextById).toHaveBeenCalledWith(expectedContextId);
         }
 
         teardown();
@@ -588,11 +586,9 @@ describe('createContextNavigationPlugin', () => {
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
-      // Test double — only setCurrentContextByIdAsync is called; throws to trigger fallback
+      // Test double — only setCurrentContextById is called; throws to trigger fallback
       const context = {
-        setCurrentContextByIdAsync: vi.fn(async () => {
-          throw new Error('Context not found');
-        }),
+        setCurrentContextById: vi.fn(() => throwError(() => new Error('Context not found'))),
       } as unknown as ContextNavigationPluginArgs['context'];
 
       // Test double — only dispatchEvent is called by the plugin
@@ -652,9 +648,9 @@ describe('createContextNavigationPlugin', () => {
         state$: navigationState$,
       } as unknown as ContextNavigationPluginArgs['navigation'];
 
-      // Test double — only setCurrentContextByIdAsync is called by the URL guard
+      // Test double — only setCurrentContextById is called by the URL guard
       const context = {
-        setCurrentContextByIdAsync: vi.fn(async () => undefined),
+        setCurrentContextById: vi.fn(() => of(undefined)),
       } as unknown as ContextNavigationPluginArgs['context'];
 
       // Test double — only dispatchEvent is called by the plugin
@@ -714,9 +710,9 @@ describe('createContextNavigationPlugin', () => {
         dispatchEvent: vi.fn(async () => ({ canceled: false })),
       } as unknown as ContextNavigationPluginArgs['event'];
 
-      // Test double — only setCurrentContextByIdAsync is called by the URL guard
+      // Test double — only setCurrentContextById is called by the URL guard
       const context = {
-        setCurrentContextByIdAsync: vi.fn(async () => undefined),
+        setCurrentContextById: vi.fn(() => of(undefined)),
       } as unknown as ContextNavigationPluginArgs['context'];
 
       const config: ContextNavigationConfig = {
@@ -736,8 +732,81 @@ describe('createContextNavigationPlugin', () => {
       // Wait a tick and verify no navigation occurred
       await new Promise((r) => setTimeout(r, 50));
       expect(navigation.navigate).not.toHaveBeenCalled();
-      expect(context.setCurrentContextByIdAsync).not.toHaveBeenCalled();
+      expect(context.setCurrentContextById).not.toHaveBeenCalled();
 
+      teardown();
+    });
+  });
+
+  // ─── URL Guard (adapters without appOwnsUrl) ──────────────────────
+
+  describe('URL guard — adapters without appOwnsUrl', () => {
+    const setup = (pathname: string, currentContext: ContextItem | null) => {
+      const navigationState$ = new Subject<unknown>();
+      // The guard reads only the active context from the app's context module
+      const appModules = { context: { currentContext } } as unknown as AppModulesInstance<
+        [ContextModule]
+      >;
+      // The guard only reads the active app's current$ stream
+      const app = {
+        current$: new BehaviorSubject({
+          appKey: 'my-app',
+          instance$: new BehaviorSubject(appModules),
+          manifest$: new BehaviorSubject(null),
+        }),
+      } as unknown as ContextNavigationPluginArgs['app'];
+      // The guard only reads path, navigate, and state$
+      const navigation = {
+        path: { pathname, search: '' },
+        navigate: vi.fn(),
+        state$: navigationState$,
+      } as unknown as ContextNavigationPluginArgs['navigation'];
+      // The guard only calls setCurrentContextById
+      const context = {
+        setCurrentContextById: vi.fn(() => of(undefined)),
+      } as unknown as ContextNavigationPluginArgs['context'];
+      // The plugin only calls dispatchEvent
+      const event = {
+        dispatchEvent: vi.fn(async () => ({ canceled: false })),
+      } as unknown as ContextNavigationPluginArgs['event'];
+      const teardown = createContextNavigationPlugin({
+        app,
+        navigation,
+        context,
+        event,
+        config: {
+          portalName: 'TestPortal',
+          origin: 'https://example.com',
+          adapters: [makeAdapter()],
+          enableUrlGuard: true,
+          debug: false,
+          requireValidContext: false,
+          sourceFactory: () => EMPTY,
+          navigationOptions: { replace: true },
+        },
+      });
+      navigationState$.next({});
+      return { navigation, context, teardown };
+    };
+
+    it('does not apply a URL context when no context is active', async () => {
+      const { navigation, context, teardown } = setup('/apps/my-app/url-ctx', null);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(context.setCurrentContextById).not.toHaveBeenCalled();
+      expect(navigation.navigate).not.toHaveBeenCalled();
+      teardown();
+    });
+
+    it('re-asserts the active context on a URL without context', async () => {
+      const { navigation, teardown } = setup('/apps/my-app', makeContext('active-ctx'));
+
+      await vi.waitFor(() => {
+        expect(navigation.navigate).toHaveBeenCalledWith(
+          expect.objectContaining({ pathname: '/apps/my-app/active-ctx' }),
+          { replace: true },
+        );
+      });
       teardown();
     });
   });
