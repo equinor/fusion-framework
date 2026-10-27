@@ -110,6 +110,12 @@ and publishing is enabled.
 Existing local deletion/manual recovery is retained as a maintainer-controlled fallback.
 See [the activation and rollback guide](../../contributing/dependency-reviews.md#activation-and-rollback).
 
+The manually selected PR-workflow smoke job is a narrow pre-merge exception: it may read the policy at the
+exact caller event commit on a reviewed candidate branch, but only in export-only mode with no publisher.
+It retains current default-branch freshness checks and cannot create or rewrite branches.
+The production workflow still runs only from the default branch. The smoke job neither enables automatic
+handover nor transfers inference credentials across jobs.
+
 ## Branch rules
 
 Repository administrators must configure `maintenance/dependencies` with rules that:

@@ -113,6 +113,31 @@ Framework maintenance run finish or cancel it deliberately, then unset the varia
 Main-push sync returns to the legacy workflow. Manual recovery/reset/promotion, maintenance-branch pushes
 and deletion recovery remain available throughout.
 
+### Pre-merge export-only smoke test
+
+The existing [PR workflow](../.github/workflows/pr.yml) has an explicit manual `greenkeeper_smoke` option.
+This tests the candidate without merging its maintenance workflow or policy into `main`.
+Dispatch `pr.yml` on the reviewed candidate branch, with `head_sha` equal to that branch's exact event commit
+and `pr_number` identifying the PR. Supply `greenkeeper_runner_ref`, `greenkeeper_image` and
+`greenkeeper_gateway_image` as reviewed immutable pins. The runner revision must include candidate-policy
+preview support; the previously merged runner cannot execute this preview yet.
+
+The smoke job uses Framework's existing `docs` identity and obtains only the AI token.
+Private runner checkout uses `APM_FUSION_SKILLS_TOKEN`, which needs read access to Greenkeeper;
+the job token needs access to the reviewed GHCR images. Missing grants fail explicitly and must be fixed
+through approved administration, never by passing the publishing token instead.
+Neither `DEPENDABOT_AUTOMATION_TOKEN` nor any `publish-token` is supplied to the smoke job.
+
+The runner accepts the candidate policy only for manual export-only execution at the exact caller event SHA
+without a publishing credential. It still compares and validates against the current default branch,
+retaining upstream freshness checks. Missing streams are proposed, never created. Existing outdated streams
+can exercise Git rebase, final validation and conflict agents without publishing.
+An already-current stream proves authentication and inventory but does not exercise rebase or inference.
+Smoke evidence remains in the transient runner workspace; no journals or bundles are uploaded.
+
+This manual test does not enable automatic handover or relax the production default-branch guard.
+Normal PR CI can also be dispatched independently without `greenkeeper_smoke`.
+
 ## Changeset requirements
 
 A changeset is mandatory when the dependency update touches a published package. See the [changeset guide](changeset.md) and the changeset decision section in `.github/instructions/dependabot-pr.instructions.md` for details.

@@ -8,6 +8,9 @@ inputs:
   export-only:
     description: Inspect and export without creating or rewriting branches
     default: 'true'
+  preview-policy-revision:
+    description: Exact caller event SHA for a manual export-only candidate-policy test, without a publisher
+    default: ''
   client-id:
     description: Existing Framework Fusion AI identity
     required: true
@@ -25,7 +28,7 @@ inputs:
     required: true
   publish-token:
     description: Existing automation credential with Contents write on Framework's dependency branch
-    required: true
+    required: false
 
 runs:
   using: composite
@@ -61,6 +64,7 @@ runs:
       with:
         task: ${{ inputs.task }}
         export-only: ${{ inputs.export-only }}
+        preview-policy-revision: ${{ inputs.preview-policy-revision }}
         validation: pnpm
         image: ${{ inputs.image }}
         gateway-image: ${{ inputs.gateway-image }}
@@ -68,4 +72,3 @@ runs:
         apm-token: ${{ inputs.apm-token }}
         publish-token: ${{ inputs.publish-token }}
         fusion-ai-token: ${{ steps.ai.outputs.token }}
-        fusion-ai-base-url: https://ai.api.fusion.equinor.com/openai/v1

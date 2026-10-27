@@ -16,6 +16,7 @@ const legacyWorkflow = readFileSync(
   new URL('../workflows/dependabot-maintenance.yml', import.meta.url),
   'utf8',
 );
+const prWorkflow = readFileSync(new URL('../workflows/pr.yml', import.meta.url), 'utf8');
 const action = readFileSync(
   new URL('../actions/greenkeeper-maintenance/action.yml', import.meta.url),
   'utf8',
@@ -111,7 +112,7 @@ test('propagates Azure acquisition failures without exporting a token', () => {
   assert.doesNotMatch(result.stdout, /fixture-token/);
 });
 
-function jobCondition(source, name, github, enabled) {
+function jobCondition(source, name, github, enabled, inputs = {}) {
   const block = source.split(`\n  ${name}:\n`)[1]?.split(/\n {2}[a-z][\w-]*:\n/)[0];
   assert.ok(block, `Missing ${name} job`);
   const condition =
@@ -122,6 +123,7 @@ function jobCondition(source, name, github, enabled) {
     {
       github,
       vars: { GREENKEEPER_MAINTENANCE_ENABLED: enabled },
+      inputs,
       format: (pattern, value) => pattern.replace('{0}', value),
     },
     { timeout: 100 },
@@ -233,7 +235,7 @@ test('authentication belongs to Framework and the runner receives separate read,
   assert.match(action, /publish-token: \$\{\{ inputs\.publish-token \}\}/);
   assert.doesNotMatch(
     `${workflow}\n${action}`,
-    /gh workflow run|dispatch_token|Actions write|environment: greenkeeper|setup-copilot|install-copilot|COPILOT_PROVIDER|provider-env/,
+    /gh workflow run|dispatch_token|Actions write|environment: greenkeeper|setup-copilot|install-copilot|COPILOT_PROVIDER|provider-env|fusion-ai-base-url/,
   );
   assert.doesNotMatch(workflow, /^ {4}outputs:/m);
 });
@@ -247,4 +249,59 @@ test('runner source is pinned and host policy preserves the populated stream', (
   assert.match(workflow, /persist-credentials: false/);
   assert.match(workflow, /task: dependency/);
   assert.match(workflow, /default: true/);
+});
+
+test('pre-merge smoke test requires explicit manual selection and never receives the publisher', () => {
+  for (const [event, selected, expected] of [
+    ['workflow_dispatch', true, true],
+    ['workflow_dispatch', false, false],
+    ['pull_request', true, false],
+    ['push', true, false],
+  ]) {
+    assert.equal(
+      jobCondition(prWorkflow, 'greenkeeper-smoke', { event_name: event }, '', {
+        greenkeeper_smoke: selected,
+      }),
+      expected,
+    );
+  }
+  const smoke = prWorkflow.split('\n  greenkeeper-smoke:\n')[1]?.split('\n  required-check:\n')[0];
+  assert.ok(smoke);
+  assert.match(smoke, /environment: docs/);
+  assert.match(smoke, /"\$CANDIDATE_SHA" == "\$GITHUB_SHA"/);
+  assert.match(smoke, /export-only: 'true'/);
+  assert.match(smoke, /preview-policy-revision: \$\{\{ inputs\.head_sha \}\}/);
+  assert.match(smoke, /token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
+  assert.doesNotMatch(smoke, /publish-token:|DEPENDABOT_AUTOMATION_TOKEN|contents: write/);
+  assert.match(action, /preview-policy-revision: \$\{\{ inputs\.preview-policy-revision \}\}/);
+});
+
+test('smoke preflight validates the exact candidate and immutable pins before authentication', () => {
+  const smoke = prWorkflow.split('\n  greenkeeper-smoke:\n')[1]?.split('\n  required-check:\n')[0];
+  const script = smoke?.match(/^ {8}run: \|\n((?: {10}[^\n]*\n)+)/m)?.[1];
+  assert.ok(script);
+  const environment = {
+    ...process.env,
+    GITHUB_SHA: 'a'.repeat(40),
+    CANDIDATE_SHA: 'a'.repeat(40),
+    RUNNER_REF: 'b'.repeat(40),
+    SANDBOX_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'c'.repeat(64)}`,
+    GATEWAY_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'d'.repeat(64)}`,
+  };
+  const valid = spawnSync('bash', ['-c', script], { env: environment, encoding: 'utf8' });
+  assert.equal(valid.status, 0, valid.stderr);
+  for (const [name, value] of [
+    ['CANDIDATE_SHA', 'e'.repeat(40)],
+    ['CANDIDATE_SHA', 'main'],
+    ['RUNNER_REF', 'main'],
+    ['SANDBOX_IMAGE', 'ghcr.io/equinor/fusion-poc-greenkeeper:latest'],
+    ['GATEWAY_IMAGE', ''],
+  ]) {
+    const invalid = spawnSync('bash', ['-c', script], {
+      env: { ...environment, [name]: value },
+      encoding: 'utf8',
+    });
+    assert.notEqual(invalid.status, 0, `Unexpectedly accepted ${name}`);
+    assert.match(invalid.stdout, /::error::/);
+  }
 });
