@@ -68,17 +68,24 @@ Azure logout and account cleanup run even on failure, before invoking the shared
 Masked step outputs carry the token only within this job; there is no cross-job token output,
 dispatch input or token artifact.
 
-Framework is public and the runner repository is private, so a direct private reusable-workflow reference
-is unavailable. Check out the reviewed full `GREENKEEPER_RUNNER_REF` into `.greenkeeper` and invoke
-`./.greenkeeper/.github/actions/maintenance` through `uses:`. Runner code stays outside the Git target clone.
-This is not a dispatch into Greenkeeper. Greenkeeper needs no federated SP, Azure identity or Actions write grant.
+Framework is public and the runner repository is private. Both production and trial runs therefore use
+the published trusted orchestrator image rather than private source checkout or a private reusable workflow.
+The host action inventories Dependabot PRs and repository policy, then invokes the orchestrator through Docker.
+The orchestrator uses the host Docker socket to provision isolated sibling gateway and sandbox containers.
+Its scratch directory is mounted at the same absolute path so sibling bind mounts resolve on the host.
+Only the trusted orchestrator receives host credentials and the Docker socket; workers do not.
+Greenkeeper needs no federated SP, Azure identity, source-read PAT or Actions write grant.
+
+The image deliberately excludes task definitions. The action vendors only `rebase-conflicts.md` and its
+locked `fusion-developer` APM profile from Greenkeeper revision
+`aaf28da138034b383bee4efaccbe219106fb04b3`, mounted read-only at `/tasks`.
+The behavior tests verify these exact asset checksums. Upgrade them deliberately alongside compatible images;
+do not replace the locked profile with an unpinned install.
 
 Credentials have separate purposes:
 
 - `github.token`: Framework Contents/Pull requests read, plus approved GHCR package reads.
 - `APM_FUSION_SKILLS_TOKEN`: the existing read-only private skills credential.
-- `GREENKEEPER_SOURCE_TOKEN`: dedicated Contents-read access to private runner source in Greenkeeper;
-  used only for checkout with credential persistence disabled.
 - `DEPENDABOT_AUTOMATION_TOKEN`: the existing host-only publisher with Contents write on Framework's stream.
 
 The publishing token must never be substituted for the APM credential or passed into the agent.
@@ -93,11 +100,11 @@ workflow continues to own main-push sync. A push while disabled reports that unc
 
 Before enabling:
 
-1. Publish and review the caller-owned runner action, then configure `GREENKEEPER_RUNNER_REF` to its full commit SHA
-   in Framework's `docs` environment.
+1. Configure `GREENKEEPER_ORCHESTRATOR_IMAGE` to a reviewed immutable trusted orchestrator digest
+   in Framework's `docs` environment. No private source checkout or `GREENKEEPER_SOURCE_TOKEN` is needed.
 2. Configure matching reviewed `GREENKEEPER_IMAGE` and `GREENKEEPER_GATEWAY_IMAGE` digests in that environment.
    Verify GHCR grants allow Framework's job token to read them.
-3. Verify the existing source-read, APM-read and Framework-publishing grants. The sandbox must support Framework's
+3. Verify the existing APM-read and Framework-publishing grants. The sandbox must support Framework's
    pnpm version and build/test/lint scripts. Keep the existing branch protections and existing Fusion identity.
    No central target enrollment or new federation is required.
 4. After this wiring is merged, manually run the Framework workflow on `main` with `export-only: true`.
@@ -119,24 +126,19 @@ and deletion recovery remain available throughout.
 The existing [PR workflow](../.github/workflows/pr.yml) has an explicit manual `greenkeeper_smoke` option.
 This tests the candidate without merging its maintenance workflow or policy into `main`.
 Dispatch `pr.yml` on the reviewed candidate branch, with `head_sha` equal to that branch's exact event commit
-and `pr_number` identifying the PR. Supply `greenkeeper_runner_ref`, `greenkeeper_image` and
-`greenkeeper_gateway_image` as reviewed immutable pins. The runner revision must include candidate-policy
-preview support; the previously merged runner cannot execute this preview yet.
+and `pr_number` identifying the PR. Supply `greenkeeper_orchestrator_image`, `greenkeeper_image` and
+`greenkeeper_gateway_image` as reviewed immutable image digests.
 
-Before private source checkout, the smoke job authenticates to GHCR with Framework's job token
-and pulls both pinned images without executing them. This tests the package grant independently
-of private source access; `packages: read` alone does not grant access to another repository's package.
+Before Azure authentication, the smoke job authenticates to GHCR with Framework's job token
+and pulls all three pinned images. `packages: read` alone does not grant access to another repository's package.
 The package must also allow Actions access from Framework.
 
 The smoke job uses Framework's existing `docs` identity and obtains only the AI token.
-Private runner access uses `GREENKEEPER_SOURCE_TOKEN` only in the safe API diagnostic and host checkout steps,
-with credential persistence disabled. This read operation requires Contents read on Greenkeeper.
-The credential is not passed to the maintenance action, runner, agent or APM preparation.
 `APM_FUSION_SKILLS_TOKEN` remains the read-only APM credential, and the job token needs access to the
 reviewed GHCR images. Missing grants fail explicitly; there is no fallback to a stronger credential.
 No `publish-token` is supplied to the smoke runner.
 
-The runner accepts the candidate policy only for manual export-only execution at the exact caller event SHA
+The host action accepts the candidate policy only for manual export-only execution at the exact caller event SHA
 without a publishing credential. It still compares and validates against the current default branch,
 retaining upstream freshness checks. Missing streams are proposed, never created. Existing outdated streams
 can exercise Git rebase, final validation and conflict agents without publishing.

@@ -1,5 +1,5 @@
 name: Run Greenkeeper maintenance in Framework
-description: Reuse Framework's existing Fusion AI authentication and invoke the shared runner in the same job
+description: Acquire Framework's Fusion AI token and execute the pinned Greenkeeper orchestrator image
 
 inputs:
   task:
@@ -16,6 +16,9 @@ inputs:
     required: true
   image:
     description: Reviewed immutable sandbox image
+    required: true
+  orchestrator-image:
+    description: Reviewed immutable trusted orchestrator image
     required: true
   gateway-image:
     description: Reviewed immutable gateway image
@@ -59,16 +62,25 @@ runs:
         az logout
         az account clear
 
-    - name: Run shared dependency maintenance
-      uses: ./.greenkeeper/.github/actions/maintenance
+    - name: Authenticate GHCR using the Framework job token
+      uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
       with:
-        task: ${{ inputs.task }}
-        export-only: ${{ inputs.export-only }}
-        preview-policy-revision: ${{ inputs.preview-policy-revision }}
-        validation: pnpm
-        image: ${{ inputs.image }}
-        gateway-image: ${{ inputs.gateway-image }}
-        github-token: ${{ inputs.github-token }}
-        apm-token: ${{ inputs.apm-token }}
-        publish-token: ${{ inputs.publish-token }}
-        fusion-ai-token: ${{ steps.ai.outputs.token }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ inputs.github-token }}
+
+    - name: Run containerized dependency maintenance
+      shell: bash
+      env:
+        TASK: ${{ inputs.task }}
+        EXPORT_ONLY: ${{ inputs.export-only }}
+        PREVIEW_POLICY_REVISION: ${{ inputs.preview-policy-revision }}
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        ORCHESTRATOR_IMAGE: ${{ inputs.orchestrator-image }}
+        GREENKEEPER_IMAGE: ${{ inputs.image }}
+        GREENKEEPER_GATEWAY_IMAGE: ${{ inputs.gateway-image }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        FUSION_APM_TOKEN: ${{ inputs.apm-token }}
+        GREENKEEPER_PUBLISH_TOKEN: ${{ inputs.publish-token }}
+        FUSION_AI_TOKEN: ${{ steps.ai.outputs.token }}
+      run: bash "$GITHUB_ACTION_PATH/run-container.sh"

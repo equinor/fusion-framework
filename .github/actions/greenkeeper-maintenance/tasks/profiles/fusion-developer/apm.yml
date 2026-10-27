@@ -1,0 +1,7 @@
+name: greenkeeper-fusion-developer
+version: 1.0.0
+targets:
+  - copilot
+dependencies:
+  apm:
+    - equinor/fusion-skills/apm/fusion-developer#v1.11.1

@@ -100,11 +100,13 @@ This is not permission to resolve individual Dependabot PR conflicts automatical
 Framework job, nor permission to merge to `main`.
 
 Framework uses its existing identity for Azure login and AI-token acquisition only, without installing
-or configuring Copilot. Azure session cleanup precedes runner execution. The shared runner is
-checked out at a reviewed full commit and invoked with local `uses:`; Greenkeeper needs no federated SP
+or configuring Copilot. Azure session cleanup precedes runner execution. Both production and trial invoke
+the published trusted orchestrator image at an immutable digest, without checking out private runner source.
+Framework supplies the pinned conflict task/profile separately and mounts same-path scratch for sibling containers.
+Only the trusted orchestrator receives the Docker socket; Greenkeeper needs no federated SP
 or Actions write grant. `DEPENDABOT_AUTOMATION_TOKEN` remains the host-only Framework publishing credential,
 while `github.token` and `APM_FUSION_SKILLS_TOKEN` provide separate read-only access.
-Reviewed source/image pins, compatible validation and existing branch-specific rewrite authorization are
+Reviewed image/task pins, compatible validation and existing branch-specific rewrite authorization are
 activation prerequisites. Missing branches are created only when open Dependabot PRs need processing
 and publishing is enabled.
 Existing local deletion/manual recovery is retained as a maintainer-controlled fallback.

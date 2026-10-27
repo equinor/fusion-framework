@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -221,21 +222,24 @@ test('authentication belongs to Framework and the runner receives separate read,
   assert.match(workflow, /client-id: \$\{\{ vars\.FUSION_AI_SP_CLIENT_ID \}\}/);
   assert.match(workflow, /github-token: \$\{\{ github\.token \}\}/);
   assert.match(workflow, /apm-token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
-  assert.match(workflow, /publish-token: \$\{\{ secrets\.DEPENDABOT_AUTOMATION_TOKEN \}\}/);
-  assert.match(workflow, /token: \$\{\{ secrets\.GREENKEEPER_SOURCE_TOKEN \}\}/);
+  assert.match(workflow, /publish-token: \$\{\{ .+secrets\.DEPENDABOT_AUTOMATION_TOKEN/);
   assert.equal((workflow.match(/DEPENDABOT_AUTOMATION_TOKEN/g) ?? []).length, 1);
   assert.doesNotMatch(action, /GREENKEEPER_SOURCE_TOKEN/);
   assert.match(action, /uses: azure\/login@[0-9a-f]{40}/);
   assert.match(action, /client-id: \$\{\{ inputs\.client-id \}\}/);
   assert.match(action, /if: always\(\)/);
   assert.ok(
-    action.indexOf('az logout') < action.indexOf('name: Run shared dependency maintenance'),
+    action.indexOf('az logout') < action.indexOf('name: Run containerized dependency maintenance'),
   );
   assert.match(action, /az account clear/);
-  assert.match(action, /uses: \.\/\.greenkeeper\/\.github\/actions\/maintenance/);
-  assert.match(action, /fusion-ai-token: \$\{\{ steps\.ai\.outputs\.token \}\}/);
-  assert.match(action, /apm-token: \$\{\{ inputs\.apm-token \}\}/);
-  assert.match(action, /publish-token: \$\{\{ inputs\.publish-token \}\}/);
+  assert.match(action, /run: bash "\$GITHUB_ACTION_PATH\/run-container\.sh"/);
+  assert.match(action, /FUSION_AI_TOKEN: \$\{\{ steps\.ai\.outputs\.token \}\}/);
+  assert.match(action, /FUSION_APM_TOKEN: \$\{\{ inputs\.apm-token \}\}/);
+  assert.match(action, /GREENKEEPER_PUBLISH_TOKEN: \$\{\{ inputs\.publish-token \}\}/);
+  assert.doesNotMatch(
+    `${workflow}\n${prWorkflow}\n${action}`,
+    /GREENKEEPER_SOURCE_TOKEN|GREENKEEPER_RUNNER_REF|\.\/\.greenkeeper\//,
+  );
   assert.doesNotMatch(
     `${workflow}\n${action}`,
     /gh workflow run|dispatch_token|Actions write|environment: greenkeeper|setup-copilot|install-copilot|COPILOT_PROVIDER|provider-env|fusion-ai-base-url/,
@@ -243,15 +247,32 @@ test('authentication belongs to Framework and the runner receives separate read,
   assert.doesNotMatch(workflow, /^ {4}outputs:/m);
 });
 
-test('runner source is pinned and host policy preserves the populated stream', () => {
+test('runner image is pinned and host policy preserves the populated stream', () => {
   const policy = readFileSync(new URL('../greenkeeper.yml', import.meta.url), 'utf8');
   assert.match(policy, /maintenance:\n {2}dependency:\n {4}branch: maintenance\/dependencies\n/);
-  assert.match(workflow, /RUNNER_REF.*=~ \^\[0-9a-f\]\{40\}\$/);
-  assert.match(workflow, /ref: \$\{\{ vars\.GREENKEEPER_RUNNER_REF \}\}/);
-  assert.match(workflow, /repository: equinor\/fusion-poc-greenkeeper/);
+  assert.match(workflow, /orchestrator-image: \$\{\{ vars\.GREENKEEPER_ORCHESTRATOR_IMAGE \}\}/);
   assert.match(workflow, /persist-credentials: false/);
   assert.match(workflow, /task: dependency/);
   assert.match(workflow, /default: true/);
+});
+
+test('vendored conflict task and locked profile match Greenkeeper aaf28da', () => {
+  for (const [file, hash] of [
+    ['rebase-conflicts.md', '1297a04096614969c738c3378569b41087a2bdd3a3a8acbeeb89c0439129946f'],
+    [
+      'profiles/fusion-developer/apm.yml',
+      'c8b550e3e62d66591e5b51139a710cc6823bee5e35f91bd0ec913be16d7e752e',
+    ],
+    [
+      'profiles/fusion-developer/apm.lock.yaml',
+      'c183923e1787bc9c8d5865d70ae42ee87b4cc4c26d26691b010453c77262a0e9',
+    ],
+  ]) {
+    const bytes = readFileSync(
+      new URL(`../actions/greenkeeper-maintenance/tasks/${file}`, import.meta.url),
+    );
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), hash);
+  }
 });
 
 test('pre-merge smoke test requires explicit manual selection and never receives the publisher', () => {
@@ -274,32 +295,30 @@ test('pre-merge smoke test requires explicit manual selection and never receives
   assert.match(smoke, /"\$CANDIDATE_SHA" == "\$GITHUB_SHA"/);
   assert.match(smoke, /export-only: 'true'/);
   assert.match(smoke, /preview-policy-revision: \$\{\{ inputs\.head_sha \}\}/);
-  assert.match(smoke, /token: \$\{\{ secrets\.GREENKEEPER_SOURCE_TOKEN \}\}/);
-  assert.equal((smoke.match(/GREENKEEPER_SOURCE_TOKEN/g) ?? []).length, 2);
+  assert.match(smoke, /orchestrator-image: \$\{\{ inputs\.greenkeeper_orchestrator_image \}\}/);
   assert.doesNotMatch(smoke, /publish-token:|DEPENDABOT_AUTOMATION_TOKEN|contents: write/);
   const execution = smoke.split('- name: Test maintenance without a publishing credential')[1];
   assert.ok(execution);
   assert.match(execution, /apm-token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
   assert.doesNotMatch(execution, /DEPENDABOT_AUTOMATION_TOKEN|GREENKEEPER_SOURCE_TOKEN/);
-  assert.match(action, /preview-policy-revision: \$\{\{ inputs\.preview-policy-revision \}\}/);
+  assert.match(action, /PREVIEW_POLICY_REVISION: \$\{\{ inputs\.preview-policy-revision \}\}/);
 });
 
-test('GHCR preflight uses the job token and pulls both pins before private source access', () => {
+test('GHCR preflight uses the job token and tests all three immutable images', () => {
   const smoke = prWorkflow.split('\n  greenkeeper-smoke:\n')[1]?.split('\n  required-check:\n')[0];
   assert.ok(smoke);
   const login = smoke
     .split('- name: Authenticate GHCR using the Framework job token')[1]
-    ?.split('- name: Verify both pinned images')[0];
+    ?.split('- name: Verify all pinned images')[0];
   assert.ok(login);
   assert.match(login, /password: \$\{\{ github\.token \}\}/);
   assert.doesNotMatch(login, /secrets\./);
-  assert.ok(smoke.indexOf('GHCR using') < smoke.indexOf('Diagnose private runner source'));
   const pull = smoke
-    .split('- name: Verify both pinned images')[1]
-    ?.split('- name: Diagnose private runner source')[0];
+    .split('- name: Verify all pinned images')[1]
+    ?.split('- name: Test maintenance')[0];
   const script = pull?.match(/^ {8}run: \|\n((?: {10}[^\n]*\n)+)/m)?.[1];
   assert.ok(script);
-  for (const failedImage of ['', 'sandbox', 'gateway']) {
+  for (const failedImage of ['', 'orchestrator', 'sandbox', 'gateway']) {
     const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-ghcr-test-'));
     writeFileSync(
       join(directory, 'docker'),
@@ -321,12 +340,13 @@ process.exit(image === process.env.FAILED_IMAGE ? 1 : 0);
           PATH: `${directory}:${process.env.PATH}`,
           SANDBOX_IMAGE: 'sandbox',
           GATEWAY_IMAGE: 'gateway',
+          ORCHESTRATOR_IMAGE: 'orchestrator',
           FIXTURE_LOG: log,
           FAILED_IMAGE: failedImage,
         },
       });
       assert.equal(result.status, failedImage ? 1 : 0, result.stderr);
-      assert.equal(readFileSync(log, 'utf8'), 'sandbox\ngateway\n');
+      assert.equal(readFileSync(log, 'utf8'), 'orchestrator\nsandbox\ngateway\n');
       if (failedImage) assert.match(result.stdout, /::error::/);
     } finally {
       rmSync(directory, { recursive: true, force: true });
@@ -342,7 +362,7 @@ test('smoke preflight validates the exact candidate and immutable pins before au
     ...process.env,
     GITHUB_SHA: 'a'.repeat(40),
     CANDIDATE_SHA: 'a'.repeat(40),
-    RUNNER_REF: 'b'.repeat(40),
+    ORCHESTRATOR_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'b'.repeat(64)}`,
     SANDBOX_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'c'.repeat(64)}`,
     GATEWAY_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'d'.repeat(64)}`,
   };
@@ -351,7 +371,7 @@ test('smoke preflight validates the exact candidate and immutable pins before au
   for (const [name, value] of [
     ['CANDIDATE_SHA', 'e'.repeat(40)],
     ['CANDIDATE_SHA', 'main'],
-    ['RUNNER_REF', 'main'],
+    ['ORCHESTRATOR_IMAGE', 'ghcr.io/equinor/fusion-poc-greenkeeper:latest'],
     ['SANDBOX_IMAGE', 'ghcr.io/equinor/fusion-poc-greenkeeper:latest'],
     ['GATEWAY_IMAGE', ''],
   ]) {
@@ -364,50 +384,205 @@ test('smoke preflight validates the exact candidate and immutable pins before au
   }
 });
 
-for (const status of ['200', '401', '403', '404']) {
-  test(`source diagnostic reports HTTP ${status} without exposing credentials or response bodies`, () => {
-    const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-source-test-'));
-    const script = new URL(
-      '../actions/greenkeeper-maintenance/check-source-access.sh',
-      import.meta.url,
-    ).pathname;
+function maintain(overrides = {}) {
+  const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-container-test-'));
+  const callsPath = join(directory, 'calls');
+  const summaryPath = join(directory, 'summary');
+  const image = `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'b'.repeat(64)}`;
+  for (const command of ['gh', 'docker', 'stat']) {
     writeFileSync(
-      join(directory, 'curl'),
+      join(directory, command),
       `#!${process.execPath}
     const fs = require('node:fs');
+    const command = ${JSON.stringify(command)};
     const args = process.argv.slice(2);
-    fs.writeFileSync(args[args.indexOf('--dump-header') + 1],
-      'HTTP/2 ' + process.env.FIXTURE_STATUS + '\\r\\nX-Accepted-GitHub-Permissions: contents=read\\r\\n');
-    fs.writeFileSync(args[args.indexOf('--output') + 1], 'private-source-fixture');
-    process.stdout.write(process.env.FIXTURE_STATUS);
+    const previous = fs.existsSync(process.env.CALLS_PATH)
+      ? fs.readFileSync(process.env.CALLS_PATH, 'utf8').trim().split('\\n').map(JSON.parse) : [];
+    fs.appendFileSync(process.env.CALLS_PATH, JSON.stringify({
+      command, args, publisher: process.env.GH_TOKEN === 'publisher-fixture'
+    }) + '\\n');
+    if (command === 'stat') { console.log('123'); process.exit(0); }
+    if (command === 'docker') {
+      if (args.includes('--dependency-branch')) console.log('maintenance/dependencies');
+      if (args.includes('--rebase-branch') && process.env.EXECUTE_FAILURE === 'true') process.exit(17);
+      process.exit(0);
+    }
+    const endpoint = args.find(arg => arg.startsWith('repos/'));
+    if (args.includes('POST')) {
+      console.log(JSON.stringify({ ref: 'refs/heads/maintenance/dependencies', object: { sha: 'a'.repeat(40) } }));
+    } else if (endpoint.endsWith('/git/ref/heads/main')) {
+      const moved = process.env.DEFAULT_MOVED === 'true' &&
+        previous.some(call => call.command === 'gh' && call.args.includes(endpoint));
+      console.log((moved ? 'c' : 'a').repeat(40));
+    } else if (endpoint.includes('/contents/')) {
+      console.log('version: 1\\nmaintenance:\\n  dependency:\\n    branch: maintenance/dependencies\\ntasks: []');
+    } else if (endpoint.includes('/pulls?')) {
+      console.log(process.env.NO_PRS === 'true' ? '[]' : JSON.stringify([
+        { number: 42, user: { login: 'dependabot[bot]' }, head: { repo: { full_name: 'equinor/fusion-framework' } } }
+      ]));
+    } else if (endpoint.includes('/git/matching-refs/')) {
+      console.log(process.env.MISSING_BRANCH === 'true' ? '[]' : JSON.stringify([
+        { ref: 'refs/heads/maintenance/dependencies', object: { sha: 'd'.repeat(40) } }
+      ]));
+    } else if (endpoint.includes('/compare/')) {
+      console.log(process.env.COMPARISON);
+    } else if (endpoint === 'repos/equinor/fusion-framework') {
+      console.log('main');
+    } else { console.error('Unexpected API endpoint'); process.exit(2); }
     `,
       { mode: 0o755 },
     );
-    try {
-      const result = spawnSync('bash', [script], {
+  }
+  try {
+    const result = spawnSync(
+      'bash',
+      [new URL('../actions/greenkeeper-maintenance/run-container.sh', import.meta.url).pathname],
+      {
         encoding: 'utf8',
         env: {
           ...process.env,
           PATH: `${directory}:${process.env.PATH}`,
           RUNNER_TEMP: directory,
-          RUNNER_REF: 'a'.repeat(40),
-          GH_TOKEN: 'secret-fixture-not-for-output',
-          FIXTURE_STATUS: status,
+          GITHUB_STEP_SUMMARY: summaryPath,
+          CALLS_PATH: callsPath,
+          GITHUB_REPOSITORY: 'equinor/fusion-framework',
+          GITHUB_EVENT_NAME: 'workflow_dispatch',
+          GITHUB_REF: 'refs/heads/candidate',
+          GITHUB_SHA: 'a'.repeat(40),
+          DEFAULT_BRANCH: 'main',
+          TASK: 'dependency',
+          EXPORT_ONLY: 'true',
+          PREVIEW_POLICY_REVISION: 'a'.repeat(40),
+          ORCHESTRATOR_IMAGE: image,
+          GREENKEEPER_IMAGE: image,
+          GREENKEEPER_GATEWAY_IMAGE: image,
+          GH_TOKEN: 'read-fixture',
+          FUSION_AI_TOKEN: 'ai-fixture',
+          FUSION_APM_TOKEN: 'apm-fixture',
+          GREENKEEPER_PUBLISH_TOKEN: '',
+          COMPARISON: 'diverged',
+          ...overrides,
         },
-      });
-      assert.equal(result.status, status === '200' ? 0 : 1, result.stderr);
-      assert.match(result.stdout, new RegExp(`HTTP ${status}`));
-      assert.match(result.stdout, /contents=read/);
-      assert.doesNotMatch(
-        result.stdout + result.stderr,
-        /secret-fixture-not-for-output|private-source-fixture/,
-      );
-      assert.equal(
-        (result.stdout.match(/Greenkeeper source API:/g) ?? []).length,
-        status === '200' ? 2 : 1,
-      );
-    } finally {
-      rmSync(directory, { recursive: true, force: true });
-    }
+      },
+    );
+    return {
+      ...result,
+      calls: existsSync(callsPath)
+        ? readFileSync(callsPath, 'utf8').trim().split('\n').map(JSON.parse)
+        : [],
+      summary: existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '',
+    };
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+test('container maintenance preserves policy freshness, isolation and export-only execution', () => {
+  const result = maintain();
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.summary, /Open Dependabot PRs: 1/);
+  const execute = result.calls.find(
+    (call) => call.command === 'docker' && call.args.includes('--rebase-branch'),
+  );
+  assert.ok(execute);
+  assert.deepEqual(execute.args.slice(-6), [
+    '--rebase-branch',
+    'maintenance/dependencies',
+    '--onto',
+    'main',
+    '--validation',
+    'pnpm',
+  ]);
+  assert.ok(execute.args.includes('GREENKEEPER_POLICY_REVISION'));
+  assert.ok(execute.args.includes('GREENKEEPER_EXPORT_ONLY'));
+  assert.ok(execute.args.includes('FUSION_AI_TOKEN'));
+  assert.ok(execute.args.includes('FUSION_APM_TOKEN'));
+  assert.doesNotMatch(
+    JSON.stringify(execute.args),
+    /read-fixture|ai-fixture|apm-fixture|publisher-fixture/,
+  );
+  const mounts = execute.args.filter((_arg, index) => execute.args[index - 1] === '--mount');
+  assert.ok(mounts.includes('type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock'));
+  assert.ok(mounts.some((arg) => arg.endsWith('target=/tasks,readonly')));
+  const scratchMount = mounts.find((arg) => /source=.*greenkeeper-maintenance\./.test(arg));
+  assert.ok(scratchMount);
+  const [, source, target] = scratchMount.split(',');
+  assert.equal(source.replace('source=', ''), target.replace('target=', ''));
+  assert.ok(result.calls.every((call) => !call.args.includes('POST')));
+});
+
+for (const comparison of ['ahead', 'identical']) {
+  test(`current dependency stream (${comparison}) does not start rebase or agents`, () => {
+    const result = maintain({ COMPARISON: comparison });
+    assert.equal(result.status, 0, result.stderr);
+    assert.ok(result.calls.every((call) => !call.args.includes('--rebase-branch')));
   });
 }
+
+test('export-only missing stream is proposed, not created', () => {
+  const result = maintain({ MISSING_BRANCH: 'true' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.summary, /proposes creation/);
+  assert.ok(
+    result.calls.every(
+      (call) => !call.args.includes('POST') && !call.args.includes('--rebase-branch'),
+    ),
+  );
+});
+
+test('production creation uses only the publisher and rechecks the default branch', () => {
+  const result = maintain({
+    PREVIEW_POLICY_REVISION: '',
+    GITHUB_REF: 'refs/heads/main',
+    EXPORT_ONLY: 'false',
+    GREENKEEPER_PUBLISH_TOKEN: 'publisher-fixture',
+    MISSING_BRANCH: 'true',
+  });
+  assert.equal(result.status, 0, result.stderr);
+  const posts = result.calls.filter((call) => call.args.includes('POST'));
+  assert.equal(posts.length, 1);
+  assert.equal(posts[0].publisher, true);
+  assert.ok(
+    result.calls.filter((call) => !call.args.includes('POST')).every((call) => !call.publisher),
+  );
+});
+
+test('default-branch movement prevents missing stream creation', () => {
+  const result = maintain({
+    PREVIEW_POLICY_REVISION: '',
+    GITHUB_REF: 'refs/heads/main',
+    EXPORT_ONLY: 'false',
+    GREENKEEPER_PUBLISH_TOKEN: 'publisher-fixture',
+    MISSING_BRANCH: 'true',
+    DEFAULT_MOVED: 'true',
+  });
+  assert.notEqual(result.status, 0);
+  assert.ok(result.calls.every((call) => !call.args.includes('POST')));
+});
+
+for (const [name, overrides] of [
+  ['untrusted event', { GITHUB_EVENT_NAME: 'pull_request' }],
+  ['non-default production ref', { PREVIEW_POLICY_REVISION: '' }],
+  [
+    'mutable orchestrator image',
+    { ORCHESTRATOR_IMAGE: 'ghcr.io/equinor/fusion-poc-greenkeeper:latest' },
+  ],
+  ['wrong preview SHA', { PREVIEW_POLICY_REVISION: 'e'.repeat(40) }],
+  ['preview publisher', { GREENKEEPER_PUBLISH_TOKEN: 'publisher-fixture' }],
+  [
+    'missing production publisher',
+    { EXPORT_ONLY: 'false', PREVIEW_POLICY_REVISION: '', GITHUB_REF: 'refs/heads/main' },
+  ],
+]) {
+  test(`container guard rejects ${name} before any external operation`, () => {
+    const result = maintain(overrides);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /::error::/);
+    assert.deepEqual(result.calls, []);
+  });
+}
+
+test('container execution failures propagate instead of reporting maintenance success', () => {
+  const result = maintain({ EXECUTE_FAILURE: 'true' });
+  assert.equal(result.status, 17);
+});

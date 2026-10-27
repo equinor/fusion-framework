@@ -47,31 +47,15 @@ jobs:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
 
-      - name: Validate reviewed runner pin
-        shell: bash
-        env:
-          RUNNER_REF: ${{ vars.GREENKEEPER_RUNNER_REF }}
-        run: |
-          [[ "$RUNNER_REF" =~ ^[0-9a-f]{40}$ ]] ||
-            { echo "::error::Set GREENKEEPER_RUNNER_REF to a reviewed full commit SHA."; exit 1; }
-
-      - name: Check out private runner source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          repository: equinor/fusion-poc-greenkeeper
-          ref: ${{ vars.GREENKEEPER_RUNNER_REF }}
-          token: ${{ secrets.GREENKEEPER_SOURCE_TOKEN }}
-          path: .greenkeeper
-          persist-credentials: false
-
       - name: Maintain dependency stream in Framework
         uses: ./.github/actions/greenkeeper-maintenance
         with:
           task: dependency
           export-only: ${{ github.event_name == 'workflow_dispatch' && inputs.export-only && 'true' || 'false' }}
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
+          orchestrator-image: ${{ vars.GREENKEEPER_ORCHESTRATOR_IMAGE }}
           image: ${{ vars.GREENKEEPER_IMAGE }}
           gateway-image: ${{ vars.GREENKEEPER_GATEWAY_IMAGE }}
           github-token: ${{ github.token }}
           apm-token: ${{ secrets.APM_FUSION_SKILLS_TOKEN }}
-          publish-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
+          publish-token: ${{ (github.event_name == 'push' || !inputs.export-only) && secrets.DEPENDABOT_AUTOMATION_TOKEN || '' }}

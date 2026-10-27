@@ -24,8 +24,8 @@ on:
         description: Run the manual export-only Greenkeeper smoke test on this workflow's exact branch commit
         type: boolean
         default: false
-      greenkeeper_runner_ref:
-        description: Reviewed full runner commit SHA supporting candidate-policy previews
+      greenkeeper_orchestrator_image:
+        description: Reviewed immutable trusted orchestrator image for the smoke test
         type: string
         default: ''
       greenkeeper_image:
@@ -207,18 +207,17 @@ jobs:
         shell: bash
         env:
           CANDIDATE_SHA: ${{ inputs.head_sha }}
-          RUNNER_REF: ${{ inputs.greenkeeper_runner_ref }}
+          ORCHESTRATOR_IMAGE: ${{ inputs.greenkeeper_orchestrator_image }}
           SANDBOX_IMAGE: ${{ inputs.greenkeeper_image }}
           GATEWAY_IMAGE: ${{ inputs.greenkeeper_gateway_image }}
         run: |
           set -euo pipefail
           [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ && "$CANDIDATE_SHA" == "$GITHUB_SHA" ]] ||
             { echo "::error::Dispatch on the reviewed candidate branch with head_sha equal to its exact event SHA."; exit 1; }
-          [[ "$RUNNER_REF" =~ ^[0-9a-f]{40}$ ]] ||
-            { echo "::error::Supply the reviewed full runner commit SHA."; exit 1; }
-          [[ "$SANDBOX_IMAGE" =~ ^ghcr\.io/equinor/fusion-poc-greenkeeper@sha256:[a-f0-9]{64}$ &&
+          [[ "$ORCHESTRATOR_IMAGE" =~ ^ghcr\.io/equinor/fusion-poc-greenkeeper@sha256:[a-f0-9]{64}$ &&
+             "$SANDBOX_IMAGE" =~ ^ghcr\.io/equinor/fusion-poc-greenkeeper@sha256:[a-f0-9]{64}$ &&
              "$GATEWAY_IMAGE" =~ ^ghcr\.io/equinor/fusion-poc-greenkeeper@sha256:[a-f0-9]{64}$ ]] ||
-            { echo "::error::Supply reviewed immutable sandbox and gateway image digests."; exit 1; }
+            { echo "::error::Supply reviewed immutable orchestrator, sandbox and gateway image digests."; exit 1; }
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -232,15 +231,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Verify both pinned images can be pulled before source checkout
+      - name: Verify all pinned images can be pulled
         shell: bash
         env:
           SANDBOX_IMAGE: ${{ inputs.greenkeeper_image }}
           GATEWAY_IMAGE: ${{ inputs.greenkeeper_gateway_image }}
+          ORCHESTRATOR_IMAGE: ${{ inputs.greenkeeper_orchestrator_image }}
         run: |
           set -euo pipefail
           failed=0
-          for image in "$SANDBOX_IMAGE" "$GATEWAY_IMAGE"; do
+          for image in "$ORCHESTRATOR_IMAGE" "$SANDBOX_IMAGE" "$GATEWAY_IMAGE"; do
             if docker pull "$image"; then
               echo "GHCR pull verified: $image"
             else
@@ -250,22 +250,6 @@ jobs:
           done
           exit "$failed"
 
-      - name: Diagnose private runner source access without exposing the token
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GREENKEEPER_SOURCE_TOKEN }}
-          RUNNER_REF: ${{ inputs.greenkeeper_runner_ref }}
-        run: bash .github/actions/greenkeeper-maintenance/check-source-access.sh
-
-      - name: Check out reviewed runner using the dedicated source credential
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          repository: equinor/fusion-poc-greenkeeper
-          ref: ${{ inputs.greenkeeper_runner_ref }}
-          token: ${{ secrets.GREENKEEPER_SOURCE_TOKEN }}
-          path: .greenkeeper
-          persist-credentials: false
-
       - name: Test maintenance without a publishing credential
         uses: ./.github/actions/greenkeeper-maintenance
         with:
@@ -273,6 +257,7 @@ jobs:
           export-only: 'true'
           preview-policy-revision: ${{ inputs.head_sha }}
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
+          orchestrator-image: ${{ inputs.greenkeeper_orchestrator_image }}
           image: ${{ inputs.greenkeeper_image }}
           gateway-image: ${{ inputs.greenkeeper_gateway_image }}
           github-token: ${{ github.token }}
