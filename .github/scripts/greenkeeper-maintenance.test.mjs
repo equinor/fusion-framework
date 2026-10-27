@@ -6,10 +6,8 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { runInNewContext } from 'node:vm';
 
-const providerScript = new URL(
-  '../actions/greenkeeper-maintenance/prepare-provider.sh',
-  import.meta.url,
-).pathname;
+const tokenScript = new URL('../actions/greenkeeper-maintenance/acquire-token.sh', import.meta.url)
+  .pathname;
 const workflow = readFileSync(
   new URL('../workflows/greenkeeper-maintenance.yml', import.meta.url),
   'utf8',
@@ -22,77 +20,95 @@ const action = readFileSync(
   new URL('../actions/greenkeeper-maintenance/action.yml', import.meta.url),
   'utf8',
 );
-const validProvider = [
-  'export COPILOT_PROVIDER_BEARER_TOKEN=fixture-token',
-  'export COPILOT_PROVIDER_BASE_URL=https://ai.api.fusion.equinor.com/openai/v1',
-].join('\n');
-
-function prepare(provider = validProvider, overrides = {}) {
-  const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-provider-test-'));
-  const providerPath = join(directory, 'copilot-provider-fixture.env');
+function acquire(token = 'fixture-token', overrides = {}) {
+  const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-token-test-'));
   const outputPath = join(directory, 'output');
-  if (provider !== null) {
-    writeFileSync(providerPath, provider, { mode: 0o600 });
-  }
+  const callsPath = join(directory, 'calls');
+  writeFileSync(
+    join(directory, 'az'),
+    `#!${process.execPath}
+const fs = require('node:fs');
+fs.appendFileSync(process.env.CALLS_PATH, JSON.stringify(process.argv.slice(2)) + '\\n');
+if (process.env.AZ_FAILURE === 'true') {
+  console.error('Azure token acquisition failed');
+  process.exit(1);
+}
+process.stdout.write(process.env.FIXTURE_TOKEN);
+`,
+    { mode: 0o755 },
+  );
   try {
-    const result = spawnSync('bash', [providerScript], {
+    const result = spawnSync('bash', [tokenScript], {
       encoding: 'utf8',
       env: {
         ...process.env,
+        PATH: `${directory}:${process.env.PATH}`,
         RUNNER_TEMP: directory,
-        PROVIDER_ENV: providerPath,
+        AZURE_CONFIG_DIR: join(directory, 'greenkeeper-azure'),
         GITHUB_OUTPUT: outputPath,
-        COPILOT_PROVIDER_BEARER_TOKEN: '',
-        COPILOT_PROVIDER_BASE_URL: '',
+        CALLS_PATH: callsPath,
+        FIXTURE_TOKEN: token,
+        AZ_FAILURE: 'false',
         ...overrides,
       },
     });
     return {
       ...result,
       output: existsSync(outputPath) ? readFileSync(outputPath, 'utf8') : '',
-      providerRemains: existsSync(providerPath),
+      calls: existsSync(callsPath)
+        ? readFileSync(callsPath, 'utf8').trim().split('\n').map(JSON.parse)
+        : [],
     };
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
 }
 
-test('consumes and deletes the caller-acquired provider file within the same job', () => {
-  const result = prepare();
+test('acquires only the Fusion AI token with the existing caller Azure session', () => {
+  const result = acquire();
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(
-    result.output,
-    'token=fixture-token\nbase-url=https://ai.api.fusion.equinor.com/openai/v1\n',
-  );
-  assert.equal(result.providerRemains, false);
+  assert.equal(result.output, 'token=fixture-token\n');
+  assert.deepEqual(result.calls, [
+    [
+      'account',
+      'get-access-token',
+      '--scope',
+      '0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default',
+      '--query',
+      'accessToken',
+      '--output',
+      'tsv',
+    ],
+  ]);
   assert.equal(result.stdout, '::add-mask::fixture-token\n');
 });
 
-for (const [name, provider] of [
-  ['missing provider file', null],
-  ['missing token', 'export COPILOT_PROVIDER_BASE_URL=https://example.com'],
-  [
-    'insecure endpoint',
-    'export COPILOT_PROVIDER_BEARER_TOKEN=fixture-token\nexport COPILOT_PROVIDER_BASE_URL=http://example.com',
-  ],
-  [
-    'multiline token',
-    "export COPILOT_PROVIDER_BEARER_TOKEN=$'first\\nsecond'\nexport COPILOT_PROVIDER_BASE_URL=https://example.com",
-  ],
+for (const [name, token] of [
+  ['empty token', ''],
+  ['multiline token', 'first\nsecond'],
+  ['carriage return', 'first\rsecond'],
 ]) {
   test(`rejects ${name} without exporting a credential`, () => {
-    const result = prepare(provider);
+    const result = acquire(token);
     assert.notEqual(result.status, 0);
     assert.equal(result.output, '');
-    assert.equal(result.providerRemains, false);
+    assert.doesNotMatch(result.stdout, /::add-mask::/);
   });
 }
 
-test('refuses an unexpected provider path without deleting the actual provider file', () => {
-  const result = prepare(validProvider, { PROVIDER_ENV: '/not-a-provider-file' });
+test('rejects a nonisolated Azure configuration before requesting a token', () => {
+  const result = acquire('fixture-token', { AZURE_CONFIG_DIR: '/unexpected-azure-session' });
   assert.notEqual(result.status, 0);
   assert.equal(result.output, '');
-  assert.equal(result.providerRemains, true);
+  assert.deepEqual(result.calls, []);
+});
+
+test('propagates Azure acquisition failures without exporting a token', () => {
+  const result = acquire('fixture-token', { AZ_FAILURE: 'true' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Azure token acquisition failed/);
+  assert.equal(result.output, '');
+  assert.doesNotMatch(result.stdout, /fixture-token/);
 });
 
 function jobCondition(source, name, github, enabled) {
@@ -204,14 +220,20 @@ test('authentication belongs to Framework and the runner receives separate read,
   assert.match(workflow, /github-token: \$\{\{ github\.token \}\}/);
   assert.match(workflow, /apm-token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
   assert.match(workflow, /publish-token: \$\{\{ secrets\.DEPENDABOT_AUTOMATION_TOKEN \}\}/);
-  assert.match(action, /uses: \.\/\.github\/actions\/setup-copilot-fusion-ai/);
+  assert.match(action, /uses: azure\/login@[0-9a-f]{40}/);
+  assert.match(action, /client-id: \$\{\{ inputs\.client-id \}\}/);
+  assert.match(action, /if: always\(\)/);
+  assert.ok(
+    action.indexOf('az logout') < action.indexOf('name: Run shared dependency maintenance'),
+  );
+  assert.match(action, /az account clear/);
   assert.match(action, /uses: \.\/\.greenkeeper\/\.github\/actions\/maintenance/);
-  assert.match(action, /fusion-ai-token: \$\{\{ steps\.provider\.outputs\.token \}\}/);
+  assert.match(action, /fusion-ai-token: \$\{\{ steps\.ai\.outputs\.token \}\}/);
   assert.match(action, /apm-token: \$\{\{ inputs\.apm-token \}\}/);
   assert.match(action, /publish-token: \$\{\{ inputs\.publish-token \}\}/);
   assert.doesNotMatch(
     `${workflow}\n${action}`,
-    /gh workflow run|dispatch_token|Actions write|environment: greenkeeper/,
+    /gh workflow run|dispatch_token|Actions write|environment: greenkeeper|setup-copilot|install-copilot|COPILOT_PROVIDER|provider-env/,
   );
   assert.doesNotMatch(workflow, /^ {4}outputs:/m);
 });

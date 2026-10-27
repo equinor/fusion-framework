@@ -30,19 +30,31 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Acquire AI access using Framework's existing identity
-      id: fusion
-      uses: ./.github/actions/setup-copilot-fusion-ai
+    - name: Authenticate with Framework's existing identity
+      uses: azure/login@0949e32778441b2c442592b7a0e6313466dc8f29 # v3.0.2
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
       with:
         client-id: ${{ inputs.client-id }}
-        wire-model: gpt-6.1-sol
+        tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+        allow-no-subscriptions: true
 
-    - name: Consume short-lived provider credentials in this job
-      id: provider
+    - name: Acquire the short-lived Fusion AI token
+      id: ai
       shell: bash
       env:
-        PROVIDER_ENV: ${{ steps.fusion.outputs.provider-env }}
-      run: bash "$GITHUB_ACTION_PATH/prepare-provider.sh"
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
+      run: bash "$GITHUB_ACTION_PATH/acquire-token.sh"
+
+    - name: Clear Framework's Azure session before running maintenance
+      if: always()
+      shell: bash
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
+      run: |
+        set -euo pipefail
+        az logout
+        az account clear
 
     - name: Run shared dependency maintenance
       uses: ./.greenkeeper/.github/actions/maintenance
@@ -55,5 +67,5 @@ runs:
         github-token: ${{ inputs.github-token }}
         apm-token: ${{ inputs.apm-token }}
         publish-token: ${{ inputs.publish-token }}
-        fusion-ai-token: ${{ steps.provider.outputs.token }}
-        fusion-ai-base-url: ${{ steps.provider.outputs.base-url }}
+        fusion-ai-token: ${{ steps.ai.outputs.token }}
+        fusion-ai-base-url: https://ai.api.fusion.equinor.com/openai/v1

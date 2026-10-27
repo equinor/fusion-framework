@@ -99,7 +99,8 @@ Full final validation and an exact-head lease precede a runner rewrite.
 This is not permission to resolve individual Dependabot PR conflicts automatically in the write-enabled
 Framework job, nor permission to merge to `main`.
 
-Framework's existing authentication action acquires AI credentials in the caller job. The shared runner is
+Framework uses its existing identity for Azure login and AI-token acquisition only, without installing
+or configuring Copilot. Azure session cleanup precedes runner execution. The shared runner is
 checked out at a reviewed full commit and invoked with local `uses:`; Greenkeeper needs no federated SP
 or Actions write grant. `DEPENDABOT_AUTOMATION_TOKEN` remains the host-only Framework publishing credential,
 while `github.token` and `APM_FUSION_SKILLS_TOKEN` provide separate read-only access.

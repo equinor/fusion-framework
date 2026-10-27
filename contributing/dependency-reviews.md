@@ -60,11 +60,13 @@ Inventory does not research, retarget or merge PRs; the existing integration pip
 ### Execution and credentials
 
 Execution stays in Framework's existing protected `docs` environment. The local
-[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) reuses
-[`setup-copilot-fusion-ai`](../.github/actions/setup-copilot-fusion-ai/action.yml), including Framework's
-existing federation, discovery, token acquisition and Azure-session cleanup. The provider file is consumed
-and deleted before invoking the runner. Masked step outputs carry the token only within this job;
-there is no cross-job token output, dispatch input or token artifact.
+[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) uses Azure OIDC login
+with Framework's existing identity and acquires only a short-lived token for the Fusion AI scope
+`0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default`.
+It does not install or configure Copilot, resolve a model, or create a provider file.
+Azure logout and account cleanup run even on failure, before invoking the shared runner.
+Masked step outputs carry the token only within this job; there is no cross-job token output,
+dispatch input or token artifact.
 
 Framework is public and the runner repository is private, so a direct private reusable-workflow reference
 is unavailable. Check out the reviewed full `GREENKEEPER_RUNNER_REF` into `.greenkeeper` and invoke
