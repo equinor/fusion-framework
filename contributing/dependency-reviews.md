@@ -123,10 +123,12 @@ and `pr_number` identifying the PR. Supply `greenkeeper_runner_ref`, `greenkeepe
 preview support; the previously merged runner cannot execute this preview yet.
 
 The smoke job uses Framework's existing `docs` identity and obtains only the AI token.
-Private runner checkout uses `APM_FUSION_SKILLS_TOKEN`, which needs read access to Greenkeeper;
-the job token needs access to the reviewed GHCR images. Missing grants fail explicitly and must be fixed
-through approved administration, never by passing the publishing token instead.
-Neither `DEPENDABOT_AUTOMATION_TOKEN` nor any `publish-token` is supplied to the smoke job.
+Private runner checkout uses the existing `DEPENDABOT_AUTOMATION_TOKEN` only in the host checkout step,
+with credential persistence disabled. This read operation requires Contents read on Greenkeeper.
+The credential is not passed to the maintenance action, runner, agent or APM preparation.
+`APM_FUSION_SKILLS_TOKEN` remains the read-only APM credential, and the job token needs access to the
+reviewed GHCR images. Missing grants fail explicitly; there is no fallback to a stronger credential.
+No `publish-token` is supplied to the smoke runner.
 
 The runner accepts the candidate policy only for manual export-only execution at the exact caller event SHA
 without a publishing credential. It still compares and validates against the current default branch,
