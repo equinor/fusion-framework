@@ -60,7 +60,7 @@ jobs:
         with:
           repository: equinor/fusion-poc-greenkeeper
           ref: ${{ vars.GREENKEEPER_RUNNER_REF }}
-          token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
+          token: ${{ secrets.GREENKEEPER_SOURCE_TOKEN }}
           path: .greenkeeper
           persist-credentials: false
 

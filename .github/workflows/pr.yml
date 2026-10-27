@@ -225,12 +225,12 @@ jobs:
           ref: ${{ inputs.head_sha }}
           persist-credentials: false
 
-      - name: Check out reviewed runner using the existing host automation credential
+      - name: Check out reviewed runner using the dedicated source credential
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: equinor/fusion-poc-greenkeeper
           ref: ${{ inputs.greenkeeper_runner_ref }}
-          token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
+          token: ${{ secrets.GREENKEEPER_SOURCE_TOKEN }}
           path: .greenkeeper
           persist-credentials: false
 

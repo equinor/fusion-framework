@@ -222,6 +222,9 @@ test('authentication belongs to Framework and the runner receives separate read,
   assert.match(workflow, /github-token: \$\{\{ github\.token \}\}/);
   assert.match(workflow, /apm-token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
   assert.match(workflow, /publish-token: \$\{\{ secrets\.DEPENDABOT_AUTOMATION_TOKEN \}\}/);
+  assert.match(workflow, /token: \$\{\{ secrets\.GREENKEEPER_SOURCE_TOKEN \}\}/);
+  assert.equal((workflow.match(/DEPENDABOT_AUTOMATION_TOKEN/g) ?? []).length, 1);
+  assert.doesNotMatch(action, /GREENKEEPER_SOURCE_TOKEN/);
   assert.match(action, /uses: azure\/login@[0-9a-f]{40}/);
   assert.match(action, /client-id: \$\{\{ inputs\.client-id \}\}/);
   assert.match(action, /if: always\(\)/);
@@ -271,13 +274,13 @@ test('pre-merge smoke test requires explicit manual selection and never receives
   assert.match(smoke, /"\$CANDIDATE_SHA" == "\$GITHUB_SHA"/);
   assert.match(smoke, /export-only: 'true'/);
   assert.match(smoke, /preview-policy-revision: \$\{\{ inputs\.head_sha \}\}/);
-  assert.match(smoke, /token: \$\{\{ secrets\.DEPENDABOT_AUTOMATION_TOKEN \}\}/);
-  assert.equal((smoke.match(/DEPENDABOT_AUTOMATION_TOKEN/g) ?? []).length, 1);
-  assert.doesNotMatch(smoke, /publish-token:|contents: write/);
+  assert.match(smoke, /token: \$\{\{ secrets\.GREENKEEPER_SOURCE_TOKEN \}\}/);
+  assert.equal((smoke.match(/GREENKEEPER_SOURCE_TOKEN/g) ?? []).length, 1);
+  assert.doesNotMatch(smoke, /publish-token:|DEPENDABOT_AUTOMATION_TOKEN|contents: write/);
   const execution = smoke.split('- name: Test maintenance without a publishing credential')[1];
   assert.ok(execution);
   assert.match(execution, /apm-token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
-  assert.doesNotMatch(execution, /DEPENDABOT_AUTOMATION_TOKEN/);
+  assert.doesNotMatch(execution, /DEPENDABOT_AUTOMATION_TOKEN|GREENKEEPER_SOURCE_TOKEN/);
   assert.match(action, /preview-policy-revision: \$\{\{ inputs\.preview-policy-revision \}\}/);
 });
 

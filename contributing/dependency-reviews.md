@@ -77,8 +77,9 @@ Credentials have separate purposes:
 
 - `github.token`: Framework Contents/Pull requests read, plus approved GHCR package reads.
 - `APM_FUSION_SKILLS_TOKEN`: the existing read-only private skills credential.
-- `DEPENDABOT_AUTOMATION_TOKEN`: the existing host-only publisher with Contents write on Framework's stream;
-  also used for private runner-source checkout, which needs only Contents read on Greenkeeper.
+- `GREENKEEPER_SOURCE_TOKEN`: dedicated Contents-read access to private runner source in Greenkeeper;
+  used only for checkout with credential persistence disabled.
+- `DEPENDABOT_AUTOMATION_TOKEN`: the existing host-only publisher with Contents write on Framework's stream.
 
 The publishing token must never be substituted for the APM credential or passed into the agent.
 No token values need to be inspected. Runner journals and bundles stay in the transient runner workspace;
@@ -123,7 +124,7 @@ and `pr_number` identifying the PR. Supply `greenkeeper_runner_ref`, `greenkeepe
 preview support; the previously merged runner cannot execute this preview yet.
 
 The smoke job uses Framework's existing `docs` identity and obtains only the AI token.
-Private runner checkout uses the existing `DEPENDABOT_AUTOMATION_TOKEN` only in the host checkout step,
+Private runner checkout uses `GREENKEEPER_SOURCE_TOKEN` only in the host checkout step,
 with credential persistence disabled. This read operation requires Contents read on Greenkeeper.
 The credential is not passed to the maintenance action, runner, agent or APM preparation.
 `APM_FUSION_SKILLS_TOKEN` remains the read-only APM credential, and the job token needs access to the
