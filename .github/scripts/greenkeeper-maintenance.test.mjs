@@ -6,8 +6,10 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { runInNewContext } from 'node:vm';
 
-const requestScript = new URL('../actions/greenkeeper-maintenance/request.sh', import.meta.url)
-  .pathname;
+const providerScript = new URL(
+  '../actions/greenkeeper-maintenance/prepare-provider.sh',
+  import.meta.url,
+).pathname;
 const workflow = readFileSync(
   new URL('../workflows/greenkeeper-maintenance.yml', import.meta.url),
   'utf8',
@@ -16,109 +18,81 @@ const legacyWorkflow = readFileSync(
   new URL('../workflows/dependabot-maintenance.yml', import.meta.url),
   'utf8',
 );
+const action = readFileSync(
+  new URL('../actions/greenkeeper-maintenance/action.yml', import.meta.url),
+  'utf8',
+);
+const validProvider = [
+  'export COPILOT_PROVIDER_BEARER_TOKEN=fixture-token',
+  'export COPILOT_PROVIDER_BASE_URL=https://ai.api.fusion.equinor.com/openai/v1',
+].join('\n');
 
-function request(overrides = {}, reject = false) {
-  const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-request-test-'));
-  const callsPath = join(directory, 'calls.jsonl');
-  const summaryPath = join(directory, 'summary');
-  writeFileSync(callsPath, '');
-  writeFileSync(
-    join(directory, 'gh'),
-    `#!${process.execPath}
-import { appendFileSync } from 'node:fs';
-appendFileSync(process.env.CALLS_PATH, JSON.stringify({
-  args: process.argv.slice(2),
-  authorized: process.env.GH_TOKEN === 'fixture-automation'
-}) + '\\n');
-if (process.env.REJECT_REQUEST === 'true') {
-  console.error('Dispatch authorization denied');
-  process.exit(1);
-}
-`,
-    { mode: 0o755 },
-  );
+function prepare(provider = validProvider, overrides = {}) {
+  const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-provider-test-'));
+  const providerPath = join(directory, 'copilot-provider-fixture.env');
+  const outputPath = join(directory, 'output');
+  if (provider !== null) {
+    writeFileSync(providerPath, provider, { mode: 0o600 });
+  }
   try {
-    const result = spawnSync('bash', [requestScript], {
+    const result = spawnSync('bash', [providerScript], {
       encoding: 'utf8',
       env: {
         ...process.env,
-        PATH: `${directory}:${process.env.PATH}`,
-        CALLS_PATH: callsPath,
-        GITHUB_STEP_SUMMARY: summaryPath,
-        GITHUB_REF: 'refs/heads/main',
-        DEFAULT_BRANCH: 'main',
-        GITHUB_EVENT_NAME: 'push',
-        REPOSITORY: 'equinor/fusion-framework',
-        GH_TOKEN: 'fixture-automation',
-        TASK: 'dependency',
-        EXPORT_ONLY: 'true',
-        REJECT_REQUEST: String(reject),
+        RUNNER_TEMP: directory,
+        PROVIDER_ENV: providerPath,
+        GITHUB_OUTPUT: outputPath,
+        COPILOT_PROVIDER_BEARER_TOKEN: '',
+        COPILOT_PROVIDER_BASE_URL: '',
         ...overrides,
       },
     });
-    const calls = readFileSync(callsPath, 'utf8')
-      .trim()
-      .split('\n')
-      .filter(Boolean)
-      .map(JSON.parse);
-    const summary = existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
-    return { ...result, calls, summary };
+    return {
+      ...result,
+      output: existsSync(outputPath) ? readFileSync(outputPath, 'utf8') : '',
+      providerRemains: existsSync(providerPath),
+    };
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
 }
 
-for (const exportOnly of ['true', 'false']) {
-  test(`dispatches dependency maintenance with export-only=${exportOnly}`, () => {
-    const result = request({ EXPORT_ONLY: exportOnly });
-    assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(result.calls, [
-      {
-        authorized: true,
-        args: [
-          'workflow',
-          'run',
-          'maintenance.yml',
-          '--repo',
-          'equinor/fusion-poc-greenkeeper',
-          '--ref',
-          'main',
-          '-f',
-          'repository=equinor/fusion-framework',
-          '-f',
-          'task=dependency',
-          '-f',
-          `export_only=${exportOnly}`,
-        ],
-      },
-    ]);
-    assert.match(result.summary, /Dispatch acceptance is not execution or validation success/);
-  });
-}
+test('consumes and deletes the caller-acquired provider file within the same job', () => {
+  const result = prepare();
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(
+    result.output,
+    'token=fixture-token\nbase-url=https://ai.api.fusion.equinor.com/openai/v1\n',
+  );
+  assert.equal(result.providerRemains, false);
+  assert.equal(result.stdout, '::add-mask::fixture-token\n');
+});
 
-for (const [name, value] of [
-  ['GH_TOKEN', ''],
-  ['GITHUB_REF', 'refs/heads/feature'],
-  ['GITHUB_EVENT_NAME', 'pull_request'],
-  ['GITHUB_EVENT_NAME', 'pull_request_target'],
-  ['TASK', 'unknown'],
-  ['EXPORT_ONLY', 'yes'],
-  ['REPOSITORY', 'outside/repository'],
+for (const [name, provider] of [
+  ['missing provider file', null],
+  ['missing token', 'export COPILOT_PROVIDER_BASE_URL=https://example.com'],
+  [
+    'insecure endpoint',
+    'export COPILOT_PROVIDER_BEARER_TOKEN=fixture-token\nexport COPILOT_PROVIDER_BASE_URL=http://example.com',
+  ],
+  [
+    'multiline token',
+    "export COPILOT_PROVIDER_BEARER_TOKEN=$'first\\nsecond'\nexport COPILOT_PROVIDER_BASE_URL=https://example.com",
+  ],
 ]) {
-  test(`rejects invalid ${name} without dispatching`, () => {
-    const result = request({ [name]: value });
+  test(`rejects ${name} without exporting a credential`, () => {
+    const result = prepare(provider);
     assert.notEqual(result.status, 0);
-    assert.deepEqual(result.calls, []);
-    assert.equal(result.summary, '');
+    assert.equal(result.output, '');
+    assert.equal(result.providerRemains, false);
   });
 }
 
-test('dispatch authorization failure does not produce a success summary', () => {
-  const result = request({}, true);
+test('refuses an unexpected provider path without deleting the actual provider file', () => {
+  const result = prepare(validProvider, { PROVIDER_ENV: '/not-a-provider-file' });
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /Dispatch authorization denied/);
-  assert.equal(result.calls.length, 1);
-  assert.equal(result.summary, '');
+  assert.equal(result.output, '');
+  assert.equal(result.providerRemains, true);
 });
 
 function jobCondition(source, name, github, enabled) {
@@ -138,7 +112,7 @@ function jobCondition(source, name, github, enabled) {
   );
 }
 
-test('automatic requests publish while manual requests honor the explicit export choice', () => {
+test('automatic maintenance publishes while manual maintenance honors the explicit export choice', () => {
   const expression = workflow.match(/export-only: \$\{\{ (.+) \}\}/)?.[1];
   assert.ok(expression);
   for (const [event, exportOnly, expected] of [
@@ -146,15 +120,17 @@ test('automatic requests publish while manual requests honor the explicit export
     ['workflow_dispatch', true, 'true'],
     ['workflow_dispatch', false, 'false'],
   ]) {
-    const result = runInNewContext(
-      expression.replaceAll('inputs.export-only', 'inputs["export-only"]'),
-      {
-        github: { event_name: event },
-        inputs: { 'export-only': exportOnly },
-      },
-      { timeout: 100 },
+    assert.equal(
+      runInNewContext(
+        expression.replaceAll('inputs.export-only', 'inputs["export-only"]'),
+        {
+          github: { event_name: event },
+          inputs: { 'export-only': exportOnly },
+        },
+        { timeout: 100 },
+      ),
+      expected,
     );
-    assert.equal(result, expected);
   }
 });
 
@@ -166,24 +142,24 @@ for (const enabled of ['', 'false', 'true']) {
       event: { repository: { default_branch: 'main' } },
     };
     const legacy = jobCondition(legacyWorkflow, 'manage-branch', github, enabled);
-    const service = jobCondition(workflow, 'request', github, enabled);
-    assert.equal(Number(legacy) + Number(service), 1);
-    assert.equal(service, enabled === 'true');
-    assert.equal(jobCondition(workflow, 'disabled', github, enabled), !service);
+    const runner = jobCondition(workflow, 'maintain', github, enabled);
+    assert.equal(Number(legacy) + Number(runner), 1);
+    assert.equal(runner, enabled === 'true');
+    assert.equal(jobCondition(workflow, 'disabled', github, enabled), !runner);
   });
 }
 
-test('manual export and legacy recovery remain available without enabling the automatic handover', () => {
+test('manual exports and legacy recovery remain available before activation', () => {
   const github = {
     event_name: 'workflow_dispatch',
     ref: 'refs/heads/main',
     event: { repository: { default_branch: 'main' } },
   };
-  assert.equal(jobCondition(workflow, 'request', github, ''), true);
+  assert.equal(jobCondition(workflow, 'maintain', github, ''), true);
   assert.equal(jobCondition(legacyWorkflow, 'manage-branch', github, 'true'), true);
 });
 
-test('service handover preserves maintenance-branch pushes and deletion recovery', () => {
+test('handover preserves stream pushes and deletion recovery', () => {
   for (const event of ['push', 'delete']) {
     const github = {
       event_name: event,
@@ -195,29 +171,58 @@ test('service handover preserves maintenance-branch pushes and deletion recovery
       },
     };
     assert.equal(jobCondition(legacyWorkflow, 'manage-branch', github, 'true'), true);
-    assert.equal(jobCondition(workflow, 'request', github, 'true'), false);
+    assert.equal(jobCondition(workflow, 'maintain', github, 'true'), false);
   }
 });
 
-test('host policy preserves the existing Dependabot stream and the caller uses only the external credential', () => {
+test('non-default branches and PR events cannot acquire Framework credentials', () => {
+  for (const [event, ref] of [
+    ['workflow_dispatch', 'refs/heads/feature'],
+    ['pull_request', 'refs/heads/main'],
+    ['pull_request_target', 'refs/heads/main'],
+  ]) {
+    assert.equal(
+      jobCondition(
+        workflow,
+        'maintain',
+        {
+          event_name: event,
+          ref,
+          event: { repository: { default_branch: 'main' } },
+        },
+        'true',
+      ),
+      false,
+    );
+  }
+});
+
+test('authentication belongs to Framework and the runner receives separate read, APM and caller-write credentials', () => {
+  assert.match(workflow, /environment: docs/);
+  assert.match(workflow, /id-token: write/);
+  assert.match(workflow, /client-id: \$\{\{ vars\.FUSION_AI_SP_CLIENT_ID \}\}/);
+  assert.match(workflow, /github-token: \$\{\{ github\.token \}\}/);
+  assert.match(workflow, /apm-token: \$\{\{ secrets\.APM_FUSION_SKILLS_TOKEN \}\}/);
+  assert.match(workflow, /publish-token: \$\{\{ secrets\.DEPENDABOT_AUTOMATION_TOKEN \}\}/);
+  assert.match(action, /uses: \.\/\.github\/actions\/setup-copilot-fusion-ai/);
+  assert.match(action, /uses: \.\/\.greenkeeper\/\.github\/actions\/maintenance/);
+  assert.match(action, /fusion-ai-token: \$\{\{ steps\.provider\.outputs\.token \}\}/);
+  assert.match(action, /apm-token: \$\{\{ inputs\.apm-token \}\}/);
+  assert.match(action, /publish-token: \$\{\{ inputs\.publish-token \}\}/);
+  assert.doesNotMatch(
+    `${workflow}\n${action}`,
+    /gh workflow run|dispatch_token|Actions write|environment: greenkeeper/,
+  );
+  assert.doesNotMatch(workflow, /^ {4}outputs:/m);
+});
+
+test('runner source is pinned and host policy preserves the populated stream', () => {
   const policy = readFileSync(new URL('../greenkeeper.yml', import.meta.url), 'utf8');
   assert.match(policy, /maintenance:\n {2}dependency:\n {4}branch: maintenance\/dependencies\n/);
-  assert.match(workflow, /task: dependency/);
-  assert.match(workflow, /github-token: \$\{\{ secrets\.DEPENDABOT_AUTOMATION_TOKEN \}\}/);
-  assert.doesNotMatch(
-    workflow,
-    /FUSION_AI_TOKEN|GREENKEEPER_BRANCH_TOKEN|secrets\.DEPENDABOT_AUTOMATION_TOKEN \|\|/,
-  );
-  assert.match(workflow, /default: true/);
-  assert.match(workflow, /ref: \$\{\{ github\.event\.repository\.default_branch \}\}/);
+  assert.match(workflow, /RUNNER_REF.*=~ \^\[0-9a-f\]\{40\}\$/);
+  assert.match(workflow, /ref: \$\{\{ vars\.GREENKEEPER_RUNNER_REF \}\}/);
+  assert.match(workflow, /repository: equinor\/fusion-poc-greenkeeper/);
   assert.match(workflow, /persist-credentials: false/);
-  const action = readFileSync(
-    new URL('../actions/greenkeeper-maintenance/action.yml', import.meta.url),
-    'utf8',
-  );
-  assert.match(action, /GH_TOKEN: \$\{\{ inputs\.github-token \}\}/);
-  assert.match(action, /TASK: \$\{\{ inputs\.task \}\}/);
-  assert.match(action, /EXPORT_ONLY: \$\{\{ inputs\.export-only \}\}/);
-  assert.match(action, /DEFAULT_BRANCH: \$\{\{ github\.event\.repository\.default_branch \}\}/);
-  assert.doesNotMatch(action, /github\.token|secrets\.GITHUB_TOKEN/);
+  assert.match(workflow, /task: dependency/);
+  assert.match(workflow, /default: true/);
 });

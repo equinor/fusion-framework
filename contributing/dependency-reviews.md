@@ -37,7 +37,7 @@ for queue behavior and capacity.
 
 ## Greenkeeper dependency maintenance
 
-[Greenkeeper maintenance](../.github/workflows/greenkeeper-maintenance.yml) requests one service task,
+[Greenkeeper maintenance](../.github/workflows/greenkeeper-maintenance.yml) runs one shared runner task,
 `dependency`. It preserves Dependabot's discovery, research comments, high-confidence merge gates,
 changesets and aggregate promotion. It does not rename the populated `maintenance/dependencies` stream.
 The branch name is repository-owned in [`.github/greenkeeper.yml`](../.github/greenkeeper.yml):
@@ -50,55 +50,64 @@ maintenance:
 tasks: []
 ```
 
-The service reads this configuration at the confirmed default-branch commit. It inventories open
+The runner reads this configuration at the confirmed default-branch commit. It inventories open
 same-repository Dependabot PRs, checks whether the dependency branch exists and whether it is outdated,
 and attempts Git rebase before hiring an agent for actual conflicts. A missing branch is created from
 the default branch only when open Dependabot PRs need processing and publication is enabled.
 Export-only runs propose creation without writing. Existing branches are checked even without open PRs.
 Inventory does not research, retarget or merge PRs; the existing integration pipeline retains those duties.
 
-### Transport and credentials
+### Execution and credentials
 
-Framework is public and the Greenkeeper repository is private. A direct cross-repository reusable-workflow
-call is therefore unavailable. The workflow instead uses the local
-[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) to dispatch
-`maintenance.yml` on trusted `main` in `equinor/fusion-poc-greenkeeper`.
-The service contract was introduced by equinor/fusion-poc-greenkeeper#6, merged at
-`38520a41ed377ba8d0a9c1c2f6a8d5664b9539db`; dispatch follows the service's current trusted `main`,
-not that immutable historical revision. No private source, inference credential or service journal is
-copied into this repository.
+Execution stays in Framework's existing protected `docs` environment. The local
+[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) reuses
+[`setup-copilot-fusion-ai`](../.github/actions/setup-copilot-fusion-ai/action.yml), including Framework's
+existing federation, discovery, token acquisition and Azure-session cleanup. The provider file is consumed
+and deleted before invoking the runner. Masked step outputs carry the token only within this job;
+there is no cross-job token output, dispatch input or token artifact.
 
-Reuse `DEPENDABOT_AUTOMATION_TOKEN`; do not fall back to `GITHUB_TOKEN` for this request.
-Organization Actions sharing allows access to shared code, not cross-repository workflow dispatch.
-The credential's identity must have **Actions write** access to Greenkeeper, in addition to the existing
-Framework grants. Presence of the secret does not prove that grant. Verify it through approved repository
-administration before activation; no credential value needs to be read or published.
+Framework is public and the runner repository is private, so a direct private reusable-workflow reference
+is unavailable. Check out the reviewed full `GREENKEEPER_RUNNER_REF` into `.greenkeeper` and invoke
+`./.greenkeeper/.github/actions/maintenance` through `uses:`. Runner code stays outside the Git target clone.
+This is not a dispatch into Greenkeeper. Greenkeeper needs no federated SP, Azure identity or Actions write grant.
+
+Credentials have separate purposes:
+
+- `github.token`: Framework Contents/Pull requests read, plus approved GHCR package reads.
+- `APM_FUSION_SKILLS_TOKEN`: the existing read-only private skills credential.
+- `DEPENDABOT_AUTOMATION_TOKEN`: the existing host-only publisher with Contents write on Framework's stream;
+  also used for private runner-source checkout, which needs only Contents read on Greenkeeper.
+
+The publishing token must never be substituted for the APM credential or passed into the agent.
+No token values need to be inspected. Runner journals and bundles stay in the transient runner workspace;
+the shared action does not upload them or copy them into public job summaries.
 
 ### Activation and rollback
 
-Automatic Greenkeeper requests are disabled until the Framework repository variable
+Automatic Greenkeeper execution is disabled until the Framework repository variable
 `GREENKEEPER_MAINTENANCE_ENABLED` is exactly `true`. Until then, the existing Dependabot maintenance
 workflow continues to own main-push sync. A push while disabled reports that unchanged ownership.
 
 Before enabling:
 
-1. Verify the existing token's Greenkeeper Actions write access.
-2. Enroll `{"repository":"equinor/fusion-framework","task":"dependency","validation":"pnpm"}` in the
-   service's protected `GREENKEEPER_MAINTENANCE_TARGETS` configuration.
-3. Configure and verify the service's reviewed runner/image pins, Fusion identity, APM read credential,
-   publishing identity and branch-specific rewrite authorization. Its sandbox must support Framework's
-   pnpm version and build/test/lint scripts. Keep the existing branch protections.
+1. Publish and review the caller-owned runner action, then configure `GREENKEEPER_RUNNER_REF` to its full commit SHA
+   in Framework's `docs` environment.
+2. Configure matching reviewed `GREENKEEPER_IMAGE` and `GREENKEEPER_GATEWAY_IMAGE` digests in that environment.
+   Verify GHCR grants allow Framework's job token to read them.
+3. Verify the existing source-read, APM-read and Framework-publishing grants. The sandbox must support Framework's
+   pnpm version and build/test/lint scripts. Keep the existing branch protections and existing Fusion identity.
+   No central target enrollment or new federation is required.
 4. After this wiring is merged, manually run the Framework workflow on `main` with `export-only: true`.
-   Inspect the private service run: accepted dispatch is not successful maintenance or validation.
+   Inspect the Framework job result; maintenance runs there, not in a second service run.
    Export-only mode creates no branches and publishes no rebased refs, but may use inference for conflicts.
 5. After reviewing that result and letting any legacy sync finish, enable the variable.
-   Main pushes then request publishing maintenance,
+   Main pushes then run publishing maintenance,
    and the legacy main-push sync job skips, avoiding two automatic rebase owners.
 
 Manual dispatch is available before activation and defaults to export-only. Explicitly choosing
 `export-only: false` authorizes publishing maintenance even while automatic handover is disabled.
-Do not run manual legacy `sync` concurrently with a service rebase. To roll back, first let any active
-service run finish or cancel it deliberately, then unset the variable or set it to `false`.
+Do not run manual legacy `sync` concurrently with a runner rebase. To roll back, first let any active
+Framework maintenance run finish or cancel it deliberately, then unset the variable or set it to `false`.
 Main-push sync returns to the legacy workflow. Manual recovery/reset/promotion, maintenance-branch pushes
 and deletion recovery remain available throughout.
 

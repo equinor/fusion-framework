@@ -1,5 +1,5 @@
-name: Request Greenkeeper maintenance
-description: Request task-based execution in the private Greenkeeper service without running maintenance in Framework
+name: Run Greenkeeper maintenance in Framework
+description: Reuse Framework's existing Fusion AI authentication and invoke the shared runner in the same job
 
 inputs:
   task:
@@ -8,19 +8,52 @@ inputs:
   export-only:
     description: Inspect and export without creating or rewriting branches
     default: 'true'
+  client-id:
+    description: Existing Framework Fusion AI identity
+    required: true
+  image:
+    description: Reviewed immutable sandbox image
+    required: true
+  gateway-image:
+    description: Reviewed immutable gateway image
+    required: true
   github-token:
-    description: Existing automation credential with Actions write access to the Greenkeeper service repository
+    description: Framework Contents, Pull requests and Packages read token
+    required: true
+  apm-token:
+    description: Existing read-only Fusion skills credential
+    required: true
+  publish-token:
+    description: Existing automation credential with Contents write on Framework's dependency branch
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Request maintenance from the Greenkeeper service
+    - name: Acquire AI access using Framework's existing identity
+      id: fusion
+      uses: ./.github/actions/setup-copilot-fusion-ai
+      with:
+        client-id: ${{ inputs.client-id }}
+        wire-model: gpt-6.1-sol
+
+    - name: Consume short-lived provider credentials in this job
+      id: provider
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.github-token }}
-        TASK: ${{ inputs.task }}
-        EXPORT_ONLY: ${{ inputs.export-only }}
-        REPOSITORY: ${{ github.repository }}
-        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-      run: bash "$GITHUB_ACTION_PATH/request.sh"
+        PROVIDER_ENV: ${{ steps.fusion.outputs.provider-env }}
+      run: bash "$GITHUB_ACTION_PATH/prepare-provider.sh"
+
+    - name: Run shared dependency maintenance
+      uses: ./.greenkeeper/.github/actions/maintenance
+      with:
+        task: ${{ inputs.task }}
+        export-only: ${{ inputs.export-only }}
+        validation: pnpm
+        image: ${{ inputs.image }}
+        gateway-image: ${{ inputs.gateway-image }}
+        github-token: ${{ inputs.github-token }}
+        apm-token: ${{ inputs.apm-token }}
+        publish-token: ${{ inputs.publish-token }}
+        fusion-ai-token: ${{ steps.provider.outputs.token }}
+        fusion-ai-base-url: ${{ steps.provider.outputs.base-url }}

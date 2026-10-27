@@ -28,22 +28,50 @@ jobs:
         run: |
           echo 'Greenkeeper maintenance is disabled; the existing Dependabot workflow still owns main-push sync.' >> "$GITHUB_STEP_SUMMARY"
 
-  request:
+  maintain:
     if: >-
       github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
       (vars.GREENKEEPER_MAINTENANCE_ENABLED == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    environment: docs
+    timeout-minutes: 75
+    permissions:
+      contents: read
+      pull-requests: read
+      packages: read
+      id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
 
-      - name: Request dependency maintenance
+      - name: Validate reviewed runner pin
+        shell: bash
+        env:
+          RUNNER_REF: ${{ vars.GREENKEEPER_RUNNER_REF }}
+        run: |
+          [[ "$RUNNER_REF" =~ ^[0-9a-f]{40}$ ]] ||
+            { echo "::error::Set GREENKEEPER_RUNNER_REF to a reviewed full commit SHA."; exit 1; }
+
+      - name: Check out private runner source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: equinor/fusion-poc-greenkeeper
+          ref: ${{ vars.GREENKEEPER_RUNNER_REF }}
+          token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
+          path: .greenkeeper
+          persist-credentials: false
+
+      - name: Maintain dependency stream in Framework
         uses: ./.github/actions/greenkeeper-maintenance
         with:
           task: dependency
           export-only: ${{ github.event_name == 'workflow_dispatch' && inputs.export-only && 'true' || 'false' }}
-          github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
+          client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
+          image: ${{ vars.GREENKEEPER_IMAGE }}
+          gateway-image: ${{ vars.GREENKEEPER_GATEWAY_IMAGE }}
+          github-token: ${{ github.token }}
+          apm-token: ${{ secrets.APM_FUSION_SKILLS_TOKEN }}
+          publish-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
