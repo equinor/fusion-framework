@@ -225,6 +225,31 @@ jobs:
           ref: ${{ inputs.head_sha }}
           persist-credentials: false
 
+      - name: Authenticate GHCR using the Framework job token
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Verify both pinned images can be pulled before source checkout
+        shell: bash
+        env:
+          SANDBOX_IMAGE: ${{ inputs.greenkeeper_image }}
+          GATEWAY_IMAGE: ${{ inputs.greenkeeper_gateway_image }}
+        run: |
+          set -euo pipefail
+          failed=0
+          for image in "$SANDBOX_IMAGE" "$GATEWAY_IMAGE"; do
+            if docker pull "$image"; then
+              echo "GHCR pull verified: $image"
+            else
+              echo "::error::Framework job token cannot pull $image"
+              failed=1
+            fi
+          done
+          exit "$failed"
+
       - name: Diagnose private runner source access without exposing the token
         shell: bash
         env:

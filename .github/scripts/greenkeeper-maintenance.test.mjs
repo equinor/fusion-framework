@@ -284,6 +284,56 @@ test('pre-merge smoke test requires explicit manual selection and never receives
   assert.match(action, /preview-policy-revision: \$\{\{ inputs\.preview-policy-revision \}\}/);
 });
 
+test('GHCR preflight uses the job token and pulls both pins before private source access', () => {
+  const smoke = prWorkflow.split('\n  greenkeeper-smoke:\n')[1]?.split('\n  required-check:\n')[0];
+  assert.ok(smoke);
+  const login = smoke
+    .split('- name: Authenticate GHCR using the Framework job token')[1]
+    ?.split('- name: Verify both pinned images')[0];
+  assert.ok(login);
+  assert.match(login, /password: \$\{\{ github\.token \}\}/);
+  assert.doesNotMatch(login, /secrets\./);
+  assert.ok(smoke.indexOf('GHCR using') < smoke.indexOf('Diagnose private runner source'));
+  const pull = smoke
+    .split('- name: Verify both pinned images')[1]
+    ?.split('- name: Diagnose private runner source')[0];
+  const script = pull?.match(/^ {8}run: \|\n((?: {10}[^\n]*\n)+)/m)?.[1];
+  assert.ok(script);
+  for (const failedImage of ['', 'sandbox', 'gateway']) {
+    const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-ghcr-test-'));
+    writeFileSync(
+      join(directory, 'docker'),
+      `#!${process.execPath}
+const fs = require('node:fs');
+const [command, image] = process.argv.slice(2);
+if (command !== 'pull') process.exit(2);
+fs.appendFileSync(process.env.FIXTURE_LOG, image + '\\n');
+process.exit(image === process.env.FAILED_IMAGE ? 1 : 0);
+`,
+      { mode: 0o755 },
+    );
+    try {
+      const log = join(directory, 'pulls');
+      const result = spawnSync('bash', ['-c', script], {
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          PATH: `${directory}:${process.env.PATH}`,
+          SANDBOX_IMAGE: 'sandbox',
+          GATEWAY_IMAGE: 'gateway',
+          FIXTURE_LOG: log,
+          FAILED_IMAGE: failedImage,
+        },
+      });
+      assert.equal(result.status, failedImage ? 1 : 0, result.stderr);
+      assert.equal(readFileSync(log, 'utf8'), 'sandbox\ngateway\n');
+      if (failedImage) assert.match(result.stdout, /::error::/);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  }
+});
+
 test('smoke preflight validates the exact candidate and immutable pins before authentication', () => {
   const smoke = prWorkflow.split('\n  greenkeeper-smoke:\n')[1]?.split('\n  required-check:\n')[0];
   const script = smoke?.match(/^ {8}run: \|\n((?: {10}[^\n]*\n)+)/m)?.[1];

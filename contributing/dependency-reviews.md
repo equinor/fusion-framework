@@ -123,8 +123,13 @@ and `pr_number` identifying the PR. Supply `greenkeeper_runner_ref`, `greenkeepe
 `greenkeeper_gateway_image` as reviewed immutable pins. The runner revision must include candidate-policy
 preview support; the previously merged runner cannot execute this preview yet.
 
+Before private source checkout, the smoke job authenticates to GHCR with Framework's job token
+and pulls both pinned images without executing them. This tests the package grant independently
+of private source access; `packages: read` alone does not grant access to another repository's package.
+The package must also allow Actions access from Framework.
+
 The smoke job uses Framework's existing `docs` identity and obtains only the AI token.
-Private runner checkout uses `GREENKEEPER_SOURCE_TOKEN` only in the host checkout step,
+Private runner access uses `GREENKEEPER_SOURCE_TOKEN` only in the safe API diagnostic and host checkout steps,
 with credential persistence disabled. This read operation requires Contents read on Greenkeeper.
 The credential is not passed to the maintenance action, runner, agent or APM preparation.
 `APM_FUSION_SKILLS_TOKEN` remains the read-only APM credential, and the job token needs access to the
