@@ -275,7 +275,7 @@ test('pre-merge smoke test requires explicit manual selection and never receives
   assert.match(smoke, /export-only: 'true'/);
   assert.match(smoke, /preview-policy-revision: \$\{\{ inputs\.head_sha \}\}/);
   assert.match(smoke, /token: \$\{\{ secrets\.GREENKEEPER_SOURCE_TOKEN \}\}/);
-  assert.equal((smoke.match(/GREENKEEPER_SOURCE_TOKEN/g) ?? []).length, 1);
+  assert.equal((smoke.match(/GREENKEEPER_SOURCE_TOKEN/g) ?? []).length, 2);
   assert.doesNotMatch(smoke, /publish-token:|DEPENDABOT_AUTOMATION_TOKEN|contents: write/);
   const execution = smoke.split('- name: Test maintenance without a publishing credential')[1];
   assert.ok(execution);
@@ -309,6 +309,54 @@ test('smoke preflight validates the exact candidate and immutable pins before au
       env: { ...environment, [name]: value },
       encoding: 'utf8',
     });
+
+    for (const status of ['200', '401', '403', '404']) {
+      test(`source diagnostic reports HTTP ${status} without exposing credentials or response bodies`, () => {
+        const directory = mkdtempSync(join(tmpdir(), 'greenkeeper-source-test-'));
+        const script = new URL(
+          '../actions/greenkeeper-maintenance/check-source-access.sh',
+          import.meta.url,
+        ).pathname;
+        writeFileSync(
+          join(directory, 'curl'),
+          `#!${process.execPath}
+    const fs = require('node:fs');
+    const args = process.argv.slice(2);
+    fs.writeFileSync(args[args.indexOf('--dump-header') + 1],
+      'HTTP/2 ' + process.env.FIXTURE_STATUS + '\\r\\nX-Accepted-GitHub-Permissions: contents=read\\r\\n');
+    fs.writeFileSync(args[args.indexOf('--output') + 1], 'private-source-fixture');
+    process.stdout.write(process.env.FIXTURE_STATUS);
+    `,
+          { mode: 0o755 },
+        );
+        try {
+          const result = spawnSync('bash', [script], {
+            encoding: 'utf8',
+            env: {
+              ...process.env,
+              PATH: `${directory}:${process.env.PATH}`,
+              RUNNER_TEMP: directory,
+              RUNNER_REF: 'a'.repeat(40),
+              GH_TOKEN: 'secret-fixture-not-for-output',
+              FIXTURE_STATUS: status,
+            },
+          });
+          assert.equal(result.status, status === '200' ? 0 : 1, result.stderr);
+          assert.match(result.stdout, new RegExp(`HTTP ${status}`));
+          assert.match(result.stdout, /contents=read/);
+          assert.doesNotMatch(
+            result.stdout + result.stderr,
+            /secret-fixture-not-for-output|private-source-fixture/,
+          );
+          assert.equal(
+            (result.stdout.match(/Greenkeeper source API:/g) ?? []).length,
+            status === '200' ? 2 : 1,
+          );
+        } finally {
+          rmSync(directory, { recursive: true, force: true });
+        }
+      });
+    }
     assert.notEqual(invalid.status, 0, `Unexpectedly accepted ${name}`);
     assert.match(invalid.stdout, /::error::/);
   }

@@ -225,6 +225,13 @@ jobs:
           ref: ${{ inputs.head_sha }}
           persist-credentials: false
 
+      - name: Diagnose private runner source access without exposing the token
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GREENKEEPER_SOURCE_TOKEN }}
+          RUNNER_REF: ${{ inputs.greenkeeper_runner_ref }}
+        run: bash .github/actions/greenkeeper-maintenance/check-source-access.sh
+
       - name: Check out reviewed runner using the dedicated source credential
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
