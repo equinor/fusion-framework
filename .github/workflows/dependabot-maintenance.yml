@@ -33,8 +33,15 @@ jobs:
   manage-branch:
     name: Ensure, sync, or reset maintenance branch
     if: >-
-      github.event_name != 'delete' ||
-      (github.event.ref_type == 'branch' && github.event.ref == 'maintenance/dependencies')
+      (
+        github.event_name != 'delete' ||
+        (github.event.ref_type == 'branch' && github.event.ref == 'maintenance/dependencies')
+      ) &&
+      !(
+        github.event_name == 'push' &&
+        github.ref == 'refs/heads/main' &&
+        vars.GREENKEEPER_MAINTENANCE_ENABLED == 'true'
+      )
     runs-on: ubuntu-latest
     outputs:
       updated: ${{ steps.branch.outputs.updated }}

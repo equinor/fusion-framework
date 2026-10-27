@@ -83,6 +83,28 @@ and refreshes the promotion, including dispatching its required checks. An empty
 promoted. `ensure` still leaves existing branches unchanged; `ensure`, `sync`, and `reset` all
 recover a missing branch.
 
+### Opt-in Greenkeeper main-push maintenance
+
+The repository may hand automatic main-push sync to the Greenkeeper service by setting
+`GREENKEEPER_MAINTENANCE_ENABLED=true`. Its caller selects `task: dependency`; the service reads
+`maintenance.dependency.branch` from `.github/greenkeeper.yml` at the confirmed default-branch commit.
+The configured branch remains `maintenance/dependencies`; this does not migrate or recreate its history.
+Without that flag, the legacy sync behavior above is unchanged.
+
+When enabled, only the legacy main-push management job skips. Existing Dependabot research, merge gates,
+changesets, maintenance-branch triggers, manual recovery and aggregate promotion remain unchanged.
+The private service inventories open Dependabot PRs and attempts Git before escalating actual integration-stream
+conflicts to bounded agents. Full final validation and an exact-head lease precede a service rewrite.
+This is not permission to resolve individual Dependabot PR conflicts automatically in the write-enabled
+Framework job, nor permission to merge to `main`.
+
+The local action reuses `DEPENDABOT_AUTOMATION_TOKEN` for dispatch, with separately verified Greenkeeper
+Actions write access. Inference and publishing credentials remain service-side. Service enrollment, reviewed
+runtime pins, compatible validation and branch-specific rewrite authorization are activation prerequisites.
+Missing service branches are created only when open Dependabot PRs need processing and publishing is enabled.
+Existing local deletion/manual recovery is retained as a maintainer-controlled fallback.
+See [the activation and rollback guide](../../contributing/dependency-reviews.md#activation-and-rollback).
+
 ## Branch rules
 
 Repository administrators must configure `maintenance/dependencies` with rules that:
@@ -91,7 +113,8 @@ Repository administrators must configure `maintenance/dependencies` with rules t
 - do not require human pull request approval;
 - require squash merges;
 - prevent deletion;
-- prevent force pushes except for the guarded maintenance sync and reset workflow;
+- prevent force pushes except for the guarded maintenance sync/reset workflow and the separately authorized
+  Greenkeeper publisher after activation;
 - permit GitHub Actions to enable auto-merge.
 
 `main` remains the default branch and retains its existing protection and human approval

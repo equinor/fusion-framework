@@ -35,6 +35,73 @@ does not replace bounded retry handling or provider quota management.
 See [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
 for queue behavior and capacity.
 
+## Greenkeeper dependency maintenance
+
+[Greenkeeper maintenance](../.github/workflows/greenkeeper-maintenance.yml) requests one service task,
+`dependency`. It preserves Dependabot's discovery, research comments, high-confidence merge gates,
+changesets and aggregate promotion. It does not rename the populated `maintenance/dependencies` stream.
+The branch name is repository-owned in [`.github/greenkeeper.yml`](../.github/greenkeeper.yml):
+
+```yaml
+version: 1
+maintenance:
+  dependency:
+    branch: maintenance/dependencies
+tasks: []
+```
+
+The service reads this configuration at the confirmed default-branch commit. It inventories open
+same-repository Dependabot PRs, checks whether the dependency branch exists and whether it is outdated,
+and attempts Git rebase before hiring an agent for actual conflicts. A missing branch is created from
+the default branch only when open Dependabot PRs need processing and publication is enabled.
+Export-only runs propose creation without writing. Existing branches are checked even without open PRs.
+Inventory does not research, retarget or merge PRs; the existing integration pipeline retains those duties.
+
+### Transport and credentials
+
+Framework is public and the Greenkeeper repository is private. A direct cross-repository reusable-workflow
+call is therefore unavailable. The workflow instead uses the local
+[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) to dispatch
+`maintenance.yml` on trusted `main` in `equinor/fusion-poc-greenkeeper`.
+The service contract was introduced by equinor/fusion-poc-greenkeeper#6, merged at
+`38520a41ed377ba8d0a9c1c2f6a8d5664b9539db`; dispatch follows the service's current trusted `main`,
+not that immutable historical revision. No private source, inference credential or service journal is
+copied into this repository.
+
+Reuse `DEPENDABOT_AUTOMATION_TOKEN`; do not fall back to `GITHUB_TOKEN` for this request.
+Organization Actions sharing allows access to shared code, not cross-repository workflow dispatch.
+The credential's identity must have **Actions write** access to Greenkeeper, in addition to the existing
+Framework grants. Presence of the secret does not prove that grant. Verify it through approved repository
+administration before activation; no credential value needs to be read or published.
+
+### Activation and rollback
+
+Automatic Greenkeeper requests are disabled until the Framework repository variable
+`GREENKEEPER_MAINTENANCE_ENABLED` is exactly `true`. Until then, the existing Dependabot maintenance
+workflow continues to own main-push sync. A push while disabled reports that unchanged ownership.
+
+Before enabling:
+
+1. Verify the existing token's Greenkeeper Actions write access.
+2. Enroll `{"repository":"equinor/fusion-framework","task":"dependency","validation":"pnpm"}` in the
+   service's protected `GREENKEEPER_MAINTENANCE_TARGETS` configuration.
+3. Configure and verify the service's reviewed runner/image pins, Fusion identity, APM read credential,
+   publishing identity and branch-specific rewrite authorization. Its sandbox must support Framework's
+   pnpm version and build/test/lint scripts. Keep the existing branch protections.
+4. After this wiring is merged, manually run the Framework workflow on `main` with `export-only: true`.
+   Inspect the private service run: accepted dispatch is not successful maintenance or validation.
+   Export-only mode creates no branches and publishes no rebased refs, but may use inference for conflicts.
+5. After reviewing that result and letting any legacy sync finish, enable the variable.
+   Main pushes then request publishing maintenance,
+   and the legacy main-push sync job skips, avoiding two automatic rebase owners.
+
+Manual dispatch is available before activation and defaults to export-only. Explicitly choosing
+`export-only: false` authorizes publishing maintenance even while automatic handover is disabled.
+Do not run manual legacy `sync` concurrently with a service rebase. To roll back, first let any active
+service run finish or cancel it deliberately, then unset the variable or set it to `false`.
+Main-push sync returns to the legacy workflow. Manual recovery/reset/promotion, maintenance-branch pushes
+and deletion recovery remain available throughout.
+
 ## Changeset requirements
 
 A changeset is mandatory when the dependency update touches a published package. See the [changeset guide](changeset.md) and the changeset decision section in `.github/instructions/dependabot-pr.instructions.md` for details.

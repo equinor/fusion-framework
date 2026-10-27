@@ -167,7 +167,7 @@ jobs:
         run: pnpm test
 
       - name: Test maintenance branch lifecycle
-        run: node --test .github/scripts/dependabot-maintenance.test.mjs
+        run: node --test .github/scripts/dependabot-maintenance.test.mjs .github/scripts/greenkeeper-maintenance.test.mjs
 
       - name: Test npm trusted publishing tooling
         run: node --test .github/scripts/npm-trusted-publishing.test.mjs

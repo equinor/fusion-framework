@@ -1,0 +1,26 @@
+name: Request Greenkeeper maintenance
+description: Request task-based execution in the private Greenkeeper service without running maintenance in Framework
+
+inputs:
+  task:
+    description: Greenkeeper maintenance task
+    required: true
+  export-only:
+    description: Inspect and export without creating or rewriting branches
+    default: 'true'
+  github-token:
+    description: Existing automation credential with Actions write access to the Greenkeeper service repository
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Request maintenance from the Greenkeeper service
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        TASK: ${{ inputs.task }}
+        EXPORT_ONLY: ${{ inputs.export-only }}
+        REPOSITORY: ${{ github.repository }}
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      run: bash "$GITHUB_ACTION_PATH/request.sh"
