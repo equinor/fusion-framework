@@ -5,23 +5,17 @@ name: Dependabot PR Rules
 
 # Dependabot PR Rules
 
+Repository facts for Dependabot PRs. Review behavior comes from the APM-installed
+`fusion-dependency-review` skill; automated maintenance follows its runner.
+
 ## TL;DR (for AI agents)
 
-- Do not approve, merge, push, close, or comment on a Dependabot PR without explicit user confirmation (batch-level confirmation counts for the solver skill).
-- If the branch needs refreshing, use rebase-only refreshes; never merge the base branch into the PR branch.
-- Abort conflicting rebases and report manual intervention. Automated Greenkeeper runs are the exception;
-  see [Automated maintenance](#automated-maintenance-greenkeeper).
-- If the PR needs patching, follow `.github/instructions/workflow-contribution.instructions.md`.
-- Treat missing changesets, missing validation, or weak PR-template usage as explicit findings.
+- Dependabot PRs target `maintenance/dependencies`. That branch's CI runs the full
+  `pnpm test && pnpm build && pnpm -w check` suite, and maintainers fix and validate there before promotion to `main`.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
-- Validate with `pnpm test && pnpm build && pnpm -w check` before declaring the PR ready to merge.
-
-## Skills
-
-| Intent | Skill |
-|--------|-------|
-| Review a single dependency PR in detail | `.agents/skills/fusion-dependency-review/SKILL.md` |
-| Batch-process multiple Dependabot PRs with auto-merge | `.agents/skills/custom-dependency-pr-solver/SKILL.md` |
+- Refresh branches by rebasing only; never merge the base branch into a Dependabot branch.
+- Regenerate `pnpm-lock.yaml` with `pnpm install`; never hand-merge lockfile hunks or invent resolutions.
+- Squash-merge dependency PRs.
 
 ## Changeset decision for dependency PRs
 
@@ -87,7 +81,7 @@ group. Direct runtime and type dependencies use `catalog:react`, defined in
 exact version. Preserve consumer-facing peer ranges. Type packages in the
 catalog do not need the same version as the runtime.
 
-Run the full validation suite before declaring the PR ready to merge:
+The full validation suite runs in CI on `maintenance/dependencies`; run it locally when you change code:
 
 ```bash
 pnpm test && pnpm build && pnpm -w check
@@ -99,45 +93,10 @@ pnpm test && pnpm build && pnpm -w check
 
 - Always rebase Dependabot branches; never merge the base branch into the PR branch.
 - After rebase, run `pnpm install --frozen-lockfile`. If the lockfile is out of sync, resolve the intended
-  dependency inputs and regenerate it with `pnpm install`, then repeat the frozen install and required validation.
-- Publication requires explicit authorization and `git push --force-with-lease`.
-- By default, if rebase conflicts occur, abort the rebase and report manual intervention to the maintainer.
-  Mark the PR as `needs-manual-intervention` only with explicit authorization. This remains the rule for
-  ordinary Dependabot handling, including `custom-dependency-pr-solver`.
-
-## Automated maintenance (Greenkeeper)
-
-When the repository opts in through `.github/greenkeeper.yml`, Greenkeeper handles Dependabot PRs on its own
-and its runner owns how it researches, resolves conflicts and publishes. The confirmation and conflict-abort
-rules above are for interactive agents. These repository facts still apply to Greenkeeper:
-
-- Dependabot PRs merge into `maintenance/dependencies`. That branch is where maintainers fix and fully validate
-  the combined updates (`pnpm test && pnpm build && pnpm -w check` in CI) before promotion to `main`.
-- Each PR still needs its changeset, following the changeset decision above.
-- Regenerate `pnpm-lock.yaml` with `pnpm install`; never hand-merge lockfile hunks or invent resolutions.
-- Hold a PR only for breaking changes that need a maintainer decision.
+  dependency inputs and regenerate it with `pnpm install`.
+- Push rebased branches with `git push --force-with-lease`.
 
 ## Merge strategy
 
 - Use **squash merge** for dependency PRs.
 - Keep the commit message concise: `chore(deps): bump <package> from <old> to <new>`.
-
-## Review decision contract
-
-Follow the installed `fusion-dependency-review` skill for recommendation, confidence, and
-readiness semantics. Repository-specific readiness requires:
-
-- `pnpm test && pnpm build && pnpm -w check` passes
-- required approving reviews are present
-- required changesets exist
-- the branch is mergeable
-
-Pending checks or approval affect readiness only. Relevant validation failures set readiness to
-`needs changes`; optional automation failures are not merge blockers.
-
-## Safety
-
-- Never auto-merge just because the update is small.
-- Never assume CI is green without checking actual status.
-- Never suppress reviewer or maintainer concerns for convenience.
-- Never create a merge commit by merging the base branch into a Dependabot PR branch.

@@ -34,7 +34,7 @@ instead of restating it.
 ## When not to use
 
 - Writing or reviewing changesets: `.github/instructions/changesets.instructions.md`.
-- Dependency update PRs: `fusion-dependency-review` / `custom-dependency-pr-solver`.
+- Dependency update PRs: `fusion-dependency-review`.
 - VS Code extension publishing: it ships through the Marketplace job, not npm.
 - Conflicts in Version Packages PRs: `custom-rebase`.
 
