@@ -23,6 +23,11 @@ const CurrentContext = () => {
   return <p>{currentContext?.title ?? 'none'}</p>;
 };
 
+const NavigationLocation = () => {
+  const { navigation } = useFramework<[NavigationModule]>().modules;
+  return <p>{navigation.history.location.pathname}</p>;
+};
+
 describe('testApp', () => {
   testApp(
     'resolves a fusion/app scope and renders through the public /vitest entry point',
@@ -49,11 +54,6 @@ describe('testApp', () => {
   });
 
   describe('with a configured parent framework', () => {
-    const NavigationLocation = () => {
-      const { navigation } = useFramework<[NavigationModule]>().modules;
-      return <p>{navigation.history.location.pathname}</p>;
-    };
-
     // pushed on the history instance itself, before it's handed to the framework configurator,
     // so a passing assertion also proves `configureFusion` ran ahead of framework initialization
     const history = createHistory('memory');
