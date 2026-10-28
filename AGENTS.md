@@ -57,7 +57,7 @@ Load the file whose `applyTo` matches your target. Do not load the rest.
 | `.changeset/**` | `.github/instructions/changesets.instructions.md` |
 | A pull request | `.github/instructions/pull-requests.instructions.md` |
 | A code review | `.agents/skills/custom-code-review/SKILL.md` (loads the canonical review instructions) |
-| A Dependabot PR | `.github/instructions/dependabot-pr.instructions.md` (**mandatory, in full**) |
+| A Dependabot PR | `.github/instructions/dependabot-pr.instructions.md` (repository facts; review via `fusion-dependency-review`) |
 | `.agents/skills/**` | `.github/instructions/skills.instructions.md` |
 | A workflow-driven commit or PR | `.github/instructions/workflow-contribution.instructions.md` |
 | A new public package, npm publishing, or a failed release | `.agents/skills/custom-npm-publishing/SKILL.md` (runbook: `contributing/npm-publishing.md`) |
@@ -78,7 +78,6 @@ If rules conflict, the more specific `applyTo` wins.
 | --- | --- |
 | `changeset.prompt.md` | Writing changesets for everything on the current branch |
 | `release-recovery.prompt.md` | A release that tagged packages but did not publish them |
-| `dependabot.prompt.md` | Reviewing or batch-processing Dependabot PRs |
 
 ---
 
@@ -110,6 +109,9 @@ Take local, reversible actions (editing files, running tests, building) without 
 
 When genuinely unsure which rule applies, ask rather than guess — a wrong guess costs more
 than a question.
+
+These consent rules apply to interactive sessions. Unattended maintenance that the repository has
+enabled (Greenkeeper) acts within the bounds its runner enforces and does not wait for confirmation.
 
 ---
 

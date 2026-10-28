@@ -74,10 +74,8 @@ Wait until PR review to squash - it makes review harder when commits disappear.
 
 ### ✅ Recovery from Rebase Issues
 
-The commands below apply to authorized local conflict resolution. Ordinary Dependabot handling must abort
-and escalate conflicts; only explicitly enabled, bounded Greenkeeper tasks may use the
-[Greenkeeper conflict exception](../.github/instructions/dependabot-pr.instructions.md#greenkeeper-conflict-exception).
-The existing write-enabled maintenance sync job does not resolve conflicts.
+For Dependabot branches, also follow the
+[Dependabot rebase strategy](../.github/instructions/dependabot-pr.instructions.md#rebase-strategy).
 
 Resolve intended source and dependency inputs (including manifests and catalogs) before regenerating a lockfile.
 Never hand-merge generated lockfile resolutions or invent versions or integrity hashes. If dependency intent is

@@ -47,7 +47,7 @@ Major, unresolved conflicting, failing, or lower-confidence updates remain open 
 They do not prevent unrelated high-confidence updates from entering the maintenance stream.
 
 For explicitly enabled Greenkeeper dependency health and PR tasks only, the
-[repository conflict policy](../../.github/instructions/dependabot-pr.instructions.md#greenkeeper-conflict-exception)
+[repository conflict policy](../../.github/instructions/dependabot-pr.instructions.md#rebase-strategy)
 permits bounded resolution in an isolated local candidate before full validation. It requires enforced scope
 and attempt limits, package-manager lockfile regeneration from intended inputs, required release artifacts,
 and manual fallback for unsupported, ambiguous, out-of-bounds, or failing results. Publication remains host-only,
