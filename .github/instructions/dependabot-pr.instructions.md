@@ -15,6 +15,7 @@ name: Dependabot PR Rules
 - Treat missing changesets, missing validation, or weak PR-template usage as explicit findings.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
 - Validate with `pnpm test && pnpm build && pnpm -w check` before declaring the PR ready to merge.
+  Greenkeeper smell-tests PRs into `maintenance/dependencies` instead; that branch's CI is the gate (see below).
 
 ## Skills
 
@@ -124,20 +125,24 @@ establish runtime readiness. Do not enable the flag or widen these bounds to com
 3. Regenerate generated lockfiles with the repository-pinned package manager: use `pnpm install` for this
    repository after resolving the inputs. Never hand-merge lockfile hunks or fabricate resolutions, versions,
    or integrity hashes. If pnpm cannot regenerate safely within scope and budget, abort and escalate.
-4. After the complete rebase, require `pnpm install --frozen-lockfile` and the full
-   `pnpm test && pnpm build && pnpm -w check` validation. Preserve the changeset decision above and all required
-   release artifacts; resolving a conflict does not waive them. Check the generated diff against the intended
-   dependency changes and scope before reporting a candidate.
-5. On unsupported or ambiguous conflicts, exceeded scope/budget, or failed regeneration/validation, abort any
-   active candidate rebase and report an explicit `blocked` or `failed` result with `HOLD`, the reason, logs,
-   and checks that failed or were not run. Do not offer a partial or unvalidated candidate as publishable.
-   Leave remote branches unchanged and escalate for manual handling.
+4. `maintenance/dependencies` is the quality gate: its CI validates the combined updates before promotion to
+   `main`. After the rebase, require `pnpm install --frozen-lockfile`, preserve the changeset decision above
+   and all required release artifacts, and check the generated diff against the intended dependency changes.
+   Do not run the full `pnpm test && pnpm build && pnpm -w check` suite per PR. Smell-test instead: skim the
+   release notes; for major or declared breaking changes, check whether changed APIs are used here. Run focused
+   tests/builds only for affected packages, and attempt an in-scope migration when they fail.
+5. Report `MERGE` unless a breaking change needs human judgement or focused checks still fail after a
+   migration attempt. Checks left to integration-branch CI are reported as not run, not as passed or failed.
+   On unsupported or ambiguous conflicts, exceeded scope/budget, failed regeneration, or such a breaking
+   change, abort any active candidate rebase and report an explicit `blocked` or `failed` result with `HOLD`,
+   the reason, logs, and what a human must decide. Leave remote branches unchanged.
 6. The runner writes evidence (`run.json`, `comment.md`, logs and, only for a successful changed candidate,
    an optional `candidate.bundle`); it must not push, post comments, label PRs, or merge. Only the authorized
-   host may publish after verifying the reported outcome, file scope, validation, release artifacts, exact
-   original head and current base freshness. A changed head or base invalidates the candidate and requires
-   a fresh task, not reuse of stale evidence. Pushes must use an explicit expected-head lease; guarded squash
-   auto-merge still requires the verdict/confidence contract, current-head CI and all required reviews/checks.
+   host may publish after verifying the reported outcome, file scope, release artifacts, exact original head
+   and current base freshness. A changed head or base invalidates the candidate and requires a fresh task,
+   not reuse of stale evidence. Pushes must use an explicit expected-head lease. For `MERGE` the host requests
+   squash auto-merge into `maintenance/dependencies`; that branch's enforced rules still decide the merge.
+   Reuse earlier Greenkeeper comments instead of repeating research when nothing meaningful changed.
 
 This policy does not enable Greenkeeper, implement runner enforcement, or authorize publication. The existing
 write-enabled maintenance sync workflow still fails on conflicts without resolving them. Keep repository-specific
