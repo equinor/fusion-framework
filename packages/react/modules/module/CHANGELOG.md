@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.7-next.0
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 4.0.6
 
 ### Patch Changes

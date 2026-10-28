@@ -8,6 +8,12 @@
   
   Require Node.js 22.22.2 or newer and update the terminal spinner to Ora 10.0.0. Upgrade Node.js before installing this release; the prerequisites previously documented Node.js 20.
 
+## 2.0.14-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.7.2-next.0
+
 ## 2.0.13
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.8-next.0
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+  - @equinor/fusion-framework-module-signalr@14.1.0-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 4.0.7
 
 ### Patch Changes

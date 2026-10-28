@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-router
 
+## 2.4.8-next.0
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 2.4.7
 
 ### Patch Changes

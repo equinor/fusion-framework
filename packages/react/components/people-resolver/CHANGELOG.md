@@ -6,6 +6,15 @@
 
 - dd359f8: Internal: suppress the Biome 2.6 `noComponentHookFactories` rule for the intentional component factory in `makeResolver`. Runtime behavior is unchanged.
 
+## 2.0.9-next.0
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+  - @equinor/fusion-framework-module-services@8.2.0-next.0
+  - @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 2.0.8
 
 ### Patch Changes

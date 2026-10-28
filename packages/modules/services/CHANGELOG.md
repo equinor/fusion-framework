@@ -1,5 +1,30 @@
 # Change Log
 
+## 8.2.0-next.0
+
+### Minor Changes
+
+- f150ff4: Record API client selection when the telemetry module is available. `ApiProvider` records
+  one `fusion.services.create-client.duration` metric per created client, for named,
+  service-discovery and custom factories, with one sanitized failure exception when no
+  client can be created. Service names, URIs and errors are never recorded; created clients
+  and thrown errors are unchanged. The provider gains an optional `connectTelemetry(telemetry)`
+  method, connected automatically after initialization.
+  
+  The module now disposes the `ApiProvider` it created when the host disposes it, so
+  telemetry stops at teardown.
+  
+  Ref: #5804.
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 8.1.5
 
 ### Patch Changes

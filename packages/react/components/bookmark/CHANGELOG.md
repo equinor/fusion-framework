@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.8-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-react-module-bookmark@7.0.4-next.0
+
 ## 2.0.7
 
 ### Patch Changes

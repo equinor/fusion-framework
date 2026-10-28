@@ -12,6 +12,12 @@
   - @equinor/fusion-framework-vite-plugin-api-service@3.0.0
   - @equinor/fusion-framework-vite-plugin-spa@5.2.4
 
+## 2.3.3-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-vite-plugin-spa@5.2.4-next.0
+
 ## 2.3.2
 
 ### Patch Changes

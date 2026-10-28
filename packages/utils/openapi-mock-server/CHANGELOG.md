@@ -10,6 +10,12 @@
   
   Direct `createRouter` usage still uses `trailing: false`: `/files/` accepts exactly one trailing slash, not `/files` or `/files//`. Standalone service dispatch continues to normalize empty path segments before middleware matching; register `/files` for that entry point. Simple parameters in separate segments are unchanged. See the README's **Migration: path-to-regexp v9** section for examples and regression-check guidance.
 
+## 0.5.4-next.0
+
+### Patch Changes
+
+- @equinor/fusion-services@0.3.4-next.0
+
 ## 0.5.3
 
 ### Patch Changes
