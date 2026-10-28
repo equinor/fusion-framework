@@ -1,5 +1,31 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 2.0.4-next.0
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-app@13.3.0-next.0
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-feature-flag@2.2.0-next.0
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+  - @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-cli@15.7.2-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 2.0.3
 
 ### Patch Changes

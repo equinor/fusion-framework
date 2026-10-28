@@ -1,5 +1,28 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 4.3.0-next.0
+
+### Minor Changes
+
+- f150ff4: Record Node authentication outcomes when a telemetry module is registered. Providers record
+  `fusion.msal-node.acquire-token.duration`, `fusion.msal-node.login.duration` and
+  `fusion.msal-node.logout.duration`, with one sanitized failure exception per failure.
+  Tokens, scopes, accounts, device codes and original errors are never recorded, results and
+  errors are unchanged, and static `token_only` providers are never instrumented. Calls for a telemetry export request, marked with
+  `markTelemetryExportRequest`, are not recorded. Without
+  telemetry the provider is untouched, and the package stays Node-compatible.
+  
+  Ref: #5804.
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 4.2.4
 
 ### Patch Changes

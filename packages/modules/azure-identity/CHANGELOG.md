@@ -1,5 +1,28 @@
 # @equinor/fusion-framework-module-azure-identity
 
+## 0.4.0-next.0
+
+### Minor Changes
+
+- f150ff4: Record Azure Identity authentication outcomes when a telemetry module is registered.
+  `acquireToken` (also used by `acquireAccessToken`), `login` and `logout` record
+  `fusion.azure-identity.<operation>.duration` metrics, with one sanitized failure exception
+  per failure. Tokens, scopes, auth records and original errors are never recorded, results
+  and errors are unchanged, and static `token_only` providers are never instrumented. Calls for a telemetry export request, marked with
+  `markTelemetryExportRequest`, are not recorded. Without
+  telemetry the provider is untouched, and the package stays Node-compatible.
+  
+  Ref: #5804.
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 0.3.4
 
 ### Patch Changes

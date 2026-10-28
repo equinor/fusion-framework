@@ -1,5 +1,26 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.12-next.0
+
+### Patch Changes
+
+- 6d7f155: Mark OTLP export requests with request-local diagnostic exclusion to prevent
+  shared HTTP telemetry from observing its own export traffic. Concurrent business
+  requests remain observable; no extra HTTP header or usage event is emitted.
+  
+  Ref: #5803.
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 3.1.11
 
 ### Patch Changes
