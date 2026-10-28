@@ -138,19 +138,23 @@ describe('hosted Roles authentication through configureModules', () => {
   });
 
   it.each([
-    [false, '12.1.0'],
-    [true, '12.1.0'],
-    [false, '12.1.0-next.0'],
-    [true, '12.1.0-next.0'],
+    [false, 'stable'],
+    [true, 'stable'],
+    [false, 'prerelease'],
+    [true, 'prerelease'],
   ] as const)(
-    'uses portal auth with real Roles HTTP requests (redundant enableMSAL: %s, version: %s)',
-    async (explicitEnable, moduleVersion) => {
+    'uses portal auth with real Roles HTTP requests (redundant enableMSAL: %s, channel: %s)',
+    async (explicitEnable, channel) => {
+      if (!authModule.version || !authModule.configure) {
+        throw new Error('MSAL module must provide a version and configurator');
+      }
+      const { major, minor, patch } = authModule.version;
+      const compatibilityVersion = `${major}.${minor}.${patch}`;
+      const moduleVersion =
+        channel === 'prerelease' ? `${compatibilityVersion}-next.0` : compatibilityVersion;
       const portal = await createPortal();
       const defaults = new AppConfigurator(env);
       expect(defaults.modules.map(({ name }) => name)).toEqual(['event', 'http', 'auth']);
-      if (!authModule.configure) {
-        throw new Error('MSAL module must provide a configurator');
-      }
       const authConfigurator = await authModule.configure();
       vi.spyOn(authConfigurator, 'version', 'get').mockReturnValue(moduleVersion);
       vi.spyOn(authModule, 'configure').mockReturnValue(authConfigurator);
@@ -164,7 +168,7 @@ describe('hosted Roles authentication through configureModules', () => {
       await expect(modules.roles.getActiveAccessRoleAssignments()).resolves.toEqual(activeRoles);
       expect(portal.createProxy).toHaveBeenCalledOnce();
       // Proxy compatibility uses the schema-coerced version, without prerelease identifiers.
-      expect(portal.createProxy).toHaveBeenCalledWith('12.1.0');
+      expect(portal.createProxy).toHaveBeenCalledWith(compatibilityVersion);
       expect(modules.auth.client).toBe(portal.client);
       expect(modules.auth.account).toBe(portal.session.account);
       expect(portal.requests.at(-1)?.url.pathname).toBe(
