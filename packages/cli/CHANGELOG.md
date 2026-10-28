@@ -1,5 +1,12 @@
 # Change Log
 
+## 15.7.2-next.1
+
+### Patch Changes
+
+- @equinor/fusion-framework-dev-portal@11.1.10-next.1
+  - @equinor/fusion-framework-dev-server@2.3.3-next.1
+
 ## 15.7.2-next.0
 
 ### Patch Changes

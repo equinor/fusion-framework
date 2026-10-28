@@ -123,6 +123,22 @@ Agents follow the same workflow through
 | Release stops partway with `error sending request` or `ECONNRESET` | Transient network error. Re-run the failed job. `pnpm publish -r` skips versions already on npm, so only the remaining packages are published. |
 | `verify` reports `no-tag` right after a successful run | The registry can take a few minutes to show new versions. Wait, then run `verify` again. |
 
+### A successful prerelease still serves old code
+
+`pnpm publish -r` skips versions already on npm, even when the workspace contains different code.
+Restarting a prerelease cycle with an old version can therefore leave consumers on an incompatible artifact
+without failing the release job.
+
+Compare the package's workspace version and runtime exports with its npm version history and dist-tag.
+If the intended version already exists, advance the workspace prerelease counter to the highest occupied
+counter for that version and tag, then add a patch changeset. Confirm that `pnpm changeset status --output <path>`
+plans an unpublished version before merging the generated release PR. Do not republish or retag an old
+artifact as a substitute for releasing the new runtime.
+
+For example, if telemetry's source is `8.0.0-next.0` but npm already contains both `.0` and `.1`, seed the
+manifest at `8.0.0-next.1`; the patch changeset must plan `8.0.0-next.2`. After publishing through
+`release.yml`, verify the registry tag and test the packed runtime's exports, not just its TypeScript declarations.
+
 ## Hardening after verification
 
 Once `verify` passes for every package:

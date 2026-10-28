@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 2.0.4-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.2
+  - @equinor/fusion-framework-app@13.3.0-next.1
+  - @equinor/fusion-framework@9.1.0-next.1
+  - @equinor/fusion-framework-cli@15.7.2-next.1
+
 ## 2.0.4-next.0
 
 ### Patch Changes
