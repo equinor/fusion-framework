@@ -137,12 +137,23 @@ describe('hosted Roles authentication through configureModules', () => {
     vi.unstubAllGlobals();
   });
 
-  it.each([false, true])(
-    'uses portal auth with real Roles HTTP requests (redundant enableMSAL: %s)',
-    async (explicitEnable) => {
+  it.each([
+    [false, '12.1.0'],
+    [true, '12.1.0'],
+    [false, '12.1.0-next.0'],
+    [true, '12.1.0-next.0'],
+  ] as const)(
+    'uses portal auth with real Roles HTTP requests (redundant enableMSAL: %s, version: %s)',
+    async (explicitEnable, moduleVersion) => {
       const portal = await createPortal();
       const defaults = new AppConfigurator(env);
       expect(defaults.modules.map(({ name }) => name)).toEqual(['event', 'http', 'auth']);
+      if (!authModule.configure) {
+        throw new Error('MSAL module must provide a configurator');
+      }
+      const authConfigurator = await authModule.configure();
+      vi.spyOn(authConfigurator, 'version', 'get').mockReturnValue(moduleVersion);
+      vi.spyOn(authModule, 'configure').mockReturnValue(authConfigurator);
       const modules = await initializeApp(portal, (configurator) => {
         // Compare the historical troubleshooting workaround with ordinary app bootstrap.
         if (explicitEnable) {
@@ -152,7 +163,8 @@ describe('hosted Roles authentication through configureModules', () => {
 
       await expect(modules.roles.getActiveAccessRoleAssignments()).resolves.toEqual(activeRoles);
       expect(portal.createProxy).toHaveBeenCalledOnce();
-      expect(portal.createProxy).toHaveBeenCalledWith(String(authModule.version));
+      // Proxy compatibility uses the schema-coerced version, without prerelease identifiers.
+      expect(portal.createProxy).toHaveBeenCalledWith('12.1.0');
       expect(modules.auth.client).toBe(portal.client);
       expect(modules.auth.account).toBe(portal.session.account);
       expect(portal.requests.at(-1)?.url.pathname).toBe(
