@@ -1,5 +1,11 @@
 # @equinor/fusion-openapi-mock-server
 
+## 0.5.4-next.0
+
+### Patch Changes
+
+- @equinor/fusion-services@0.3.4-next.0
+
 ## 0.5.3
 
 ### Patch Changes

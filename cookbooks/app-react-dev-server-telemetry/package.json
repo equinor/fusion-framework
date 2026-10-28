@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-dev-server-telemetry",
-  "version": "0.0.2",
+  "version": "0.0.3-next.0",
   "description": "",
   "private": true,
   "type": "module",

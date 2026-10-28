@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-plugin-context-navigation
 
+## 1.1.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [6d7f155]
+- Updated dependencies [6d7f155]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 1.1.0
 
 ### Minor Changes

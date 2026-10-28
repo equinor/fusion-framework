@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.33-next.0
+
+### Patch Changes
+
+- ef9d5f3: Document the shared operational telemetry handle, bounded measured operations, child-scope
+  lifecycle, privacy-safe summaries and lazy optional-peer wiring across framework modules.
+  
+  Refs #5837.
+- 6d7f155: Document operational telemetry schemas, source ownership and fallback routing,
+  bounded startup/enrichment/processing, ordered teardown, optional HTTP/query/cache
+  instrumentation, measured synthetic budget gates, and lifecycle/navigation migration.
+  
+  Ref: #5803.
+
 ## 0.4.32
 
 ### Patch Changes
