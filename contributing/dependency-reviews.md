@@ -11,7 +11,9 @@ Dependency updates arrive primarily through Dependabot PRs. The repository suppo
 | Single-PR deep review | `fusion-dependency-review` | Detailed multi-lens analysis of one dependency update |
 | Batch processing | `custom-dependency-pr-solver` | Process and auto-merge multiple safe Dependabot PRs |
 
-Both workflows follow the rules in `.github/instructions/dependabot-pr.instructions.md`.
+Both workflows follow the [Dependabot instructions](../.github/instructions/dependabot-pr.instructions.md).
+Opt-in Greenkeeper tasks use the same policy with the bounded local conflict exception described below;
+they do not grant the ordinary batch solver permission to resolve conflicts.
 
 ## Review process
 
@@ -96,9 +98,31 @@ pnpm test && pnpm build && pnpm -w check
 ## Branch management
 
 - **Rebase only** — never merge the base branch into a Dependabot PR branch.
-- Force-push after rebase: `git push --force-with-lease`.
-- Reinstall after rebase: `pnpm install --frozen-lockfile`. If the lockfile drifts, run `pnpm install`, commit the lockfile, and push.
-- If rebase conflicts occur, abort and flag the PR for manual intervention.
+- Reinstall after rebase: `pnpm install --frozen-lockfile`. If the lockfile drifts, resolve intended dependency
+  inputs, regenerate with `pnpm install`, repeat the frozen install, and run full validation before publication.
+- Publish only with authorization and `git push --force-with-lease`; Greenkeeper runners never push.
+- Ordinary Dependabot handling, including the batch solver, must abort conflicting rebases and report manual
+  intervention. PR labels and comments still require explicit authorization.
+
+### Opt-in Greenkeeper conflict resolution
+
+Only when `GREENKEEPER_MAINTENANCE_ENABLED == 'true'` and the runner enforces its declared file scope and finite
+whole-task attempt budget may Greenkeeper dependency health or PR tasks attempt local conflict resolution.
+Follow the canonical [Greenkeeper conflict exception](../.github/instructions/dependabot-pr.instructions.md#greenkeeper-conflict-exception).
+This includes local maintenance-stream candidates, not automatic resolution in the existing write-enabled sync job.
+
+Resolve intended source, manifests, and catalogs first. Regenerate lockfiles with repository-pinned pnpm;
+never hand-merge generated resolutions or invent versions, integrity hashes, or dependency intent. Missing
+enablement or enforced bounds, ambiguous inputs, unsupported conflicts, exceeded scope/budget, and failed
+regeneration or validation all require manual fallback and an explicit `blocked`/`failed` result with `HOLD`.
+Record reasons and checks not run; do not publish partial results.
+
+A resolved candidate still needs a frozen install, full `pnpm test && pnpm build && pnpm -w check` validation,
+and required changesets/release artifacts, all within scope. The runner produces evidence and an optional
+successful candidate bundle only. Publication belongs to the authorized host, which must verify the exact
+original head, current base freshness, candidate scope, artifacts and validation before an expected-head leased
+push. Stale heads or bases require a fresh task. Guarded squash auto-merge retains required current-head CI,
+reviews/checks, and verdict/confidence gates. This policy neither enables Greenkeeper nor proves runtime readiness.
 
 ## Merge strategy
 
@@ -114,7 +138,7 @@ chore(deps): bump <package> from <old> to <new>
 |-------|----------|--------|
 | **High** | Patch/minor bump, no breaking changes, no advisories, validation passes, no unresolved comments | Safe to recommend merge |
 | **Medium** | Minor bump with new features, recent release (< 48h), broad consumer surface | Review recommended before merge |
-| **Low** | Major bump, breaking changes, validation failures, security advisories, rebase conflicts | Hold and flag for maintainer |
+| **Low** | Major bump, breaking changes, validation failures, security advisories, unresolved rebase conflicts | Hold and flag for maintainer |
 
 ## Safety rules
 

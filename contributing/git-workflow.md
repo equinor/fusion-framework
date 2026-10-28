@@ -73,7 +73,16 @@ Main branch should **only** receive commits via approved PRs. Never:
 Wait until PR review to squash - it makes review harder when commits disappear.
 
 ### ✅ Recovery from Rebase Issues
-If conflicts occur during rebase:
+
+The commands below apply to authorized local conflict resolution. Ordinary Dependabot handling must abort
+and escalate conflicts; only explicitly enabled, bounded Greenkeeper tasks may use the
+[Greenkeeper conflict exception](../.github/instructions/dependabot-pr.instructions.md#greenkeeper-conflict-exception).
+The existing write-enabled maintenance sync job does not resolve conflicts.
+
+Resolve intended source and dependency inputs (including manifests and catalogs) before regenerating a lockfile.
+Never hand-merge generated lockfile resolutions or invent versions or integrity hashes. If dependency intent is
+ambiguous or safe regeneration is unsupported, abort and request manual handling.
+
 ```bash
 # Fix conflicts, then:
 git add <resolved-files>
@@ -83,11 +92,15 @@ git rebase --continue
 git rebase --abort
 
 # Special case: pnpm-lock.yaml conflicts
-# Just run pnpm install to regenerate:
+# After resolving intended dependency inputs, regenerate with repository-pinned pnpm:
 pnpm install
 git add pnpm-lock.yaml
 git rebase --continue
 ```
+
+After the complete rebase, run `pnpm install --frozen-lockfile` and all required validation.
+For dependency maintenance this includes `pnpm test && pnpm build && pnpm -w check` and required
+changesets/release artifacts; conflict resolution does not authorize pushing or merging.
 
 ## Best Practices
 

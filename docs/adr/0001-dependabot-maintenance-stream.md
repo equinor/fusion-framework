@@ -43,8 +43,16 @@ conditions hold:
 - Required validation succeeds.
 - The update does not require manual code or configuration changes.
 
-Major, conflicting, failing, or lower-confidence updates remain open for maintainer handling.
+Major, unresolved conflicting, failing, or lower-confidence updates remain open for maintainer handling.
 They do not prevent unrelated high-confidence updates from entering the maintenance stream.
+
+For explicitly enabled Greenkeeper dependency health and PR tasks only, the
+[repository conflict policy](../../.github/instructions/dependabot-pr.instructions.md#greenkeeper-conflict-exception)
+permits bounded resolution in an isolated local candidate before full validation. It requires enforced scope
+and attempt limits, package-manager lockfile regeneration from intended inputs, required release artifacts,
+and manual fallback for unsupported, ambiguous, out-of-bounds, or failing results. Publication remains host-only,
+with exact-head/base freshness checks and expected-head leases; required CI and reviews still gate squash
+auto-merge. This policy exception does not enable Greenkeeper or change the existing write-enabled sync workflow.
 
 Each Dependabot update merged into the maintenance stream dispatches the maintenance workflow's
 `promote` operation. It validates the combined stream and creates or updates the promotion pull
