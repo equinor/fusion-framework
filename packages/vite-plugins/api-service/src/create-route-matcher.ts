@@ -1,4 +1,4 @@
-import pathToRegexp from 'path-to-regexp';
+import { match as matchPath } from 'path-to-regexp';
 
 import type { ApiRoute, IncomingRequest, RequestParams } from './types.js';
 
@@ -62,7 +62,7 @@ export function createRouteMatcher<T extends RequestParams>(route: ApiRoute): Ma
     return (path: string): MatchResult<T> => {
       // Try each pattern in order and return on the first match
       for (const pattern of match) {
-        const result = pathToRegexp.match<T>(pattern)(path);
+        const result = matchPath<T>(pattern)(path);
         // A truthy result means this pattern matched the path
         if (result) {
           return result;
