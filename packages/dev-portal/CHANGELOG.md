@@ -28,6 +28,16 @@
   - @equinor/fusion-framework-app@13.2.2
   - @equinor/fusion-framework@9.0.7
 
+## 11.1.10-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.2
+  - @equinor/fusion-framework-app@13.3.0-next.1
+  - @equinor/fusion-framework@9.1.0-next.1
+  - @equinor/fusion-framework-dev-server@2.3.3-next.1
+
 ## 11.1.10-next.0
 
 ### Patch Changes
