@@ -9,13 +9,12 @@ name: Dependabot PR Rules
 
 - Do not approve, merge, push, close, or comment on a Dependabot PR without explicit user confirmation (batch-level confirmation counts for the solver skill).
 - If the branch needs refreshing, use rebase-only refreshes; never merge the base branch into the PR branch.
-- Abort conflicting rebases for ordinary Dependabot handling. Only explicitly enabled Greenkeeper tasks may
-  attempt the bounded local resolution described under [Greenkeeper conflict exception](#greenkeeper-conflict-exception).
+- Abort conflicting rebases and report manual intervention. Automated Greenkeeper runs are the exception;
+  see [Automated maintenance](#automated-maintenance-greenkeeper).
 - If the PR needs patching, follow `.github/instructions/workflow-contribution.instructions.md`.
 - Treat missing changesets, missing validation, or weak PR-template usage as explicit findings.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
 - Validate with `pnpm test && pnpm build && pnpm -w check` before declaring the PR ready to merge.
-  Greenkeeper smell-tests PRs into `maintenance/dependencies` instead; that branch's CI is the gate (see below).
 
 ## Skills
 
@@ -101,52 +100,22 @@ pnpm test && pnpm build && pnpm -w check
 - Always rebase Dependabot branches; never merge the base branch into the PR branch.
 - After rebase, run `pnpm install --frozen-lockfile`. If the lockfile is out of sync, resolve the intended
   dependency inputs and regenerate it with `pnpm install`, then repeat the frozen install and required validation.
-- Publication requires explicit authorization and `git push --force-with-lease`; Greenkeeper publication is
-  host-only under the exception below.
+- Publication requires explicit authorization and `git push --force-with-lease`.
 - By default, if rebase conflicts occur, abort the rebase and report manual intervention to the maintainer.
   Mark the PR as `needs-manual-intervention` only with explicit authorization. This remains the rule for
   ordinary Dependabot handling, including `custom-dependency-pr-solver`.
 
-### Greenkeeper conflict exception
+## Automated maintenance (Greenkeeper)
 
-This is the only exception to the default conflict-abort rule. It applies to Greenkeeper dependency health
-and PR tasks, including local rebases of `maintenance/dependencies`, only when
-`GREENKEEPER_MAINTENANCE_ENABLED == 'true'` and the runner enforces a declared file scope and finite attempt
-budget. Missing enablement, scope, budget, or enforcement means abort and escalate; the flag alone does not
-establish runtime readiness. Do not enable the flag or widen these bounds to complete a task.
+When the repository opts in through `.github/greenkeeper.yml`, Greenkeeper handles Dependabot PRs on its own
+and its runner owns how it researches, resolves conflicts and publishes. The confirmation and conflict-abort
+rules above are for interactive agents. These repository facts still apply to Greenkeeper:
 
-1. Work only in the task's isolated local candidate at the supplied original head and base head. Never resume
-   another paused rebase, modify another worktree, merge the base branch, or skip dependency commits to bypass
-   a conflict. The attempt budget covers the whole task, not a fresh allowance for each replayed commit.
-2. Resolve intended source and dependency inputs first, including manifests and shared catalogs. Resolve only
-   when the supplied commits and repository guidance establish the intended result without guessing versions,
-   dependency intent, or unrelated code/configuration changes. All edits, including generated output and required
-   release artifacts, must stay inside the declared scope.
-3. Regenerate generated lockfiles with the repository-pinned package manager: use `pnpm install` for this
-   repository after resolving the inputs. Never hand-merge lockfile hunks or fabricate resolutions, versions,
-   or integrity hashes. If pnpm cannot regenerate safely within scope and budget, abort and escalate.
-4. `maintenance/dependencies` is the quality gate: its CI validates the combined updates before promotion to
-   `main`. After the rebase, require `pnpm install --frozen-lockfile`, preserve the changeset decision above
-   and all required release artifacts, and check the generated diff against the intended dependency changes.
-   Do not run the full `pnpm test && pnpm build && pnpm -w check` suite per PR. Smell-test instead: skim the
-   release notes; for major or declared breaking changes, check whether changed APIs are used here. Run focused
-   tests/builds only for affected packages, and attempt an in-scope migration when they fail.
-5. Report `MERGE` unless a breaking change needs human judgement or focused checks still fail after a
-   migration attempt. Checks left to integration-branch CI are reported as not run, not as passed or failed.
-   On unsupported or ambiguous conflicts, exceeded scope/budget, failed regeneration, or such a breaking
-   change, abort any active candidate rebase and report an explicit `blocked` or `failed` result with `HOLD`,
-   the reason, logs, and what a human must decide. Leave remote branches unchanged.
-6. The runner writes evidence (`run.json`, `comment.md`, logs and, only for a successful changed candidate,
-   an optional `candidate.bundle`); it must not push, post comments, label PRs, or merge. Only the authorized
-   host may publish after verifying the reported outcome, file scope, release artifacts, exact original head
-   and current base freshness. A changed head or base invalidates the candidate and requires a fresh task,
-   not reuse of stale evidence. Pushes must use an explicit expected-head lease. For `MERGE` the host requests
-   squash auto-merge into `maintenance/dependencies`; that branch's enforced rules still decide the merge.
-   Reuse earlier Greenkeeper comments instead of repeating research when nothing meaningful changed.
-
-This policy does not enable Greenkeeper, implement runner enforcement, or authorize publication. The existing
-write-enabled maintenance sync workflow still fails on conflicts without resolving them. Keep repository-specific
-dependency and release rules here rather than copying Framework logic into the generic Greenkeeper runner.
+- Dependabot PRs merge into `maintenance/dependencies`. That branch is where maintainers fix and fully validate
+  the combined updates (`pnpm test && pnpm build && pnpm -w check` in CI) before promotion to `main`.
+- Each PR still needs its changeset, following the changeset decision above.
+- Regenerate `pnpm-lock.yaml` with `pnpm install`; never hand-merge lockfile hunks or invent resolutions.
+- Hold a PR only for breaking changes that need a maintainer decision.
 
 ## Merge strategy
 
