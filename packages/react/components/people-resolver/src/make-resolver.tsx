@@ -9,6 +9,7 @@ export const makeResolver = (services: IApiProvider, options?: PersonControllerO
     const client = await services.createPeopleClient();
     const controller = new PersonController(client, options);
     const resolver = createResolver(controller);
+    // biome-ignore lint/correctness/noComponentHookFactories: lazy() runs this factory once, so the component identity stays stable.
     const Component = ({ children }: { readonly children?: React.ReactNode }) => (
       <PeopleResolverComponent resolver={resolver}>{children}</PeopleResolverComponent>
     );
