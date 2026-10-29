@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { from, switchMap, type Observable } from 'rxjs';
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
-import type { ITelemetryProvider, TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
+import {
+  TelemetryLevel,
+  type ITelemetryProvider,
+  type TelemetryItem,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 import httpModule from '@equinor/fusion-framework-module-http';
@@ -131,16 +135,22 @@ describe('service discovery operational telemetry', () => {
 
     expect(items.map((item) => `${item.name}:${item.diagnostic?.outcome}`)).toEqual([
       'fusion.service-discovery.resolve.duration:success',
-      'fusion.service-discovery.resolve.duration:success',
       'fusion.service-discovery.cache-hit:success',
       'fusion.service-discovery.resolve.duration:success',
       'fusion.service-discovery.fallback:success',
     ]);
+    // Cached lookups stay below the Information level hosts typically export.
+    expect(items[1]?.level).toBe(TelemetryLevel.Debug);
+    expect(
+      items.filter(
+        (item) => (item.level ?? TelemetryLevel.Information) >= TelemetryLevel.Information,
+      ),
+    ).toHaveLength(3);
     expect(JSON.stringify(items)).not.toContain(sentinel);
 
     provider.dispose();
     await provider.resolveServices();
-    expect(items).toHaveLength(5);
+    expect(items).toHaveLength(4);
   });
 
   it('pairs a failed resolution with one sanitized exception and a cooldown notification', async () => {

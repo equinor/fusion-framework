@@ -92,12 +92,16 @@ See [Testing](./docs/testing.md) for the full builder API, local-mock-server set
 ## Operational telemetry
 
 When the telemetry module is available, the provider connects to it after initialization
-and records one `fusion.service-discovery.resolve.duration` metric per resolution, with a
-sanitized `.failure` exception when resolution throws. Notifications explain where the list
-came from: `fusion.service-discovery.cache-hit`, `fusion.service-discovery.fallback` (last
+and records one `fusion.service-discovery.resolve.duration` metric per network, fallback or
+cooldown resolution, with a sanitized `.failure` exception when resolution throws.
+Notifications explain where the list came from: `fusion.service-discovery.fallback` (last
 known good list served instead of a failure) and `fusion.service-discovery.cooldown` (failed
 fast during backoff, without a network attempt). `fusion.service-discovery.unknown-service`
 marks a key that is not registered. Keys, URIs, scopes and errors are never recorded.
+
+Cached resolutions are the bulk of lookups, so they record only a Debug-level
+`fusion.service-discovery.cache-hit` event and no duration metric. Adapters that export
+Information and above therefore send nothing for them.
 
 The HTTP attempt behind a network resolution is reported by HTTP telemetry, not repeated
 here. A child host that reuses its parent's client leaves reporting to the parent, so each

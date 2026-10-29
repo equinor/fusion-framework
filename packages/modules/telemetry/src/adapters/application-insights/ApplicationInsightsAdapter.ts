@@ -152,9 +152,10 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
   protected _track(item: TelemetryItem): void {
     const { name, level, type } = item;
     // Keep the captured operational envelope separate from custom metadata and event properties.
+    // Absent optional fields are omitted; Application Insights would export them as "undefined".
     const properties = {
       ...item.properties,
-      metadata: item.metadata,
+      ...(item.metadata !== undefined ? { metadata: item.metadata } : {}),
       ...(item.diagnostic ? { diagnostic: item.diagnostic } : {}),
     };
     // process item by type
