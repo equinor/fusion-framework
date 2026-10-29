@@ -1,5 +1,15 @@
 # Change Log
 
+## 8.0.0-next.3
+
+### Patch Changes
+
+- a27f40f: `ApplicationInsightsAdapter` no longer exports `metadata: "undefined"` in
+  `customDimensions`. Records without metadata, including every built-in operational record,
+  now leave the `metadata` property out.
+  
+  Fixes #5906.
+
 ## 8.0.0-next.2
 
 ### Patch Changes
