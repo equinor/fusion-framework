@@ -143,8 +143,10 @@ export class ServiceDiscoveryProvider
   /**
    * Connects optional operational telemetry for the client this provider owns.
    *
-   * Records one `fusion.service-discovery.resolve.duration` per resolution, plus
-   * `cache-hit`, `fallback`, `cooldown` and `unknown-service` notifications. No keys,
+   * Records one `fusion.service-discovery.resolve.duration` per network, fallback or cooldown
+   * resolution, plus `fallback`, `cooldown` and `unknown-service` notifications. Cached
+   * resolutions record only a Debug-level `cache-hit` notification, so hosts filtering at
+   * Information or above export nothing for them. No keys,
    * URIs, scopes or errors are recorded, and HTTP attempts are left to HTTP telemetry.
    * Calling it again replaces the provider; `undefined` records nothing until reconnected.
    *
@@ -170,16 +172,20 @@ export class ServiceDiscoveryProvider
         return;
       }
       const { outcome, origin, duration } = diagnostic;
-      report({ operation: 'resolve', outcome, duration });
-      // Network resolutions are fully described by the measurement and the HTTP attempt.
+      // Cache hits dominate lookup volume and carry no diagnostic value at default levels,
+      // so they are a single Debug notification rather than a measured resolution.
       if (origin === 'cache') {
         report({
           notification: true,
           operation: 'cache-hit',
           outcome,
-          level: TelemetryLevel.Information,
+          level: TelemetryLevel.Debug,
         });
-      } else if (origin !== 'network') {
+        return;
+      }
+      report({ operation: 'resolve', outcome, duration });
+      // Network resolutions are fully described by the measurement and the HTTP attempt.
+      if (origin !== 'network') {
         report({
           notification: true,
           operation: origin,
