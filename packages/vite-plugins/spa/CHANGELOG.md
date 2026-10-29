@@ -8,6 +8,15 @@
 - Updated dependencies [b5a3976]
   - @equinor/fusion-framework-module-telemetry@7.2.3
 
+## 5.2.4-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.3
+
 ## 5.2.4-next.1
 
 ### Patch Changes

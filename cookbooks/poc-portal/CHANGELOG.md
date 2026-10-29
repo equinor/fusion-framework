@@ -12,6 +12,16 @@
   - @equinor/fusion-framework-react-app@14.3.8
   - @equinor/fusion-framework@9.0.7
 
+## 1.1.122-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.1
+  - @equinor/fusion-framework-cli@15.7.2-next.2
+  - @equinor/fusion-framework@9.1.0-next.2
+  - @equinor/fusion-framework-react-app@14.3.8-next.2
+
 ## 1.1.122-next.1
 
 ### Patch Changes
