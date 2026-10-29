@@ -1,5 +1,12 @@
 # Change Log
 
+## 16.1.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.1
+
 ## 16.1.0-next.0
 
 ### Minor Changes
