@@ -34,6 +34,78 @@ const ProtectedCounter = ({ onMount }: { onMount: VoidFunction }): ReactNode => 
   );
 };
 
+/**
+ * Detects even a single unauthorized commit before passive effect cleanup.
+ * @param props - Observers for layout and passive mount effects.
+ * @returns Content that must never render without access.
+ */
+const DeniedChild = ({
+  onLayout,
+  onMount,
+}: {
+  onLayout: VoidFunction;
+  onMount: VoidFunction;
+}): ReactNode => {
+  useLayoutEffect(onLayout, [onLayout]);
+  useEffect(onMount, [onMount]);
+  return <p>Unchecked content</p>;
+};
+
+/**
+ * Records protected side effects, including any unauthorized transient mount.
+ * @param props - Observer for protected mount effects.
+ * @returns Protected content.
+ */
+const ProtectedChild = ({ onMount }: { onMount: VoidFunction }): ReactNode => {
+  useEffect(onMount, [onMount]);
+  return <p>New protected content</p>;
+};
+
+/**
+ * Throws a required-role error during render.
+ * @param props - Provider attached to the thrown error.
+ */
+const ThrowRequiredRoleError = ({
+  provider,
+}: {
+  provider: ConstructorParameters<typeof RequiredAccessRolesError>[2];
+}): ReactNode => {
+  throw new RequiredAccessRolesError('Missing required role.', ['Reports.Read'], provider);
+};
+
+/**
+ * Throws an error unrelated to access roles during render.
+ */
+const ThrowUnrelated = (): ReactNode => {
+  throw new Error('Unrelated failure');
+};
+
+/**
+ * Renders the error message as a fallback component.
+ * @param props - Error caught by the boundary.
+ * @returns The error message.
+ */
+const Fallback = ({ error }: { error: Error }): ReactNode => <p>Component: {error.message}</p>;
+
+/**
+ * Outer error boundary that proves unrelated errors propagate past AccessRoleBoundary.
+ */
+class OuterBoundary extends Component<
+  { children: ReactNode; onError: (error: Error) => void },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError(): { failed: boolean } {
+    return { failed: true };
+  }
+  componentDidCatch(error: Error): void {
+    this.props.onError(error);
+  }
+  render(): ReactNode {
+    return this.state.failed ? <p>Outer boundary</p> : this.props.children;
+  }
+}
+
 describe('AccessRoleBoundary', () => {
   beforeEach(() => {
     mocks.hasAccessRole.mockReset();
@@ -197,17 +269,11 @@ describe('AccessRoleBoundary', () => {
       }
       const onMount = vi.fn();
       const onLayout = vi.fn();
-      /** Detects even a single unauthorized commit before passive effect cleanup. */
-      const DeniedChild = (): ReactNode => {
-        useLayoutEffect(onLayout, []);
-        useEffect(onMount, []);
-        return <p>Unchecked content</p>;
-      };
       await screen.rerender(
         <AccessRoleBoundary
           requiredAccessRoles={[change === 'provider' ? 'Reports.Read' : 'Reports.Export']}
         >
-          <DeniedChild />
+          <DeniedChild onLayout={onLayout} onMount={onMount} />
         </AccessRoleBoundary>,
       );
       mocks.getRequiredAccessRoleStatuses.mockResolvedValue([
@@ -249,16 +315,11 @@ describe('AccessRoleBoundary', () => {
         mocks.hasAccessRole.mockReturnValue(checked.promise);
       }
       const onMount = vi.fn();
-      /** Records protected side effects, including any unauthorized transient mount. */
-      const ProtectedChild = (): ReactNode => {
-        useEffect(onMount, []);
-        return <p>New protected content</p>;
-      };
       await screen.rerender(
         <AccessRoleBoundary
           requiredAccessRoles={change === 'requirements' ? ['Reports.Export'] : required}
         >
-          <ProtectedChild />
+          <ProtectedChild onMount={onMount} />
         </AccessRoleBoundary>,
       );
 
@@ -336,13 +397,9 @@ describe('AccessRoleBoundary', () => {
         claimableAssignments: [],
       },
     ]);
-    const ThrowRequiredRoleError = (): ReactNode => {
-      throw new RequiredAccessRolesError('Missing required role.', ['Reports.Read'], provider);
-    };
-
     const screen = await render(
       <AccessRoleBoundary>
-        <ThrowRequiredRoleError />
+        <ThrowRequiredRoleError provider={provider} />
       </AccessRoleBoundary>,
     );
 
@@ -380,10 +437,6 @@ describe('AccessRoleBoundary', () => {
 
     it('renders FallbackComponent and prefers fallbackRender when both are provided', async () => {
       mocks.hasAccessRole.mockRejectedValue(deniedError());
-      const Fallback = ({ error }: { error: Error }): ReactNode => (
-        <p>Component: {error.message}</p>
-      );
-
       const screen = await render(
         <AccessRoleBoundary requiredAccessRoles={['Reports.Read']} FallbackComponent={Fallback}>
           <p>Protected reports</p>
@@ -426,23 +479,10 @@ describe('AccessRoleBoundary', () => {
 
     it('does not use the fallback for unrelated errors', async () => {
       const fallbackRender = vi.fn(() => <p>Custom fallback</p>);
-      const ThrowUnrelated = (): ReactNode => {
-        throw new Error('Unrelated failure');
-      };
       const onError = vi.fn();
-      class OuterBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
-        state = { failed: false };
-        static getDerivedStateFromError(): { failed: boolean } {
-          return { failed: true };
-        }
-        componentDidCatch = onError;
-        render(): ReactNode {
-          return this.state.failed ? <p>Outer boundary</p> : this.props.children;
-        }
-      }
 
       const screen = await render(
-        <OuterBoundary>
+        <OuterBoundary onError={onError}>
           <AccessRoleBoundary fallbackRender={fallbackRender}>
             <ThrowUnrelated />
           </AccessRoleBoundary>
