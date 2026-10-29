@@ -32,7 +32,7 @@
     "@equinor/fusion-framework-react-module-context": "workspace:^",
     "@equinor/fusion-observable": "workspace:*",
     "@equinor/fusion-query": "workspace:*",
-    "@equinor/fusion-react-context-selector": "^2.0.11",
+    "@equinor/fusion-react-context-selector": "^2.0.12",
     "@equinor/fusion-react-date": "^1.0.8",
     "@equinor/fusion-react-side-sheet": "^2.0.0",
     "react": "catalog:react",
