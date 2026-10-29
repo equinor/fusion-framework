@@ -61,6 +61,16 @@
       "quoteStyle": "single"
     }
   },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "yaml": {
+    "formatter": {
+      "enabled": false
+    }
+  },
   "overrides": [
     {
       "includes": ["**/packages/react/**"]
@@ -93,30 +103,6 @@
           }
         }
       }
-    },
-    {
-      "includes": ["**/__tests__/**", "**/*.test.tsx"],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "noComponentHookFactories": "warn"
-          }
-        }
-      }
-    },
-    {
-      "includes": ["packages/react/components/people-resolver/src/make-resolver.tsx"],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "noComponentHookFactories": "warn"
-          }
-        }
-      }
-    },
-    {
-      "includes": ["**/*.md", "**/*.yaml", "**/*.yml"],
-      "formatter": { "enabled": false }
     }
   ]
 }
