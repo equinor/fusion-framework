@@ -4,24 +4,16 @@ How dependency update PRs are reviewed and merged in the Fusion Framework monore
 
 ## Overview
 
-Dependency updates arrive primarily through Dependabot PRs. The repository supports two workflows:
+Dependabot PRs target `maintenance/dependencies`. That branch collects the updates, its CI runs the full
+validation suite, and maintainers fix and validate the combined result there before it is promoted to `main`.
 
-| Workflow | Skill | Use case |
-|----------|-------|----------|
-| Single-PR deep review | `fusion-dependency-review` | Detailed multi-lens analysis of one dependency update |
-| Batch processing | `custom-dependency-pr-solver` | Process and auto-merge multiple safe Dependabot PRs |
+| Path | How |
+|------|-----|
+| Automated | Greenkeeper (when enabled) smell-tests each Dependabot PR, adds its changeset and merges it into `maintenance/dependencies`. It holds a PR only for breaking changes that need a maintainer decision. |
+| Interactive | Review one PR with the APM-installed `fusion-dependency-review` skill. |
 
-Both workflows follow the [Dependabot instructions](../.github/instructions/dependabot-pr.instructions.md).
-Opt-in Greenkeeper tasks use the same policy with the bounded local conflict exception described below;
-they do not grant the ordinary batch solver permission to resolve conflicts.
-
-## Review process
-
-1. **Research** — Identify the dependency, version range, upstream changelog, breaking changes, and security advisories.
-2. **Existing discussion** — Read all PR comments and review threads before analysis. Prior maintainer decisions take priority.
-3. **Lens analysis** — Evaluate security posture, code quality / upstream stability, and repository impact.
-4. **Verdict** — Produce a recommendation with confidence level and follow-up items.
-5. **Maintainer confirmation** — Never merge without explicit approval.
+Both follow the repository facts in the [Dependabot instructions](../.github/instructions/dependabot-pr.instructions.md).
+Promotion from `maintenance/dependencies` to `main` stays a maintainer-reviewed PR.
 
 ## AI review scheduling
 
@@ -87,7 +79,7 @@ refresh or replacement; the catalog migration does not repair them retroactively
 
 ### Full validation
 
-Run the full suite before recommending merge:
+The full suite runs in CI on `maintenance/dependencies`, not per Dependabot PR:
 
 ```bash
 pnpm test && pnpm build && pnpm -w check
@@ -97,32 +89,10 @@ pnpm test && pnpm build && pnpm -w check
 
 ## Branch management
 
-- **Rebase only** — never merge the base branch into a Dependabot PR branch.
+- **Rebase only**: never merge the base branch into a Dependabot PR branch.
 - Reinstall after rebase: `pnpm install --frozen-lockfile`. If the lockfile drifts, resolve intended dependency
-  inputs, regenerate with `pnpm install`, repeat the frozen install, and run full validation before publication.
-- Publish only with authorization and `git push --force-with-lease`; Greenkeeper runners never push.
-- Ordinary Dependabot handling, including the batch solver, must abort conflicting rebases and report manual
-  intervention. PR labels and comments still require explicit authorization.
-
-### Opt-in Greenkeeper conflict resolution
-
-Only when `GREENKEEPER_MAINTENANCE_ENABLED == 'true'` and the runner enforces its declared file scope and finite
-whole-task attempt budget may Greenkeeper dependency health or PR tasks attempt local conflict resolution.
-Follow the canonical [Greenkeeper conflict exception](../.github/instructions/dependabot-pr.instructions.md#greenkeeper-conflict-exception).
-This includes local maintenance-stream candidates, not automatic resolution in the existing write-enabled sync job.
-
-Resolve intended source, manifests, and catalogs first. Regenerate lockfiles with repository-pinned pnpm;
-never hand-merge generated resolutions or invent versions, integrity hashes, or dependency intent. Missing
-enablement or enforced bounds, ambiguous inputs, unsupported conflicts, exceeded scope/budget, and failed
-regeneration or validation all require manual fallback and an explicit `blocked`/`failed` result with `HOLD`.
-Record reasons and checks not run; do not publish partial results.
-
-A resolved candidate still needs a frozen install, full `pnpm test && pnpm build && pnpm -w check` validation,
-and required changesets/release artifacts, all within scope. The runner produces evidence and an optional
-successful candidate bundle only. Publication belongs to the authorized host, which must verify the exact
-original head, current base freshness, candidate scope, artifacts and validation before an expected-head leased
-push. Stale heads or bases require a fresh task. Guarded squash auto-merge retains required current-head CI,
-reviews/checks, and verdict/confidence gates. This policy neither enables Greenkeeper nor proves runtime readiness.
+  inputs and regenerate with `pnpm install`; never hand-merge lockfile hunks or invent resolutions.
+- Push rebased branches with `git push --force-with-lease`.
 
 ## Merge strategy
 
@@ -131,18 +101,3 @@ Use **squash merge** with a conventional commit message:
 ```
 chore(deps): bump <package> from <old> to <new>
 ```
-
-## Confidence levels
-
-| Level | Criteria | Action |
-|-------|----------|--------|
-| **High** | Patch/minor bump, no breaking changes, no advisories, validation passes, no unresolved comments | Safe to recommend merge |
-| **Medium** | Minor bump with new features, recent release (< 48h), broad consumer surface | Review recommended before merge |
-| **Low** | Major bump, breaking changes, validation failures, security advisories, unresolved rebase conflicts | Hold and flag for maintainer |
-
-## Safety rules
-
-- Never auto-merge just because the update is small.
-- Never assume CI is green — always check actual status.
-- Never suppress reviewer or maintainer concerns.
-- Never create merge commits on Dependabot branches.

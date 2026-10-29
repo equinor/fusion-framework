@@ -106,4 +106,4 @@ Read the latest `.tmp/skills/custom-rebase/*-rebase-report.md` and summarize onl
 ## Related Skills
 
 - `fusion-dependency-review` for dependency PR analysis
-- `custom-dependency-pr-solver` for Dependabot batch processing
+- `fusion-dependency-review` for Dependabot PRs
