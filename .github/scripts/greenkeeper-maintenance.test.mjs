@@ -346,6 +346,8 @@ else { console.error('Unexpected API endpoint'); process.exit(2); }
           GITHUB_EVENT_NAME: 'push',
           GITHUB_REF: 'refs/heads/main',
           GITHUB_ACTIONS: 'true',
+          // Explicit, so a debug-mode CI run cannot leak its own RUNNER_DEBUG into the fixture.
+          RUNNER_DEBUG: '0',
           ORCHESTRATOR_IMAGE: channel('orchestrator'),
           GREENKEEPER_IMAGE: channel('sandbox-node'),
           GREENKEEPER_GATEWAY_IMAGE: channel('gateway'),
@@ -386,7 +388,7 @@ test('the container runs the combined dependency task at the confirmed default-b
     GREENKEEPER_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'2'.repeat(64)}`,
     GREENKEEPER_GATEWAY_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'3'.repeat(64)}`,
     GITHUB_ACTIONS: 'true',
-    RUNNER_DEBUG: null,
+    RUNNER_DEBUG: '0',
   });
   // The grouped run log and native debug mode follow the runner's own variables.
   assert.ok(execute.args.includes('GITHUB_ACTIONS'));
