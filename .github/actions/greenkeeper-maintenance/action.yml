@@ -71,6 +71,4 @@ runs:
         GREENKEEPER_PUBLISH_TOKEN: ${{ inputs.publish-token }}
         FUSION_AI_TOKEN: ${{ steps.ai.outputs.token }}
         FUSION_MCP_TOKEN: ${{ steps.ai.outputs.mcp-token }}
-        # GitHub debug mode ("Re-run with debug logging" or ACTIONS_STEP_DEBUG) adds runner evidence to the summary.
-        GREENKEEPER_DEBUG: ${{ runner.debug == '1' }}
       run: bash "$GITHUB_ACTION_PATH/run-container.sh"
