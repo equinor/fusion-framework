@@ -11,12 +11,12 @@ on:
 permissions:
   contents: read
 
-# Greenkeeper images built from equinor/fusion-poc-greenkeeper 933468e52851d1e43173ad2af430107cc1b67e51.
-# Pinned here, not in repository variables, so every image change is reviewed in a pull request.
+# During evaluation Framework follows Greenkeeper's main channel: each run resolves these tags to digests, runs
+# only those digests and records them in the run summary. Pin @sha256 digests here to freeze a reviewed version.
 env:
-  GREENKEEPER_ORCHESTRATOR_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:6b42cb157388bd154be3002387f4cdd2ffb557e464cc9e8d8d82e71e8f51f9d8
-  GREENKEEPER_SANDBOX_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:bead40f1cf1f7d9d9fadf9de7900a49c27c29cb51aeac12f3d0d61a13582cdc4
-  GREENKEEPER_GATEWAY_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:16f0e16450dd82eba2f386fa81195a70830a8369ad3e6af80193c86dda283256
+  GREENKEEPER_ORCHESTRATOR_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper:orchestrator-main
+  GREENKEEPER_SANDBOX_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper:sandbox-node-main
+  GREENKEEPER_GATEWAY_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper:gateway-main
 
 concurrency:
   group: greenkeeper-maintenance
