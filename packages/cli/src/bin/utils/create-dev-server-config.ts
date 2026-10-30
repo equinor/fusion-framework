@@ -6,6 +6,8 @@ import {
   type DevServerOptions,
   type FusionTemplateEnv,
 } from '@equinor/fusion-framework-dev-server';
+import { mergeDevServerConfig } from '../../lib/merge-dev-server-config.js';
+import type { RecursivePartial } from '../../lib/utils/types.js';
 
 /**
  * PortalManifest describes the minimal structure required for a portal manifest.
@@ -34,7 +36,12 @@ type PortalConfig = Record<string, unknown>; // Use a more specific type if avai
  * @property server - Optional server options for the dev server.
  */
 export type CreateDevServerOptions = {
-  template?: Partial<FusionTemplateEnv>;
+  /**
+   * Deeply merged with the default template. Objects merge recursively; arrays append to defaults
+   * (with duplicate primitive/reference values removed); `undefined` preserves the default and
+   * `null` replaces it, then fails runtime validation for non-nullable settings.
+   */
+  template?: RecursivePartial<FusionTemplateEnv>;
   portal?: {
     manifest: PortalManifest;
     config?: PortalConfig;
@@ -55,16 +62,12 @@ export type CreateDevServerOptions = {
 };
 
 /**
- * Creates a Fusion dev server template environment, merging with user overrides.
+ * Creates the default Fusion dev server template environment.
  *
- * @param overrides - Partial template environment to override defaults.
  * @param mock - Origin of a local mock server, if `--mock` was used; also swaps auth for the in-process MSAL mock so the mocked API is usable end-to-end.
  * @returns The dev server template environment without the 'bootstrap' property.
  */
-const createDevServerTemplate = (
-  overrides?: Partial<FusionTemplateEnv>,
-  mock?: string,
-): Omit<FusionTemplateEnv, 'bootstrap'> => ({
+const createDevServerTemplate = (mock?: string): Omit<FusionTemplateEnv, 'bootstrap'> => ({
   portal: {
     id: '@equinor/fusion-framework-dev-portal',
   },
@@ -112,8 +115,6 @@ const createDevServerTemplate = (
       },
     ],
   },
-  // TODO(#5069): deep merge with user config
-  ...overrides,
 });
 
 /**
@@ -227,11 +228,11 @@ const applyPortalRouting = (
  * @param options - Options for dev server config, including app/portal manifests and overrides.
  * @returns The complete dev server options object.
  */
-export const createDevServerConfig = (options: CreateDevServerOptions) => {
+export const createDevServerConfig = (options: CreateDevServerOptions): DevServerOptions => {
   const discoveryMock = options.mock ?? options.mockDiscovery;
   const config: DevServerOptions = {
     spa: {
-      templateEnv: createDevServerTemplate(options.template, options.mock),
+      templateEnv: createDevServerTemplate(options.mock),
     },
     api: {
       // Mock auth issues unsigned tokens that real discovery rejects, so any mock auth source
@@ -266,5 +267,9 @@ export const createDevServerConfig = (options: CreateDevServerOptions) => {
     applyPortalRouting(config, options.portal.manifest, options.portal.config);
   }
 
-  return config;
+  return mergeDevServerConfig(config, {
+    spa: {
+      templateEnv: options.template,
+    },
+  });
 };

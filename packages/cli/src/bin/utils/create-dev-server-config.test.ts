@@ -79,4 +79,31 @@ describe('createDevServerConfig', () => {
 
     expect(config.api.serviceDiscoveryUrl).toBe('http://localhost:4010/@fusion-mock/discovery');
   });
+
+  it('deeply merges template overrides without losing unrelated defaults', () => {
+    const config = createDevServerConfig({
+      template: {
+        msal: { requiresAuth: 'false' },
+        serviceDiscovery: { url: '/custom-discovery' },
+        serviceWorker: { resources: [{ url: '/custom-resource' }] },
+      },
+    });
+    const templateEnv = config.spa?.templateEnv;
+
+    // The template factory returns an object, not a per-request callback.
+    if (!templateEnv || typeof templateEnv === 'function') {
+      throw new Error('Expected createDevServerConfig to generate an object template environment');
+    }
+
+    expect(templateEnv.msal?.requiresAuth).toBe('false');
+    expect(templateEnv.msal?.clientId).toBeDefined();
+    expect(templateEnv.serviceDiscovery?.url).toBe('/custom-discovery');
+    expect(templateEnv.serviceDiscovery?.scopes.length).toBeGreaterThan(0);
+    // Compare only resource paths so test output never includes authentication scopes.
+    expect(templateEnv.serviceWorker?.resources.map(({ url }) => url)).toContain(
+      '/custom-resource',
+    );
+    // Confirm an unrelated default proxy survives the nested resource override.
+    expect(templateEnv.serviceWorker?.resources.map(({ url }) => url)).toContain('/apps-proxy');
+  });
 });

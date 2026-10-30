@@ -90,7 +90,11 @@ The dev-server configuration supports these main areas:
 
 ## How Configuration Works
 
-The `dev-server.config.ts` file is designed for **overriding** the default dev-server behavior. You only specify what you want to change - the system automatically merges your overrides with the defaults.
+The `dev-server.config.ts` file is designed for **overriding** the default dev-server behavior. You only specify what you want to change; the system recursively merges nested objects with the defaults.
+
+For example, overriding only `spa.templateEnv.msal.requiresAuth` preserves the other default
+MSAL settings. Likewise, overriding `serviceDiscovery.url` preserves its default scopes, and
+adding `serviceWorker.resources` keeps the default resource entries.
 
 ### Object Configuration (Recommended)
 Just export the properties you want to override:
@@ -121,13 +125,22 @@ export default defineDevServerConfig(({ base }) => {
 
 **Key Point**: You don't need to manually spread/merge anything. Just provide the overrides you want - the merging happens automatically.
 
-## Array Merging Behavior
+## Object, Array, `undefined`, and `null` Merge Behavior
 
-The dev-server uses intelligent array merging:
+Nested object overrides merge recursively. An omitted property or an explicitly `undefined`
+property preserves its default. An explicit `null` replaces the default and then fails runtime
+validation for settings that do not accept `null`; use `undefined` or omit the property to keep
+the default.
 
-- **Routes**: Merged by `match` path - routes with identical paths are replaced (yours wins)
-- **Other arrays**: Deduplicated using `Set` - removes exact duplicates
-- **Services**: In service discovery, arrays are typically replaced rather than merged
+Array overrides append entries to the default array. Primitive values and identical object
+references are deduplicated with `Set`; distinct objects with equal contents are not considered
+duplicates. This means a `serviceWorker.resources` override adds resource entries without removing
+the default proxies.
+
+`api.routes` is the exception: middleware and proxy routes merge by their `match` value. A route
+override with the same match replaces the default route; routes with different matches are retained.
+String and string-array matchers compare by value. Function matchers compare by reference, so pass
+the same function to replace a route; distinct functions are always kept as separate routes.
 
 Example route merging:
 ```typescript
@@ -139,6 +152,23 @@ routes: [{ match: '/api/users', middleware: yourHandler }]
 
 // Result: yourHandler replaces baseHandler for /api/users
 ```
+
+## Runtime Configuration Validation
+
+The CLI validates the resolved dev-server configuration after loading JSON or JavaScript/TypeScript
+configuration and merging it with defaults. Object exports and configuration factory functions are
+supported; callback-valued settings such as `spa.templateEnv`, `api.processServices`, and route
+middleware remain valid. Custom `spa.templateEnv` keys, including keys inside nested template
+objects such as `msal`, are preserved and exposed to the SPA as `FUSION_SPA_*` variables. Unknown
+keys in `spa`, `api`, `log`, and `api.routes` entries are rejected so typos are reported.
+
+Invalid settings fail startup with a diagnostic that names the field path, for example
+`api.serviceDiscoveryUrl: API service discovery URL must be a non-empty string.` The CLI logs the
+diagnostic and does not start with defaults as a fallback.
+
+A project without `dev-server.config` starts with the defaults. A config file that exists but
+cannot be loaded, for example invalid JSON, a syntax error, or a factory that throws, is logged
+and stops startup.
 
 ## Quick Start Examples
 
@@ -434,4 +464,3 @@ export default defineDevServerConfig(() => ({
   mockServer: { path: 'mocks', port: 4010, seed: 42 },
 }));
 ```
-
