@@ -37,119 +37,52 @@ for queue behavior and capacity.
 
 ## Greenkeeper dependency maintenance
 
-[Greenkeeper maintenance](../.github/workflows/greenkeeper-maintenance.yml) runs one shared runner task,
-`dependency`. It preserves Dependabot's discovery, research comments, high-confidence merge gates,
-changesets and aggregate promotion. It does not rename the populated `maintenance/dependencies` stream.
-The branch name is repository-owned in [`.github/greenkeeper.yml`](../.github/greenkeeper.yml):
+[Greenkeeper dependency maintenance](../.github/workflows/greenkeeper-maintenance.yml) combines open Dependabot
+updates on `greenkeeper/dependencies` with one pull request into `main`, titled
+`☘️ Greenkeeper: dependency updates`. See [ADR 0003](../docs/adr/0003-greenkeeper-combined-dependency-updates.md).
+Each run:
 
-```yaml
-version: 1
-maintenance:
-  dependency:
-    branch: maintenance/dependencies
-tasks: []
-```
+1. Creates `greenkeeper/dependencies` from `main`, or rebases it onto `main`, and pushes it.
+2. For each open Dependabot pull request on `main`: applies the update without its lockfiles, researches only
+   a version it has not researched before, migrates when needed, runs light checks, adds or updates the
+   changeset, commits with `Dependabot-PR` and `Dependabot-Version` trailers, pushes and updates the pull request.
+3. Comments on each Dependabot pull request: included ones link the combined pull request, whose body closes
+   them on merge; held ones give the reason and stay open for Dependabot and maintainers.
 
-The runner reads this configuration at the confirmed default-branch commit. It inventories open
-same-repository Dependabot PRs, checks whether the dependency branch exists and whether it is outdated,
-and attempts Git rebase before hiring an agent for actual conflicts. A missing branch is created from
-the default branch only when open Dependabot PRs need processing and publication is enabled.
-Export-only runs propose creation without writing. Existing branches are checked even without open PRs.
-Inventory does not research, retarget or merge PRs; the existing integration pipeline retains those duties.
+Nothing merges automatically. Review and merge the combined pull request like any other; a merge commit keeps the
+per-update commits. The next run starts a fresh branch after the combined pull request is merged or closed.
 
 ### Execution and credentials
 
-Execution stays in Framework's existing protected `docs` environment. The local
-[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) uses Azure OIDC login
-with Framework's existing identity and acquires only a short-lived token for the Fusion AI scope
-`0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default`.
-It does not install or configure Copilot, resolve a model, or create a provider file.
-Azure logout and account cleanup run even on failure, before invoking the shared runner.
-Masked step outputs carry the token only within this job; there is no cross-job token output,
-dispatch input or token artifact.
+The job runs in the protected `docs` environment. The local
+[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) acquires a short-lived
+Fusion AI token with Framework's existing identity, clears the Azure session, then runs the Greenkeeper
+orchestrator image. The orchestrator starts its own isolated gateway and sandbox containers. The three images are
+pinned by digest in the workflow; change them only in a reviewed pull request. The action vendors the
+`dependencies` task and the locked `fusion-developer` APM profile from the same Greenkeeper commit; the behavior
+tests check their checksums.
 
-Framework is public and the runner repository is private. Both production and trial runs therefore use
-the published trusted orchestrator image rather than private source checkout or a private reusable workflow.
-The host action inventories Dependabot PRs and repository policy, then invokes the orchestrator through Docker.
-The orchestrator uses the host Docker socket to provision isolated sibling gateway and sandbox containers.
-Its scratch directory is mounted at the same absolute path so sibling bind mounts resolve on the host.
-Only the trusted orchestrator receives host credentials and the Docker socket; workers do not.
-Greenkeeper needs no federated SP, Azure identity, source-read PAT or Actions write grant.
-
-The image deliberately excludes task definitions. The action vendors only `rebase-conflicts.md` and its
-locked `fusion-developer` APM profile from Greenkeeper revision
-`aaf28da138034b383bee4efaccbe219106fb04b3`, mounted read-only at `/tasks`.
-The behavior tests verify these exact asset checksums. Upgrade them deliberately alongside compatible images;
-do not replace the locked profile with an unpinned install.
-
-Credentials have separate purposes:
-
-- `github.token`: Framework Contents/Pull requests read, plus approved GHCR package reads.
-- `APM_FUSION_SKILLS_TOKEN`: the existing read-only private skills credential.
-- `DEPENDABOT_AUTOMATION_TOKEN`: the existing host-only publisher with Contents write on Framework's stream.
-
-The publishing token must never be substituted for the APM credential or passed into the agent.
-No token values need to be inspected. Runner journals and bundles stay in the transient runner workspace;
-the shared action does not upload them or copy them into public job summaries.
+- `github.token`: reads Framework and the Greenkeeper images.
+- `APM_FUSION_SKILLS_TOKEN`: reads the private skills.
+- `DEPENDABOT_AUTOMATION_TOKEN`: pushes `greenkeeper/dependencies`, opens and updates its pull request and comments
+  on Dependabot pull requests. It never enters a sandbox.
 
 ### Activation and rollback
 
-Automatic Greenkeeper execution is disabled until the Framework repository variable
-`GREENKEEPER_MAINTENANCE_ENABLED` is exactly `true`. Until then, the existing Dependabot maintenance
-workflow continues to own main-push sync. A push while disabled reports that unchanged ownership.
-
 Before enabling:
 
-1. Configure `GREENKEEPER_ORCHESTRATOR_IMAGE` to a reviewed immutable trusted orchestrator digest
-   in Framework's `docs` environment. No private source checkout or `GREENKEEPER_SOURCE_TOKEN` is needed.
-2. Configure matching reviewed `GREENKEEPER_IMAGE` and `GREENKEEPER_GATEWAY_IMAGE` digests in that environment.
-   Verify GHCR grants allow Framework's job token to read them.
-3. Verify the existing APM-read and Framework-publishing grants. The sandbox must support Framework's
-   pnpm version and build/test/lint scripts. Keep the existing branch protections and existing Fusion identity.
-   No central target enrollment or new federation is required.
-4. After this wiring is merged, manually run the Framework workflow on `main` with `export-only: true`.
-   Inspect the Framework job result; maintenance runs there, not in a second service run.
-   Export-only mode creates no branches and publishes no rebased refs, but may use inference for conflicts.
-5. After reviewing that result and letting any legacy sync finish, enable the variable.
-   Main pushes then run publishing maintenance,
-   and the legacy main-push sync job skips, avoiding two automatic rebase owners.
+1. Grant `DEPENDABOT_AUTOMATION_TOKEN` Contents write on `greenkeeper/dependencies`, Pull requests write and
+   Issues write (for comments). Make sure branch rules allow it to force-push that branch after a rebase.
+2. Optionally create the `☘️ Fusion Greenkeep` label; Greenkeeper applies it but never creates it.
+3. Run the workflow manually on `main` and review the combined pull request and comments it creates.
 
-Manual dispatch is available before activation and defaults to export-only. Explicitly choosing
-`export-only: false` authorizes publishing maintenance even while automatic handover is disabled.
-Do not run manual legacy `sync` concurrently with a runner rebase. To roll back, first let any active
-Framework maintenance run finish or cancel it deliberately, then unset the variable or set it to `false`.
-Main-push sync returns to the legacy workflow. Manual recovery/reset/promotion, maintenance-branch pushes
-and deletion recovery remain available throughout.
+Then set the repository variable `GREENKEEPER_MAINTENANCE_ENABLED` to `true`. Pushes to `main` and the weekday
+schedule then run Greenkeeper, and the legacy main-push stream sync and the per-PR AI research for pull requests on
+`main` stop. To roll back, let an active run finish, unset the variable and close the combined pull request.
 
-### Pre-merge export-only smoke test
-
-The existing [PR workflow](../.github/workflows/pr.yml) has an explicit manual `greenkeeper_smoke` option.
-This tests the candidate without merging its maintenance workflow or policy into `main`.
-Dispatch `pr.yml` on the reviewed candidate branch, with `head_sha` equal to that branch's exact event commit
-and `pr_number` identifying the PR. Supply `greenkeeper_orchestrator_image`, `greenkeeper_image` and
-`greenkeeper_gateway_image` as reviewed immutable image digests.
-The trial defaults pin the orchestrator, Node sandbox and gateway published from Greenkeeper revision
-`fb5646553ad7d8537df1addaa0d45be14c6d13b5`, including bounded large-lockfile conflict evidence.
-Production still uses the explicitly configured environment image variables.
-
-Before Azure authentication, the smoke job authenticates to GHCR with Framework's job token
-and pulls all three pinned images. `packages: read` alone does not grant access to another repository's package.
-The package must also allow Actions access from Framework.
-
-The smoke job uses Framework's existing `docs` identity and obtains only the AI token.
-`APM_FUSION_SKILLS_TOKEN` remains the read-only APM credential, and the job token needs access to the
-reviewed GHCR images. Missing grants fail explicitly; there is no fallback to a stronger credential.
-No `publish-token` is supplied to the smoke runner.
-
-The host action accepts the candidate policy only for manual export-only execution at the exact caller event SHA
-without a publishing credential. It still compares and validates against the current default branch,
-retaining upstream freshness checks. Missing streams are proposed, never created. Existing outdated streams
-can exercise Git rebase, final validation and conflict agents without publishing.
-An already-current stream proves authentication and inventory but does not exercise rebase or inference.
-Smoke evidence remains in the transient runner workspace; no journals or bundles are uploaded.
-
-This manual test does not enable automatic handover or relax the production default-branch guard.
-Normal PR CI can also be dispatched independently without `greenkeeper_smoke`.
+Merging this setup points npm Dependabot at `main`. Dependabot closes its pull requests against
+`maintenance/dependencies` and opens new ones against `main`. Pull requests that still target the stream keep
+their legacy workflows until they drain.
 
 ## Changeset requirements
 

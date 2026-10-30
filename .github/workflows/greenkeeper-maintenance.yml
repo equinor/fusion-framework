@@ -1,18 +1,21 @@
-name: Greenkeeper maintenance
+name: Greenkeeper dependency maintenance
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '17 5 * * 1-5'
   workflow_dispatch:
-    inputs:
-      export-only:
-        description: Inspect and export without creating or rewriting branches
-        type: boolean
-        required: true
-        default: true
 
 permissions:
   contents: read
+
+# Greenkeeper images built from equinor/fusion-poc-greenkeeper dc0dc581906ab804b69815f47089a222532d90fb.
+# Pinned here, not in repository variables, so every image change is reviewed in a pull request.
+env:
+  GREENKEEPER_ORCHESTRATOR_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:11400d3a1e1fb72377cae8f09f1b513f66fadc027f1d4fc8a930951797115544
+  GREENKEEPER_SANDBOX_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:d3738e3808fd6d3a30d8b42312b9e30a41919c21da5c70432330c93f91fd51fc
+  GREENKEEPER_GATEWAY_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:2ff0cec34921a1b4ca907aafa3c211be031f8bcfc225ea70f8ca1189783c13be
 
 concurrency:
   group: greenkeeper-maintenance
@@ -20,22 +23,23 @@ concurrency:
 
 jobs:
   disabled:
-    if: github.event_name == 'push' && vars.GREENKEEPER_MAINTENANCE_ENABLED != 'true'
+    if: github.event_name != 'workflow_dispatch' && vars.GREENKEEPER_MAINTENANCE_ENABLED != 'true'
     runs-on: ubuntu-latest
     permissions: {}
     steps:
-      - name: Report unchanged maintenance ownership
+      - name: Report inactive dependency maintenance
         run: |
-          echo 'Greenkeeper maintenance is disabled; the existing Dependabot workflow still owns main-push sync.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Greenkeeper dependency maintenance is not enabled; set GREENKEEPER_MAINTENANCE_ENABLED=true to run it automatically.' >> "$GITHUB_STEP_SUMMARY"
 
   maintain:
     if: >-
-      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (github.event_name == 'schedule' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) &&
+      (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') &&
       (vars.GREENKEEPER_MAINTENANCE_ENABLED == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     environment: docs
-    timeout-minutes: 75
+    # Each update is pushed when accepted, so a run that times out loses only the update in progress.
+    timeout-minutes: 300
     permissions:
       contents: read
       pull-requests: read
@@ -44,18 +48,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
 
-      - name: Maintain dependency stream in Framework
+      - name: Combine Dependabot updates on greenkeeper/dependencies
         uses: ./.github/actions/greenkeeper-maintenance
         with:
-          task: dependency
-          export-only: ${{ github.event_name == 'workflow_dispatch' && inputs.export-only && 'true' || 'false' }}
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
-          orchestrator-image: ${{ vars.GREENKEEPER_ORCHESTRATOR_IMAGE }}
-          image: ${{ vars.GREENKEEPER_IMAGE }}
-          gateway-image: ${{ vars.GREENKEEPER_GATEWAY_IMAGE }}
+          orchestrator-image: ${{ env.GREENKEEPER_ORCHESTRATOR_IMAGE }}
+          image: ${{ env.GREENKEEPER_SANDBOX_IMAGE }}
+          gateway-image: ${{ env.GREENKEEPER_GATEWAY_IMAGE }}
           github-token: ${{ github.token }}
           apm-token: ${{ secrets.APM_FUSION_SKILLS_TOKEN }}
-          publish-token: ${{ (github.event_name == 'push' || !inputs.export-only) && secrets.DEPENDABOT_AUTOMATION_TOKEN || '' }}
+          publish-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}

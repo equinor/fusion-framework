@@ -1,16 +1,7 @@
-name: Run Greenkeeper maintenance in Framework
-description: Acquire Framework's Fusion AI token and execute the pinned Greenkeeper orchestrator image
+name: Run Greenkeeper dependency maintenance in Framework
+description: Acquire Framework's Fusion AI token and run the pinned Greenkeeper combined dependency task
 
 inputs:
-  task:
-    description: Greenkeeper maintenance task
-    required: true
-  export-only:
-    description: Inspect and export without creating or rewriting branches
-    default: 'true'
-  preview-policy-revision:
-    description: Exact caller event SHA for a manual export-only candidate-policy test, without a publisher
-    default: ''
   client-id:
     description: Existing Framework Fusion AI identity
     required: true
@@ -30,8 +21,8 @@ inputs:
     description: Existing read-only Fusion skills credential
     required: true
   publish-token:
-    description: Existing automation credential with Contents write on Framework's dependency branch
-    required: false
+    description: Host-only automation credential that pushes greenkeeper/dependencies, opens its pull request and comments on Dependabot PRs
+    required: true
 
 runs:
   using: composite
@@ -72,10 +63,6 @@ runs:
     - name: Run containerized dependency maintenance
       shell: bash
       env:
-        TASK: ${{ inputs.task }}
-        EXPORT_ONLY: ${{ inputs.export-only }}
-        PREVIEW_POLICY_REVISION: ${{ inputs.preview-policy-revision }}
-        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         ORCHESTRATOR_IMAGE: ${{ inputs.orchestrator-image }}
         GREENKEEPER_IMAGE: ${{ inputs.image }}
         GREENKEEPER_GATEWAY_IMAGE: ${{ inputs.gateway-image }}

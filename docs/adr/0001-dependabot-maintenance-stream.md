@@ -11,6 +11,9 @@ scope:
 
 # Route routine Dependabot updates through a maintenance stream
 
+> Replaced by [ADR 0003](0003-greenkeeper-combined-dependency-updates.md) once Greenkeeper dependency
+> maintenance is enabled. This stream remains until no Dependabot pull requests target it.
+
 ## Context
 
 Fusion Framework contains more than 80 packages that share a pnpm lockfile. Dependabot opens
@@ -83,41 +86,6 @@ and refreshes the promotion, including dispatching its required checks. An empty
 promoted. `ensure` still leaves existing branches unchanged; `ensure`, `sync`, and `reset` all
 recover a missing branch.
 
-### Opt-in Greenkeeper main-push maintenance
-
-The repository may hand automatic main-push sync to the Greenkeeper runner by setting
-`GREENKEEPER_MAINTENANCE_ENABLED=true`. Its caller selects `task: dependency`; the service reads
-`maintenance.dependency.branch` from `.github/greenkeeper.yml` at the confirmed default-branch commit.
-The configured branch remains `maintenance/dependencies`; this does not migrate or recreate its history.
-Without that flag, the legacy sync behavior above is unchanged.
-
-When enabled, only the legacy main-push management job skips. Existing Dependabot research, merge gates,
-changesets, maintenance-branch triggers, manual recovery and aggregate promotion remain unchanged.
-The runner executes in Framework's existing protected `docs` environment, inventories open Dependabot PRs
-and attempts Git before escalating actual integration-stream conflicts to bounded agents.
-Full final validation and an exact-head lease precede a runner rewrite.
-This is not permission to resolve individual Dependabot PR conflicts automatically in the write-enabled
-Framework job, nor permission to merge to `main`.
-
-Framework uses its existing identity for Azure login and AI-token acquisition only, without installing
-or configuring Copilot. Azure session cleanup precedes runner execution. Both production and trial invoke
-the published trusted orchestrator image at an immutable digest, without checking out private runner source.
-Framework supplies the pinned conflict task/profile separately and mounts same-path scratch for sibling containers.
-Only the trusted orchestrator receives the Docker socket; Greenkeeper needs no federated SP
-or Actions write grant. `DEPENDABOT_AUTOMATION_TOKEN` remains the host-only Framework publishing credential,
-while `github.token` and `APM_FUSION_SKILLS_TOKEN` provide separate read-only access.
-Reviewed image/task pins, compatible validation and existing branch-specific rewrite authorization are
-activation prerequisites. Missing branches are created only when open Dependabot PRs need processing
-and publishing is enabled.
-Existing local deletion/manual recovery is retained as a maintainer-controlled fallback.
-See [the activation and rollback guide](../../contributing/dependency-reviews.md#activation-and-rollback).
-
-The manually selected PR-workflow smoke job is a narrow pre-merge exception: it may read the policy at the
-exact caller event commit on a reviewed candidate branch, but only in export-only mode with no publisher.
-It retains current default-branch freshness checks and cannot create or rewrite branches.
-The production workflow still runs only from the default branch. The smoke job neither enables automatic
-handover nor transfers inference credentials across jobs.
-
 ## Branch rules
 
 Repository administrators must configure `maintenance/dependencies` with rules that:
@@ -126,8 +94,7 @@ Repository administrators must configure `maintenance/dependencies` with rules t
 - do not require human pull request approval;
 - require squash merges;
 - prevent deletion;
-- prevent force pushes except for guarded maintenance sync/reset and the Greenkeeper runner using the existing
-  explicitly authorized Framework automation identity after activation;
+- prevent force pushes except for the guarded maintenance sync and reset workflow;
 - permit GitHub Actions to enable auto-merge.
 
 `main` remains the default branch and retains its existing protection and human approval
