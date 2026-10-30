@@ -68,6 +68,13 @@ Greenkeeper's task definitions and locked skills, so this repository holds no Gr
 - `DEPENDABOT_AUTOMATION_TOKEN`: pushes `greenkeeper/dependencies`, opens and updates its pull request and comments
   on Dependabot pull requests. It never enters a sandbox.
 
+### Debugging a run
+
+Dispatch the workflow with `debug` checked, or use GitHub's "Re-run with debug logging". The run summary then lists
+the warm-up's and each update's status, verdict, checks, diagnostics, limitations and changed files, with every
+credential redacted. That's the same kind of content the Dependabot pull request comments publish. Prompts, model
+output and raw logs never reach this public repository; use a local Greenkeeper run with its Aspire dashboard for those.
+
 ### Activation and rollback
 
 Before enabling:

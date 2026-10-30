@@ -264,8 +264,17 @@ test('authentication belongs to Framework and the runner receives separate read,
 });
 
 test('the workflow follows the Greenkeeper main channel for all three images', () => {
-  for (const [name, image] of [['ORCHESTRATOR', 'orchestrator'], ['SANDBOX', 'sandbox-node'], ['GATEWAY', 'gateway']]) {
-    assert.match(workflow, new RegExp(`GREENKEEPER_${name}_IMAGE: ghcr\\.io/equinor/fusion-poc-greenkeeper:${image}-main\\n`));
+  for (const [name, image] of [
+    ['ORCHESTRATOR', 'orchestrator'],
+    ['SANDBOX', 'sandbox-node'],
+    ['GATEWAY', 'gateway'],
+  ]) {
+    assert.match(
+      workflow,
+      new RegExp(
+        `GREENKEEPER_${name}_IMAGE: ghcr\\.io/equinor/fusion-poc-greenkeeper:${image}-main\\n`,
+      ),
+    );
   }
   assert.doesNotMatch(workflow, /vars\.GREENKEEPER_[A-Z_]*IMAGE/);
   assert.equal(existsSync(new URL('../greenkeeper.yml', import.meta.url)), false);
@@ -294,7 +303,8 @@ const args = process.argv.slice(2);
 fs.appendFileSync(process.env.CALLS_PATH, JSON.stringify({ command, args, environment: {
   GREENKEEPER_REVISION: process.env.GREENKEEPER_REVISION, GREENKEEPER_MODEL: process.env.GREENKEEPER_MODEL,
   GREENKEEPER_WORKER_MODEL: process.env.GREENKEEPER_WORKER_MODEL, GREENKEEPER_TASKS_PATH: process.env.GREENKEEPER_TASKS_PATH ?? null,
-  GREENKEEPER_IMAGE: process.env.GREENKEEPER_IMAGE, GREENKEEPER_GATEWAY_IMAGE: process.env.GREENKEEPER_GATEWAY_IMAGE
+  GREENKEEPER_IMAGE: process.env.GREENKEEPER_IMAGE, GREENKEEPER_GATEWAY_IMAGE: process.env.GREENKEEPER_GATEWAY_IMAGE,
+  GREENKEEPER_DEBUG: process.env.GREENKEEPER_DEBUG
 } }) + '\\n');
 if (command === 'stat') { console.log('123'); process.exit(0); }
 if (command === 'docker') {
@@ -374,11 +384,20 @@ test('the container runs the combined dependency task at the confirmed default-b
     GREENKEEPER_TASKS_PATH: null,
     GREENKEEPER_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'2'.repeat(64)}`,
     GREENKEEPER_GATEWAY_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'3'.repeat(64)}`,
+    GREENKEEPER_DEBUG: 'false',
   });
+  assert.ok(execute.args.includes('GREENKEEPER_DEBUG'));
   // The run uses the resolved orchestrator digest, never the moving channel tag.
-  assert.ok(execute.args.includes(`ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'1'.repeat(64)}`));
+  assert.ok(
+    execute.args.includes(`ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'1'.repeat(64)}`),
+  );
   assert.ok(execute.args.every((arg) => !arg.endsWith('-main')));
-  assert.match(result.summary, new RegExp(`orchestrator \`ghcr\\.io/equinor/fusion-poc-greenkeeper@sha256:${'1'.repeat(64)}\``));
+  assert.match(
+    result.summary,
+    new RegExp(
+      `orchestrator \`ghcr\\.io/equinor/fusion-poc-greenkeeper@sha256:${'1'.repeat(64)}\``,
+    ),
+  );
   for (const name of [
     'GREENKEEPER_PUBLISH_TOKEN',
     'FUSION_AI_TOKEN',
@@ -419,10 +438,7 @@ test('container failures propagate after the run summary is recorded', () => {
 for (const [name, overrides] of [
   ['untrusted event', { GITHUB_EVENT_NAME: 'pull_request' }],
   ['non-default ref', { GITHUB_REF: 'refs/heads/feature' }],
-  [
-    'non-channel tag',
-    { ORCHESTRATOR_IMAGE: 'ghcr.io/equinor/fusion-poc-greenkeeper:latest' },
-  ],
+  ['non-channel tag', { ORCHESTRATOR_IMAGE: 'ghcr.io/equinor/fusion-poc-greenkeeper:latest' }],
   ['image from another repository', { GREENKEEPER_IMAGE: 'ghcr.io/other/image:sandbox-node-main' }],
   ['missing publisher', { GREENKEEPER_PUBLISH_TOKEN: '' }],
   ['missing AI token', { FUSION_AI_TOKEN: '' }],
@@ -439,11 +455,35 @@ for (const [name, overrides] of [
 test('an image that does not resolve to a Greenkeeper digest stops the run before the orchestrator starts', () => {
   const result = maintain({ UNRESOLVABLE: 'true' });
   assert.notEqual(result.status, 0);
-  assert.ok(result.calls.every((call) => !(call.command === 'docker' && call.args.includes('--task'))));
+  assert.ok(
+    result.calls.every((call) => !(call.command === 'docker' && call.args.includes('--task'))),
+  );
 });
 
 test('pinned digests are still accepted to freeze a reviewed version', () => {
   const digest = `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'2'.repeat(64)}`;
   const result = maintain({ GREENKEEPER_IMAGE: digest });
   assert.equal(result.status, 0, result.stderr);
+});
+
+for (const [value, expected] of [
+  ['true', 'true'],
+  ['false', 'false'],
+  ['', 'false'],
+  ['yes', 'false'],
+]) {
+  test(`debug input ${value || 'unset'} reaches the orchestrator as ${expected}`, () => {
+    const result = maintain({ GREENKEEPER_DEBUG: value });
+    assert.equal(result.status, 0, result.stderr);
+    const execute = result.calls.find(
+      (call) => call.command === 'docker' && call.args.includes('--task'),
+    );
+    assert.equal(execute.environment.GREENKEEPER_DEBUG, expected);
+  });
+}
+
+test('debug is a manual dispatch choice or GitHub debug logging, off by default', () => {
+  assert.match(workflow, /debug:\n {8}description: .+\n {8}type: boolean\n {8}default: false/);
+  assert.match(workflow, /debug: \$\{\{ inputs\.debug == true \|\| runner\.debug == '1' \}\}/);
+  assert.match(action, /GREENKEEPER_DEBUG: \$\{\{ inputs\.debug \}\}/);
 });
