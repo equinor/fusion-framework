@@ -34,8 +34,9 @@ Replace the maintenance stream with Greenkeeper's combined branch once
   requests against the default branch.
 - [Greenkeeper dependency maintenance](../../.github/workflows/greenkeeper-maintenance.yml) runs on pushes to
   `main` and on manual dispatch (a weekday schedule is prepared but disabled during evaluation), in the protected `docs` environment with Framework's
-  existing Fusion AI identity. The three Greenkeeper images are pinned by digest in that workflow; the orchestrator image also carries
-  Greenkeeper's task definitions and locked skills.
+  existing Fusion AI identity. During evaluation the workflow follows Greenkeeper's `main` channel
+  tags, resolved to digests at run start; pin `@sha256` digests to freeze a reviewed version. The orchestrator image
+  carries Greenkeeper's task definitions and locked skills.
 - `DEPENDABOT_AUTOMATION_TOKEN` is the only write credential. It pushes `greenkeeper/dependencies`, opens and
   updates its pull request and comments on Dependabot pull requests. It never enters a sandbox.
 - Once enabled, the legacy main-push stream sync and the per-PR AI research for pull requests on `main` stop.
