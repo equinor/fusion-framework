@@ -33,7 +33,7 @@ Replace the maintenance stream with Greenkeeper's combined branch once
 - npm Dependabot updates target `main` (no `target-branch`), because Greenkeeper reads Dependabot pull
   requests against the default branch.
 - [Greenkeeper dependency maintenance](../../.github/workflows/greenkeeper-maintenance.yml) runs on pushes to
-  `main`, on weekday mornings and on manual dispatch, in the protected `docs` environment with Framework's
+  `main` and on manual dispatch (a weekday schedule is prepared but disabled during evaluation), in the protected `docs` environment with Framework's
   existing Fusion AI identity. The three Greenkeeper images are pinned by digest in that workflow; the orchestrator image also carries
   Greenkeeper's task definitions and locked skills.
 - `DEPENDABOT_AUTOMATION_TOKEN` is the only write credential. It pushes `greenkeeper/dependencies`, opens and

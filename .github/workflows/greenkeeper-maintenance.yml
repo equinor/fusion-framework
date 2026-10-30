@@ -3,8 +3,9 @@ name: Greenkeeper dependency maintenance
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: '17 5 * * 1-5'
+  # Weekday schedule disabled during evaluation; re-enable with:
+  # schedule:
+  #   - cron: '17 5 * * 1-5'
   workflow_dispatch:
 
 permissions:

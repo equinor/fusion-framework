@@ -152,7 +152,7 @@ for (const enabled of ['', 'false', 'true']) {
   });
 }
 
-test('the daily schedule runs only when enabled, without a repository payload', () => {
+test('a schedule would run only when enabled, without a repository payload', () => {
   const schedule = {
     event_name: 'schedule',
     ref: 'refs/heads/main',
@@ -160,7 +160,8 @@ test('the daily schedule runs only when enabled, without a repository payload', 
   };
   assert.equal(jobCondition(workflow, 'maintain', schedule, 'true'), true);
   assert.equal(jobCondition(workflow, 'maintain', schedule, ''), false);
-  assert.match(workflow, /schedule:\n {4}- cron: '17 5 \* \* 1-5'/);
+  // The schedule trigger is commented out during evaluation; the job condition still supports it.
+  assert.doesNotMatch(workflow, /^ {2}schedule:/m);
 });
 
 test('maintainers can dispatch a run from the default branch before activation', () => {

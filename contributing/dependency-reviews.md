@@ -75,8 +75,8 @@ Before enabling:
 2. Optionally create the `☘️ Fusion Greenkeep` label; Greenkeeper applies it but never creates it.
 3. Run the workflow manually on `main` and review the combined pull request and comments it creates.
 
-Then set the repository variable `GREENKEEPER_MAINTENANCE_ENABLED` to `true`. Pushes to `main` and the weekday
-schedule then run Greenkeeper, and the legacy main-push stream sync and the per-PR AI research for pull requests on
+Then set the repository variable `GREENKEEPER_MAINTENANCE_ENABLED` to `true`. Pushes to `main` then run
+Greenkeeper (the weekday schedule is commented out during evaluation), and the legacy main-push stream sync and the per-PR AI research for pull requests on
 `main` stop. To roll back, let an active run finish, unset the variable and close the combined pull request.
 
 Merging this setup points npm Dependabot at `main`. Dependabot closes its pull requests against
