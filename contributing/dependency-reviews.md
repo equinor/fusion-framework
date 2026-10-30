@@ -35,6 +35,54 @@ does not replace bounded retry handling or provider quota management.
 See [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
 for queue behavior and capacity.
 
+## Greenkeeper dependency maintenance
+
+[Greenkeeper dependency maintenance](../.github/workflows/greenkeeper-maintenance.yml) combines open Dependabot
+updates on `greenkeeper/dependencies` with one pull request into `main`, titled
+`☘️ Greenkeeper: dependency updates`. See [ADR 0003](../docs/adr/0003-greenkeeper-combined-dependency-updates.md).
+Each run:
+
+1. Creates `greenkeeper/dependencies` from `main`, or rebases it onto `main`, and pushes it.
+2. For each open Dependabot pull request on `main`: applies the update without its lockfiles, researches only
+   a version it has not researched before, migrates when needed, runs light checks, adds or updates the
+   changeset, commits with `Dependabot-PR` and `Dependabot-Version` trailers, pushes and updates the pull request.
+3. Comments on each Dependabot pull request: included ones link the combined pull request, whose body closes
+   them on merge; held ones give the reason and stay open for Dependabot and maintainers.
+
+Nothing merges automatically. Review and merge the combined pull request like any other; a merge commit keeps the
+per-update commits. The next run starts a fresh branch after the combined pull request is merged or closed.
+
+### Execution and credentials
+
+The job runs in the protected `docs` environment. The local
+[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) acquires a short-lived
+Fusion AI token with Framework's existing identity, clears the Azure session, then runs the Greenkeeper
+orchestrator image. The orchestrator starts its own isolated gateway and sandbox containers. The three images are
+pinned by digest in the workflow; change them only in a reviewed pull request. The orchestrator image carries
+Greenkeeper's task definitions and locked skills, so this repository holds no Greenkeeper task files.
+
+- `github.token`: reads Framework and the Greenkeeper images.
+- `APM_FUSION_SKILLS_TOKEN`: reads the private skills.
+- `DEPENDABOT_AUTOMATION_TOKEN`: pushes `greenkeeper/dependencies`, opens and updates its pull request and comments
+  on Dependabot pull requests. It never enters a sandbox.
+
+### Activation and rollback
+
+Before enabling:
+
+1. Grant `DEPENDABOT_AUTOMATION_TOKEN` Contents write on `greenkeeper/dependencies`, Pull requests write and
+   Issues write (for comments). Make sure branch rules allow it to force-push that branch after a rebase.
+2. Optionally create the `☘️ Fusion Greenkeep` label; Greenkeeper applies it but never creates it.
+3. Run the workflow manually on `main` and review the combined pull request and comments it creates.
+
+Then set the repository variable `GREENKEEPER_MAINTENANCE_ENABLED` to `true`. Pushes to `main` then run
+Greenkeeper (the weekday schedule is commented out during evaluation), and the legacy main-push stream sync and the per-PR AI research for pull requests on
+`main` stop. To roll back, let an active run finish, unset the variable and close the combined pull request.
+
+Merging this setup points npm Dependabot at `main`. Dependabot closes its pull requests against
+`maintenance/dependencies` and opens new ones against `main`. Pull requests that still target the stream keep
+their legacy workflows until they drain.
+
 ## Changeset requirements
 
 A changeset is mandatory when the dependency update touches a published package. See the [changeset guide](changeset.md) and the changeset decision section in `.github/instructions/dependabot-pr.instructions.md` for details.

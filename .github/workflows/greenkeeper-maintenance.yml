@@ -1,0 +1,63 @@
+name: Greenkeeper dependency maintenance
+
+on:
+  push:
+    branches: [main]
+  # Weekday schedule disabled during evaluation; re-enable with:
+  # schedule:
+  #   - cron: '17 5 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Greenkeeper images built from equinor/fusion-poc-greenkeeper 933468e52851d1e43173ad2af430107cc1b67e51.
+# Pinned here, not in repository variables, so every image change is reviewed in a pull request.
+env:
+  GREENKEEPER_ORCHESTRATOR_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:6b42cb157388bd154be3002387f4cdd2ffb557e464cc9e8d8d82e71e8f51f9d8
+  GREENKEEPER_SANDBOX_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:bead40f1cf1f7d9d9fadf9de7900a49c27c29cb51aeac12f3d0d61a13582cdc4
+  GREENKEEPER_GATEWAY_IMAGE: ghcr.io/equinor/fusion-poc-greenkeeper@sha256:16f0e16450dd82eba2f386fa81195a70830a8369ad3e6af80193c86dda283256
+
+concurrency:
+  group: greenkeeper-maintenance
+  cancel-in-progress: false
+
+jobs:
+  disabled:
+    if: github.event_name != 'workflow_dispatch' && vars.GREENKEEPER_MAINTENANCE_ENABLED != 'true'
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Report inactive dependency maintenance
+        run: |
+          echo 'Greenkeeper dependency maintenance is not enabled; set GREENKEEPER_MAINTENANCE_ENABLED=true to run it automatically.' >> "$GITHUB_STEP_SUMMARY"
+
+  maintain:
+    if: >-
+      (github.event_name == 'schedule' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) &&
+      (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') &&
+      (vars.GREENKEEPER_MAINTENANCE_ENABLED == 'true' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    environment: docs
+    # Each update is pushed when accepted, so a run that times out loses only the update in progress.
+    timeout-minutes: 300
+    permissions:
+      contents: read
+      pull-requests: read
+      packages: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Combine Dependabot updates on greenkeeper/dependencies
+        uses: ./.github/actions/greenkeeper-maintenance
+        with:
+          client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
+          orchestrator-image: ${{ env.GREENKEEPER_ORCHESTRATOR_IMAGE }}
+          image: ${{ env.GREENKEEPER_SANDBOX_IMAGE }}
+          gateway-image: ${{ env.GREENKEEPER_GATEWAY_IMAGE }}
+          github-token: ${{ github.token }}
+          apm-token: ${{ secrets.APM_FUSION_SKILLS_TOKEN }}
+          publish-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}

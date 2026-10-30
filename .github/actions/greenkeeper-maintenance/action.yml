@@ -1,0 +1,73 @@
+name: Run Greenkeeper dependency maintenance in Framework
+description: Acquire Framework's Fusion AI token and run the pinned Greenkeeper combined dependency task
+
+inputs:
+  client-id:
+    description: Existing Framework Fusion AI identity
+    required: true
+  image:
+    description: Reviewed immutable sandbox image
+    required: true
+  orchestrator-image:
+    description: Reviewed immutable trusted orchestrator image
+    required: true
+  gateway-image:
+    description: Reviewed immutable gateway image
+    required: true
+  github-token:
+    description: Framework Contents, Pull requests and Packages read token
+    required: true
+  apm-token:
+    description: Existing read-only Fusion skills credential
+    required: true
+  publish-token:
+    description: Host-only automation credential that pushes greenkeeper/dependencies, opens its pull request and comments on Dependabot PRs
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Authenticate with Framework's existing identity
+      uses: azure/login@0949e32778441b2c442592b7a0e6313466dc8f29 # v3.0.2
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
+      with:
+        client-id: ${{ inputs.client-id }}
+        tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+        allow-no-subscriptions: true
+
+    - name: Acquire the short-lived Fusion AI token
+      id: ai
+      shell: bash
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
+      run: bash "$GITHUB_ACTION_PATH/acquire-token.sh"
+
+    - name: Clear Framework's Azure session before running maintenance
+      if: always()
+      shell: bash
+      env:
+        AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
+      run: |
+        set -euo pipefail
+        az logout
+        az account clear
+
+    - name: Authenticate GHCR using the Framework job token
+      uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ inputs.github-token }}
+
+    - name: Run containerized dependency maintenance
+      shell: bash
+      env:
+        ORCHESTRATOR_IMAGE: ${{ inputs.orchestrator-image }}
+        GREENKEEPER_IMAGE: ${{ inputs.image }}
+        GREENKEEPER_GATEWAY_IMAGE: ${{ inputs.gateway-image }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        FUSION_APM_TOKEN: ${{ inputs.apm-token }}
+        GREENKEEPER_PUBLISH_TOKEN: ${{ inputs.publish-token }}
+        FUSION_AI_TOKEN: ${{ steps.ai.outputs.token }}
+      run: bash "$GITHUB_ACTION_PATH/run-container.sh"
