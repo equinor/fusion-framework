@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -266,27 +265,9 @@ test('the three Greenkeeper images are pinned by digest in the reviewed workflow
   assert.equal(existsSync(new URL('../greenkeeper.yml', import.meta.url)), false);
 });
 
-test('vendored dependencies task and locked profile match Greenkeeper dc0dc58', () => {
-  for (const [file, hash] of [
-    ['dependencies.md', '6ee7541d5b0d9a88b73918f98c002761bf4a69cfd0d47ad2bac45a87a72ab6c4'],
-    [
-      'profiles/fusion-developer/apm.yml',
-      'c8b550e3e62d66591e5b51139a710cc6823bee5e35f91bd0ec913be16d7e752e',
-    ],
-    [
-      'profiles/fusion-developer/apm.lock.yaml',
-      'c183923e1787bc9c8d5865d70ae42ee87b4cc4c26d26691b010453c77262a0e9',
-    ],
-  ]) {
-    const bytes = readFileSync(
-      new URL(`../actions/greenkeeper-maintenance/tasks/${file}`, import.meta.url),
-    );
-    assert.equal(createHash('sha256').update(bytes).digest('hex'), hash, file);
-  }
+test('Greenkeeper task definitions come from the orchestrator image, not this repository', () => {
   assert.equal(
-    existsSync(
-      new URL('../actions/greenkeeper-maintenance/tasks/rebase-conflicts.md', import.meta.url),
-    ),
+    existsSync(new URL('../actions/greenkeeper-maintenance/tasks', import.meta.url)),
     false,
   );
 });
@@ -306,7 +287,7 @@ const command = ${JSON.stringify(command)};
 const args = process.argv.slice(2);
 fs.appendFileSync(process.env.CALLS_PATH, JSON.stringify({ command, args, environment: {
   GREENKEEPER_REVISION: process.env.GREENKEEPER_REVISION, GREENKEEPER_MODEL: process.env.GREENKEEPER_MODEL,
-  GREENKEEPER_WORKER_MODEL: process.env.GREENKEEPER_WORKER_MODEL, GREENKEEPER_TASKS_PATH: process.env.GREENKEEPER_TASKS_PATH
+  GREENKEEPER_WORKER_MODEL: process.env.GREENKEEPER_WORKER_MODEL, GREENKEEPER_TASKS_PATH: process.env.GREENKEEPER_TASKS_PATH ?? null
 } }) + '\\n');
 if (command === 'stat') { console.log('123'); process.exit(0); }
 if (command === 'docker') {
@@ -376,7 +357,7 @@ test('the container runs the combined dependency task at the confirmed default-b
     GREENKEEPER_REVISION: 'a'.repeat(40),
     GREENKEEPER_MODEL: 'gpt-6.1-sol',
     GREENKEEPER_WORKER_MODEL: 'gpt-6-luna',
-    GREENKEEPER_TASKS_PATH: '/tasks',
+    GREENKEEPER_TASKS_PATH: null,
   });
   for (const name of [
     'GREENKEEPER_PUBLISH_TOKEN',
@@ -393,7 +374,8 @@ test('the container runs the combined dependency task at the confirmed default-b
   );
   const mounts = execute.args.filter((_arg, index) => execute.args[index - 1] === '--mount');
   assert.ok(mounts.includes('type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock'));
-  assert.ok(mounts.some((arg) => arg.endsWith('target=/tasks,readonly')));
+  assert.ok(mounts.every((arg) => !arg.includes('target=/tasks')));
+  assert.ok(!execute.args.includes('GREENKEEPER_TASKS_PATH'));
   const scratch = mounts.find((arg) => /source=.*greenkeeper-maintenance\./.test(arg));
   assert.ok(scratch);
   const [, source, target] = scratch.split(',');

@@ -19,7 +19,6 @@ git check-ref-format --branch "$default_branch"
 for image in "$ORCHESTRATOR_IMAGE" "$GREENKEEPER_IMAGE" "$GREENKEEPER_GATEWAY_IMAGE"; do
   docker pull "$image"
 done
-tasks="$(cd "$(dirname "${BASH_SOURCE[0]}")/tasks" && pwd)"
 scratch="$(mktemp -d "$RUNNER_TEMP/greenkeeper-maintenance.XXXXXX")"
 
 revision="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$default_branch" --jq .object.sha)"
@@ -36,7 +35,6 @@ mkdir "$scratch/tmp"
 export GREENKEEPER_REPOSITORY="$GITHUB_REPOSITORY"
 export GREENKEEPER_REVISION="$revision"
 export GREENKEEPER_OUTPUT_PATH="$scratch/results"
-export GREENKEEPER_TASKS_PATH=/tasks
 export GREENKEEPER_TIMEOUT_SECONDS=900
 export GREENKEEPER_MODEL=gpt-6.1-sol
 export GREENKEEPER_WORKER_MODEL=gpt-6-luna
@@ -46,12 +44,11 @@ status=0
 docker run --rm --init --user "$(id -u):$(id -g)" \
   --read-only --cap-drop ALL --security-opt no-new-privileges \
   --tmpfs "/tmp:rw,nosuid,nodev" \
-  --mount "type=bind,source=$tasks,target=/tasks,readonly" \
   --group-add "$(stat -c '%g' /var/run/docker.sock)" \
   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
   --mount "type=bind,source=$scratch,target=$scratch" \
   --env "TMPDIR=$scratch/tmp" \
-  --env GREENKEEPER_REPOSITORY --env GREENKEEPER_REVISION --env GREENKEEPER_OUTPUT_PATH --env GREENKEEPER_TASKS_PATH \
+  --env GREENKEEPER_REPOSITORY --env GREENKEEPER_REVISION --env GREENKEEPER_OUTPUT_PATH \
   --env GREENKEEPER_PUBLISH_TOKEN --env GREENKEEPER_IMAGE --env GREENKEEPER_GATEWAY_IMAGE \
   --env GREENKEEPER_TIMEOUT_SECONDS --env GREENKEEPER_MODEL --env GREENKEEPER_WORKER_MODEL \
   --env GH_TOKEN --env FUSION_APM_TOKEN --env FUSION_AI_TOKEN --env FUSION_AI_BASE_URL --env FUSION_MCP_URL \

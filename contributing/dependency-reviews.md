@@ -58,9 +58,8 @@ The job runs in the protected `docs` environment. The local
 [`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) acquires a short-lived
 Fusion AI token with Framework's existing identity, clears the Azure session, then runs the Greenkeeper
 orchestrator image. The orchestrator starts its own isolated gateway and sandbox containers. The three images are
-pinned by digest in the workflow; change them only in a reviewed pull request. The action vendors the
-`dependencies` task and the locked `fusion-developer` APM profile from the same Greenkeeper commit; the behavior
-tests check their checksums.
+pinned by digest in the workflow; change them only in a reviewed pull request. The orchestrator image carries
+Greenkeeper's task definitions and locked skills, so this repository holds no Greenkeeper task files.
 
 - `github.token`: reads Framework and the Greenkeeper images.
 - `APM_FUSION_SKILLS_TOKEN`: reads the private skills.
