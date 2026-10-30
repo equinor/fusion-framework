@@ -38,7 +38,8 @@ if (process.env.AZ_FAILURE === 'true') {
   console.error('Azure token acquisition failed');
   process.exit(1);
 }
-process.stdout.write(process.env.FIXTURE_TOKEN);
+const scope = process.argv[process.argv.indexOf('--scope') + 1];
+process.stdout.write(scope.startsWith('667fbbb5-') ? (process.env.FIXTURE_MCP_TOKEN ?? 'mcp-fixture') : process.env.FIXTURE_TOKEN);
 `,
     { mode: 0o755 },
   );
@@ -69,23 +70,22 @@ process.stdout.write(process.env.FIXTURE_TOKEN);
   }
 }
 
-test('acquires only the Fusion AI token with the existing caller Azure session', () => {
+test('acquires separate Fusion AI and Fusion MCP tokens with the existing caller Azure session', () => {
   const result = acquire();
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(result.output, 'token=fixture-token\n');
+  assert.equal(result.output, 'token=fixture-token\nmcp-token=mcp-fixture\n');
+  const call = (scope) => ['account', 'get-access-token', '--scope', scope, '--query', 'accessToken', '--output', 'tsv'];
   assert.deepEqual(result.calls, [
-    [
-      'account',
-      'get-access-token',
-      '--scope',
-      '0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default',
-      '--query',
-      'accessToken',
-      '--output',
-      'tsv',
-    ],
+    call('0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default'),
+    call('667fbbb5-3c45-4dad-affe-6fe4e323bcde/.default'),
   ]);
-  assert.equal(result.stdout, '::add-mask::fixture-token\n');
+  assert.equal(result.stdout, '::add-mask::fixture-token\n::add-mask::mcp-fixture\n');
+});
+
+test('rejects an empty MCP token without exporting either credential', () => {
+  const result = acquire('fixture-token', { FIXTURE_MCP_TOKEN: '' });
+  assert.notEqual(result.status, 0);
+  assert.equal(result.output, '');
 });
 
 for (const [name, token] of [
@@ -246,6 +246,7 @@ test('authentication belongs to Framework and the runner receives separate read,
     action.indexOf('az logout') < action.indexOf('name: Run containerized dependency maintenance'),
   );
   assert.match(action, /FUSION_AI_TOKEN: \$\{\{ steps\.ai\.outputs\.token \}\}/);
+  assert.match(action, /FUSION_MCP_TOKEN: \$\{\{ steps\.ai\.outputs\.mcp-token \}\}/);
   assert.match(action, /GREENKEEPER_PUBLISH_TOKEN: \$\{\{ inputs\.publish-token \}\}/);
   assert.doesNotMatch(
     `${workflow}\n${action}`,
@@ -328,6 +329,7 @@ else { console.error('Unexpected API endpoint'); process.exit(2); }
           GREENKEEPER_GATEWAY_IMAGE: image,
           GH_TOKEN: 'read-fixture',
           FUSION_AI_TOKEN: 'ai-fixture',
+          FUSION_MCP_TOKEN: 'mcp-fixture',
           FUSION_APM_TOKEN: 'apm-fixture',
           GREENKEEPER_PUBLISH_TOKEN: 'publisher-fixture',
           ...overrides,
@@ -363,6 +365,7 @@ test('the container runs the combined dependency task at the confirmed default-b
   for (const name of [
     'GREENKEEPER_PUBLISH_TOKEN',
     'FUSION_AI_TOKEN',
+    'FUSION_MCP_TOKEN',
     'FUSION_APM_TOKEN',
     'GH_TOKEN',
     'GREENKEEPER_WORKER_MODEL',
@@ -371,7 +374,7 @@ test('the container runs the combined dependency task at the confirmed default-b
   }
   assert.doesNotMatch(
     JSON.stringify(execute.args),
-    /read-fixture|ai-fixture|apm-fixture|publisher-fixture/,
+    /read-fixture|ai-fixture|mcp-fixture|apm-fixture|publisher-fixture/,
   );
   const mounts = execute.args.filter((_arg, index) => execute.args[index - 1] === '--mount');
   assert.ok(mounts.includes('type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock'));
@@ -405,6 +408,7 @@ for (const [name, overrides] of [
   ],
   ['missing publisher', { GREENKEEPER_PUBLISH_TOKEN: '' }],
   ['missing AI token', { FUSION_AI_TOKEN: '' }],
+  ['missing MCP token', { FUSION_MCP_TOKEN: '' }],
 ]) {
   test(`container guard rejects ${name} before pulling or running images`, () => {
     const result = maintain(overrides);

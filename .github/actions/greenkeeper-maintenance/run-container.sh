@@ -9,7 +9,8 @@ for image in "$ORCHESTRATOR_IMAGE" "$GREENKEEPER_IMAGE" "$GREENKEEPER_GATEWAY_IM
   [[ "$image" =~ ^ghcr\.io/equinor/fusion-poc-greenkeeper@sha256:[a-f0-9]{64}$ ]] ||
     fail "All three Greenkeeper images must use reviewed immutable digests."
 done
-[[ -n "$GH_TOKEN" && -n "$FUSION_AI_TOKEN" ]] || fail "Caller read and acquired AI tokens are required."
+[[ -n "$GH_TOKEN" && -n "$FUSION_AI_TOKEN" && -n "${FUSION_MCP_TOKEN:-}" ]] ||
+  fail "Caller read and acquired AI and MCP tokens are required."
 [[ -n "${GREENKEEPER_PUBLISH_TOKEN:-}" ]] || fail "Dependency maintenance publishes; a separate Framework write token is required."
 # Scheduled events carry no repository payload, so the default branch is read from the API.
 default_branch="$(gh api "repos/$GITHUB_REPOSITORY" --jq .default_branch)"
@@ -51,7 +52,8 @@ docker run --rm --init --user "$(id -u):$(id -g)" \
   --env GREENKEEPER_REPOSITORY --env GREENKEEPER_REVISION --env GREENKEEPER_OUTPUT_PATH \
   --env GREENKEEPER_PUBLISH_TOKEN --env GREENKEEPER_IMAGE --env GREENKEEPER_GATEWAY_IMAGE \
   --env GREENKEEPER_TIMEOUT_SECONDS --env GREENKEEPER_MODEL --env GREENKEEPER_WORKER_MODEL \
-  --env GH_TOKEN --env FUSION_APM_TOKEN --env FUSION_AI_TOKEN --env FUSION_AI_BASE_URL --env FUSION_MCP_URL \
+  --env GH_TOKEN --env FUSION_APM_TOKEN --env FUSION_AI_TOKEN --env FUSION_MCP_TOKEN \
+  --env FUSION_AI_BASE_URL --env FUSION_MCP_URL \
   "$ORCHESTRATOR_IMAGE" --task dependencies --mode maintenance || status=$?
 if [[ -f "$scratch/results/dependency-run.md" ]]; then
   cat "$scratch/results/dependency-run.md" >> "$GITHUB_STEP_SUMMARY"

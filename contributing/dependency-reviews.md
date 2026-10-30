@@ -55,8 +55,8 @@ per-update commits. The next run starts a fresh branch after the combined pull r
 ### Execution and credentials
 
 The job runs in the protected `docs` environment. The local
-[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) acquires a short-lived
-Fusion AI token with Framework's existing identity, clears the Azure session, then runs the Greenkeeper
+[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) acquires short-lived
+Fusion AI and Fusion MCP tokens with Framework's existing identity (they are separate resources), clears the Azure session, then runs the Greenkeeper
 orchestrator image. The orchestrator starts its own isolated gateway and sandbox containers. The three images are
 pinned by digest in the workflow; change them only in a reviewed pull request. The orchestrator image carries
 Greenkeeper's task definitions and locked skills, so this repository holds no Greenkeeper task files.

@@ -36,7 +36,7 @@ runs:
         tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
         allow-no-subscriptions: true
 
-    - name: Acquire the short-lived Fusion AI token
+    - name: Acquire the short-lived Fusion AI and MCP tokens
       id: ai
       shell: bash
       env:
@@ -70,4 +70,5 @@ runs:
         FUSION_APM_TOKEN: ${{ inputs.apm-token }}
         GREENKEEPER_PUBLISH_TOKEN: ${{ inputs.publish-token }}
         FUSION_AI_TOKEN: ${{ steps.ai.outputs.token }}
+        FUSION_MCP_TOKEN: ${{ steps.ai.outputs.mcp-token }}
       run: bash "$GITHUB_ACTION_PATH/run-container.sh"
