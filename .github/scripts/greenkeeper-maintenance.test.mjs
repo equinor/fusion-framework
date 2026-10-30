@@ -482,8 +482,7 @@ for (const [value, expected] of [
   });
 }
 
-test('debug is a manual dispatch choice or GitHub debug logging, off by default', () => {
-  assert.match(workflow, /debug:\n {8}description: .+\n {8}type: boolean\n {8}default: false/);
-  assert.match(workflow, /debug: \$\{\{ inputs\.debug == true \|\| runner\.debug == '1' \}\}/);
-  assert.match(action, /GREENKEEPER_DEBUG: \$\{\{ inputs\.debug \}\}/);
+test('GitHub debug mode, not a separate input, enables Greenkeeper debug output', () => {
+  assert.match(action, /GREENKEEPER_DEBUG: \$\{\{ runner\.debug == '1' \}\}/);
+  assert.doesNotMatch(`${workflow}\n${action}`, /inputs\.debug|^ {2}debug:/m);
 });
