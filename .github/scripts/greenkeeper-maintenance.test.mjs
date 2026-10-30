@@ -74,7 +74,16 @@ test('acquires separate Fusion AI and Fusion MCP tokens with the existing caller
   const result = acquire();
   assert.equal(result.status, 0, result.stderr);
   assert.equal(result.output, 'token=fixture-token\nmcp-token=mcp-fixture\n');
-  const call = (scope) => ['account', 'get-access-token', '--scope', scope, '--query', 'accessToken', '--output', 'tsv'];
+  const call = (scope) => [
+    'account',
+    'get-access-token',
+    '--scope',
+    scope,
+    '--query',
+    'accessToken',
+    '--output',
+    'tsv',
+  ];
   assert.deepEqual(result.calls, [
     call('0ec6e8f2-d309-4316-90e6-1d05628b5f07/.default'),
     call('667fbbb5-3c45-4dad-affe-6fe4e323bcde/.default'),
