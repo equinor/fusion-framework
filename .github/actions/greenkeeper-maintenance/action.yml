@@ -20,6 +20,9 @@ inputs:
   apm-token:
     description: Existing read-only Fusion skills credential
     required: true
+  debug:
+    description: Add each update's runner evidence to the run summary, with credentials redacted
+    default: 'false'
   publish-token:
     description: Host-only automation credential that pushes greenkeeper/dependencies, opens its pull request and comments on Dependabot PRs
     required: true
@@ -71,4 +74,5 @@ runs:
         GREENKEEPER_PUBLISH_TOKEN: ${{ inputs.publish-token }}
         FUSION_AI_TOKEN: ${{ steps.ai.outputs.token }}
         FUSION_MCP_TOKEN: ${{ steps.ai.outputs.mcp-token }}
+        GREENKEEPER_DEBUG: ${{ inputs.debug }}
       run: bash "$GITHUB_ACTION_PATH/run-container.sh"

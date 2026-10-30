@@ -53,6 +53,8 @@ export GREENKEEPER_OUTPUT_PATH="$scratch/results"
 export GREENKEEPER_TIMEOUT_SECONDS=900
 export GREENKEEPER_MODEL=gpt-6.1-sol
 export GREENKEEPER_WORKER_MODEL=gpt-6-luna
+[[ "${GREENKEEPER_DEBUG:-false}" == true ]] || GREENKEEPER_DEBUG=false
+export GREENKEEPER_DEBUG
 export FUSION_AI_BASE_URL=https://ai.api.fusion.equinor.com/openai/v1
 export FUSION_MCP_URL=https://mcp.api.fusion.equinor.com/mcp
 status=0
@@ -65,7 +67,7 @@ docker run --rm --init --user "$(id -u):$(id -g)" \
   --env "TMPDIR=$scratch/tmp" \
   --env GREENKEEPER_REPOSITORY --env GREENKEEPER_REVISION --env GREENKEEPER_OUTPUT_PATH \
   --env GREENKEEPER_PUBLISH_TOKEN --env GREENKEEPER_IMAGE --env GREENKEEPER_GATEWAY_IMAGE \
-  --env GREENKEEPER_TIMEOUT_SECONDS --env GREENKEEPER_MODEL --env GREENKEEPER_WORKER_MODEL \
+  --env GREENKEEPER_TIMEOUT_SECONDS --env GREENKEEPER_MODEL --env GREENKEEPER_WORKER_MODEL --env GREENKEEPER_DEBUG \
   --env GH_TOKEN --env FUSION_APM_TOKEN --env FUSION_AI_TOKEN --env FUSION_MCP_TOKEN \
   --env FUSION_AI_BASE_URL --env FUSION_MCP_URL \
   "$ORCHESTRATOR_IMAGE" --task dependencies --mode maintenance || status=$?
