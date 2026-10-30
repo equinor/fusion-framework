@@ -3640,8 +3640,8 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2
       path-to-regexp:
-        specifier: ^8.4.0
-        version: 8.4.2
+        specifier: ^9.0.0
+        version: 9.0.0
       yaml:
         specifier: ^2.9.0
         version: 2.9.1
@@ -3705,8 +3705,8 @@ importers:
         specifier: ^4.1.1
         version: 4.2.0(supports-color@10.2.2)
       path-to-regexp:
-        specifier: 8.4.0
-        version: 8.4.0
+        specifier: ^9.0.0
+        version: 9.0.0
     devDependencies:
       '@types/http-proxy':
         specifier: ^1.17.16
@@ -11869,11 +11869,8 @@ packages:
   path-to-regexp@6.3.0:
     resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
 
-  path-to-regexp@8.4.0:
-    resolution: {integrity: sha512-PuseHIvAnz3bjrM2rGJtSgo1zjgxapTLZ7x2pjhzWwlp4SJQgK3f3iZIQwkpEnBaKz6seKBADpM4B4ySkuYypg==}
-
-  path-to-regexp@8.4.2:
-    resolution: {integrity: sha512-qRcuIdP69NPm4qbACK+aDogI5CBDMi1jKe0ry5rSQJz8JVLsC7jV8XpiJjGRLLol3N+R5ihGYcrPLTno6pAdBA==}
+  path-to-regexp@9.0.0:
+    resolution: {integrity: sha512-kfo5HIFCfEH24bcHSWEFIfrwiCsm/DXR+j1fc0696VIdWkICdAcKH2LxRClvz5HQcG4iCQpb4qBZ7pttGPG/dA==}
 
   pathe@1.1.2:
     resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
@@ -22367,9 +22364,7 @@ snapshots:
   path-to-regexp@6.3.0:
     optional: true
 
-  path-to-regexp@8.4.0: {}
-
-  path-to-regexp@8.4.2: {}
+  path-to-regexp@9.0.0: {}
 
   pathe@1.1.2: {}
 
