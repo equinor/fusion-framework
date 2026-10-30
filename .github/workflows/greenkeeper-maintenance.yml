@@ -7,11 +7,6 @@ on:
   # schedule:
   #   - cron: '17 5 * * 1-5'
   workflow_dispatch:
-    inputs:
-      debug:
-        description: Add each update's checks, diagnostics and limitations to the run summary (credentials redacted)
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -66,5 +61,3 @@ jobs:
           github-token: ${{ github.token }}
           apm-token: ${{ secrets.APM_FUSION_SKILLS_TOKEN }}
           publish-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN }}
-          # "Re-run with debug logging" also enables it.
-          debug: ${{ inputs.debug == true || runner.debug == '1' }}
