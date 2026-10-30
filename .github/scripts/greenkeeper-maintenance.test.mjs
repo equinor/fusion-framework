@@ -304,7 +304,7 @@ fs.appendFileSync(process.env.CALLS_PATH, JSON.stringify({ command, args, enviro
   GREENKEEPER_REVISION: process.env.GREENKEEPER_REVISION, GREENKEEPER_MODEL: process.env.GREENKEEPER_MODEL,
   GREENKEEPER_WORKER_MODEL: process.env.GREENKEEPER_WORKER_MODEL, GREENKEEPER_TASKS_PATH: process.env.GREENKEEPER_TASKS_PATH ?? null,
   GREENKEEPER_IMAGE: process.env.GREENKEEPER_IMAGE, GREENKEEPER_GATEWAY_IMAGE: process.env.GREENKEEPER_GATEWAY_IMAGE,
-  GREENKEEPER_DEBUG: process.env.GREENKEEPER_DEBUG
+  GITHUB_ACTIONS: process.env.GITHUB_ACTIONS, RUNNER_DEBUG: process.env.RUNNER_DEBUG ?? null
 } }) + '\\n');
 if (command === 'stat') { console.log('123'); process.exit(0); }
 if (command === 'docker') {
@@ -345,6 +345,7 @@ else { console.error('Unexpected API endpoint'); process.exit(2); }
           GITHUB_REPOSITORY: 'equinor/fusion-framework',
           GITHUB_EVENT_NAME: 'push',
           GITHUB_REF: 'refs/heads/main',
+          GITHUB_ACTIONS: 'true',
           ORCHESTRATOR_IMAGE: channel('orchestrator'),
           GREENKEEPER_IMAGE: channel('sandbox-node'),
           GREENKEEPER_GATEWAY_IMAGE: channel('gateway'),
@@ -384,9 +385,12 @@ test('the container runs the combined dependency task at the confirmed default-b
     GREENKEEPER_TASKS_PATH: null,
     GREENKEEPER_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'2'.repeat(64)}`,
     GREENKEEPER_GATEWAY_IMAGE: `ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'3'.repeat(64)}`,
-    GREENKEEPER_DEBUG: 'false',
+    GITHUB_ACTIONS: 'true',
+    RUNNER_DEBUG: null,
   });
-  assert.ok(execute.args.includes('GREENKEEPER_DEBUG'));
+  // The grouped run log and native debug mode follow the runner's own variables.
+  assert.ok(execute.args.includes('GITHUB_ACTIONS'));
+  assert.ok(execute.args.includes('RUNNER_DEBUG'));
   // The run uses the resolved orchestrator digest, never the moving channel tag.
   assert.ok(
     execute.args.includes(`ghcr.io/equinor/fusion-poc-greenkeeper@sha256:${'1'.repeat(64)}`),
@@ -466,23 +470,12 @@ test('pinned digests are still accepted to freeze a reviewed version', () => {
   assert.equal(result.status, 0, result.stderr);
 });
 
-for (const [value, expected] of [
-  ['true', 'true'],
-  ['false', 'false'],
-  ['', 'false'],
-  ['yes', 'false'],
-]) {
-  test(`debug input ${value || 'unset'} reaches the orchestrator as ${expected}`, () => {
-    const result = maintain({ GREENKEEPER_DEBUG: value });
-    assert.equal(result.status, 0, result.stderr);
-    const execute = result.calls.find(
-      (call) => call.command === 'docker' && call.args.includes('--task'),
-    );
-    assert.equal(execute.environment.GREENKEEPER_DEBUG, expected);
-  });
-}
-
-test('GitHub debug mode, not a separate input, enables Greenkeeper debug output', () => {
-  assert.match(action, /GREENKEEPER_DEBUG: \$\{\{ runner\.debug == '1' \}\}/);
-  assert.doesNotMatch(`${workflow}\n${action}`, /inputs\.debug|^ {2}debug:/m);
+test("the runner's native debug mode reaches the orchestrator", () => {
+  const result = maintain({ RUNNER_DEBUG: '1' });
+  assert.equal(result.status, 0, result.stderr);
+  const execute = result.calls.find(
+    (call) => call.command === 'docker' && call.args.includes('--task'),
+  );
+  assert.equal(execute.environment.RUNNER_DEBUG, '1');
+  assert.doesNotMatch(`${workflow}\n${action}`, /GREENKEEPER_DEBUG|inputs\.debug|^ {2}debug:/m);
 });
