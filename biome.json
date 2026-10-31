@@ -73,7 +73,8 @@
   },
   "yaml": {
     "formatter": {
-      "enabled": false
+      "enabled": false,
+      "quoteStyle": "double"
     }
   },
   "overrides": [
@@ -125,15 +126,5 @@
         }
       }
     }
-  ],
-  "yaml": {
-    "formatter": {
-      "quoteStyle": "double"
-    }
-  },
-  "markdown": {
-    "formatter": {
-      "enabled": false
-    }
-  }
+  ]
 }
