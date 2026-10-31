@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-lint-lsp
 
+## 0.2.8
+
+### Patch Changes
+
+- 43843be: Internal: bump `vscode-languageserver` from `10.1.2` to `11.0.0`.
+
 ## 0.2.7
 
 ### Patch Changes

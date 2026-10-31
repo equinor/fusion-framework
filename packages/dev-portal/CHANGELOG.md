@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.10
+
+### Patch Changes
+
+- 6b132bd: Remove the development portal's own temporary light-mode lock, including the
+  root `color-scheme: only light` style and the `data-color-scheme="light"`
+  attribute on `html`. Native browser controls stay light through
+  `@equinor/fusion-web-theme@0.1.12`, but that package does not select the modern
+  EDS palette, so EDS colors now follow the OS or browser color-scheme preference.
+  
+  Ref: equinor/fusion-core-tasks#2120.
+- Updated dependencies [dd359f8]
+  - @equinor/fusion-framework-react-components-people-provider@2.0.9
+  - @equinor/fusion-framework-dev-server@2.3.3
+
 ## 11.1.9
 
 ### Patch Changes
