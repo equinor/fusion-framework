@@ -10,10 +10,10 @@ inputs:
     default: research
   confirmed-head-sha:
     description: Head commit a maintainer or workflow confirmed for maintain and resolve operations
-    default: ''
+    default: ""
   authorized-actor:
     description: Maintainer who authorized a resolve operation
-    default: ''
+    default: ""
   github-token:
     description: Token used to read the pull request and collaborator permissions
     default: ${{ github.token }}

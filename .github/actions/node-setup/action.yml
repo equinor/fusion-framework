@@ -5,13 +5,13 @@ inputs:
     default: 24
   cache-node-modules:
     description: Restore the OS-specific node_modules cache
-    default: 'false'
+    default: "false"
   cache-turbo:
     description: Restore the latest local Turbo cache
-    default: 'true'
+    default: "true"
   wait-for-turbo-cache:
     description: Require a successful main/base-commit Turbo producer within 10 minutes and restore only its exact Linux cache
-    default: 'false'
+    default: "false"
 outputs:
   node-modules-cache-hit:
     description: Whether the exact node_modules cache key was restored

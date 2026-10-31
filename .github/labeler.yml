@@ -1,70 +1,68 @@
 version: v1
 
 labels:
-  - label: '📦 RELEASE'
+  - label: "📦 RELEASE"
     sync: true
     matcher:
-      files: ['./changeset/*.md']
+      files: ["./changeset/*.md"]
 
-  - label: '🚀 feature'
+  - label: "🚀 feature"
     sync: true
     matcher:
-      commits: '^feat.*?:'
-      title: '^feat.*?:'
+      commits: "^feat.*?:"
+      title: "^feat.*?:"
 
-  - label: '🐞 bug'
+  - label: "🐞 bug"
     sync: true
     matcher:
-      commits: '^fix.*?:'
-      title: '^fix.*?:'
+      commits: "^fix.*?:"
+      title: "^fix.*?:"
 
-  - label: '📚 documentation'
+  - label: "📚 documentation"
     sync: true
     matcher:
-      commits: '^docs.*?:'
-      title: '^docs.*?:'
-      files: ['**/*.md']
-      
-  - label: '🌍 GitHub Pages'
-    sync: true
-    matcher:
-      files: ['vue-press']
+      commits: "^docs.*?:"
+      title: "^docs.*?:"
+      files: ["**/*.md"]
 
-  - label: '🚧 chore'
+  - label: "🌍 GitHub Pages"
     sync: true
     matcher:
-      commits: '^chore.*?:'
-      title: '^chore.*?:'
-      files: ['.github/**', '.husky/**', './lerna.json', './tsconfig*.json', './.*']
+      files: ["vue-press"]
 
-  - label: '🧨 breaking changes'
+  - label: "🚧 chore"
     sync: true
     matcher:
-      commits: '(^(.+?)!:)|(BREAKING CHANGE:)'
+      commits: "^chore.*?:"
+      title: "^chore.*?:"
+      files: [".github/**", ".husky/**", "./lerna.json", "./tsconfig*.json", "./.*"]
 
-  - label: '💾 CLI'
+  - label: "🧨 breaking changes"
     sync: true
     matcher:
-      files: ['packages/cli/**']
+      commits: "(^(.+?)!:)|(BREAKING CHANGE:)"
 
-  - label: '👾 React'
+  - label: "💾 CLI"
     sync: true
     matcher:
-      files: ['packages/react/**']
+      files: ["packages/cli/**"]
 
-  - label: '🧬 Modules'
+  - label: "👾 React"
     sync: true
     matcher:
-      files: ['packages/modules/**', 'packages/react/modules/**']
+      files: ["packages/react/**"]
 
-  - label: '🛠️ utils'
+  - label: "🧬 Modules"
     sync: true
     matcher:
-      files: ['packages/utils/**']
+      files: ["packages/modules/**", "packages/react/modules/**"]
 
-  - label: '👨🏻‍🍳 cookbooks'
+  - label: "🛠️ utils"
     sync: true
     matcher:
-      files: ['cookbooks/**']
+      files: ["packages/utils/**"]
 
-  
+  - label: "👨🏻‍🍳 cookbooks"
+    sync: true
+    matcher:
+      files: ["cookbooks/**"]

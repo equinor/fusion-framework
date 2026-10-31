@@ -92,7 +92,7 @@ jobs:
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     permissions:
-      contents: write      # Required to push the release branch
+      contents: write # Required to push the release branch
       pull-requests: write # Required to create or update the release PR
     outputs:
       pr-number: ${{ steps.version.outputs.pr-number }}
@@ -125,8 +125,8 @@ jobs:
     # npm trusts this environment; its deployment branches are limited to main and next.
     environment: npm
     permissions:
-      contents: write  # Required to push release tags and create GitHub releases
-      id-token: write  # Required for npm trusted publishing (OIDC)
+      contents: write # Required to push release tags and create GitHub releases
+      id-token: write # Required for npm trusted publishing (OIDC)
     outputs:
       published: ${{ steps.publish.outputs.published }}
     steps:
@@ -172,7 +172,7 @@ jobs:
     environment: npm
     permissions:
       contents: read
-      id-token: write  # Required for npm trusted publishing (OIDC)
+      id-token: write # Required for npm trusted publishing (OIDC)
     steps:
       - name: Validate snapshot tag
         shell: bash
@@ -263,7 +263,7 @@ jobs:
     environment: vs-marketplace
     permissions:
       contents: read
-      id-token: write  # Required for OIDC login to Azure (Marketplace publish)
+      id-token: write # Required for OIDC login to Azure (Marketplace publish)
     steps:
       - uses: actions/checkout@v7
         with:
@@ -302,9 +302,9 @@ jobs:
   documentation:
     name: Update documentation
     permissions:
-      contents: read   # Required to read repository contents
-      pages: write     # Required to deploy to GitHub Pages
-      id-token: write  # Required for OIDC token generation
+      contents: read # Required to read repository contents
+      pages: write # Required to deploy to GitHub Pages
+      id-token: write # Required for OIDC token generation
     needs: publish
     if: needs.publish.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml

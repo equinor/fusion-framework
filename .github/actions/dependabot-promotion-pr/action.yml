@@ -7,7 +7,7 @@ inputs:
     default: maintenance/dependencies
   validated:
     description: Whether aggregate validation passed for the checked-out commit; unvalidated updates only refresh the draft and its description
-    default: 'false'
+    default: "false"
   github-token:
     description: Token with pull-requests write and actions write access
     default: ${{ github.token }}
