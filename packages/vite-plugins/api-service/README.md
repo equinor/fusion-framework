@@ -289,6 +289,49 @@ const customMatcher = createRouteMatcher({
 
 See the [path-to-regexp documentation](https://www.npmjs.com/package/path-to-regexp) for the full pattern syntax.
 
+### Migration: path-to-regexp v9
+
+This major release changes string-pattern matching in `createRouteMatcher`, including proxy and
+middleware routes. Review routes with two or more parameters in the same segment and handlers
+that use their captured values before upgrading.
+
+```ts
+const matcher = createRouteMatcher({
+  match: '/:file.:ext',
+  proxy: { target: 'http://localhost:3001' },
+});
+
+matcher('/foo.json.html', req);
+// Before (v8): params = { file: 'foo.json', ext: 'html' }
+// Now (v9):    params = { file: 'foo', ext: 'json.html' }
+```
+
+An extension check such as `params.ext === 'html'` no longer recognizes that URL. Prefer separate
+segments when each capture has a distinct meaning, updating the route and its callers together:
+
+```ts
+const matcher = createRouteMatcher({
+  match: '/files/:file/extensions/:ext',
+  proxy: { target: 'http://localhost:3001' },
+});
+
+matcher('/files/foo.json/extensions/html', req);
+// params = { file: 'foo.json', ext: 'html' }
+```
+
+If URLs cannot change, provide a [custom matcher function](#custom-matcher-function) that implements
+your intended parsing and decoding rules; v9 does not restore v8's ambiguous capture behavior
+automatically. Ordinary patterns with parameters in separate segments, such as `/users/:id`, do
+not have this ambiguity.
+
+Explicitly slash-terminated patterns such as `/files/` now match `/files/` but not `/files//`.
+Normalize callers to one trailing slash. A pattern without an explicit slash, such as `/files`,
+still accepts `/files/` under the matcher's default options.
+
+Add route regressions for dotted values, captured parameters, and trailing slashes. Check proxy
+rewrites and middleware decisions as well as whether a route matches. The dependency is ESM-only
+and requires Node 22 or newer; this package uses its named `match` export.
+
 ## Response Interceptor with `createResponseInterceptor`
 
 `createResponseInterceptor` intercepts JSON proxy responses and transforms them before they reach the client. Non-JSON responses and error responses (status >= 400) pass through untouched, with their original status code and headers.
