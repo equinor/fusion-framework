@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-vanilla
 
+## 2.0.2
+
+### Patch Changes
+
+- 922767b: Internal: write status text with `textContent` instead of `innerText`, as recommended by Biome 2.6. The rendered output is unchanged.
+
 ## 2.0.1
 
 ### Patch Changes
