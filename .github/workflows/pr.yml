@@ -8,8 +8,8 @@ on:
       - reopened
       - synchronize
     paths-ignore:
-      - '.changeset/**'
-      - 'vue-press/**'
+      - ".changeset/**"
+      - "vue-press/**"
   workflow_dispatch:
     inputs:
       head_sha:
@@ -54,7 +54,7 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
         with:
-          wait-for-turbo-cache: 'true'
+          wait-for-turbo-cache: "true"
 
       - uses: reviewdog/action-setup@v1
 
@@ -97,7 +97,7 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
         with:
-          wait-for-turbo-cache: 'true'
+          wait-for-turbo-cache: "true"
 
       - uses: reviewdog/action-setup@v1
 
@@ -140,7 +140,7 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
         with:
-          wait-for-turbo-cache: 'true'
+          wait-for-turbo-cache: "true"
 
       - name: Build test dependencies
         run: |
