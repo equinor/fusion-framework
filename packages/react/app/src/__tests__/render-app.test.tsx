@@ -16,6 +16,8 @@ import { renderApp } from '../render-app';
 import { createComponent } from '../create-component';
 import { renderComponent } from '../render-component';
 
+const TestComponent = () => <div>Test</div>;
+
 describe('renderApp', () => {
   let mockFusion: Fusion;
   let mockEnv: AppEnv;
@@ -46,7 +48,6 @@ describe('renderApp', () => {
   });
 
   it('should create a render function that calls createComponent with provided arguments', () => {
-    const TestComponent = () => <div>Test</div>;
     const mockConfigure = vi.fn();
 
     renderApp(TestComponent, mockConfigure);
@@ -55,7 +56,6 @@ describe('renderApp', () => {
   });
 
   it('should create a render function that uses renderComponent with the component renderer', () => {
-    const TestComponent = () => <div>Test</div>;
     const appRender = renderApp(TestComponent);
 
     // Call the render function
@@ -70,7 +70,6 @@ describe('renderApp', () => {
   });
 
   it('should return a teardown function that unmounts the component', () => {
-    const TestComponent = () => <div>Test</div>;
     const appRender = renderApp(TestComponent);
 
     const teardown = appRender(mockElement, { fusion: mockFusion, env: mockEnv });
@@ -82,7 +81,6 @@ describe('renderApp', () => {
 
   it('should work without a configure callback', () => {
     vi.clearAllMocks();
-    const TestComponent = () => <div>Test</div>;
     const appRender = renderApp(TestComponent);
 
     // When no configure callback is provided, it may be called with just the component
@@ -98,7 +96,6 @@ describe('renderApp', () => {
   });
 
   it('should pass component renderer args correctly to renderComponent', () => {
-    const TestComponent = () => <div>Test</div>;
     const appRender = renderApp(TestComponent);
 
     const args: ComponentRenderArgs = {

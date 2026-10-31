@@ -56,6 +56,55 @@ programmable middleware, and runtime operation overrides. Start with directory d
 lower-level discovery entry point only when a faker function or middleware route cannot be
 expressed in JSON or YAML.
 
+## Migration: path-to-regexp v9
+
+This major release changes captured parameters for middleware routes registered through
+`ServiceBuilder.middleware` or the exported `createRouter`. Review handlers that read
+`RouteContext.params`, especially routes with multiple parameters in one segment.
+
+```ts
+router.get('/:file.:ext', (_req, res, { params }) => res.json(params));
+// Request: /foo.json.html (relative to the service)
+// Before (v8): { file: 'foo.json', ext: 'html' }
+// Now (v9):    { file: 'foo', ext: 'json.html' }
+```
+
+Prefer separate segments for independently meaningful values, updating the mock route and test
+clients together:
+
+```ts
+router.get('/files/:file/extensions/:ext', (_req, res, { params }) => res.json(params));
+// Request: /files/foo.json/extensions/html
+// params = { file: 'foo.json', ext: 'html' }
+```
+
+If existing URLs must stay unchanged, capture the entire segment and explicitly split it at the
+last dot in your handler rather than relying on ambiguous matcher captures:
+
+```ts
+router.get('/:filename', (_req, res, { params }) => {
+  const filename = String(params.filename);
+  const separator = filename.lastIndexOf('.');
+  if (separator <= 0 || separator === filename.length - 1) {
+    res.statusCode = 400;
+    res.json({ error: 'Expected a filename with an extension' });
+    return;
+  }
+  res.json({ file: filename.slice(0, separator), ext: filename.slice(separator + 1) });
+});
+// Request: /foo.json.html -> { file: 'foo.json', ext: 'html' }
+```
+
+Direct `createRouter` usage still sets `trailing: false`. A route `/files/` matches `/files/`, not
+`/files` or `/files//`; optional trailing slashes have not been enabled. The standalone server
+already normalizes empty path segments before service middleware matching, so register `/files`
+there: service requests `/files`, `/files/` and `/files//` reach that same route. This normalization
+is unchanged by the upgrade. Simple routes such as `/users/:id` are unaffected by the capture change.
+
+Add regressions that assert both the HTTP response and `params` for dotted values, invalid
+filenames and trailing-slash variants. The dependency is ESM-only and requires Node 22 or newer;
+keep using this package's ESM entry points.
+
 ## Docs
 
 - [Getting started](docs/getting-started.md) — directory convention, the bundled `fusion`

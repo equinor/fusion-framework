@@ -66,6 +66,17 @@
       "quoteStyle": "single"
     }
   },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "yaml": {
+    "formatter": {
+      "enabled": false,
+      "quoteStyle": "double"
+    }
+  },
   "overrides": [
     {
       "includes": ["**/packages/react/**"]
@@ -115,15 +126,5 @@
         }
       }
     }
-  ],
-  "yaml": {
-    "formatter": {
-      "quoteStyle": "double"
-    }
-  },
-  "markdown": {
-    "formatter": {
-      "enabled": false
-    }
-  }
+  ]
 }

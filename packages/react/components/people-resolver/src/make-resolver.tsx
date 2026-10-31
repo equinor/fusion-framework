@@ -9,7 +9,7 @@ export const makeResolver = (services: IApiProvider, options?: PersonControllerO
     const client = await services.createPeopleClient();
     const controller = new PersonController(client, options);
     const resolver = createResolver(controller);
-    // biome-ignore lint/correctness/noComponentHookFactories: created once per lazy() load to bind the resolver; it is the module's default export, not re-created on render
+    // biome-ignore lint/correctness/noComponentHookFactories: lazy() creates this component once to bind the resolver, keeping its identity stable.
     const Component = ({ children }: { readonly children?: React.ReactNode }) => (
       <PeopleResolverComponent resolver={resolver}>{children}</PeopleResolverComponent>
     );
