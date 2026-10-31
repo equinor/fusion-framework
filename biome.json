@@ -66,6 +66,16 @@
       "quoteStyle": "single"
     }
   },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "yaml": {
+    "formatter": {
+      "enabled": false
+    }
+  },
   "overrides": [
     {
       "includes": ["**/packages/react/**"]

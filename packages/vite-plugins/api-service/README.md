@@ -36,7 +36,7 @@ export default defineConfig({
         'https://discovery.example.com/services',
         (services, { route }) => {
           const routes = services.map((svc) => ({
-            match: `/${svc.name}/:path*`,
+            match: `/${svc.name}/*path`,
             proxy: {
               target: svc.url,
               rewrite: (p: string) => p.replace(`/${svc.name}`, ''),
@@ -145,7 +145,7 @@ const proxyHandler = createProxyHandler(
   // Callback that processes the response and returns routes
   (responseData, { route, request }) => {
     const routes = responseData.services.map((service) => ({
-      match: `/${service.name}/:path*`,
+      match: `/${service.name}/*path`,
       proxy: {
         target: service.url,
         rewrite: (path: string) => path.replace(`/${service.name}`, ''),
@@ -255,9 +255,9 @@ matcher('/api/posts/123', req);         // false
 ### Wildcards
 
 ```ts
-const serviceMatcher = createRouteMatcher({ match: '/api/services/:serviceName/:path*' });
+const serviceMatcher = createRouteMatcher({ match: '/api/services/:serviceName/*path' });
 serviceMatcher('/api/services/auth/v1/token', req);
-// { params: { serviceName: 'auth', path: 'v1/token' } }
+// { params: { serviceName: 'auth', path: [ 'v1', 'token' ] } }
 ```
 
 ### Multiple Patterns

@@ -42,13 +42,13 @@ export const renderApp: AppRenderFn = (el, args) => {
   init(args)
     .then((modules) => {
       // Display the default account information from the auth module
-      myApp.innerText = JSON.stringify(modules.auth.defaultAccount, null, 2);
+      myApp.textContent = JSON.stringify(modules.auth.defaultAccount, null, 2);
     })
     .catch((error) => {
       // Display any errors that occurred during initialization
-      myApp.innerText = JSON.stringify(error, null, 2);
+      myApp.textContent = JSON.stringify(error, null, 2);
     });
   // Indicate that the application is loading until the modules are initialized
-  myApp.innerText = 'loading...';
+  myApp.textContent = 'loading...';
   el.appendChild(myApp);
 };
