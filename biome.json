@@ -13,8 +13,13 @@
       "!**/vue-press/src/.vuepress",
       "!package.json",
       "!pnpm-lock.yaml",
+      "!apm.lock.yaml",
       "!**/openapi-mock-server/src/__tests__/fixtures/broken",
-      "!**/openapi.json"
+      "!**/openapi.json",
+      "!**/CHANGELOG.md",
+      "!.agents/skills",
+      "!.github/agents/fusion-*.agent.md",
+      "!.github/instructions/fusion-*.instructions.md"
     ]
   },
   "formatter": {
@@ -93,6 +98,32 @@
           }
         }
       }
+    },
+    {
+      "includes": [
+        "**/__tests__/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noComponentHookFactories": "off"
+          }
+        }
+      }
     }
-  ]
+  ],
+  "yaml": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  }
 }
