@@ -1916,7 +1916,7 @@ importers:
         version: 2.0.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-react-errorboundary':
         specifier: ^2.0.11
-        version: 2.0.13(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 2.0.14(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@19.3.1)
@@ -3202,7 +3202,7 @@ importers:
         version: 1.6.0
       '@equinor/fusion-react-errorboundary':
         specifier: ^2.0.11
-        version: 2.0.13(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 2.0.14(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@types/react':
         specifier: catalog:react
         version: 19.3.0
@@ -4565,15 +4565,15 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@equinor/fusion-react-errorboundary@2.0.13':
-    resolution: {integrity: sha512-O/r4kb7DojQI+CgUEPXK/C1Uph5N4cWAxKZQvt4ZhdV3vyXPtuJ+/Ovc7qf0OPIP0MfN347CFMFrzWaGuSTyOg==}
+  '@equinor/fusion-react-errorboundary@2.0.14':
+    resolution: {integrity: sha512-j1iDnHTYiRFY240ryo/1cTJfCR/NMeOCvEGZb8X9SeWJCE2fv7jrHUrnspz5yG2yiCi7KBAotnVOgcknWIywBg==}
     peerDependencies:
       '@equinor/eds-core-react': ^2
       '@equinor/eds-icons': ^1
       '@equinor/eds-tokens': ^2
       react: ^18 || ^19
       react-dom: ^18 || ^19
-      styled-components: ^6.5.3
+      styled-components: ^6.6.0
 
   '@equinor/fusion-react-person@2.0.17':
     resolution: {integrity: sha512-3TE5zwNpMo8mydtF24Qco/RMBNwQUFZy0hZ36UdEQ2jP9SKa11rJ3ApuuPgPONBvStGCSQdbf46M0MNdfDPmcw==}
@@ -4601,6 +4601,12 @@ packages:
 
   '@equinor/fusion-react-styles@2.1.10':
     resolution: {integrity: sha512-VDZCncKsb4G6DOUSFaVODd5rYS5zfxo3N1zAYcGwlxETQO0QkpgiYCseYnrWOgDMMYUWxiPKF2gjWR1S0CePpg==}
+    peerDependencies:
+      react: ^18 || ^19
+      styled-components: ^6
+
+  '@equinor/fusion-react-styles@2.1.11':
+    resolution: {integrity: sha512-LuJwrv+KpFn4E/jVomNSodHvOtUOYRFrAPMQY7tAKGv/CnX6BqGkcj1DEL6pKA+XMPnTptLRdYGAXnvqzLmTJQ==}
     peerDependencies:
       react: ^18 || ^19
       styled-components: ^6
@@ -4674,6 +4680,9 @@ packages:
 
   '@equinor/fusion-wc-theme@1.2.5':
     resolution: {integrity: sha512-MSp5UgxB5Yt5fEl9+JJMvIo++Y/xI2XhxeHyqyyLLiUpeKsyDaJs5j1zMQgkjyUSwtEDr/b4OCKYybmwhEo34g==}
+
+  '@equinor/fusion-wc-theme@1.2.6':
+    resolution: {integrity: sha512-MIem4+ct3EF/TwwukG0ZirYmuJyaLn4J8fZpnz8FSSJtPAlj8vH+zdk+AAAheZh03AOmypuD6x01hdfkc36qcQ==}
 
   '@equinor/fusion-web-theme@0.1.10':
     resolution: {integrity: sha512-/Yzfie73UvMoBMo35gmeHO+5nTty5EyemomcB5ZbEDyHFNIodgCL1JGm2KfrIwqez9w9CTneHjnJWvwhu9TM+w==}
@@ -5089,10 +5098,6 @@ packages:
     resolution: {integrity: sha512-dwrc+1aqVZpHNkNDswXGtn1typ+Pxpo5FHZRyBw1le7onEJUkPUkYOY1FIFC1LvFMYUqqLuWBwElhAmencL7MQ==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
 
-  '@inquirer/ansi@2.0.9':
-    resolution: {integrity: sha512-0Ywt3S8tqM6TWUcsRlBFQ1x+X3/o8kktX0ZiKAnByYb9GFDknnOhse1PVtfiD2BXPI8ar+BWx9PV9R0lQIcygw==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-
   '@inquirer/checkbox@5.2.8':
     resolution: {integrity: sha512-NY/S1EalQhlonqhwwsarrcnkH7s9ByQuvjWYdk1jB2Gb9EPQJjKkhCTWjM3yQ0UpHaLm1XbIL89b+32G8rhO5w==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
@@ -5102,26 +5107,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/confirm@6.3.4':
-    resolution: {integrity: sha512-ZwnaZZDa1zxsyVrN32s447ydMnKcw7e8WWNT+R+Qsu0zAn8Rs6yi9d1B80Kob1Ul2cfUi7t8JD2t4/K7uEZpqA==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
   '@inquirer/confirm@6.3.5':
     resolution: {integrity: sha512-BJ59BOyURiZiAxdr9AuRu38/k+rV+DcTIM2fUF/c/BXrab6H8zMZTTOl3LgkSJH96Xob2vOJxDiBkHiz32Xx2w==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/core@12.0.5':
-    resolution: {integrity: sha512-c0ZSnO9oVk/IlEGoZK3u8b3IZQeu9I6jUkXJSQnQEVRXsjKvtAq3AGqFL2LgfJhlzMZne08pZHWRWasIcI3Rew==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
     peerDependencies:
       '@types/node': '>=18'
@@ -5167,10 +5154,6 @@ packages:
 
   '@inquirer/figures@2.0.10':
     resolution: {integrity: sha512-51elrUJV3jZpvD0ygz8+U10Kc6+Lzqln+/tYmnbhy6jo5oXpE6hMCcv+OTBC0enwJXsb3JIuT3VtEinRNCSK2A==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-
-  '@inquirer/figures@2.0.9':
-    resolution: {integrity: sha512-EAWgUTGQ/Umgga51dE3B2PUHbufuXarDfg86uVgoSgNHNNQnyFKcOrQLWVqYMghuSyHh8+2HUH0Js9cTC1WAdg==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
 
   '@inquirer/input@5.1.9':
@@ -5229,15 +5212,6 @@ packages:
 
   '@inquirer/select@5.2.8':
     resolution: {integrity: sha512-BklkkAAOpjdCfuQw5fVGcDuhKxA7T1iBpn6b2JUvDDdkIsO3Ftlg+WnWUCVpkUBFagL2o036OFW+xL4lC9wIPw==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/type@4.2.0':
-    resolution: {integrity: sha512-2rnHX8RPo4glJYqnFc/v3nQeIhDcjyRRyaT7MGcfL/8xv/8K03SXYoA2tX06WVSKywWOE/ncbG3dtuzLjR5TCQ==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
     peerDependencies:
       '@types/node': '>=18'
@@ -14530,12 +14504,12 @@ snapshots:
       '@equinor/fusion-wc-date': 1.2.5
       react: 19.3.1
 
-  '@equinor/fusion-react-errorboundary@2.0.13(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+  '@equinor/fusion-react-errorboundary@2.0.14(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
     dependencies:
       '@equinor/eds-core-react': 2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/eds-icons': 1.6.0
       '@equinor/eds-tokens': 2.3.2
-      '@equinor/fusion-react-styles': 2.1.10(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@equinor/fusion-react-styles': 2.1.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-react-utils': 3.0.7(react@19.3.1)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
@@ -14582,6 +14556,24 @@ snapshots:
     dependencies:
       '@equinor/eds-tokens': 2.3.2
       '@equinor/fusion-wc-theme': 1.2.5
+      '@equinor/fusion-web-theme': 0.1.12
+      clsx: 2.1.1
+      hoist-non-react-statics: 3.3.2
+      jss: 10.10.0
+      jss-plugin-camel-case: 10.10.0
+      jss-plugin-default-unit: 10.10.0
+      jss-plugin-global: 10.10.0
+      jss-plugin-nested: 10.10.0
+      jss-plugin-props-sort: 10.10.0
+      jss-plugin-rule-value-function: 10.10.0
+      jss-plugin-vendor-prefixer: 10.10.0
+      react: 19.3.1
+      styled-components: 6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+
+  '@equinor/fusion-react-styles@2.1.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+    dependencies:
+      '@equinor/eds-tokens': 2.3.2
+      '@equinor/fusion-wc-theme': 1.2.6
       '@equinor/fusion-web-theme': 0.1.12
       clsx: 2.1.1
       hoist-non-react-statics: 3.3.2
@@ -14774,6 +14766,13 @@ snapshots:
       lit: 3.3.3
 
   '@equinor/fusion-wc-theme@1.2.5':
+    dependencies:
+      '@equinor/fusion-wc-core': 2.0.3
+      '@equinor/fusion-web-theme': 0.1.12
+      '@material/theme': 14.0.0
+      lit: 3.3.3
+
+  '@equinor/fusion-wc-theme@1.2.6':
     dependencies:
       '@equinor/fusion-wc-core': 2.0.3
       '@equinor/fusion-web-theme': 0.1.12
@@ -15031,8 +15030,6 @@ snapshots:
 
   '@inquirer/ansi@2.0.10': {}
 
-  '@inquirer/ansi@2.0.9': {}
-
   '@inquirer/checkbox@5.2.8(@types/node@26.6.2)':
     dependencies:
       '@inquirer/ansi': 2.0.10
@@ -15042,29 +15039,10 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.6.2
 
-  '@inquirer/confirm@6.3.4(@types/node@26.6.2)':
-    dependencies:
-      '@inquirer/core': 12.0.5(@types/node@26.6.2)
-      '@inquirer/type': 4.2.0(@types/node@26.6.2)
-    optionalDependencies:
-      '@types/node': 26.6.2
-
   '@inquirer/confirm@6.3.5(@types/node@26.6.2)':
     dependencies:
       '@inquirer/core': 12.0.6(@types/node@26.6.2)
       '@inquirer/type': 4.2.1(@types/node@26.6.2)
-    optionalDependencies:
-      '@types/node': 26.6.2
-
-  '@inquirer/core@12.0.5(@types/node@26.6.2)':
-    dependencies:
-      '@inquirer/ansi': 2.0.9
-      '@inquirer/figures': 2.0.9
-      '@inquirer/type': 4.2.0(@types/node@26.6.2)
-      cli-width: 4.1.0
-      fast-wrap-ansi: 0.2.2
-      mute-stream: 3.0.0
-      signal-exit: 4.1.0
     optionalDependencies:
       '@types/node': 26.6.2
 
@@ -15103,8 +15081,6 @@ snapshots:
       '@types/node': 26.6.2
 
   '@inquirer/figures@2.0.10': {}
-
-  '@inquirer/figures@2.0.9': {}
 
   '@inquirer/input@5.1.9(@types/node@26.6.2)':
     dependencies:
@@ -15164,10 +15140,6 @@ snapshots:
       '@inquirer/core': 12.0.6(@types/node@26.6.2)
       '@inquirer/figures': 2.0.10
       '@inquirer/type': 4.2.1(@types/node@26.6.2)
-    optionalDependencies:
-      '@types/node': 26.6.2
-
-  '@inquirer/type@4.2.0(@types/node@26.6.2)':
     optionalDependencies:
       '@types/node': 26.6.2
 
@@ -21957,7 +21929,7 @@ snapshots:
 
   msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2):
     dependencies:
-      '@inquirer/confirm': 6.3.4(@types/node@26.6.2)
+      '@inquirer/confirm': 6.3.5(@types/node@26.6.2)
       '@mswjs/interceptors': 0.41.3
       '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
@@ -21983,7 +21955,7 @@ snapshots:
 
   msw@3.0.3(@types/node@26.6.2)(graphql@17.0.2)(supports-color@10.2.2)(typescript@7.0.2)(vite@8.3.5(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.106.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15)):
     dependencies:
-      '@inquirer/confirm': 6.3.4(@types/node@26.6.2)
+      '@inquirer/confirm': 6.3.5(@types/node@26.6.2)
       '@msw/url': 0.1.2
       '@mswjs/interceptors': 0.45.8(supports-color@10.2.2)
       cookie: 2.0.1
