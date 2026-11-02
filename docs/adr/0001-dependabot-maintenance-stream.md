@@ -11,6 +11,9 @@ scope:
 
 # Route routine Dependabot updates through a maintenance stream
 
+> Replaced by [ADR 0003](0003-greenkeeper-combined-dependency-updates.md) once Greenkeeper dependency
+> maintenance is enabled. This stream remains until no Dependabot pull requests target it.
+
 ## Context
 
 Fusion Framework contains more than 80 packages that share a pnpm lockfile. Dependabot opens

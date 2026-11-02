@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'generate-documentation'
+  group: "generate-documentation"
   cancel-in-progress: true
 
 env:

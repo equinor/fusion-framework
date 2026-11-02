@@ -271,11 +271,11 @@ test('all PR jobs require an exact restore and Windows cannot use the Linux cach
   const pr = read('../workflows/pr.yml');
   const visual = read('../workflows/visual-checks.yml');
   const setup = read('../actions/node-setup/action.yml');
-  assert.equal(pr.match(/wait-for-turbo-cache: 'true'/g)?.length, 3);
+  assert.equal(pr.match(/wait-for-turbo-cache: (['"])true\1/g)?.length, 3);
   assert.match(pr, /actions: read/);
   assert.match(visual, /actions: read/);
   assert.match(visual, /cache-turbo: \$\{\{ runner.os == 'Linux' && 'true' \|\| 'false' \}\}/);
-  assert.match(visual, /wait-for-turbo-cache: 'true'/);
+  assert.match(visual, /wait-for-turbo-cache: (['"])true\1/);
   const exact = setup
     .split('- name: Restore exact PR Turbo cache')[1]
     .split('- name: Restore Turbo cache')[0];

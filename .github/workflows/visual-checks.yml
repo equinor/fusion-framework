@@ -8,8 +8,8 @@ on:
       - reopened
       - synchronize
     paths-ignore:
-      - '.changeset/**'
-      - 'vue-press/**'
+      - ".changeset/**"
+      - "vue-press/**"
   workflow_dispatch:
     inputs:
       head_sha:
@@ -57,10 +57,10 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
         with:
-          cache-node-modules: 'true'
+          cache-node-modules: "true"
           # The shared Turbo producer runs only on Linux; Windows builds fresh.
           cache-turbo: ${{ runner.os == 'Linux' && 'true' || 'false' }}
-          wait-for-turbo-cache: 'true'
+          wait-for-turbo-cache: "true"
 
       - name: Get Playwright version
         id: playwright-version

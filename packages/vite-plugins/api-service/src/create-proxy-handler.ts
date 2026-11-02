@@ -108,7 +108,7 @@ export type ApiDataProcessor<
  *   'https://discovery.example.com/services',
  *   (services, { route }) => {
  *     const routes = services.map((svc) => ({
- *       match: `${route}/${svc.name}/:path*`,
+ *       match: `${route}/${svc.name}/*path`,
  *       proxy: { target: svc.url, rewrite: (p) => p.replace(`${route}/${svc.name}`, '') },
  *     }));
  *     return { data: services, routes };

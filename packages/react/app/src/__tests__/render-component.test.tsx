@@ -17,6 +17,8 @@ vi.mock('react-dom/client', () => ({
 import type { ComponentRenderer } from '../create-component';
 import { renderComponent } from '../render-component';
 
+const Component: FunctionComponent = () => <div>Application</div>;
+
 describe('renderComponent', () => {
   beforeEach(() => {
     mocks.createRoot.mockReset();
@@ -29,7 +31,6 @@ describe('renderComponent', () => {
   });
 
   it('forwards uncaught React errors to the application host', () => {
-    const Component: FunctionComponent = () => <div>Application</div>;
     const renderer = vi.fn(() => Component) as unknown as ComponentRenderer;
     const onError = vi.fn();
     const element = document.createElement('div');

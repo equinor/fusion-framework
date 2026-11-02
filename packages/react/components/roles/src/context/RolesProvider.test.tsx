@@ -78,6 +78,16 @@ const RolesConsumer = (): ReactNode => {
   );
 };
 
+/**
+ * Keeps host state observable while the provider handles expiry recovery.
+ * @param props - Observer for mount effects.
+ * @returns An uncontrolled input whose value survives only if the host is not remounted.
+ */
+const Application = ({ onMount }: { onMount: VoidFunction }): ReactNode => {
+  useEffect(onMount, [onMount]);
+  return <input aria-label="Unsaved report" defaultValue="Draft report" />;
+};
+
 describe('RolesProvider', () => {
   beforeEach(() => {
     mocks.getActiveAccessRoleAssignments.mockReset();
@@ -218,11 +228,6 @@ describe('RolesProvider', () => {
       .mockReturnValueOnce(first.promise)
       .mockReturnValueOnce(retry.promise);
     const onMount = vi.fn();
-    /** Keeps host state observable while the provider handles expiry recovery. */
-    const Application = (): ReactNode => {
-      useEffect(onMount, []);
-      return <input aria-label="Unsaved report" defaultValue="Draft report" />;
-    };
     const activeAssignment = {
       id: 'expiring-role',
       claimableRole: {
@@ -245,7 +250,7 @@ describe('RolesProvider', () => {
     const screen = await render(
       <RolesProvider>
         <RolesConsumer />
-        <Application />
+        <Application onMount={onMount} />
       </RolesProvider>,
     );
     await expect.element(screen.getByText('Claimable: reports-exporter')).toBeVisible();

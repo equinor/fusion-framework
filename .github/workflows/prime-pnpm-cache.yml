@@ -38,8 +38,8 @@ jobs:
         id: node-setup
         uses: ./.github/actions/node-setup
         with:
-          cache-node-modules: 'true'
-          cache-turbo: 'false'
+          cache-node-modules: "true"
+          cache-turbo: "false"
 
       - name: Save node_modules
         if: steps.node-setup.outputs.node-modules-cache-hit != 'true'

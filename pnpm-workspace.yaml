@@ -4,7 +4,7 @@ packages:
   - vue-press
 
 catalog:
-  '@playwright/test': ^1.63.0
+  "@playwright/test": ^1.63.0
   playwright: ^1.63.0
 
 catalogs:
@@ -13,12 +13,12 @@ catalogs:
   react:
     react: 19.3.1
     react-dom: 19.3.1
-    '@types/react': 19.3.0
-    '@types/react-dom': 19.3.0
+    "@types/react": 19.3.0
+    "@types/react-dom": 19.3.0
   # Vitest, its browser provider, and React renderer must move together; mixing majors breaks
   # browser-mode project startup.
   vitest:
-    '@vitest/browser-playwright': ^5.0.3
+    "@vitest/browser-playwright": ^5.0.3
     vitest: ^5.0.3
     vitest-browser-react: ^2.3.0
 
@@ -27,9 +27,9 @@ catalogs:
 # from the changesets v2->v3 migration (PR #5337) — exempt them so installs aren't blocked.
 # First-party Fusion packages are trusted; exempt them so new releases can be adopted immediately.
 minimumReleaseAgeExclude:
-  - '@changesets/cli'
-  - '@changesets/write'
-  - '@equinor/fusion-*'
+  - "@changesets/cli"
+  - "@changesets/write"
+  - "@equinor/fusion-*"
 
 patchedDependencies:
   vscode-jsonrpc@8.2.1: patches/vscode-jsonrpc@8.2.1.patch
@@ -62,7 +62,7 @@ overrides:
   postcss@>=8.0.0 <=8.5.22: 8.5.23
   valibot@<=1.4.1: 1.4.2
   fast-uri@>=3.0.0 <=3.1.4: 3.1.5
-  '@babel/core@<=7.29.0': 7.29.6
+  "@babel/core@<=7.29.0": 7.29.6
   esbuild@>=0.27.3 <0.28.1: 0.28.1
   uuid@<11.1.1: 11.1.1
   zod: 4.6.7
@@ -71,12 +71,12 @@ allowBuilds:
   # only used by AuthProviderInteractiveBrowser's OS-level token cache, a
   # dynamic import with its own error message when unavailable — not hit by
   # any CI workflow (they authenticate via OIDC, not interactive browser auth).
-  '@azure/msal-node-extensions': false
+  "@azure/msal-node-extensions": false
   # only needed for `pnpm build:docs` (sass-embedded's file watcher); vuepress
   # falls back to its default watcher without it.
-  '@parcel/watcher': false
+  "@parcel/watcher": false
   # only needed to sign/package the fusion-lint vscode extension (rare, manual).
-  '@vscode/vsce-sign': false
+  "@vscode/vsce-sign": false
   # postinstall downloads a native binary from GitHub on every install; only the
   # copilot cli-plugin needs it, so its own prepack rebuilds it explicitly instead.
   agent-browser: false

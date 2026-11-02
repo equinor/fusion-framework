@@ -62,8 +62,8 @@ jobs:
       - name: Set up APM
         uses: microsoft/apm-action@v1
         with:
-          apm-version: '0.33.0'
-          setup-only: 'true'
+          apm-version: "0.33.0"
+          setup-only: "true"
 
       # equinor/fusion-skills is an internal repository, so the job token cannot clone it.
       # APM reads the per-organization token from GITHUB_APM_PAT_EQUINOR.

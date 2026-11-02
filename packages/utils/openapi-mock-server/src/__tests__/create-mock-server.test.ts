@@ -328,6 +328,7 @@ describe('createMockServer', () => {
     const router = createRouter();
     let routeError: unknown;
     router.get('/ping', (_req, res) => res.json({ matched: true }));
+    router.get('/files/', (_req, res) => res.json({ matched: true }));
     const routeServer = createServer((request, response) => {
       router
         .handle(request, response)
@@ -354,8 +355,11 @@ describe('createMockServer', () => {
     try {
       const response = await fetch(`http://127.0.0.1:${address.port}/ping/`);
 
-      expect(routeError).toBeUndefined();
       expect(response.status).toBe(404);
+      expect((await fetch(`http://127.0.0.1:${address.port}/files/`)).status).toBe(200);
+      expect((await fetch(`http://127.0.0.1:${address.port}/files`)).status).toBe(404);
+      expect((await fetch(`http://127.0.0.1:${address.port}/files//`)).status).toBe(404);
+      expect(routeError).toBeUndefined();
     } finally {
       await new Promise<void>((resolve, reject) => {
         routeServer.close((error) => (error ? reject(error) : resolve()));

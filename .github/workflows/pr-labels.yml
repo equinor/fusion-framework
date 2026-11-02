@@ -1,9 +1,9 @@
 name: pr labels
 on:
   pull_request_target:
-    types: 
+    types:
       - ready_for_review
-      - opened 
+      - opened
       - synchronize
 
 permissions: read-all

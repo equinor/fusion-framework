@@ -90,7 +90,7 @@
     "@equinor/fusion-services": "workspace:^",
     "@faker-js/faker": "^10.1.0",
     "graphql": "^17.0.2",
-    "path-to-regexp": "^8.4.0",
+    "path-to-regexp": "^9.0.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {

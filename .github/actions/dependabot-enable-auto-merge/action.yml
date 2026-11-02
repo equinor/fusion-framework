@@ -10,13 +10,13 @@ inputs:
     required: true
   expected-author:
     description: Required pull request author login, for example app/dependabot; empty skips the check
-    default: ''
+    default: ""
   mark-ready:
     description: Mark a draft pull request ready for review before enabling auto-merge
-    default: 'false'
+    default: "false"
   skip-on-head-mismatch:
     description: Skip with a notice instead of failing when the head moved after validation
-    default: 'false'
+    default: "false"
   github-token:
     description: Token with contents and pull-requests write access
     default: ${{ github.token }}
