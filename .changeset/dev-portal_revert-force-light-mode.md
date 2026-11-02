@@ -9,3 +9,5 @@ attribute on `html`. Native browser controls stay light through
 EDS palette, so EDS colors now follow the OS or browser color-scheme preference.
 
 Ref: equinor/fusion-core-tasks#2120.
+
+Internal: bump locked Rollup from 4.65.1 to 4.66.0 for the Vite build toolchain.
