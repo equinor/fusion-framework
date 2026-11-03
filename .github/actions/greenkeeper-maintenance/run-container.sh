@@ -50,7 +50,7 @@ mkdir "$scratch/tmp"
 export GREENKEEPER_REPOSITORY="$GITHUB_REPOSITORY"
 export GREENKEEPER_REVISION="$revision"
 export GREENKEEPER_OUTPUT_PATH="$scratch/results"
-export GREENKEEPER_TIMEOUT_SECONDS=900
+export GREENKEEPER_TIMEOUT_SECONDS=1800
 export GREENKEEPER_MODEL=gpt-6.1-sol
 export GREENKEEPER_WORKER_MODEL=gpt-6-luna
 export FUSION_AI_BASE_URL=https://ai.api.fusion.equinor.com/openai/v1
