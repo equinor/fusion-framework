@@ -35,6 +35,29 @@ does not replace bounded retry handling or provider quota management.
 See [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
 for queue behavior and capacity.
 
+## Request an export-only Greenkeeper assessment
+
+Run **Request Greenkeeper dependency assessment** from `main` in Actions and provide an open
+same-repository Dependabot PR number. The workflow reads its exact head and dispatches
+`dependency-assessment.yml` on `main` in `equinor/fusion-poc-greenkeeper`.
+Only the PR number, confirmed head SHA and caller run attempt URL cross repositories.
+PoC Greenkeeper owns execution, Entra authentication and the result; Framework acquires no provider tokens.
+If the PR head changes before execution, Greenkeeper rejects the request; dispatch a new request.
+
+Configure `GREENKEEPER_DISPATCH_TOKEN` in the protected `docs` environment with Actions write access
+to `equinor/fusion-poc-greenkeeper`. Prefer a short-lived GitHub App token where available.
+The ordinary Framework job token has read-only access and cannot dispatch into another repository.
+Publish the PoC receiver on `main` and configure its `greenkeeper` environment, image digests,
+checkout/metadata read credentials and provider access before enabling this caller.
+The federation handover is tracked in equinor/fusion-core-tasks#2710.
+
+Caller success means **dispatch accepted**, not assessment passed. Follow the PoC workflow link
+in the caller summary; its run title includes this Framework run attempt URL.
+Results stay in the internal PoC job summary; this test does not comment, push, merge or change
+the existing dependency-maintenance workflow.
+
+Validate the caller with `node --test .github/scripts/greenkeeper-dispatch.test.mjs`.
+
 ## Greenkeeper dependency maintenance
 
 [Greenkeeper dependency maintenance](../.github/workflows/greenkeeper-maintenance.yml) combines open Dependabot
