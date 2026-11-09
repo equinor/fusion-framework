@@ -13,9 +13,11 @@ const { description, name, version } = rootPackage;
 
 import theme from './theme.js';
 import { packageNamespaceLinksPlugin } from './plugins/package-namespace-links-plugin.js';
+import { thirdPartyNoticesPlugin } from './plugins/third-party-notices-plugin.js';
+import { siteBase } from './site-base.js';
 
 export default defineUserConfig({
-  base: (process.env.VUEPRESS_BASE ?? '/fusion-framework/') as '/' | `/${string}/`,
+  base: siteBase,
   title: [name, version].join('@'),
   description,
   head: [
@@ -27,6 +29,7 @@ export default defineUserConfig({
       optimizeDeps: {
         include: ['mermaid'],
       },
+      plugins: [thirdPartyNoticesPlugin()],
     },
     vuePluginOptions: {},
   }),

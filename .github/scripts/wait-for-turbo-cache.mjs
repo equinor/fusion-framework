@@ -128,7 +128,9 @@ async function main() {
       },
     );
     if (!response.ok) {
-      throw new Error(`GitHub API ${response.status} for ${path}; actions: read is required.`);
+      throw new Error(
+        `GitHub API ${response.status} for ${path}; actions: read and, for dispatched runs, pull-requests: read are required.`,
+      );
     }
     return response.json();
   };

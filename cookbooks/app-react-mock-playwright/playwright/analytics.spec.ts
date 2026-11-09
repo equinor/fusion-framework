@@ -6,6 +6,8 @@ const MOCK_SERVER = 'http://127.0.0.1:4010';
 const APP_ORIGIN = 'http://127.0.0.1:3000';
 const APP_PATH = '/apps/fusion-framework-cookbook-app-react-mock-playwright';
 const ANALYTICS_PATH = `${APP_PATH}/analytics`;
+// Portal and app startup on Windows CI runners can take longer than the default expect timeout.
+const APP_START_TIMEOUT = 30_000;
 
 const mockAuth = createMockAuth(MOCK_SERVER);
 const analytics = createMockAnalytics(MOCK_SERVER);
@@ -23,6 +25,10 @@ test.beforeEach(async ({ context }, testInfo) => {
 
 test('tracks a page view with its route', async ({ context, page }) => {
   await page.goto(`${APP_PATH}/people`);
+  // `goto` resolves before the app has loaded; the page view is only tracked once the route renders.
+  await expect(page.getByRole('heading', { name: 'Existing discovery service' })).toBeVisible({
+    timeout: APP_START_TIMEOUT,
+  });
 
   // The dev portal sends analytics in batches, so wait instead of reading once.
   const event = await analytics.waitFor(context.request, {
@@ -87,6 +93,15 @@ test('keeps the analytics of parallel browser contexts apart', async ({ browser 
 
   const [firstPage, secondPage] = await Promise.all([first.newPage(), second.newPage()]);
   await Promise.all([firstPage.goto(`${APP_PATH}/people`), secondPage.goto(`${APP_PATH}/aurora`)]);
+  // Page views are only tracked once each route renders, which can take longer than a wait for events.
+  await Promise.all([
+    expect(firstPage.getByRole('heading', { name: 'Existing discovery service' })).toBeVisible({
+      timeout: APP_START_TIMEOUT,
+    }),
+    expect(
+      secondPage.getByRole('heading', { name: 'Pre-production discovery service' }),
+    ).toBeVisible({ timeout: APP_START_TIMEOUT }),
+  ]);
 
   const [firstView, secondView] = await Promise.all([
     analytics.waitFor(first.request, { feature: 'page-viewed' }),

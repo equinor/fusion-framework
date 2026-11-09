@@ -31,6 +31,8 @@ concurrency:
 permissions:
   actions: read
   contents: read
+  # Dispatched runs look up the pull request to find the Turbo cache for its base commit.
+  pull-requests: read
 
 jobs:
   playwright:
@@ -49,7 +51,7 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
       PLAYWRIGHT_IGNORE_SNAPSHOTS: ${{ matrix.ignoreSnapshots }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -70,7 +72,7 @@ jobs:
           echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
 
       - name: Restore Playwright browsers
-        uses: actions/cache/restore@v6
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
           key: playwright-fusion-v2-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright-version.outputs.version }}
@@ -78,13 +80,19 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install chromium
 
+      - name: Build Playwright dependencies
+        shell: bash
+        run: pnpm turbo run build --filter='./packages/**'
+
+      # Each suite starts its own app build, dev server, mock server, and browser. Running them
+      # side by side starved the runners, so apps took longer to load than the tests wait for.
       - name: Run Playwright checks
         shell: bash
-        run: pnpm turbo run test:playwright
+        run: pnpm turbo run test:playwright --concurrency=1
 
       - name: Upload Playwright diagnostics
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: playwright-diagnostics-${{ matrix.os }}-${{ github.run_attempt }}
           path: |

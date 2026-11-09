@@ -7,6 +7,8 @@ export default defineConfig({
   // All specs share one mock-server process, so a runtime override (see playwright-override.spec.ts)
   // would race other specs' assertions under parallel workers — keep this suite single-worker instead.
   workers: 1,
+  // Leaves room for slow app startup plus the analytics batch wait on CI runners.
+  timeout: 45_000,
   // Browser assertions run against production-built files rather than Vite's development graph.
   expect: { timeout: 15_000 },
   webServer: [

@@ -8,13 +8,14 @@ const mockAuth = createMockAuth(MOCK_SERVER_URL);
 /**
  * Waits for app initialization to finish, including the intentional required-role gate.
  * @param page - The page whose portal and app are starting.
+ * @param timeout - How long the app may take to start, in milliseconds.
  */
-async function waitForAppReady(page: Page): Promise<void> {
+async function waitForAppReady(page: Page, timeout = 20_000): Promise<void> {
   await expect(
     page
       .getByRole('heading', { name: 'Fusion Roles V2', exact: true })
       .or(page.getByRole('heading', { name: 'Access denied', exact: true })),
-  ).toBeVisible({ timeout: 20_000 });
+  ).toBeVisible({ timeout });
 }
 
 test.beforeEach(async ({ context }) => {
@@ -108,6 +109,8 @@ test('renders scoped and duplicate active assignments after refresh', async ({ p
 test('isolates concurrent role personas and switches identity without restarting services', async ({
   browser,
 }) => {
+  // Two portals start side by side here, which takes over 20 seconds on Windows CI runners.
+  test.slow();
   const operationsContext = await browser.newContext();
   const reportingContext = await browser.newContext();
   const operationsPage = await operationsContext.newPage();
@@ -124,7 +127,10 @@ test('isolates concurrent role personas and switches identity without restarting
     }),
   ]);
   await Promise.all([operationsPage.goto(APP_PATH), reportingPage.goto(APP_PATH)]);
-  await Promise.all([waitForAppReady(operationsPage), waitForAppReady(reportingPage)]);
+  await Promise.all([
+    waitForAppReady(operationsPage, 40_000),
+    waitForAppReady(reportingPage, 40_000),
+  ]);
 
   await expect(operationsPage.getByRole('main')).toContainText(
     'Fusion Apps / Fusion.Apps.FullControl',

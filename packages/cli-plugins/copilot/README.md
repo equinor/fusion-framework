@@ -222,7 +222,7 @@ graph TD
 
 ## Prerequisites
 
-- **Node.js** >= 20
+- **Node.js** >= 22.22.2
 - **pnpm** as the workspace package manager
 - **agent-browser** installed globally or available on `PATH`
 - **GitHub Copilot** access in VS Code, because the SDK authenticates through the GitHub Copilot extension
