@@ -42,7 +42,7 @@ jobs:
       dist-tag: ${{ steps.channel.outputs.dist-tag }}
       mode: ${{ steps.select-mode.outputs.mode || 'none' }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # `main` publishes stable releases; `next` publishes pre-releases only
       # while changesets pre-release mode is active.
@@ -83,7 +83,7 @@ jobs:
       - name: Select changesets mode
         id: select-mode
         if: steps.channel.outputs.channel != 'skip'
-        uses: changesets/action/select-mode@v2
+        uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
 
   version:
     name: Create or update release pull request
@@ -97,7 +97,7 @@ jobs:
     outputs:
       pr-number: ${{ steps.version.outputs.pr-number }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -109,7 +109,7 @@ jobs:
 
       - name: Create or update release pull request
         id: version
-        uses: changesets/action/version@v2
+        uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
         with:
           script: pnpm changeset:version
           pr-title: ${{ needs.select-mode.outputs.channel == 'next' && '🤖 Bip Bop - Fusion Framework Pre-Release' || '🤖 Bip Bop - Fusion Framework Release' }}
@@ -130,7 +130,7 @@ jobs:
     outputs:
       published: ${{ steps.publish.outputs.published }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -157,7 +157,7 @@ jobs:
       # short-lived npm publish token and attaches provenance automatically.
       - name: Publish to npm
         id: publish
-        uses: changesets/action/publish@v2
+        uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
         with:
           script: ${{ needs.select-mode.outputs.channel == 'stable' && 'pnpm changeset:publish' || format('pnpm publish -r --no-git-checks --report-summary --tag {0}', needs.select-mode.outputs.dist-tag) }}
           create-github-releases: ${{ needs.select-mode.outputs.channel == 'stable' }}
@@ -188,7 +188,7 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -237,7 +237,7 @@ jobs:
     outputs:
       should-publish: ${{ steps.check.outputs.should-publish }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -265,7 +265,7 @@ jobs:
       contents: read
       id-token: write # Required for OIDC login to Azure (Marketplace publish)
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 

@@ -24,7 +24,7 @@ jobs:
       preview-path: ${{ steps.preview-path.outputs.value }}
       is-preview: ${{ steps.mode.outputs.value }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -61,7 +61,7 @@ jobs:
 
       - name: Checkout main
         if: ${{ steps.mode.outputs.value == 'true' }}
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: main
           fetch-depth: 0
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload Pages artifact
         if: ${{ steps.mode.outputs.value == 'true' }}
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: ./vue-press/dist
 
@@ -94,7 +94,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
 
       - name: Publish preview URL
         if: ${{ needs.build.outputs.is-preview == 'true' }}
