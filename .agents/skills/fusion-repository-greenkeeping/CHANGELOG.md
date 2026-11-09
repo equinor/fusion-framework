@@ -1,5 +1,76 @@
 # Changelog
 
+## 0.4.2 - 2026-11-01
+
+### patch
+
+- [#375](https://github.com/equinor/fusion-skills/pull/375) [`b193b19`](https://github.com/equinor/fusion-skills/commit/b193b193ede77b10df765f9a95c21db782880129) - Exclude AI editor rules and instructions from the description and point them to `fusion-rules`, so requests to set up Copilot, Cursor or Claude Code rules no longer route to repository greenkeeping.
+
+
+  refs equinor/fusion-core-tasks#2674
+
+- [#378](https://github.com/equinor/fusion-skills/pull/378) [`ca584cf`](https://github.com/equinor/fusion-skills/commit/ca584cff41be1622d5b98dd93371a6d3bdde3189) - Compress shared template fill guidance while preserving provenance, privacy and output rules.
+
+
+  refs equinor/fusion-core-tasks#2678
+
+- [#385](https://github.com/equinor/fusion-skills/pull/385) [`822abf6`](https://github.com/equinor/fusion-skills/commit/822abf66b9a3dc7f4e48d97cf85db2c4ee4cca8e) - Route repository audits and readiness before workflow catalogues; load selected guides and examples only when needed while preserving approval and provenance gates.
+
+
+  resolves equinor/fusion-core-tasks#2683
+
+## 0.4.1 - 2026-11-01
+
+### patch
+
+- [#363](https://github.com/equinor/fusion-skills/pull/363) [`f34c0d9`](https://github.com/equinor/fusion-skills/commit/f34c0d9dc7de15e59ec643407914e98ad8288245) - Shorten the skill description, which is loaded on every turn. Triggers, exclusions that separate it from sibling skills, and safety exclusions are unchanged, and a routing evaluation confirms requests still reach this skill.
+
+
+  resolves equinor/fusion-core-tasks#2666
+
+## 0.4.0 - 2026-10-31
+
+### minor
+
+- [#356](https://github.com/equinor/fusion-skills/pull/356) [`ba79254`](https://github.com/equinor/fusion-skills/commit/ba79254ce5a7a1ffa6fbefc093a6dc03aec827c6) - Add read-only audit mode for existing GitHub Actions workflows and APM consumer health.
+
+
+  - Actions audit: script injection, privileged `pull_request_target`/`workflow_run` checkouts, token permissions, mutable or tag pins, `secrets: inherit`, retired runner labels, Node 20 and older action runtimes, deprecated workflow commands and toolchain version drift
+  - APM health: manifest/lock disagreement, missing or locally edited deployed files, floating refs, CLI version drift, committed `apm_modules/` and sync token gaps, with approval-gated `apm audit`/`apm outdated`
+
+  refs equinor/fusion-poc-greenkeeper#45
+
+## 0.3.0 - 2026-10-28
+
+### minor
+
+- [#343](https://github.com/equinor/fusion-skills/pull/343) [`be98844`](https://github.com/equinor/fusion-skills/commit/be9884498421149fd25cbaa5133f0b1623980d77) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add agent-filled `dependabot` configuration template so repositories adopting
+
+  SHA-pinned workflow templates keep those pins and their dependencies current.
+
+  - Always covers `github-actions` (root plus local composite actions) and only the
+    npm/pnpm/Yarn, Bun and NuGet directories detected in the repository
+  - Weekly schedule, 7-day cooldown, one PR per action pin; npm/Bun group
+    Fusion Framework, Fusion React, React and EDS families like `fusion-app-template`;
+    every other dependency gets its own PR, with up to 50 open PRs per ecosystem
+    entry; reasoning documented
+  - Detects existing Dependabot or Renovate configuration and reports it instead of
+    overwriting; customized files follow the same provenance-aware three-way update
+
+  resolves equinor/fusion-skills#320
+
+  refs equinor/fusion-skills#299
+
+## 0.2.1 - 2026-10-27
+
+### patch
+
+- [#336](https://github.com/equinor/fusion-skills/pull/336) [`bf60e9e`](https://github.com/equinor/fusion-skills/commit/bf60e9e76a812735b3ff0cde8140eb5604a506f7) - Sync shared provenance fill rules: resolve authoring-turn metadata before fallback,
+
+  with bounded lookup, model-change and delegate attribution, and privacy limits.
+
+  fixes equinor/fusion-skills#335
+
 ## 0.2.0 - 2026-10-22
 
 ### minor
