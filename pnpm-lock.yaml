@@ -12649,10 +12649,6 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
-    engines: {node: '>=0.10.0'}
-
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
     engines: {node: '>=0.10.0'}
@@ -18598,7 +18594,7 @@ snapshots:
       '@vue/shared': 3.5.42
       entities: 7.0.1
       estree-walker: 2.0.2
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   '@vue/compiler-core@3.5.43':
     dependencies:
@@ -18643,7 +18639,7 @@ snapshots:
       estree-walker: 2.0.2
       magic-string: 0.30.21
       postcss: 8.5.23
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   '@vue/compiler-sfc@3.5.43':
     dependencies:
@@ -22345,7 +22341,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.18
       picocolors: 1.1.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   postcss@8.5.29:
     dependencies:
@@ -23287,8 +23283,6 @@ snapshots:
       '@solid-primitives/refs': 1.1.4(solid-js@1.9.15)
       '@solid-primitives/transition-group': 1.1.2(solid-js@1.9.15)
       solid-js: 1.9.15
-
-  source-map-js@1.2.1: {}
 
   source-map-js@1.2.2: {}
 
