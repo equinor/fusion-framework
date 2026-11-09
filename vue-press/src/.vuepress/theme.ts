@@ -1,6 +1,8 @@
 import { hopeTheme, NavbarOptions } from 'vuepress-theme-hope';
 
 import sidebar from './sidebar';
+import { THIRD_PARTY_NOTICES_FILE } from './plugins/third-party-notices-plugin.js';
+import { siteBase } from './site-base.js';
 
 const navbar: NavbarOptions = [
   {
@@ -37,6 +39,9 @@ export default hopeTheme({
   darkmode: 'switch',
   navbar,
   sidebar,
+  // The theme renders the footer as raw HTML, so the link needs the site base.
+  footer: `Powered by Fusion · <a href="${siteBase}${THIRD_PARTY_NOTICES_FILE}">Third-party licenses</a>`,
+  displayFooter: true,
   markdown: {
     gfm: true,
     alert: true,
