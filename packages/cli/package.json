@@ -116,7 +116,7 @@
     "inquirer": "^14.0.0",
     "is-mergeable-object": "^1.1.1",
     "is-path-inside": "^4.0.0",
-    "ora": "^9.0.0",
+    "ora": "^10.0.0",
     "read-package-up": "^12.0.0",
     "semver": "^7.7.4",
     "simple-git": "^4.0.1",
