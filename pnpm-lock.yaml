@@ -1422,7 +1422,7 @@ importers:
         version: link:../../packages/utils/query
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
-        version: 2.0.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 2.0.12(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-react-date':
         specifier: ^1.0.0
         version: 1.0.8(react@19.3.1)
@@ -1910,7 +1910,7 @@ importers:
         version: link:../utils/query
       '@equinor/fusion-react-context-selector':
         specifier: ^2.0.1
-        version: 2.0.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 2.0.12(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-react-errorboundary':
         specifier: ^2.0.11
         version: 2.0.14(@equinor/eds-core-react@2.6.4(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)))(@equinor/eds-icons@1.6.0)(@equinor/eds-tokens@2.3.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
@@ -4544,8 +4544,8 @@ packages:
       react-dom: ^18 || ^19
       styled-components: ^6
 
-  '@equinor/fusion-react-context-selector@2.0.11':
-    resolution: {integrity: sha512-A8xb6EfGx/ZDNpQEy3OiGpt5P+8ZyChiwCc626MdLUowcp3g+uMuiyUKmgD1Zjwvq66EvgmUjPciflBATJd4eA==}
+  '@equinor/fusion-react-context-selector@2.0.12':
+    resolution: {integrity: sha512-tzfTfNY0d8Ss0bMhDkVbSjfj1vhfV5eiJq69Qp0E06APXFda8Mq89o0TgE0RbZtYlZtXfCQStIwxudAuMMQkag==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -4587,12 +4587,6 @@ packages:
       react: ^18 || ^19
       react-dom: ^18 || ^19
       styled-components: ^6.6.0
-
-  '@equinor/fusion-react-styles@2.1.10':
-    resolution: {integrity: sha512-VDZCncKsb4G6DOUSFaVODd5rYS5zfxo3N1zAYcGwlxETQO0QkpgiYCseYnrWOgDMMYUWxiPKF2gjWR1S0CePpg==}
-    peerDependencies:
-      react: ^18 || ^19
-      styled-components: ^6
 
   '@equinor/fusion-react-styles@2.1.11':
     resolution: {integrity: sha512-LuJwrv+KpFn4E/jVomNSodHvOtUOYRFrAPMQY7tAKGv/CnX6BqGkcj1DEL6pKA+XMPnTptLRdYGAXnvqzLmTJQ==}
@@ -4666,9 +4660,6 @@ packages:
 
   '@equinor/fusion-wc-textinput@1.2.5':
     resolution: {integrity: sha512-r/0Fn+4j+fn/XV5x+np6xK9J7xEyf00BAZRs5q4gtyOzWVU/Qa3wMWiMW6hAnMuYcm5H6/agOU1BjetUrTLBQw==}
-
-  '@equinor/fusion-wc-theme@1.2.5':
-    resolution: {integrity: sha512-MSp5UgxB5Yt5fEl9+JJMvIo++Y/xI2XhxeHyqyyLLiUpeKsyDaJs5j1zMQgkjyUSwtEDr/b4OCKYybmwhEo34g==}
 
   '@equinor/fusion-wc-theme@1.2.6':
     resolution: {integrity: sha512-MIem4+ct3EF/TwwukG0ZirYmuJyaLn4J8fZpnz8FSSJtPAlj8vH+zdk+AAAheZh03AOmypuD6x01hdfkc36qcQ==}
@@ -14474,10 +14465,10 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       styled-components: 6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
-  '@equinor/fusion-react-context-selector@2.0.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+  '@equinor/fusion-react-context-selector@2.0.12(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
     dependencies:
       '@equinor/fusion-react-searchable-dropdown': 2.0.9(react@19.3.1)
-      '@equinor/fusion-react-styles': 2.1.10(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@equinor/fusion-react-styles': 2.1.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@equinor/fusion-react-utils': 3.0.7(react@19.3.1)
       '@equinor/fusion-wc-icon': 2.4.4
       '@equinor/fusion-wc-searchable-dropdown': 4.1.5
@@ -14538,24 +14529,6 @@ snapshots:
       styled-components: 6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     transitivePeerDependencies:
       - react-is
-
-  '@equinor/fusion-react-styles@2.1.10(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
-    dependencies:
-      '@equinor/eds-tokens': 2.3.2
-      '@equinor/fusion-wc-theme': 1.2.5
-      '@equinor/fusion-web-theme': 0.1.12
-      clsx: 2.1.1
-      hoist-non-react-statics: 3.3.2
-      jss: 10.10.0
-      jss-plugin-camel-case: 10.10.0
-      jss-plugin-default-unit: 10.10.0
-      jss-plugin-global: 10.10.0
-      jss-plugin-nested: 10.10.0
-      jss-plugin-props-sort: 10.10.0
-      jss-plugin-rule-value-function: 10.10.0
-      jss-plugin-vendor-prefixer: 10.10.0
-      react: 19.3.1
-      styled-components: 6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
   '@equinor/fusion-react-styles@2.1.11(react@19.3.1)(styled-components@6.6.0(css-to-react-native@3.2.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
     dependencies:
@@ -14750,13 +14723,6 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.4.4
       '@equinor/fusion-web-theme': 0.1.12
       '@material/mwc-textfield': 0.27.0
-      lit: 3.3.3
-
-  '@equinor/fusion-wc-theme@1.2.5':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.3
-      '@equinor/fusion-web-theme': 0.1.12
-      '@material/theme': 14.0.0
       lit: 3.3.3
 
   '@equinor/fusion-wc-theme@1.2.6':
