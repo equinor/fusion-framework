@@ -18,7 +18,6 @@ features:
   details: Written in TypeScript
 - title: 📄 TypeDoc
   details: Documentation with IntelliSense
-footer: Powered by Fusion
 ---
 
 ## App
