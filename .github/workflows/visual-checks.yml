@@ -31,6 +31,8 @@ concurrency:
 permissions:
   actions: read
   contents: read
+  # Dispatched runs look up the pull request to find the Turbo cache for its base commit.
+  pull-requests: read
 
 jobs:
   playwright:
