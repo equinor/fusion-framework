@@ -78,9 +78,15 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install chromium
 
+      - name: Build Playwright dependencies
+        shell: bash
+        run: pnpm turbo run build --filter='./packages/**'
+
+      # Each suite starts its own app build, dev server, mock server, and browser. Running them
+      # side by side starved the runners, so apps took longer to load than the tests wait for.
       - name: Run Playwright checks
         shell: bash
-        run: pnpm turbo run test:playwright
+        run: pnpm turbo run test:playwright --concurrency=1
 
       - name: Upload Playwright diagnostics
         if: ${{ !cancelled() }}

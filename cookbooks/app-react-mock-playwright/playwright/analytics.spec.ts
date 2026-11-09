@@ -23,6 +23,8 @@ test.beforeEach(async ({ context }, testInfo) => {
 
 test('tracks a page view with its route', async ({ context, page }) => {
   await page.goto(`${APP_PATH}/people`);
+  // `goto` resolves before the app has loaded; the page view is only tracked once the route renders.
+  await expect(page.getByRole('heading', { name: 'Existing discovery service' })).toBeVisible();
 
   // The dev portal sends analytics in batches, so wait instead of reading once.
   const event = await analytics.waitFor(context.request, {
@@ -87,6 +89,13 @@ test('keeps the analytics of parallel browser contexts apart', async ({ browser 
 
   const [firstPage, secondPage] = await Promise.all([first.newPage(), second.newPage()]);
   await Promise.all([firstPage.goto(`${APP_PATH}/people`), secondPage.goto(`${APP_PATH}/aurora`)]);
+  // Page views are only tracked once each route renders, which can take longer than a wait for events.
+  await Promise.all([
+    expect(firstPage.getByRole('heading', { name: 'Existing discovery service' })).toBeVisible(),
+    expect(
+      secondPage.getByRole('heading', { name: 'Pre-production discovery service' }),
+    ).toBeVisible(),
+  ]);
 
   const [firstView, secondView] = await Promise.all([
     analytics.waitFor(first.request, { feature: 'page-viewed' }),
