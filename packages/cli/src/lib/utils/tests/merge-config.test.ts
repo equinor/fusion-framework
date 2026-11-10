@@ -49,4 +49,25 @@ describe('mergeConfig', () => {
     expect(Object.getPrototypeOf(result.nested)).toBe(Object.prototype);
     expect(result.polluted).toBeUndefined();
   });
+
+  it('strips __proto__ keys from override values that have no base counterpart, at any depth', () => {
+    const overrides = JSON.parse(
+      '{"added": {"deep": {"__proto__": {"polluted": true}}}, "list": [{"__proto__": {"polluted": true}}], "replaced": {"__proto__": {"polluted": true}}}',
+    );
+    type Merged = { added: { deep: object }; list: object[]; replaced: object };
+    const base: Record<string, unknown> = { list: [], replaced: 'primitive' };
+    const result = mergeConfig(base, overrides) as Merged;
+    // Object.assign uses [[Set]], so a surviving own `__proto__` key would swap the prototype
+    const reassigned = [
+      Object.assign({}, result.added.deep),
+      Object.assign({}, result.list[0]),
+      Object.assign({}, result.replaced),
+    ];
+
+    // Each value came from the overrides without a base counterpart to merge with
+    for (const value of reassigned) {
+      expect(Object.getPrototypeOf(value)).toBe(Object.prototype);
+      expect(Object.hasOwn(value, '__proto__')).toBe(false);
+    }
+  });
 });

@@ -36,6 +36,42 @@ const isConfigObject = (value: unknown): value is ConfigObject => {
 const appendArrays: MergeConfigArrays = (base, overrides) => base.concat(overrides);
 
 /**
+ * Lists an object's entries without `__proto__`, which would replace the prototype of an object
+ * it is assigned to (GHSA-gcqx-w48m-w2h4).
+ *
+ * @param value - Object whose entries are listed.
+ * @returns The entries that are safe to assign.
+ */
+const safeEntries = (value: ConfigObject): Array<[string, unknown]> =>
+  // `JSON.parse` keeps `__proto__` as an own key, so untrusted config can carry one
+  Object.entries(value).filter(([entryKey]) => entryKey !== '__proto__');
+
+/**
+ * Copies plain objects and arrays from the overrides, dropping `__proto__` keys at any depth so
+ * an override value that has no base counterpart is cleaned the same way as a merged one.
+ *
+ * @param value - Value from the overrides.
+ * @returns A cleaned copy of plain objects and arrays; any other value as-is.
+ */
+const sanitize = (value: unknown): unknown => {
+  // Arrays may contain plain objects that carry `__proto__` keys
+  if (Array.isArray(value)) {
+    // Clean every item, since items never merge with a base value
+    return value.map(sanitize);
+  }
+  // Class instances and primitives are kept as-is
+  if (!isConfigObject(value)) {
+    return value;
+  }
+  // Clean each nested value too, since none of them has a base value to merge with
+  const entries = safeEntries(value).map(([entryKey, entryValue]) => [
+    entryKey,
+    sanitize(entryValue),
+  ]);
+  return Object.fromEntries(entries);
+};
+
+/**
  * Merges one value from the overrides into the matching base value.
  *
  * @param base - Value from the base config.
@@ -52,21 +88,20 @@ const mergeValue = (
 ): unknown => {
   // Both sides are lists, so the caller's strategy decides how to combine them
   if (Array.isArray(base) && Array.isArray(overrides)) {
-    return mergeArrays(base, overrides, key);
+    // Clean override items before the strategy sees them, since it may keep them as-is
+    return mergeArrays(base, overrides.map(sanitize), key);
   }
   // Anything other than two plain objects is replaced by the override
   if (!isConfigObject(base) || !isConfigObject(overrides)) {
-    return overrides;
+    return sanitize(overrides);
   }
   // Start from the base keys so keys absent from the overrides survive
-  const result: ConfigObject = { ...base };
-  // Skip `__proto__`: assigning it would replace the result's prototype (GHSA-gcqx-w48m-w2h4)
-  const entries = Object.entries(overrides).filter(([entryKey]) => entryKey !== '__proto__');
+  const result: ConfigObject = Object.fromEntries(safeEntries(base));
   // Overlay each override key, recursing where both sides define it
-  for (const [entryKey, value] of entries) {
+  for (const [entryKey, value] of safeEntries(overrides)) {
     result[entryKey] = Object.hasOwn(base, entryKey)
       ? mergeValue(base[entryKey], value, mergeArrays, entryKey)
-      : value;
+      : sanitize(value);
   }
   return result;
 };
@@ -77,8 +112,8 @@ const mergeValue = (
  *
  * Plain objects merge key by key with override values winning, including an explicit `undefined`.
  * Arrays are appended unless `mergeArrays` says otherwise. Any other value, including class
- * instances, replaces the base value. Nested values that are not overridden are shared with
- * the inputs rather than copied.
+ * instances, replaces the base value. Values taken from the overrides are copied with `__proto__`
+ * keys removed at any depth; base values that are not overridden are shared with the inputs.
  *
  * @template T - Shape of the config.
  * @param base - Base config.

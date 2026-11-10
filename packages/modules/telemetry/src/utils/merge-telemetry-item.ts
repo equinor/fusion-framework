@@ -17,6 +17,42 @@ const isPlainMetadata = (value: unknown): value is Record<string, unknown> => {
 };
 
 /**
+ * Lists a metadata object's entries without `__proto__`, which would replace the prototype of an
+ * object it is assigned to (GHSA-gcqx-w48m-w2h4).
+ *
+ * @param value - Metadata object whose entries are listed.
+ * @returns The entries that are safe to assign.
+ */
+const safeEntries = (value: Record<string, unknown>): Array<[string, unknown]> =>
+  // `JSON.parse` keeps `__proto__` as an own key, so untrusted metadata can carry one
+  Object.entries(value).filter(([key]) => key !== '__proto__');
+
+/**
+ * Copies plain objects and arrays from incoming metadata, dropping `__proto__` keys at any depth
+ * so a value with no existing counterpart is cleaned the same way as a merged one.
+ *
+ * @param value - Incoming metadata value.
+ * @returns A cleaned copy of plain objects and arrays; any other value as-is.
+ */
+const sanitizeMetadata = (value: unknown): unknown => {
+  // Arrays may contain plain objects that carry `__proto__` keys
+  if (Array.isArray(value)) {
+    // Clean every item, since items never merge with an existing value
+    return value.map(sanitizeMetadata);
+  }
+  // Class instances such as `Error` and primitives are kept as-is
+  if (!isPlainMetadata(value)) {
+    return value;
+  }
+  // Clean each nested value too, since none of them has an existing value to merge with
+  const entries = safeEntries(value).map(([key, entryValue]) => [
+    key,
+    sanitizeMetadata(entryValue),
+  ]);
+  return Object.fromEntries(entries);
+};
+
+/**
  * Merges one metadata value into another: plain objects merge recursively, arrays are appended,
  * and any other value from `override` wins.
  *
@@ -27,19 +63,20 @@ const isPlainMetadata = (value: unknown): value is Record<string, unknown> => {
 const mergeMetadataValue = (base: unknown, override: unknown): unknown => {
   // Lists of values accumulate rather than replace each other
   if (Array.isArray(base) && Array.isArray(override)) {
-    return base.concat(override);
+    // Clean incoming items before appending them to the existing list
+    return base.concat(override.map(sanitizeMetadata));
   }
   // Anything other than two plain objects is replaced by the override
   if (!isPlainMetadata(base) || !isPlainMetadata(override)) {
-    return override;
+    return sanitizeMetadata(override);
   }
   // Start from the base keys so keys absent from the override survive
-  const result: Record<string, unknown> = { ...base };
-  // Skip `__proto__`: assigning it would replace the result's prototype (GHSA-gcqx-w48m-w2h4)
-  const entries = Object.entries(override).filter(([key]) => key !== '__proto__');
+  const result: Record<string, unknown> = Object.fromEntries(safeEntries(base));
   // Overlay each override key, recursing where both sides define it
-  for (const [key, value] of entries) {
-    result[key] = Object.hasOwn(base, key) ? mergeMetadataValue(base[key], value) : value;
+  for (const [key, value] of safeEntries(override)) {
+    result[key] = Object.hasOwn(base, key)
+      ? mergeMetadataValue(base[key], value)
+      : sanitizeMetadata(value);
   }
   return result;
 };

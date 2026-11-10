@@ -36,4 +36,22 @@ describe('mergeMetadata', () => {
     expect(result).toEqual({ safe: 1 });
     expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
   });
+
+  it('strips __proto__ keys from newly added metadata values at any depth', () => {
+    const target = JSON.parse(
+      '{"added": {"deep": {"__proto__": {"polluted": true}}}, "list": [{"__proto__": {"polluted": true}}]}',
+    );
+    const result = mergeMetadata({ list: [] }, target) as {
+      added: { deep: object };
+      list: object[];
+    };
+    // Object.assign uses [[Set]], so a surviving own `__proto__` key would swap the prototype
+    const reassigned = [Object.assign({}, result.added.deep), Object.assign({}, result.list[0])];
+
+    // Each value was added by the incoming metadata without an existing counterpart
+    for (const value of reassigned) {
+      expect(Object.getPrototypeOf(value)).toBe(Object.prototype);
+      expect(Object.hasOwn(value, '__proto__')).toBe(false);
+    }
+  });
 });
