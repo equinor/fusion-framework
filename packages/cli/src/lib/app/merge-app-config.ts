@@ -1,5 +1,5 @@
-import deepmerge from 'deepmerge';
 import type { AppConfig } from '@equinor/fusion-framework-cli/app';
+import { mergeConfig } from '../utils/merge-config.js';
 
 /**
  * Merges a base application configuration object with an overrides object,
@@ -13,17 +13,8 @@ import type { AppConfig } from '@equinor/fusion-framework-cli/app';
  * @returns A new configuration object resulting from merging `base` and `overrides`.
  */
 export const mergeAppConfig = <T extends AppConfig>(base: T, overrides: Partial<T>): T => {
-  // if scopes are provided in overrides, use the new scopes
-  return deepmerge(base, overrides, {
-    customMerge: (key) => {
-      // Replace (rather than deep-merge) scopes so overrides fully control the array
-      if (key === 'scopes') {
-        return (_target, source) => {
-          // If scopes are provided in overrides, replace the base scopes with the new ones
-          return source;
-        };
-      }
-      return undefined; // Use default merging for other keys
-    },
-  });
+  return mergeConfig(base, overrides, (target, source, key) =>
+    // Replace scopes so overrides fully control which scopes are requested; append other arrays
+    key === 'scopes' ? source : target.concat(source),
+  );
 };

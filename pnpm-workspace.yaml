@@ -33,22 +33,23 @@ minimumReleaseAgeExclude:
 
 patchedDependencies:
   vscode-jsonrpc@8.2.1: patches/vscode-jsonrpc@8.2.1.patch
+  vscode-languageclient@11.0.0: patches/vscode-languageclient@11.0.0.patch
 
 overrides:
   form-data@>=4.0.0 <4.0.6: 4.0.6
   immutable@>=5.0.0 <5.1.5: 5.1.5
-  markdown-it@>=13.0.0 <14.2.0: 14.2.0
+  markdown-it@>=13.0.0 <14.3.3: 14.3.3
   linkify-it@<5.0.1: 5.0.1
-  js-yaml@>=3.0.0 <3.15.1: 3.15.1
-  js-yaml@>=4.0.0 <4.3.1: 4.3.1
-  qs@<=6.15.1: 6.15.2
-  undici@>=7.0.0 <7.29.0: 7.29.0
+  js-yaml@>=3.0.0 <3.15.2: 3.15.2
+  js-yaml@>=4.0.0 <4.3.2: 4.3.2
+  qs@<6.16.1: 6.16.1
+  undici@>=7.0.0 <7.30.1: 7.30.1
   undici@>=8.0.0 <8.5.0: 8.5.0
   ws@>=7.0.0 <7.5.11: 7.5.11
-  brace-expansion@>=2.0.0 <2.1.4: 2.1.4
-  brace-expansion@>=3.0.0 <=5.0.7: 5.0.8
+  brace-expansion@>=2.0.0 <2.1.7: 2.1.7
+  brace-expansion@>=3.0.0 <5.0.12: 5.0.12
   dompurify@>=3.1.3 <=3.4.12: 3.4.13
-  follow-redirects@<=1.15.11: 1.16.0
+  follow-redirects@<1.16.2: 1.16.2
   handlebars@>=4.0.0 <=4.7.8: 4.7.9
   langsmith@>=0.4.0 <0.6.0: 0.8.3
   lodash@>=4.0.0 <=4.17.23: 4.18.1
@@ -56,16 +57,24 @@ overrides:
   minimatch@>=5.0.0 <5.1.8: 5.1.8
   minimatch@>=9.0.0 <9.0.7: 9.0.7
   minimatch@<3.1.3: 3.1.5
+  # GHSA-g3hv-75wg-m249: patched only in 11.x. Consumers still declare ^10; v11 removed
+  # Minimatch#makeRe, so vscode-languageclient carries a patch (patches/) for the new API.
+  minimatch@>=7.0.0 <11.0.1: 11.0.5
   path-to-regexp@>=8.0.0 <8.4.0: 8.4.0
-  serialize-javascript@<=7.0.4: 7.0.5
+  serialize-javascript@<7.1.3: 7.1.3
   yaml@>=2.0.0 <2.8.3: 2.8.3
   postcss@>=8.0.0 <=8.5.22: 8.5.23
   valibot@<=1.4.1: 1.4.2
-  fast-uri@>=3.0.0 <=3.1.4: 3.1.5
+  fast-uri@>=3.0.0 <3.1.9: 3.1.9
   "@babel/core@<=7.29.0": 7.29.6
   esbuild@>=0.27.3 <0.28.1: 0.28.1
   uuid@<11.1.1: 11.1.1
   zod: 4.6.7
+  "@vitest/browser@>=5.0.0 <5.0.5": 5.0.5
+  "@vitest/ui@>=5.0.0 <5.0.5": 5.0.5
+  axios@>=1.0.0 <1.20.0: 1.20.0
+  js-yaml@>=5.0.0 <5.4.1: 5.4.1
+  seroval@>=1.0.0 <1.6.11: 1.6.11
 
 allowBuilds:
   # only used by AuthProviderInteractiveBrowser's OS-level token cache, a
