@@ -3710,7 +3710,7 @@ importers:
         version: 1.17.17
       nock:
         specifier: ^15.0.1
-        version: 15.0.5(supports-color@10.2.2)
+        version: 15.0.6(supports-color@10.2.2)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -6425,8 +6425,8 @@ packages:
     resolution: {integrity: sha512-cXu86tF4VQVfwz8W1SPbhoRyHJkti6mjH/XJIxp40jhO4j2k1m4KYrEykxqWPkFF3vrK4rgQppBh//AwyGSXPA==}
     engines: {node: '>=18'}
 
-  '@mswjs/interceptors@0.44.0':
-    resolution: {integrity: sha512-IYHevRStF4ijM20GI9c9Ndhw483NSAjCydQhUr4/zIB0BNLsTVw3vFAxTo6TlvX4QnV60wEHttUa9539TTAq+A==}
+  '@mswjs/interceptors@0.45.11':
+    resolution: {integrity: sha512-+ISPERIRIHhSVnFQRGCP9jDJXxn0/z2+pWWbXUym6JUfpUCRW2Pvro4P9RBKGYUKTKAULszKurKMTQIsaJUIgQ==}
     engines: {node: '>=22'}
 
   '@mswjs/interceptors@0.45.8':
@@ -11693,8 +11693,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nock@15.0.5:
-    resolution: {integrity: sha512-nVeuZGS2we1PyvqbW082Qj0EB4bd//6pZk/zOPDlaTPU72qcWrqfHg3kx9JcBcH1fJxwJHjmsfuQ4mss42su4w==}
+  nock@15.0.6:
+    resolution: {integrity: sha512-eyOJ1wemcgJZ+PQC3lecfF3gQc2SAmGlQ4mHGfFXcOa/+7v0qjnX+ft/NV2F+4vCwzkXZqik3gS6ZIjh+QcigQ==}
     engines: {node: '>=22.20.0'}
 
   node-abi@3.94.0:
@@ -16291,7 +16291,7 @@ snapshots:
       strict-event-emitter: 0.5.1
     optional: true
 
-  '@mswjs/interceptors@0.44.0(supports-color@10.2.2)':
+  '@mswjs/interceptors@0.45.11(supports-color@10.2.2)':
     dependencies:
       '@open-draft/until': 3.0.1
       '@types/debug': 4.1.13
@@ -22292,9 +22292,9 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nock@15.0.5(supports-color@10.2.2):
+  nock@15.0.6(supports-color@10.2.2):
     dependencies:
-      '@mswjs/interceptors': 0.44.0(supports-color@10.2.2)
+      '@mswjs/interceptors': 0.45.11(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
