@@ -1,7 +1,6 @@
 import { importConfig } from '@equinor/fusion-imports';
 
-import deepmerge from 'deepmerge';
-
+import { mergeConfig } from '../utils/merge-config.js';
 import { PortalManifestSchema } from './portal-manifest-schema.js';
 import type { RecursivePartial, RuntimeEnv } from '../types.js';
 import type { PortalManifest } from './define-portal-manifest.js';
@@ -98,7 +97,7 @@ export const loadPortalManifest = async <T extends Partial<PortalManifest> = Por
           // If the manifest export is not a function, treat it as an object
           overrides = module.default as RecursivePartial<T>;
         }
-        return overrides ? deepmerge(base, overrides as Partial<T>) : base;
+        return overrides ? mergeConfig(base, overrides) : base;
       },
     },
   });

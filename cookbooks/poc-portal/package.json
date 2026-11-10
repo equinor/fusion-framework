@@ -23,7 +23,6 @@
     "@equinor/fusion-framework-react": "workspace:*",
     "@equinor/fusion-framework-react-app": "workspace:*",
     "@vitejs/plugin-react": "^6.0.1",
-    "is-mergeable-object": "^1.1.1",
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "vite": "^8.0.0",

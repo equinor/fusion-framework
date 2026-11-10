@@ -1,6 +1,5 @@
-import deepmerge from 'deepmerge';
-
 import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
+import { mergeConfig } from './utils/merge-config.js';
 import type { RecursivePartial } from './utils/types.js';
 
 /**
@@ -36,8 +35,8 @@ const keyedArrayMerger = <TType extends Record<string, unknown>>(
 /**
  * Merges a base development server configuration with an overrides object.
  *
- * Uses lodash.mergeWith to deeply merge properties, with custom logic for arrays.
- * Arrays in the overrides object will replace arrays in the base config.
+ * Objects are merged recursively. Route arrays (entries with `match` and `middleware`) are
+ * merged by `match`, with override routes winning; other arrays are concatenated and de-duplicated.
  *
  * @param base - The base development server configuration.
  * @param overrides - A partial configuration object containing properties to override in the base configuration.
@@ -49,19 +48,21 @@ export const mergeDevServerConfig = (
   base: DevServerOptions,
   overrides: RecursivePartial<DevServerOptions>,
 ): DevServerOptions => {
-  return deepmerge(base, overrides, {
-    arrayMerge: (target, source) => {
-      // extract the first entry from both arrays to determine the merge strategy
-      const entry = source[0] ?? target[0];
+  return mergeConfig(base, overrides, (target, source) => {
+    // extract the first entry from both arrays to determine the merge strategy
+    const entry = source[0] ?? target[0];
 
-      // merge routes by 'match' if the entry is a route object
-      if (typeof entry === 'object' && 'match' in entry && 'middleware' in entry) {
-        return keyedArrayMerger('match', target, source);
-      }
-      // Deduplicate the combined target and source entries
-      return [...new Set([...target, ...source])];
-    },
-  }) as DevServerOptions;
+    // merge routes by 'match' if the entry is a route object
+    if (typeof entry === 'object' && entry !== null && 'match' in entry && 'middleware' in entry) {
+      return keyedArrayMerger(
+        'match',
+        target as Array<Record<string, unknown>>,
+        source as Array<Record<string, unknown>>,
+      );
+    }
+    // Deduplicate the combined target and source entries
+    return [...new Set([...target, ...source])];
+  });
 };
 
 // Export as default for convenience in imports
