@@ -1,5 +1,12 @@
 # Change Log
 
+## 9.0.7
+
+### Patch Changes
+
+- Updated dependencies [b5a3976]
+  - @equinor/fusion-framework-module-telemetry@7.2.3
+
 ## 9.0.6
 
 ### Patch Changes

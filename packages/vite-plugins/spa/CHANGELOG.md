@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.2.4
+
+### Patch Changes
+
+- dd82e2f: Internal: bump locked Rollup from 4.65.1 to 4.67.4 for the build and development toolchain.
+- Updated dependencies [b5a3976]
+  - @equinor/fusion-framework-module-telemetry@7.2.3
+
 ## 5.2.3
 
 ### Patch Changes

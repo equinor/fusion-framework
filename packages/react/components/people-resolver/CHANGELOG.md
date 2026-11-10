@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.9
+
+### Patch Changes
+
+- dd359f8: Internal: suppress the Biome 2.6 `noComponentHookFactories` rule for the intentional component factory in `makeResolver`. Runtime behavior is unchanged.
+
 ## 2.0.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 7.2.3
+
+### Patch Changes
+
+- b5a3976: Replace the `deepmerge` dependency with a built-in metadata merge. This resolves the unpatched prototype-poisoning advisory GHSA-gcqx-w48m-w2h4: `__proto__` keys in metadata are now ignored. Class instances in metadata, such as `Error` objects, are now kept intact instead of being flattened into empty plain objects.
+
 ## 7.2.2
 
 ### Patch Changes

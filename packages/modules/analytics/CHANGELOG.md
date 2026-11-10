@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.12
+
+### Patch Changes
+
+- b5a3976: Internal: remove the unused `deepmerge` dependency.
+
 ## 3.1.11
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.33
+
+### Patch Changes
+
+- 6b132bd: Remove documentation of the development portal's temporary light-only policy.
+  The portal no longer sets `data-color-scheme="light"`, so the modern EDS palette
+  follows the OS or browser preference; only the native-control lock remains, via
+  `@equinor/fusion-web-theme@0.1.12`.
+  
+  Ref: equinor/fusion-core-tasks#2120.
+- 26bce27: Correct the Copilot plugin prerequisites to require Node.js 22.22.2 or newer, matching its declared runtime requirement.
+- 26bce27: Publish licence notices for the third-party code the documentation site serves. Every build now emits `third-party-licenses.txt` with each bundled package's name, version, licence, source URL and licence text, and the site footer links to it.
+  
+  Also bump `mermaid` from 12.2.0 to 12.3.0. Its `elkjs` layout dependency is now licensed `EPL-2.0 OR GPL-3.0-or-later`; the site uses it under EPL-2.0.
+  
+  Resolves #5975
+
 ## 0.4.32
 
 ### Patch Changes

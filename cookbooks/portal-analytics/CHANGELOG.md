@@ -1,5 +1,20 @@
 # portal-analytics
 
+## 0.4.77
+
+### Patch Changes
+
+- 26bce27: Internal: bump locked `@equinor/fusion-react-context-selector` from 2.0.11 to 2.0.12. The context selector now uses `@equinor/fusion-react-styles` 2.1.11 like the rest of the portal, so its `ThemeProvider` also keeps EDS colours light regardless of OS or browser settings (equinor/fusion-core-tasks#2120).
+- Updated dependencies [26bce27]
+- Updated dependencies [b5a3976]
+- Updated dependencies [dd82e2f]
+- Updated dependencies [b5a3976]
+  - @equinor/fusion-framework-cli@15.7.2
+  - @equinor/fusion-framework-module-analytics@3.1.12
+  - @equinor/fusion-framework-react-app@14.3.8
+  - @equinor/fusion-framework-app@13.2.2
+  - @equinor/fusion-framework@9.0.7
+
 ## 0.4.76
 
 ### Patch Changes

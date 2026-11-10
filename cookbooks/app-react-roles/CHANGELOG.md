@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cookbook-app-react-roles
 
+## 0.1.5
+
+### Patch Changes
+
+- 26bce27: Internal: give the Playwright test that starts two role personas side by side up to 40 seconds for both apps to load, and mark it slow. Starting two portals in parallel took longer than the 20-second readiness wait on Windows CI runners. Other tests keep the 20-second wait.
+- b5a3976: Internal: bump `concurrently` from `10.0.6` to `10.0.7` for cookbook app and mock-server startup.
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,5 +1,33 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.10
+
+### Patch Changes
+
+- 26bce27: Internal: bump locked `semver` from 7.8.5 to 7.8.6, which improves range-parsing performance. Declared `semver` ranges are unchanged.
+- 26bce27: Internal: bump locked `@equinor/fusion-react-context-selector` from 2.0.11 to 2.0.12. The context selector now uses `@equinor/fusion-react-styles` 2.1.11 like the rest of the portal, so its `ThemeProvider` also keeps EDS colours light regardless of OS or browser settings (equinor/fusion-core-tasks#2120).
+- 6b132bd: Remove the development portal's own temporary light-mode lock, including the
+  root `color-scheme: only light` style and the `data-color-scheme="light"`
+  attribute on `html`. Native browser controls stay light through
+  `@equinor/fusion-web-theme@0.1.12`, but that package does not select the modern
+  EDS palette, so EDS colors now follow the OS or browser color-scheme preference.
+  
+  Ref: equinor/fusion-core-tasks#2120.
+  
+  Internal: bump locked Rollup from 4.65.1 to 4.67.4 for the Vite build toolchain.
+- 26bce27: Internal: bump locked `@vitejs/plugin-react` from 6.1.2 to 6.2.1. The `^6.0.1` range is unchanged.
+- Updated dependencies [26bce27]
+- Updated dependencies [dd82e2f]
+- Updated dependencies [b5a3976]
+- Updated dependencies [b5a3976]
+- Updated dependencies [dd359f8]
+  - @equinor/fusion-framework-dev-server@2.3.3
+  - @equinor/fusion-framework-module-analytics@3.1.12
+  - @equinor/fusion-framework-module-telemetry@7.2.3
+  - @equinor/fusion-framework-react-components-people-provider@2.0.9
+  - @equinor/fusion-framework-app@13.2.2
+  - @equinor/fusion-framework@9.0.7
+
 ## 11.1.9
 
 ### Patch Changes
