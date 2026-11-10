@@ -1,13 +1,12 @@
 lockfile_version: '2'
-generated_at: '2026-11-09T07:54:51.747692+00:00'
-apm_version: 0.33.0
+apm_version: 0.34.0
 dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-developer
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
-  version: 1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
+  version: 1.18.0
   virtual_path: apm/fusion-developer
   is_virtual: true
   package_type: apm_package
@@ -27,17 +26,17 @@ dependencies:
     .github/instructions/fusion-skill-feedback.instructions.md: sha256:87e3caecf799cbe12a29eeadd860aef1042e12a841d3a0f2a345499ea4a07f6c
     .github/instructions/fusion-work-bounds.instructions.md: sha256:edff44bf8f9ef3c0c9ea7ad3fa9c63936ed1a7574c883c7d549a6dd4d76cf018
     .github/instructions/fusion-work-tracking.instructions.md: sha256:fa8699206f268371d2571b4f98aba12d38ae151669d799c57fe2961542fd5e71
-  content_hash: sha256:0c1fb2f03529e6b68e8761b32adae14900b7834ea9ebd3126b717391d7761b45
+  content_hash: sha256:e2b20b1de11bdfa4cae4654aa2533e642898cffd14cb9a03f89a8f648ee5acb3
   constraint: ^1.6.3
-  resolved_tag: v1.17.0
-  resolved_at: '2026-11-09T07:54:47+00:00'
+  resolved_tag: v1.18.0
+  resolved_at: '2026-11-10T08:27:23+00:00'
   declared_license: MIT
 - repo_url: equinor/fusion-skills
   name: fusion-skill-authoring
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
-  version: 1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
+  version: 1.18.0
   virtual_path: skills/fusion-skill-authoring
   is_virtual: true
   package_type: claude_skill
@@ -74,13 +73,13 @@ dependencies:
     .agents/skills/fusion-skill-authoring/references/validation-signals.md: sha256:ee6b5b3e0c17dc6e97bdbffd1caf71b818b12c0d0381b1ea032a063b0f1d339a
   content_hash: sha256:c3044dc354d87e7efa9bdec1364e275ca8bd868c81f7f189ffe218eb6ee779fb
   constraint: ^1.6.3
-  resolved_tag: v1.17.0
-  resolved_at: '2026-11-09T07:54:47+00:00'
+  resolved_tag: v1.18.0
+  resolved_at: '2026-11-10T08:27:23+00:00'
 - repo_url: equinor/fusion-skills
   name: fusion-agent-content
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-agent-content
   is_virtual: true
@@ -116,8 +115,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-audience-alignment
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-audience-alignment
   is_virtual: true
@@ -143,8 +142,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-dependency-review
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-dependency-review
   is_virtual: true
@@ -200,8 +199,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-general-greenkeeping
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-general-greenkeeping
   is_virtual: true
@@ -227,8 +226,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-github-review-resolution
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-github-review-resolution
   is_virtual: true
@@ -282,8 +281,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-issue-solving
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-issue-solving
   is_virtual: true
@@ -307,8 +306,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-issue-task-planning
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-issue-task-planning
   is_virtual: true
@@ -348,8 +347,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-mcp
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-mcp
   is_virtual: true
@@ -385,8 +384,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-pr-documentation
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-pr-documentation
   is_virtual: true
@@ -430,8 +429,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-report-authoring
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-report-authoring
   is_virtual: true
@@ -487,8 +486,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-repository-greenkeeping
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.experimental/fusion-repository-greenkeeping
   is_virtual: true
@@ -524,8 +523,8 @@ dependencies:
   - .agents/skills/fusion-repository-greenkeeping/references/workflow-example.md
   - .agents/skills/fusion-repository-greenkeeping/references/workflow-greenkeeping.md
   deployed_file_hashes:
-    .agents/skills/fusion-repository-greenkeeping/CHANGELOG.md: sha256:749937b601816d4890857c5c215586decb4a0016aa7da36c72c7a43cdb00dc9a
-    .agents/skills/fusion-repository-greenkeeping/SKILL.md: sha256:4cd02ad8e26b60e0420b336961bfaee9513c0f38dd44525e833873fe675e8e9d
+    .agents/skills/fusion-repository-greenkeeping/CHANGELOG.md: sha256:2a43ddfb03096610963025ab67aab1c0138e76c95be1837a553f3c521e0871cb
+    .agents/skills/fusion-repository-greenkeeping/SKILL.md: sha256:eb31f077242085c6639fbfd09641cb9f07e8a53e8cfcdf12bfca9d90218bb381
     .agents/skills/fusion-repository-greenkeeping/assets/config/dependabot.yml.hbs: sha256:3239eb23f5eaae137e5fdf17188836399288a686959700381bc3437c4ee2b5cf
     .agents/skills/fusion-repository-greenkeeping/assets/greenkeeper-readiness-report.md.hbs: sha256:b856920786acab037e8dffd9ac860189d4eea76b2d9dc5d060b95177af809fca
     .agents/skills/fusion-repository-greenkeeping/assets/partials/agent-content/README.md: sha256:ded434be3a1c87aa03d1b44c8e4f281805bee44e16e0969a628ab3e820147c22
@@ -538,7 +537,7 @@ dependencies:
     .agents/skills/fusion-repository-greenkeeping/assets/workflows/app-deploy.yml.hbs: sha256:c4923aa510836d207262646edde3ea4698f4a3df9b8f5f175aa46d46b96196e6
     .agents/skills/fusion-repository-greenkeeping/assets/workflows/app-monorepo-deploy.yml.hbs: sha256:cc712b19eddd91599df98a6ebb34b92a32b543ecc824e07e59e364c579c79630
     .agents/skills/fusion-repository-greenkeeping/assets/workflows/copilot-setup-steps.yml.hbs: sha256:a642b695d01eb6e12b55dca82d8b40e0d4c742fe538d6498eb58d3da692f4bc8
-    .agents/skills/fusion-repository-greenkeeping/references/actions-hygiene.md: sha256:037f33c1ebef272e63b352fafd6607805d31eaeffb3133696103d7b0602f2aae
+    .agents/skills/fusion-repository-greenkeeping/references/actions-hygiene.md: sha256:2eb2589e83f1e0f15f359667b9834783886d83ab59f64be7dbb23084743cfc74
     .agents/skills/fusion-repository-greenkeeping/references/apm-health.md: sha256:2c879915bdee060f9f62bb6ef9543e88ad3cbfa7946d6dd83d1df8f3766a6f2d
     .agents/skills/fusion-repository-greenkeeping/references/app-deployment.md: sha256:33845cc6b553904270a7c64f987c59ea37ff2f18e8eb5daade05d39156ffdecf
     .agents/skills/fusion-repository-greenkeeping/references/app-monorepo-deployment.md: sha256:9cdd9497fbf7e29d002767873975b3a599bd01334b521b697ea47b12d192c4e1
@@ -550,12 +549,12 @@ dependencies:
     .agents/skills/fusion-repository-greenkeeping/references/sync-workflows.md: sha256:d43b8a546adbf5947340a19835c244da1274277bb581060a74c2ac92338ae828
     .agents/skills/fusion-repository-greenkeeping/references/workflow-example.md: sha256:c76579913d3231072dd8f1de493fdaf39faddb760a702a9a84a22cf8ffcde969
     .agents/skills/fusion-repository-greenkeeping/references/workflow-greenkeeping.md: sha256:e44e4c23cade306b6fe393e3e86c9829eca28b41b8c5dc5f2a5431e4a9be8146
-  content_hash: sha256:5c15faef2081541292fa79fea65deedf274988aa379f86f6442bb4316300adcf
+  content_hash: sha256:c66ce8dc002cc9555b32da6ec70173c237a45d64f00cf684a7c0bdc5fa926cfa
 - repo_url: equinor/fusion-skills
   name: fusion-code-conventions
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.system/fusion-code-conventions
   is_virtual: true
@@ -601,8 +600,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-research
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/.system/fusion-research
   is_virtual: true
@@ -650,8 +649,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-devtools
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/fusion-devtools
   is_virtual: true
@@ -681,8 +680,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-issue-authoring
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/fusion-issue-authoring
   is_virtual: true
@@ -774,8 +773,8 @@ dependencies:
 - repo_url: equinor/fusion-skills
   name: fusion-skills
   host: github.com
-  resolved_commit: 1c66977827019accc53fd213a5324e0085fcaf19
-  resolved_ref: v1.17.0
+  resolved_commit: 0b144e575ead53cc7f0ebfe47dfe1266052a0d61
+  resolved_ref: v1.18.0
   version: unknown
   virtual_path: skills/fusion-skills
   is_virtual: true
@@ -2685,7 +2684,7 @@ deployments:
   owners:
   - equinor/fusion-skills/skills/.experimental/fusion-repository-greenkeeping
   active_owner: equinor/fusion-skills/skills/.experimental/fusion-repository-greenkeeping
-  content_hash: sha256:749937b601816d4890857c5c215586decb4a0016aa7da36c72c7a43cdb00dc9a
+  content_hash: sha256:2a43ddfb03096610963025ab67aab1c0138e76c95be1837a553f3c521e0871cb
 - kind: project-relative
   target: copilot
   value: .agents/skills/fusion-repository-greenkeeping/SKILL.md
@@ -2694,7 +2693,7 @@ deployments:
   owners:
   - equinor/fusion-skills/skills/.experimental/fusion-repository-greenkeeping
   active_owner: equinor/fusion-skills/skills/.experimental/fusion-repository-greenkeeping
-  content_hash: sha256:4cd02ad8e26b60e0420b336961bfaee9513c0f38dd44525e833873fe675e8e9d
+  content_hash: sha256:eb31f077242085c6639fbfd09641cb9f07e8a53e8cfcdf12bfca9d90218bb381
 - kind: project-relative
   target: copilot
   value: .agents/skills/fusion-repository-greenkeeping/assets/config/dependabot.yml.hbs
@@ -2811,7 +2810,7 @@ deployments:
   owners:
   - equinor/fusion-skills/skills/.experimental/fusion-repository-greenkeeping
   active_owner: equinor/fusion-skills/skills/.experimental/fusion-repository-greenkeeping
-  content_hash: sha256:037f33c1ebef272e63b352fafd6607805d31eaeffb3133696103d7b0602f2aae
+  content_hash: sha256:2eb2589e83f1e0f15f359667b9834783886d83ab59f64be7dbb23084743cfc74
 - kind: project-relative
   target: copilot
   value: .agents/skills/fusion-repository-greenkeeping/references/apm-health.md
@@ -3466,3 +3465,4 @@ mcp_target_servers:
   - fusion-mcp
 mcp_config_provenance:
   fusion-mcp: fusion-developer
+...
