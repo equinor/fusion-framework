@@ -84,8 +84,7 @@ for (const conclusion of ['failure', 'cancelled', 'timed_out', 'skipped']) {
   test(`fails explicitly for a ${conclusion} prime and links to it`, async () => {
     const { options, calls } = fixture({ runs: [{ ...success, conclusion }] });
     await assert.rejects(waitForTurboCache(options), (error) => {
-      assert.ok(error.message.includes(conclusion));
-      assert.ok(error.message.includes(runUrl));
+      assert.equal(error.message, `Turbo cache producer for ${sha} ${conclusion}: ${runUrl}`);
       return true;
     });
     assert.equal(calls.length, 2);
@@ -171,7 +170,9 @@ test('times out after exactly 10 minutes for a missing prime and links to the wo
 
 test('times out for an unfinished prime with its run link', async () => {
   const { options } = fixture({ runs: [{ status: 'in_progress', html_url: runUrl }] });
-  await assert.rejects(waitForTurboCache(options), (error) => error.message.includes(runUrl));
+  await assert.rejects(waitForTurboCache(options), {
+    message: `Timed out waiting 10 minutes for the Turbo cache for ${sha}: ${runUrl}`,
+  });
 });
 
 test('waits for cache visibility after successful priming', async () => {
