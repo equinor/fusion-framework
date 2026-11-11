@@ -1,5 +1,24 @@
 # Change Log
 
+## 15.7.2
+
+### Patch Changes
+
+- 26bce27: Internal: bump locked `semver` from 7.8.5 to 7.8.6, which improves range-parsing performance. Declared `semver` ranges are unchanged.
+- b5a3976: Replace the `deepmerge` dependency with a built-in merge for app config, app manifest, portal manifest and dev-server config. This resolves the unpatched prototype-poisoning advisory GHSA-gcqx-w48m-w2h4: `__proto__` keys in manifests or overrides are now ignored. Merge rules are unchanged: objects merge recursively, overrides win, and arrays are appended (app config `scopes` are replaced, and dev-server routes merge by `match`). Neither input is mutated, but nested values that are not overridden are now shared with the inputs instead of copied, and class instances such as `Date` or `URL` are kept intact instead of being copied into plain objects. The unused `is-mergeable-object` dependency is also removed.
+- dd82e2f: Internal: bump locked Rollup from 4.65.1 to 4.67.4 for the build and development toolchain.
+  
+  Internal: remove the redundant `@types/inquirer` dependency and use the declarations bundled with Inquirer; no runtime dependency version or prompt behavior changes.
+  
+  Internal: update the terminal spinner from Ora 9.4.1 to 10.0.0 for improved frame erasure that preserves program output. The existing Node.js >=22.22.2 requirement is unchanged.
+- Updated dependencies [26bce27]
+- Updated dependencies [26bce27]
+- Updated dependencies [6b132bd]
+- Updated dependencies [26bce27]
+- Updated dependencies [dd82e2f]
+  - @equinor/fusion-framework-dev-portal@11.1.10
+  - @equinor/fusion-framework-dev-server@2.3.3
+
 ## 15.7.1
 
 ### Patch Changes

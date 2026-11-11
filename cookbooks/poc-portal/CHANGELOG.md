@@ -1,5 +1,17 @@
 # poc-portal
 
+## 1.1.122
+
+### Patch Changes
+
+- b5a3976: Internal: remove the unused `is-mergeable-object` dependency, which was only needed by the CLI's former `deepmerge` dependency.
+- Updated dependencies [26bce27]
+- Updated dependencies [b5a3976]
+- Updated dependencies [dd82e2f]
+  - @equinor/fusion-framework-cli@15.7.2
+  - @equinor/fusion-framework-react-app@14.3.8
+  - @equinor/fusion-framework@9.0.7
+
 ## 1.1.121
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.9
+
+### Patch Changes
+
+- 26bce27: Internal: wait up to 30 seconds for the routed page to render before waiting for its `page-viewed` analytics event, and cap each Playwright test at 45 seconds. `page.goto` resolves before the app has loaded, so slow CI runners spent the analytics wait on app startup and timed out.
+- b5a3976: Internal: bump `concurrently` from `10.0.6` to `10.0.7` for cookbook app and mock-server startup.
+
 ## 0.0.8
 
 ### Patch Changes

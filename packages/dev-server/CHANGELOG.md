@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.3.3
+
+### Patch Changes
+
+- 26bce27: Internal: bump locked `@vitejs/plugin-react` from 6.1.2 to 6.2.1. The `^6.0.1` range is unchanged.
+- dd82e2f: Internal: bump locked Rollup from 4.65.1 to 4.67.4 for the build and development toolchain.
+- Updated dependencies [922767b]
+- Updated dependencies [922767b]
+- Updated dependencies [dd82e2f]
+  - @equinor/fusion-framework-vite-plugin-api-service@3.0.0
+  - @equinor/fusion-framework-vite-plugin-spa@5.2.4
+
 ## 2.3.2
 
 ### Patch Changes
