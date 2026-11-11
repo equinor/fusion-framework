@@ -1,5 +1,25 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.13-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-app@8.3.0-next.1
+  - @equinor/fusion-framework-module-context@9.1.0-next.1
+  - @equinor/fusion-framework-module-event@6.1.4-next.1
+  - @equinor/fusion-framework-module-http@8.1.5-next.1
+  - @equinor/fusion-observable@9.2.6-next.0
+
 ## 3.1.12
 
 ### Patch Changes

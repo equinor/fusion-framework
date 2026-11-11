@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-roles
 
+## 0.1.6-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+
 ## 0.1.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.34-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+
 ## 0.4.33
 
 ### Patch Changes
