@@ -1,5 +1,31 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 2.0.5-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework@9.1.0-next.3
+  - @equinor/fusion-framework-app@13.3.0-next.3
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-app@8.3.0-next.1
+  - @equinor/fusion-framework-module-feature-flag@2.2.0-next.1
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.4
+  - @equinor/fusion-framework-react@9.0.5-next.1
+  - @equinor/fusion-framework-react-module@4.0.7-next.1
+  - @equinor/fusion-imports@2.0.8-next.0
+
 ## 2.0.4
 
 ### Patch Changes

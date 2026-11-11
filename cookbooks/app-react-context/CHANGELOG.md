@@ -1,5 +1,16 @@
 # Change Log
 
+## 5.0.15-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+  - @equinor/fusion-framework-react-app@14.3.9-next.0
+  - @equinor/fusion-observable@9.2.6-next.0
+
 ## 5.0.14
 
 ### Patch Changes

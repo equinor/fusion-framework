@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-ai
 
+## 0.0.8-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+
 ## 0.0.7
 
 ### Patch Changes

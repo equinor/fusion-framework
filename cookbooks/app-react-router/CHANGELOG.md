@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.9-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+
 ## 5.0.8
 
 ### Patch Changes

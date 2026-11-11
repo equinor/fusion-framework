@@ -3,7 +3,7 @@
   "displayName": "Fusion TS Lint",
   "description": "Real-time Fusion Framework lint diagnostics — no separate server install required",
   "type": "module",
-  "version": "0.3.1",
+  "version": "0.3.2-next.0",
   "private": true,
   "publisher": "equinor-fusion",
   "license": "MIT",

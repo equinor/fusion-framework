@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-vanilla
 
+## 2.0.3-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+
 ## 2.0.2
 
 ### Patch Changes
