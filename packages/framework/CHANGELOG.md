@@ -1,5 +1,95 @@
 # Change Log
 
+## 9.1.0-next.3
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-context@9.1.0-next.1
+  - @equinor/fusion-framework-module-event@6.1.4-next.1
+  - @equinor/fusion-framework-module-http@8.1.5-next.1
+  - @equinor/fusion-framework-module-msal@12.1.0-next.1
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.2
+  - @equinor/fusion-framework-module-services@8.2.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.4
+
+## 9.1.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.3
+
+## 9.1.0-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.2
+
+## 9.1.0-next.0
+
+### Minor Changes
+
+- 6d7f155: Capture safe terminal framework startup and ordinary module teardown outcomes from
+  host configuration, with an immutable lifecycle-local framework identity.
+  Capture is bounded and does not create an exporter. Set
+  `attachConfiguratorEvents: false` through `enableTelemetry` to disable it.
+  
+  Register prepared telemetry configuration before user callbacks run.
+  `FrameworkConfigurator` accepts optional `FrameworkConfiguratorOptions` with a
+  `telemetry` configurator, so the mock host
+  uses the same configuration, capture and provider pipeline without replacing module
+  factories.
+  
+  Ref: #5803.
+- f150ff4: Record safe operational telemetry for every transport attempt of the framework's HTTP
+  clients. Each fetch attempt produces one `fusion.http.request.duration` metric with a
+  `success`, `failure` (rejected fetch or non-2xx response) or `cancelled` (aborted signal)
+  outcome, plus one sanitized `fusion.http.request.failure` on failure. URLs, headers,
+  bodies, tokens and original errors are never recorded; responses and errors are unchanged.
+  
+  The middleware is appended after configuration callbacks, so retry middleware wraps it
+  and each retry is its own attempt. Exporter requests marked with
+  `markTelemetryExportRequest` are excluded, telemetry connects after initialization, and
+  no exporter is created. Opt out with `new FrameworkConfigurator({ httpTelemetry: false })`.
+  
+  Ref: #5804.
+
+### Patch Changes
+
+- Updated dependencies [d8b1f10]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.0
+  - @equinor/fusion-framework-module-services@8.2.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 9.0.7
 
 ### Patch Changes

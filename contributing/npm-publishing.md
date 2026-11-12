@@ -8,7 +8,7 @@ CI. npm accepts a publish only from:
 | --- | --- |
 | Repository | `equinor/fusion-framework` |
 | Workflow file | `release.yml` |
-| Environment | `npm` (deployment branches: `main`, `next`) |
+| Environment | `npm` (deployment branches: `main`, `feat/improve-telemetry`) |
 
 The decision and its trade-offs are recorded in
 [ADR 0002](../docs/adr/0002-npm-trusted-publishing.md).
@@ -22,8 +22,17 @@ loses its trust configuration.
 | Trigger | Channel | Dist-tag |
 | --- | --- | --- |
 | Push to `main` | Stable release through the changesets release PR | `latest` |
-| Push to `next` with `.changeset/pre.json` | Pre-release through the changesets pre-release PR | tag from `pre.json` |
-| `workflow_dispatch` from `main` or `next` | Snapshot of every public package | input `tag` (not `latest` or `next`) |
+| Push to `feat/improve-telemetry` with `.changeset/pre.json` | Pre-release through the changesets pre-release PR | tag from `pre.json` (`next`) |
+| `workflow_dispatch` from `main` or `feat/improve-telemetry` | Snapshot of every public package | input `tag` (not `latest` or `next`) |
+
+The telemetry feature branch owns the `next` prerelease channel; there is no separate `next`
+branch. Keep `.changeset/pre.json` on `feat/improve-telemetry`, not `main`. Feature PRs for this
+rollout target `feat/improve-telemetry`. The release workflow creates a branch-specific
+Changesets release PR; the former `changeset-release/next` PR is obsolete.
+
+Changing the prerelease branch also requires updating the `npm` environment's deployment branch
+policy. Keep `main` allowed and replace the old prerelease branch with the exact new branch name.
+The workflow filename and environment stay unchanged, so npm trust does not need re-bootstrapping.
 
 ```sh
 gh workflow run release.yml --ref main -f tag=my-snapshot
@@ -109,10 +118,26 @@ Agents follow the same workflow through
 | `preflight` reports `repository must point at` | Add `repository.url` `git+https://github.com/equinor/fusion-framework.git` and `repository.directory` to the package's `package.json`. |
 | Publish fails with `ENEEDAUTH`, `401`, or `404` | Trust is missing or expired. Run `pnpm npm-trust audit`. If it reports `untrusted`, run `bootstrap --package <name>`. If it reports `trusted`, the configuration probably expired: revoke it (`npm trust list <name>`, then `npm trust revoke <name> --id <id>`) before running `bootstrap --package <name>`. Then publish within 2 days. |
 | Publish fails with `422` mentioning provenance | `repository` in `package.json` does not match `equinor/fusion-framework`. |
-| Snapshot job waits for or rejects the deployment | Snapshots only run from `main` or `next` (`npm` environment policy). |
+| Snapshot job waits for or rejects the deployment | Snapshots only run from `main` or `feat/improve-telemetry` (`npm` environment policy). |
 | `npm trust` prints `EOTP` | Complete 2FA in the prompt the script opens, and enable the 5-minute skip. |
 | Release stops partway with `error sending request` or `ECONNRESET` | Transient network error. Re-run the failed job. `pnpm publish -r` skips versions already on npm, so only the remaining packages are published. |
 | `verify` reports `no-tag` right after a successful run | The registry can take a few minutes to show new versions. Wait, then run `verify` again. |
+
+### A successful prerelease still serves old code
+
+`pnpm publish -r` skips versions already on npm, even when the workspace contains different code.
+Restarting a prerelease cycle with an old version can therefore leave consumers on an incompatible artifact
+without failing the release job.
+
+Compare the package's workspace version and runtime exports with its npm version history and dist-tag.
+If the intended version already exists, advance the workspace prerelease counter to the highest occupied
+counter for that version and tag, then add a patch changeset. Confirm that `pnpm changeset status --output <path>`
+plans an unpublished version before merging the generated release PR. Do not republish or retag an old
+artifact as a substitute for releasing the new runtime.
+
+For example, if telemetry's source is `8.0.0-next.0` but npm already contains both `.0` and `.1`, seed the
+manifest at `8.0.0-next.1`; the patch changeset must plan `8.0.0-next.2`. After publishing through
+`release.yml`, verify the registry tag and test the packed runtime's exports, not just its TypeScript declarations.
 
 ## Hardening after verification
 

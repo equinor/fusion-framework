@@ -1,5 +1,14 @@
 # portal
 
+## 0.1.108-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+
 ## 0.1.107
 
 ### Patch Changes
@@ -8,6 +17,24 @@
 - Updated dependencies [b5a3976]
 - Updated dependencies [dd82e2f]
   - @equinor/fusion-framework-cli@15.7.2
+
+## 0.1.107-next.2
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.7.2-next.2
+
+## 0.1.107-next.1
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.7.2-next.1
+
+## 0.1.107-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.7.2-next.0
 
 ## 0.1.106
 

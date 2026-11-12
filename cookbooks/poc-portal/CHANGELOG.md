@@ -1,5 +1,22 @@
 # poc-portal
 
+## 1.1.123-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework@9.1.0-next.3
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-app@8.3.0-next.1
+  - @equinor/fusion-framework-module-http@8.1.5-next.1
+  - @equinor/fusion-framework-module-msal@12.1.0-next.1
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.2
+  - @equinor/fusion-framework-react@9.0.5-next.1
+  - @equinor/fusion-framework-react-app@14.3.9-next.0
+
 ## 1.1.122
 
 ### Patch Changes
@@ -11,6 +28,46 @@
   - @equinor/fusion-framework-cli@15.7.2
   - @equinor/fusion-framework-react-app@14.3.8
   - @equinor/fusion-framework@9.0.7
+
+## 1.1.122-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.1
+  - @equinor/fusion-framework-cli@15.7.2-next.2
+  - @equinor/fusion-framework@9.1.0-next.2
+  - @equinor/fusion-framework-react-app@14.3.8-next.2
+
+## 1.1.122-next.1
+
+### Patch Changes
+
+- @equinor/fusion-framework@9.1.0-next.1
+  - @equinor/fusion-framework-react-app@14.3.8-next.1
+  - @equinor/fusion-framework-cli@15.7.2-next.1
+
+## 1.1.122-next.0
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+  - @equinor/fusion-framework-react-app@14.3.8-next.0
+  - @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-cli@15.7.2-next.0
 
 ## 1.1.121
 

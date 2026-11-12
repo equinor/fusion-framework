@@ -5,18 +5,27 @@ import { module as telemetryModule, type TelemetryModule } from '../module.js';
 import { TelemetryMockConfigurator } from './TelemetryMockConfigurator.js';
 
 /**
+ * Creates the same recording configuration for either preparation or normal configuration.
+ * @returns A fresh telemetry mock configuration builder.
+ */
+function createMockTelemetryConfigurator(): TelemetryMockConfigurator {
+  return new TelemetryMockConfigurator();
+}
+
+/**
  * The telemetry module with a {@link TelemetryMockConfigurator} instead of a
  * configurator that answers to whichever adapters an application registers.
  *
  * @remarks
- * Only `configure` differs from the real module. `initialize` is the
+ * Only configuration creation differs from the real module. `initialize` is the
  * production one, untouched, so metadata merging, scoping and parent-provider
  * relaying all behave exactly as they do in production — a test observes the
  * real telemetry pipeline rather than a rehearsal of it.
  */
 export const telemetryMockModule: TelemetryModule = {
   ...telemetryModule,
-  configure: () => new TelemetryMockConfigurator(),
+  prepare: createMockTelemetryConfigurator,
+  configure: createMockTelemetryConfigurator,
 };
 
 /**

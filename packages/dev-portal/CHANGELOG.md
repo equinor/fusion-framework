@@ -1,5 +1,39 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.11-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework@9.1.0-next.3
+  - @equinor/fusion-framework-app@13.3.0-next.3
+  - @equinor/fusion-framework-dev-server@2.3.4-next.0
+  - @equinor/fusion-framework-module-ag-grid@37.2.0-next.1
+  - @equinor/fusion-framework-module-analytics@3.1.13-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.1
+  - @equinor/fusion-framework-module-bookmark@4.2.0-next.1
+  - @equinor/fusion-framework-module-context@9.1.0-next.1
+  - @equinor/fusion-framework-module-feature-flag@2.2.0-next.1
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.1
+  - @equinor/fusion-framework-module-services@8.2.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.4
+  - @equinor/fusion-framework-plugin-context-navigation@1.1.1-next.1
+  - @equinor/fusion-framework-react@9.0.5-next.1
+  - @equinor/fusion-framework-react-components-bookmark@2.0.8-next.1
+  - @equinor/fusion-framework-react-components-people-provider@2.0.10-next.0
+  - @equinor/fusion-framework-react-module-bookmark@7.0.4-next.1
+  - @equinor/fusion-observable@9.2.6-next.0
+  - @equinor/fusion-query@7.0.8-next.0
+
 ## 11.1.10
 
 ### Patch Changes
@@ -27,6 +61,66 @@
   - @equinor/fusion-framework-react-components-people-provider@2.0.9
   - @equinor/fusion-framework-app@13.2.2
   - @equinor/fusion-framework@9.0.7
+
+## 11.1.10-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.3
+  - @equinor/fusion-framework@9.1.0-next.2
+  - @equinor/fusion-framework-app@13.3.0-next.2
+  - @equinor/fusion-framework-dev-server@2.3.3-next.2
+
+## 11.1.10-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.2
+  - @equinor/fusion-framework-app@13.3.0-next.1
+  - @equinor/fusion-framework@9.1.0-next.1
+  - @equinor/fusion-framework-dev-server@2.3.3-next.1
+
+## 11.1.10-next.0
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [3a051da]
+- Updated dependencies [6d7f155]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-app@13.3.0-next.0
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-ag-grid@37.2.0-next.0
+  - @equinor/fusion-framework-module-analytics@3.1.12-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-bookmark@4.2.0-next.0
+  - @equinor/fusion-framework-module-context@9.1.0-next.0
+  - @equinor/fusion-framework-module-feature-flag@2.2.0-next.0
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-module-roles@0.4.0-next.0
+  - @equinor/fusion-framework-module-services@8.2.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-react@9.0.5-next.0
+  - @equinor/fusion-framework-plugin-context-navigation@1.1.1-next.0
+  - @equinor/fusion-framework-react-components-bookmark@2.0.8-next.0
+  - @equinor/fusion-framework-react-components-people-provider@2.0.9-next.0
+  - @equinor/fusion-framework-react-module-bookmark@7.0.4-next.0
+  - @equinor/fusion-framework-react-components-roles@0.2.3-next.0
+  - @equinor/fusion-framework-dev-server@2.3.3-next.0
 
 ## 11.1.9
 

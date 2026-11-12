@@ -39,6 +39,13 @@ export default configureWidgetModules((configurator, { env }) => {
 
 The Fusion portal calls the returned async function at render time, passing the current runtime and widget environment.
 
+Widget initialization also captures safe operational telemetry with a lifecycle-local
+host ID, without widget manifest identity or version. It inherits parent routing without creating an
+exporter; explicit widget exporters suppress ancestor fallback exporters only.
+Configuration failures preserve the original rejection and report safe outcomes to
+an eligible parent. See [Operational telemetry](../modules/telemetry/docs/operational-telemetry.md)
+for opt-out, privacy and shutdown guarantees.
+
 ## Key Concepts
 
 | Concept | Description |
@@ -98,4 +105,3 @@ export default configureWidgetModules<[typeof myModule]>((configurator) => {
 ## Documentation
 
 See the full Fusion Framework documentation at <https://equinor.github.io/fusion-framework/>.
-

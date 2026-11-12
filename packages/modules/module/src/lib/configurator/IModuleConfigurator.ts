@@ -36,6 +36,22 @@ export interface IModuleConfigurator<
   module: TModule;
 
   /**
+   * Explicitly owned configuration builder, used instead of the module's configure factory.
+   * Use when configuration must exist before initialization, for example to observe host startup.
+   * Omit to retain the normal factory lifecycle.
+   */
+  configurator?: NoInfer<ModuleConfigType<TModule>>;
+
+  /**
+   * Applies synchronous host configuration during registration, before user startup code.
+   * Receives the supplied builder, or one created once by `module.prepare()`.
+   * Does not receive `ref`, which is available only during initialization.
+   * Async callbacks are rejected; use `configure` for asynchronous configuration.
+   * @param config - The builder also used by subsequent configure and initialize phases.
+   */
+  prepare?: (config: TConfig) => void;
+
+  /**
    * Callback invoked during the configure phase to mutate the module's
    * config builder.
    *

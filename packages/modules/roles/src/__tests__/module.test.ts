@@ -88,8 +88,9 @@ describe('roles module', () => {
       dispatchEvent: vi.fn(),
     };
     const telemetry = {
+      source: { source: 'framework', hostId: 'host-1' },
+      track: vi.fn(),
       trackEvent: vi.fn(),
-      trackException: vi.fn(),
     };
     // The initializer's generic dependency resolver includes auth even though this test
     // advertises only service discovery; bridge that framework test seam explicitly.
@@ -122,8 +123,8 @@ describe('roles module', () => {
     expect(initialize).toHaveBeenCalledOnce();
     expect(json.mock.calls[0][0]).toContain('/accounts/account-id/');
     expect(json.mock.calls[1][0]).toContain('/accounts/account-b/');
-    expect(telemetry.trackEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'RolesProvider.getActiveAccessRoleAssignments' }),
+    expect(telemetry.track).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'fusion.roles.get-active-access-role-assignments.duration' }),
     );
   });
 

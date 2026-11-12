@@ -1,4 +1,9 @@
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
 import { version } from './version.js';
 import type { AIModuleConfig } from './AiConfigurator.js';
@@ -9,6 +14,53 @@ import {
   STRATEGY_TYPE,
 } from './lib/strategies/index.js';
 import type { EmbedStrategy, ModelStrategy, Strategy } from './lib/strategies/index.js';
+import type { AiOperation, AiReport } from './telemetry/types.js';
+import { type InstrumentationPlan, instrumentAiClient } from './telemetry/instrument-ai-client.js';
+import type { ExecutionKind } from './telemetry/measure-execution.js';
+
+/**
+ * @internal Creates a recursive execution plan for LangChain runnables and their bindings.
+ * @returns Plans that measure execution and wrap new bindings returned by configuration methods.
+ */
+const createModelRunnablePlan = (): InstrumentationPlan => {
+  const plan: Record<
+    string,
+    | { readonly kind: ExecutionKind; readonly operation: AiOperation }
+    | { readonly returns: InstrumentationPlan }
+  > = {
+    invoke: { kind: 'promise', operation: 'model-invoke' },
+    invoke$: { kind: 'observable', operation: 'model-stream' },
+    stream: { kind: 'stream', operation: 'model-stream' },
+    transform: { kind: 'generator', operation: 'model-stream' },
+  };
+  // Configuration methods construct a new runnable; recursively instrument that binding too.
+  plan.withConfig = { returns: plan };
+  plan.withRetry = { returns: plan };
+  return plan;
+};
+
+const modelRunnablePlan = createModelRunnablePlan();
+
+/** @internal Models also instrument the runnables returned by tool binding. */
+const modelPlan: InstrumentationPlan = {
+  ...modelRunnablePlan,
+  bindTools: { returns: createModelRunnablePlan() },
+};
+
+/** @internal Embedding executions, whichever entry point is used. */
+const embedPlan: InstrumentationPlan = {
+  invoke: { kind: 'promise', operation: 'embed' },
+  invoke$: { kind: 'observable', operation: 'embed' },
+  embedQuery: { kind: 'promise', operation: 'embed' },
+  embedDocuments: { kind: 'promise', operation: 'embed' },
+};
+
+/** @internal Searches through the store or through a LangChain retriever created from it. */
+const indexPlan: InstrumentationPlan = {
+  invoke: { kind: 'promise', operation: 'search' },
+  invoke$: { kind: 'observable', operation: 'search' },
+  asRetriever: { returns: { invoke: { kind: 'promise', operation: 'search' } } },
+};
 
 /** @internal Default embedding model used when none is specified. */
 const DEFAULT_EMBED_MODEL = 'text-embedding-3-large' as const;
@@ -22,7 +74,7 @@ const DEFAULT_MODEL = 'gpt-5.1-chat' as const;
  * All three factory methods create a fresh client instance on each call,
  * binding them to the resolved service URI and MSAL token factory.
  */
-export interface IAiProvider {
+export interface IAiProvider extends TelemetryConnectable {
   /**
    * Creates a language model client backed by the Fusion AI service.
    *
@@ -48,6 +100,16 @@ export interface IAiProvider {
    * @param opts - Optional overrides for embedding model and strategy selection.
    */
   useIndex(indexName: string, opts?: { embedModel?: string; strategy?: string }): IVectorStore;
+
+  /**
+   * Connects optional host telemetry for AI execution diagnostics.
+   *
+   * Called by the module after initialization. Clients created afterwards report
+   * `fusion.ai.<operation>.duration` outcomes; `undefined` leaves clients uninstrumented.
+   * @param telemetry - Available host telemetry provider.
+   * @returns Resolves once diagnostics are active, or immediately without telemetry.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): Promise<void>;
 }
 
 /**
@@ -71,6 +133,11 @@ export interface IAiProvider {
  */
 export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IAiProvider {
   readonly #strategies: Strategy[];
+  #telemetry?: OperationalTelemetry;
+  #report?: AiReport;
+  /** Increments on every (re)connection and on disposal, so stale async connections stop. */
+  #connection = 0;
+  #disposed = false;
 
   /**
    * @param config - Resolved AI module configuration with service URI and token factory.
@@ -78,6 +145,68 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
   constructor(config: AIModuleConfig) {
     super({ version, config });
     this.#strategies = config.strategies ?? [];
+    // Executions finishing after disposal must not report to a torn-down host.
+    this._addTeardown(() => {
+      this.#connection++;
+      this.#disposed = true;
+      this.#telemetry?.disconnect();
+      this.#telemetry = undefined;
+      this.#report = undefined;
+    });
+  }
+
+  /**
+   * {@inheritDoc IAiProvider.connectTelemetry}
+   *
+   * The reporter depends on the optional telemetry peer, so it is loaded only when a provider
+   * is given; without telemetry the peer is never imported.
+   */
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#connection;
+    this.#telemetry?.connect(undefined);
+    this.#report = undefined;
+    // Without telemetry, clients stay exactly as the strategies create them.
+    if (!telemetry || this.#disposed) {
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('ai') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('ai');
+    } catch {
+      console.warn('AI operational telemetry is unavailable');
+      return;
+    }
+    // A later connection, disconnection or disposal supersedes this one.
+    if (connection !== this.#connection) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
+    this.#report = (operation, outcome, duration) =>
+      handle.report({ operation, outcome, duration });
+  }
+
+  /**
+   * Instruments a strategy-created client while telemetry is connected.
+   * Without telemetry the strategy's own client is returned untouched.
+   *
+   * @template T - Client type.
+   * @param client - Client created by a built-in or custom strategy.
+   * @param plan - Execution methods to measure.
+   * @returns The instrumented client, or `client` itself without telemetry.
+   */
+  #instrument<T>(client: T, plan: InstrumentationPlan): T {
+    const report = this.#report;
+    return report ? instrumentAiClient(client, plan, report) : client;
   }
 
   /** {@inheritDoc IAiProvider.useModel} */
@@ -91,11 +220,23 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
     if (!strategy) {
       throw new Error(`Model strategy "${strategyName}" not found in configuration`);
     }
-    return strategy.createModel(model);
+    return this.#instrument(strategy.createModel(model), modelPlan);
   }
 
   /** {@inheritDoc IAiProvider.useEmbed} */
   public useEmbed(model: string = DEFAULT_EMBED_MODEL, options?: { strategy?: string }): IEmbed {
+    return this.#instrument(this.#createEmbed(model, options), embedPlan);
+  }
+
+  /**
+   * Creates an uninstrumented embed client; searches measure their own embedding work.
+   *
+   * @param model - Embedding deployment name.
+   * @param options - Optional strategy selector.
+   * @returns The strategy's embed client.
+   * @throws {Error} When the requested embed strategy is not registered.
+   */
+  #createEmbed(model: string, options?: { strategy?: string }): IEmbed {
     const strategyName = options?.strategy ?? FUSION_EMBED_STRATEGY_NAME;
     // Locate the registered strategy matching the requested name and type
     const strategy = this.#strategies.find(
@@ -124,7 +265,8 @@ export class AiProvider extends BaseModuleProvider<AIModuleConfig> implements IA
       throw new Error(`Index strategy "${strategyName}" not found in configuration`);
     }
     const embedModel = opts?.embedModel ?? DEFAULT_EMBED_MODEL;
-    const embedClient = this.useEmbed(embedModel, { strategy: FUSION_EMBED_STRATEGY_NAME });
-    return strategy.createStore(embedClient, indexName);
+    // The search record covers its query embedding, so one search reports exactly once.
+    const embedClient = this.#createEmbed(embedModel, { strategy: FUSION_EMBED_STRATEGY_NAME });
+    return this.#instrument(strategy.createStore(embedClient, indexName), indexPlan);
   }
 }

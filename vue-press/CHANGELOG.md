@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.34-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+
 ## 0.4.33
 
 ### Patch Changes
@@ -16,6 +22,20 @@
   Also bump `mermaid` from 12.2.0 to 12.3.0. Its `elkjs` layout dependency is now licensed `EPL-2.0 OR GPL-3.0-or-later`; the site uses it under EPL-2.0.
   
   Resolves #5975
+
+## 0.4.33-next.0
+
+### Patch Changes
+
+- ef9d5f3: Document the shared operational telemetry handle, bounded measured operations, child-scope
+  lifecycle, privacy-safe summaries and lazy optional-peer wiring across framework modules.
+  
+  Refs #5837.
+- 6d7f155: Document operational telemetry schemas, source ownership and fallback routing,
+  bounded startup/enrichment/processing, ordered teardown, optional HTTP/query/cache
+  instrumentation, measured synthetic budget gates, and lifecycle/navigation migration.
+  
+  Ref: #5803.
 
 ## 0.4.32
 

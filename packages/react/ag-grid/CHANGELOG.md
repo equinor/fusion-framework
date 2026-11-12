@@ -1,5 +1,28 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.1.5-next.1
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- Updated dependencies [daa0612]
+  - @equinor/fusion-framework-module-ag-grid@37.2.0-next.1
+
+## 37.1.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [3a051da]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-ag-grid@37.2.0-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 37.1.4
 
 ### Patch Changes

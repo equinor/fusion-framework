@@ -1,5 +1,23 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.3.4-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-vite-plugin-api-service@3.0.1-next.0
+  - @equinor/fusion-framework-vite-plugin-spa@5.2.5-next.0
+  - @equinor/fusion-log@2.0.8-next.0
+
 ## 2.3.3
 
 ### Patch Changes
@@ -11,6 +29,24 @@
 - Updated dependencies [dd82e2f]
   - @equinor/fusion-framework-vite-plugin-api-service@3.0.0
   - @equinor/fusion-framework-vite-plugin-spa@5.2.4
+
+## 2.3.3-next.2
+
+### Patch Changes
+
+- @equinor/fusion-framework-vite-plugin-spa@5.2.4-next.2
+
+## 2.3.3-next.1
+
+### Patch Changes
+
+- @equinor/fusion-framework-vite-plugin-spa@5.2.4-next.1
+
+## 2.3.3-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-vite-plugin-spa@5.2.4-next.0
 
 ## 2.3.2
 

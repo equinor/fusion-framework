@@ -1,5 +1,26 @@
 # Change Log
 
+## 15.7.3-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-dev-portal@11.1.11-next.0
+  - @equinor/fusion-framework-dev-server@2.3.4-next.0
+  - @equinor/fusion-framework-module-azure-identity@0.4.0-next.1
+  - @equinor/fusion-framework-vite-plugin-raw-imports@2.0.6-next.0
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.6-next.0
+  - @equinor/fusion-imports@2.0.8-next.0
+
 ## 15.7.2
 
 ### Patch Changes
@@ -18,6 +39,29 @@
 - Updated dependencies [dd82e2f]
   - @equinor/fusion-framework-dev-portal@11.1.10
   - @equinor/fusion-framework-dev-server@2.3.3
+
+## 15.7.2-next.2
+
+### Patch Changes
+
+- @equinor/fusion-framework-dev-portal@11.1.10-next.2
+  - @equinor/fusion-framework-dev-server@2.3.3-next.2
+
+## 15.7.2-next.1
+
+### Patch Changes
+
+- @equinor/fusion-framework-dev-portal@11.1.10-next.1
+  - @equinor/fusion-framework-dev-server@2.3.3-next.1
+
+## 15.7.2-next.0
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+  - @equinor/fusion-framework-module-azure-identity@0.4.0-next.0
+  - @equinor/fusion-framework-dev-portal@11.1.10-next.0
+  - @equinor/fusion-framework-dev-server@2.3.3-next.0
 
 ## 15.7.1
 

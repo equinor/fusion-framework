@@ -84,6 +84,29 @@ const modules = await configurator.initialize();
 
 See [Usage & Error Handling](docs/usage.md) for full CRUD examples, subscription cleanup patterns, error handling, and testing utilities.
 
+## Operational telemetry
+
+`IStateProvider` extends `TelemetryConnectable`. The provider uses
+`telemetry.scope('state')`, with a lazy factory fallback for older custom providers,
+and closes the handle on disposal. The synchronization health
+observer remains local and sends its existing bounded summaries through the handle.
+
+When the host registers telemetry, each `getItem`, `getAllItems`, `storeItem(s)`,
+`removeItem(s)` and `clear` call reports one `fusion.state.<operation>.duration` outcome
+(`get`, `list`, `store`, `remove`, `clear`) with an item `count`. Storage error results
+are failures with reason `storage-error`. Synchronization is summarized in one-minute
+reporting windows rather than forwarded, because each pull reports `active` and then
+`paused`:
+
+- `fusion.state.sync-status` for the first transition into each status in a window;
+- `fusion.state.sync-error` for the first error of each type in a window;
+- `fusion.state.sync-activity` with status-change, change, poll, skipped-poll, completion
+  and error counts and the current status, emitted when the next event arrives after a
+  window ends, on disconnect, and on disposal. Quiet windows emit nothing.
+
+Keys, values, arguments and error messages are never exported. Promises settle exactly
+as before. See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
+
 ## Storage
 
 The module ships with a PouchDB-based `IStorage` implementation, including adapter configuration
@@ -107,4 +130,3 @@ custom `IStorage` implementations.
 - [Events](docs/events.md): state change, sync, and operation events dispatched through the `event` module
 - [API Reference](docs/api-reference.md): supported value types, and the full `StateProvider`, `StateItem`, and result-type reference
 - [Performance](docs/performance.md): prefix filtering, batching, and sync tuning tips
-

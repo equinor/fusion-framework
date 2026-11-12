@@ -2,7 +2,11 @@ import type { ObservableInput } from 'rxjs';
 import type { MetadataExtractor, TelemetryItem } from './types.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
-import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
+import type {
+  ConfigBuilderCallback,
+  ConfigBuilderCallbackArgs,
+} from '@equinor/fusion-framework-module';
+import type { TelemetrySource } from './schemas/diagnostic-context.js';
 
 /**
  * Configuration options for setting up telemetry within the application.
@@ -16,11 +20,18 @@ import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
  * @property relayFilter - Optional filter function to determine which telemetry items should be relayed to parent providers.
  */
 export type TelemetryConfig = {
+  source?: TelemetrySource;
+  /** Retains explicit exporter ownership even when its factory cannot create an adapter. */
+  ownsExport?: boolean;
   adapters?: Record<string, ITelemetryAdapter>;
   parent?: ITelemetryProvider;
   metadata?: MetadataExtractor;
   defaultScope?: string[];
   items$?: ObservableInput<TelemetryItem>;
+  /** Host-owned safe lifecycle stream, subscribed independently from custom items so errors cannot disable capture. */
+  lifecycleItems$?: ObservableInput<TelemetryItem>;
+  /** `false` keeps attached lifecycle records from reaching the provider without discarding the host's capture. */
+  lifecycleItemsEnabled?: boolean;
   filter?: {
     adapter?: (item: TelemetryItem) => boolean;
     relay?: (item: TelemetryItem) => boolean;
@@ -35,6 +46,50 @@ export type TelemetryConfig = {
  * @interface ITelemetryConfigurator
  */
 export interface ITelemetryConfigurator {
+  /**
+   * Resolves the configured settings consumed by the telemetry provider.
+   * Custom configurators implement this contract without extending the built-in class.
+   * @param init - Module initialization context available to configuration callbacks.
+   * @param initial - Optional settings merged before registered configuration resolves.
+   * @returns The resolved provider configuration.
+   */
+  createConfigAsync(
+    init: ConfigBuilderCallbackArgs,
+    initial?: Partial<TelemetryConfig>,
+  ): Promise<TelemetryConfig>;
+
+  /**
+   * Attaches host lifecycle records captured before the provider existed, typically
+   * `StartupCapture.items`. They are subscribed independently from custom items, so a failing
+   * custom stream cannot stop lifecycle records.
+   * @param item$ - Lifecycle record stream.
+   * @returns This configurator.
+   */
+  attachLifecycleItems(item$: NonNullable<TelemetryConfig['lifecycleItems$']>): this;
+
+  /**
+   * Whether lifecycle records are attached, so helpers can avoid replacing a host's own
+   * startup capture. Disabling delivery does not detach them.
+   * @returns `true` once `attachLifecycleItems` has been called.
+   */
+  hasLifecycleItems(): boolean;
+
+  /**
+   * Enables or disables delivery of attached lifecycle records to this provider; the last call
+   * wins. Disabling keeps the attached capture, so a later call can enable it again.
+   * @param enabled - Whether attached lifecycle records reach the provider.
+   * @returns This configurator.
+   */
+  setLifecycleItemsEnabled(enabled: boolean): this;
+
+  /**
+   * Sets the origin for built-in diagnostics without depending on dynamic metadata.
+   * The source kind is host-defined; any lowercase kebab-case identifier is accepted.
+   * @param source - Lifecycle-local identity supplied by the host.
+   * @returns This configurator.
+   * @throws {RangeError} When the source kind is not a static lowercase kebab-case identifier.
+   */
+  setSource(source: TelemetrySource): this;
   /**
    * Sets the parent telemetry provider for hierarchical telemetry propagation.
    *

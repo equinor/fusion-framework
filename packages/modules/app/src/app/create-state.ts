@@ -10,9 +10,14 @@ import {
   handleImportApplication,
 } from './flows/index.js';
 
-import type { Actions } from './actions.js';
+import { actions, type Actions } from './actions.js';
 import type { AppBundleState, AppBundleStateInitial } from './types.js';
 import type { AppModuleProvider } from '../AppModuleProvider.js';
+import type {
+  OperationalTelemetry,
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
+import { measureStage } from '../integrations/measure-stage.js';
 
 /**
  * Creates and configures the reactive state machine ({@link FlowSubject}) for
@@ -23,11 +28,13 @@ import type { AppModuleProvider } from '../AppModuleProvider.js';
  *
  * @param value - Initial state values (appKey, tag, and any pre-loaded data).
  * @param provider - The {@link AppModuleProvider} used by flows to fetch data.
+ * @param telemetry - Optional scope recording one outcome per load-stage request.
  * @returns A configured `FlowSubject` ready for use by the App class.
  */
 export const createState = (
   value: AppBundleStateInitial,
   provider: AppModuleProvider,
+  telemetry?: OperationalTelemetry | (() => OperationalTelemetry | undefined),
 ): FlowSubject<AppBundleState, Actions> => {
   const reducer = createReducer(value);
 
@@ -35,18 +42,56 @@ export const createState = (
   const state = new FlowSubject<AppBundleState, Actions>(reducer);
 
   // add handler for fetching manifest
-  state.addFlow(handleFetchManifest(provider));
+  state.addFlow(
+    handleFetchManifest(
+      provider,
+      measureStage<Actions>(
+        telemetry,
+        'load-manifest',
+        actions.fetchManifest,
+        (action): OperationalProperties => {
+          const version =
+            actions.fetchManifest.success.match(action) &&
+            (typeof telemetry === 'function' ? telemetry() : telemetry)?.safeIdentity(
+              action.payload.build?.version,
+              'version',
+            );
+          return version ? { appVersion: version } : {};
+        },
+      ),
+    ),
+  );
 
   // add handler for fetching config
-  state.addFlow(handleFetchConfig(provider));
+  state.addFlow(
+    handleFetchConfig(
+      provider,
+      measureStage<Actions>(telemetry, 'load-config', actions.fetchConfig),
+    ),
+  );
 
   // add handler for fetching settings
-  state.addFlow(handleFetchSettings(provider));
+  state.addFlow(
+    handleFetchSettings(
+      provider,
+      measureStage<Actions>(telemetry, 'load-settings', actions.fetchSettings),
+    ),
+  );
 
-  state.addFlow(handleUpdateSettings(provider));
+  state.addFlow(
+    handleUpdateSettings(
+      provider,
+      measureStage<Actions>(telemetry, 'update-settings', actions.updateSettings),
+    ),
+  );
 
   // add handler for loading application script
-  state.addFlow(handleImportApplication(provider));
+  state.addFlow(
+    handleImportApplication(
+      provider,
+      measureStage<Actions>(telemetry, 'import', actions.importApp),
+    ),
+  );
 
   return state;
 };

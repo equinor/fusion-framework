@@ -1,4 +1,14 @@
-import { EMPTY, lastValueFrom, Observable, of, Subject, Subscription, throwError } from 'rxjs';
+import {
+  defer,
+  identity,
+  EMPTY,
+  lastValueFrom,
+  Observable,
+  of,
+  Subject,
+  Subscription,
+  throwError,
+} from 'rxjs';
 import {
   catchError,
   filter,
@@ -25,6 +35,11 @@ import type {
 } from '@equinor/fusion-framework-module-event';
 import Query from '@equinor/fusion-query';
 import type { SemVer } from 'semver';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Interface representing a provider for managing and interacting with context items within an application.
@@ -57,7 +72,7 @@ import type { SemVer } from 'semver';
  *
  * @template T - The shape of the context item data.
  */
-export interface IContextProvider {
+export interface IContextProvider extends TelemetryConnectable {
   /** DANGER */
   readonly contextClient: ContextClient;
   /** DANGER */
@@ -304,6 +319,13 @@ export interface IContextProvider {
    * This property represents the version of the context provider, which can be a string or a SemVer object.
    */
   readonly version: string | SemVer;
+
+  /**
+   * Connects host telemetry for operational `fusion.context.select` and
+   * `fusion.context.resolve` records. Optional: mock and custom providers may omit it.
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }
 
 /**
@@ -347,6 +369,11 @@ export class ContextProvider
   #event?: ModuleType<EventModule>;
 
   #subscriptions = new Subscription();
+
+  #telemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   #contextType?: ContextModuleConfig['contextType'];
   #contextFilter: ContextModuleConfig['contextFilter'];
@@ -411,6 +438,7 @@ export class ContextProvider
    * @param args.config - The context module configuration.
    * @param args.event - Optional event module instance for dispatching context change events.
    * @param args.parentContext - Optional parent context provider. Deprecated, use {@link connectParentContext}.
+   * @throws Configured resolver failures propagate unchanged from the installed `resolveContext` method.
    */
   constructor(args: {
     config: ContextModuleConfig;
@@ -436,6 +464,28 @@ export class ContextProvider
     if (config.resolveContext) {
       this.resolveContext = config.resolveContext?.bind(this);
     }
+    // Measure the effective resolver, including configured overrides and subclass methods,
+    // so direct calls, `resolveContextAsync` and selection-driven resolution count once each.
+    const resolveContext = this.resolveContext.bind(this);
+    this.resolveContext = (item) => {
+      let result: Observable<ContextItem<Record<string, unknown>>>;
+      try {
+        result = resolveContext(item);
+      } catch (error) {
+        // Resolver factories may throw before returning an observable; retain the sync contract.
+        const end = this.#telemetry?.start('resolve', { by: 'item' });
+        const classified = this.#telemetry?.classifyError(error);
+        // Classification is only needed while an optional handle exists.
+        if (classified) {
+          end?.(classified.outcome, classified.reason ? { reason: classified.reason } : undefined);
+        }
+        throw error;
+      }
+      return defer(() => {
+        // Resolve the optional handle per subscription without deferring synchronous factory errors.
+        return result.pipe(this.#telemetry?.measure('resolve', { by: 'item' }) ?? identity);
+      });
+    };
     // override validateContext if configured
     if (config.validateContext) {
       this.validateContext = config.validateContext?.bind(this);
@@ -619,6 +669,8 @@ export class ContextProvider
           .resolveContext(id)
           // filter out invalid items and set as current context
           .pipe(
+            // The by-id lookup is its own resolution attempt, measured before selection.
+            this.#telemetry?.measure('resolve', { by: 'id' }) ?? identity,
             // filter out invalid context items
             filter((item): item is ContextItem => !!item),
             // set current context with validation and resolution
@@ -676,7 +728,42 @@ export class ContextProvider
     const subject$ = new Subject<T>();
 
     // run the actual context-setting logic and relay results/errors to the caller's subject
-    const task$ = this._setCurrentContext(context, opt).pipe(
+    const task$ = defer(() => {
+      // Re-setting the current item without validation is skipped work, not an operation.
+      if (context === this.currentContext && opt?.validate !== true) {
+        return this._setCurrentContext(context, opt);
+      }
+      // Measured upstream of the abort signal, so queue replacement and caller
+      // unsubscription record a cancellation rather than a success or failure.
+      const end = this.#telemetry?.start('select', {
+        clear: context === null,
+        validate: opt?.validate === true,
+        resolve: opt?.resolve === true,
+      });
+      let emitted = false;
+      // The change-event veto has a detached error path; end this tracker at that boundary.
+      return this._setCurrentContext(context, opt, () =>
+        end?.('cancelled', { reason: 'listener' }),
+      ).pipe(
+        tap({
+          next: () => {
+            emitted = true;
+          },
+          complete: () => end?.('success'),
+          error: (error: unknown) => {
+            const classified = this.#telemetry?.classifyError(error);
+            // Classification is only needed while an optional handle exists.
+            if (classified) {
+              end?.(
+                classified.outcome,
+                classified.reason ? { reason: classified.reason } : undefined,
+              );
+            }
+          },
+        }),
+        finalize(() => end?.(emitted ? 'success' : 'cancelled')),
+      );
+    }).pipe(
       // send context item which was set to the caller
       tap((x) => subject$.next(x)),
       // abort task on signal
@@ -736,6 +823,7 @@ export class ContextProvider
    * @param opt - Optional settings:
    *   - `validate`: Whether to validate the context before setting.
    *   - `resolve`: Whether to attempt to resolve the context if validation fails.
+   * @param onCancelled - Optional selection telemetry callback for a detached listener veto.
    * @returns An `Observable<T>` that emits the context when set, or errors if validation or resolution fails.
    * @fires onSetContextValidationFailed - When context validation fails and resolution is not enabled.
    * @fires onSetContextResolve - Before attempting to resolve the context.
@@ -746,6 +834,7 @@ export class ContextProvider
   protected _setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
     context: T,
     opt?: { validate?: boolean; resolve?: boolean },
+    onCancelled?: VoidFunction,
   ): Observable<T> {
     return new Observable((subscriber) => {
       const isInvalid =
@@ -766,7 +855,9 @@ export class ContextProvider
             detail: { context },
           });
           // emit error and complete
-          return subscriber.error(Error('failed to validate provided context'));
+          const error = Error('failed to validate provided context');
+          this.#telemetry?.markReason(error, 'validation');
+          return subscriber.error(error);
         }
         // if resolve is enabled, attempt to resolve the invalid context before setting it
         if (opt.resolve) {
@@ -784,7 +875,9 @@ export class ContextProvider
                 });
                 // check if event was canceled and abort if so
                 if (event?.canceled) {
-                  throw Error('resolving of context was canceled');
+                  const error = Error('resolving of context was canceled');
+                  this.#telemetry?.markCancellation(error, 'listener');
+                  throw error;
                 }
                 return context;
               }),
@@ -808,12 +901,16 @@ export class ContextProvider
                 });
                 // check if event was canceled and abort if so
                 if (event?.canceled) {
-                  throw Error('resolving of context was canceled');
+                  const error = Error('resolving of context was canceled');
+                  this.#telemetry?.markCancellation(error, 'listener');
+                  throw error;
                 }
                 return resolved;
               }),
               // recursive call to set current context without validation and resolution
-              switchMap((resolved) => this._setCurrentContext(resolved as unknown as T)),
+              switchMap((resolved) =>
+                this._setCurrentContext(resolved as unknown as T, undefined, onCancelled),
+              ),
             )
             .subscribe(subscriber);
         }
@@ -833,7 +930,10 @@ export class ContextProvider
 
             // check if event was canceled and abort if so
             if (event?.canceled) {
-              throw Error('change of context was aborted');
+              onCancelled?.();
+              const error = Error('change of context was aborted');
+              this.#telemetry?.markCancellation(error, 'listener');
+              throw error;
             }
 
             return context;
@@ -1052,8 +1152,58 @@ export class ContextProvider
    * ensuring that any allocated resources are properly released.
    */
   dispose() {
+    // Tasks interrupted by disposal are cancellations; nothing is reported afterwards.
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#telemetry?.close({ reason: 'disposed' });
     this.#subscriptions.unsubscribe();
     this.#contextClient.dispose();
+  }
+
+  /**
+   * Connects host telemetry for operational context records.
+   *
+   * Each queued `setCurrentContext` task reports one `fusion.context.select` outcome:
+   * `success`, `failure` (reason `validation` when validation fails without resolution) or
+   * `cancelled` (reason `listener` for a canceled event; superseded, unsubscribed and
+   * disposed tasks also count as cancelled). Each resolution attempt reports
+   * `fusion.context.resolve`. Records never include context ids, titles or values.
+   *
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#telemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('context') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('context');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for context: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
   }
 }
 

@@ -26,6 +26,12 @@ import type { FeatureFlagConfig } from './types.js';
 import type { IFeatureFlag } from './FeatureFlag.js';
 import { normalizeFlags } from './utils/normalize-flags.js';
 import type { FeatureSelectorFn } from './utils/selectors.js';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import type { OperationalTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { summarizeToggle } from './integrations/summarize-toggle.js';
 
 /**
  * Custom equality comparison for two feature flag snapshots.
@@ -39,7 +45,7 @@ export type CompareFeature = (a: IFeatureFlag | undefined, b: IFeatureFlag | und
 /**
  * Represents a feature flag provider.
  */
-export interface IFeatureFlagProvider {
+export interface IFeatureFlagProvider extends TelemetryConnectable {
   /**
    * The collection of features managed by the provider.
    */
@@ -95,6 +101,13 @@ export interface IFeatureFlagProvider {
    * @returns True if the feature flag exists, false otherwise.
    */
   hasFeature(key: string): boolean;
+
+  /**
+   * Connects host telemetry for operational toggle records once all providers exist.
+   * Optional: mock and custom providers may omit it.
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void | Promise<void>;
 }
 
 /**
@@ -110,6 +123,12 @@ export class FeatureFlagProvider
 {
   #state: ReturnType<typeof createState>;
   #event?: ModuleType<EventModule>;
+
+  /** Optional operational telemetry; never carries feature keys or values. */
+  #telemetry?: OperationalTelemetry;
+  #telemetryConnection = 0;
+  #telemetryClosed = false;
+  #telemetryWarned = false;
 
   /** @returns All currently registered feature flags, keyed by flag key. */
   get features(): Record<string, IFeatureFlag> {
@@ -212,6 +231,7 @@ export class FeatureFlagProvider
    * before applying it.
    *
    * @param values - The flag keys and desired enabled states to toggle.
+   * @throws The original error when dispatching a toggle event fails, after recording it.
    */
   public async toggleFeatures(values: Array<{ key: string; enabled: boolean }>): Promise<void> {
     // get current features from the state
@@ -252,11 +272,79 @@ export class FeatureFlagProvider
       reduce((acc, value) => acc.concat([value]), [] as Array<{ key: string; enabled: boolean }>),
     );
 
-    // wait for the onToggle observable to complete and get the toggled features
-    const toggledFeatures = await lastValueFrom(onToggle);
+    // Counts are derived from the request and its result, so the toggle flow stays unchanged.
+    const end = this.#telemetry?.start('toggle');
+    let toggledFeatures: Array<{ key: string; enabled: boolean }>;
+    try {
+      // wait for the onToggle observable to complete and get the toggled features
+      toggledFeatures = await lastValueFrom(onToggle);
+    } catch (error) {
+      end?.('failure', summarizeToggle(values, features));
+      throw error;
+    }
 
     // dispatch the toggle values to the state
     this.#state.next(actions.toggleFeatures(toggledFeatures));
+
+    const summary = summarizeToggle(values, features, toggledFeatures.length);
+    // Listeners vetoing everything that could apply is a cancellation, not a success.
+    end?.(summary.applied === 0 && summary.cancelled > 0 ? 'cancelled' : 'success', summary);
+  }
+
+  /**
+   * Connects host telemetry for operational feature-flag records once all providers exist.
+   *
+   * Each `toggleFeature`/`toggleFeatures` call reports one `fusion.feature-flag.toggle`
+   * outcome with `requested`, `applied`, `rejected` and `cancelled` counts. Reads such as
+   * `hasFeature` and `getFeature` are never recorded, and feature keys and values are omitted.
+   *
+   * @param telemetry - The host telemetry provider, or `undefined` to stop reporting.
+   */
+  public async connectTelemetry(telemetry: ITelemetryProvider | undefined): Promise<void> {
+    const connection = ++this.#telemetryConnection;
+    // Disconnection is immediate; disposal must never be reversed by a late connection.
+    if (!telemetry || this.#telemetryClosed) {
+      this.#telemetry?.connect(undefined);
+      return;
+    }
+    let handle: OperationalTelemetry;
+    try {
+      handle =
+        this.#telemetry ??
+        telemetry.scope?.('feature-flag') ??
+        (
+          await import('@equinor/fusion-framework-module-telemetry/utils')
+        ).createOperationalTelemetry('feature-flag');
+    } catch {
+      // Repeated connections must not amplify a missing optional-peer warning.
+      if (!this.#telemetryWarned) {
+        this.#telemetryWarned = true;
+        console.warn('Operational telemetry for feature-flag: telemetry package unavailable');
+      }
+      return;
+    }
+    // A newer connection or disposal wins over a pending legacy-factory import.
+    if (connection !== this.#telemetryConnection || this.#telemetryClosed) {
+      // Only a newly allocated, superseded handle needs releasing here.
+      if (handle !== this.#telemetry) {
+        handle.disconnect();
+      }
+      return;
+    }
+    this.#telemetry = handle;
+    this.#telemetry.connect(telemetry);
+  }
+
+  /**
+   * Disposes the provider. Toggles still awaiting listeners are recorded as `cancelled`
+   * (reason `disposed`) while telemetry is available, then nothing more is reported; plugin
+   * connections and toggle listeners are released as before.
+   */
+  public override dispose(): void {
+    this.#telemetryClosed = true;
+    this.#telemetryConnection++;
+    this.#telemetry?.close({ reason: 'disposed' });
+    super.dispose();
   }
 
   /**

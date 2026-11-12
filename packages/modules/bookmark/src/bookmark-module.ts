@@ -13,6 +13,7 @@ import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { lastValueFrom } from 'rxjs';
 import { version } from './version.js';
 import type { IBookmarkProvider } from './BookmarkProvider.interface.js';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 /** String literal key used to register the bookmark module in the framework. */
 export type BookmarkModuleKey = 'bookmark';
@@ -83,6 +84,11 @@ export const module: BookmarkModule = {
     );
     const provider = new BookmarkProvider(config);
     return provider;
+  },
+  postInitialize: async ({ instance, modules }) => {
+    // Telemetry stays optional and is never awaited during bookmark initialization.
+    const { telemetry } = modules as { telemetry?: ITelemetryProvider };
+    await instance.connectTelemetry?.(telemetry);
   },
   dispose: (args) => {
     (args.instance as BookmarkProvider).dispose();

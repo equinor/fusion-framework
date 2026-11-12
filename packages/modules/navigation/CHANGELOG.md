@@ -1,5 +1,57 @@
 # Change Log
 
+## 8.0.0-next.1
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- Updated dependencies [daa0612]
+  - @equinor/fusion-observable@9.2.6-next.0
+
+## 8.0.0-next.0
+
+### Major Changes
+
+- 6d7f155: **Breaking:** navigation telemetry changes its event names and payloads. Dashboards,
+  queries and relay filters that match per-action event names or read location and
+  action properties must be updated (see **Migration**). The navigation API and routing
+  behavior are unchanged.
+  
+  Connect available host telemetry after initialization without adding a startup
+  dependency. Explicit `setTelemetry(provider)` and `setTelemetry(undefined)` continue
+  to take precedence. Automatic wiring excludes per-action debug chatter. Custom
+  navigation providers opt in through the optional `INavigationProvider.connectTelemetry`
+  method; the module no longer checks for the concrete `NavigationProvider` class.
+  
+  **Migration:** navigation telemetry no longer exposes locations, previous locations,
+  route state or raw action payloads. Detailed explicit-provider action events use
+  the static `Navigation::action` name with a controlled action type instead of
+  dynamic per-action names. Read navigation state/events locally when route data is
+  needed; routing behavior itself is unchanged. Diagnostic failures cannot break navigation.
+  
+  Ref: #5803.
+
+### Patch Changes
+
+- ef9d5f3: Internal: standardize optional telemetry wiring on `TelemetryConnectable` and replace
+  module-specific operational reporters with the shared telemetry handle where applicable.
+  Preserve record names, outcomes, summary properties, volume budgets and navigation's
+  explicit telemetry precedence. Optional peers remain lazily loaded, and disposed providers
+  cannot report late outcomes.
+  
+  Cold app/widget loads, context resolution and bookmark requests resolve telemetry when
+  subscribed, including observables created before the first telemetry connection.
+  
+  Refs #5837.
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 7.0.12
 
 ### Patch Changes

@@ -5,6 +5,7 @@ import {
 import { type IFeatureFlagProvider, FeatureFlagProvider } from './FeatureFlagProvider.js';
 
 import type { Module, IModulesConfigurator } from '@equinor/fusion-framework-module';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 /** Unique module identifier used in the Fusion Framework module registry. */
 export const name = 'featureFlag';
@@ -35,6 +36,16 @@ export const module: FeatureFlagModule = {
     const config = await init.config.createConfigAsync(init);
     const event = init.hasModule('event') ? await init.requireInstance('event') : undefined;
     return new FeatureFlagProvider({ config, event });
+  },
+  postInitialize: async ({ instance, modules }) => {
+    // Telemetry stays optional and is never awaited during feature-flag initialization.
+    const { telemetry } = modules as { telemetry?: ITelemetryProvider };
+    await instance.connectTelemetry?.(telemetry);
+  },
+  dispose: ({ instance }) => {
+    // Runs in the default phase, before the telemetry sink shuts down, so pending toggles are
+    // still reported as cancelled.
+    (instance as { dispose?: VoidFunction }).dispose?.();
   },
 };
 

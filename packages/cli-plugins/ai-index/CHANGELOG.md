@@ -1,5 +1,36 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.17-next.1
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.16-next.1
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-ai@7.2.0-next.1
+  - @equinor/fusion-imports@2.0.8-next.0
+
+## 3.0.17-next.0
+
+### Patch Changes
+
+- Updated dependencies [3a051da]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-ai@7.2.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.16-next.0
+  - @equinor/fusion-framework-cli@15.7.2-next.0
+
 ## 3.0.16
 
 ### Patch Changes

@@ -1,5 +1,10 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
+import { createOperationalTelemetry } from '@equinor/fusion-framework-module-telemetry/utils';
 import type { ClientMethod } from './types.js';
 
 import type { ApiClientFactory } from './types.js';
@@ -22,7 +27,8 @@ export { ApiProviderError } from './ApiProviderError.js';
  *
  * @template TClient - The underlying HTTP client type.
  */
-export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
+export interface IApiProvider<TClient extends IHttpClient = IHttpClient>
+  extends TelemetryConnectable {
   /**
    * Creates a typed client for the bookmarks API.
    *
@@ -127,10 +133,47 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
    * Creates a services provider from an HTTP client factory.
    *
    * @param config - Provider configuration containing the client factory.
+   * @throws Never directly; created factories rethrow the original client-creation error.
    */
   constructor(config: ApiProviderConfig<TClient>) {
     super({ version, config });
-    this._createClientFn = config.createClient;
+    const createClient = config.createClient;
+    // Measured at the factory boundary so named, discovered and custom clients count alike.
+    this._createClientFn = async (name) => {
+      const started = performance.now();
+      try {
+        const client = await createClient(name);
+        this.#telemetry.report({
+          operation: 'create-client',
+          outcome: 'success',
+          duration: performance.now() - started,
+        });
+        return client;
+      } catch (error) {
+        this.#telemetry.report({
+          operation: 'create-client',
+          outcome: 'failure',
+          duration: performance.now() - started,
+        });
+        throw error;
+      }
+    };
+    this._addTeardown(() => this.#telemetry.disconnect());
+  }
+
+  #telemetry = createOperationalTelemetry('services');
+
+  /**
+   * Connects optional operational telemetry for API client selection.
+   *
+   * Records one `fusion.services.create-client.duration` per client creation, plus one
+   * sanitized failure when no client can be selected. Service names, URIs and errors are
+   * not recorded; discovery resolution and HTTP attempts are reported by their own modules.
+   *
+   * @param telemetry - Host telemetry provider, or `undefined` to record nothing.
+   */
+  public connectTelemetry(telemetry: ITelemetryProvider | undefined): void {
+    this.#telemetry.connect(telemetry);
   }
 
   /**

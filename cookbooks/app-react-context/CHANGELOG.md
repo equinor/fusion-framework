@@ -1,10 +1,32 @@
 # Change Log
 
+## 5.0.15-next.0
+
+### Patch Changes
+
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+  - @equinor/fusion-framework-react-app@14.3.9-next.0
+  - @equinor/fusion-observable@9.2.6-next.0
+
 ## 5.0.14
 
 ### Patch Changes
 
 - b5a3976: Internal: bump `concurrently` from `10.0.6` to `10.0.7` for cookbook app and mock-server startup.
+
+## 5.0.14-next.0
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework-module-navigation@8.0.0-next.0
+  - @equinor/fusion-framework-react-app@14.3.8-next.0
+  - @equinor/fusion-framework-cli@15.7.2-next.0
+  - @equinor/fusion-framework-react-module-context@7.0.7-next.0
 
 ## 5.0.13
 

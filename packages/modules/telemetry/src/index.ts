@@ -21,6 +21,17 @@ export type {
 } from './TelemetryConfigurator.interface.js';
 
 export type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+export type { TelemetryConnectable } from './TelemetryConnectable.interface.js';
+export type {
+  OperationalTelemetry,
+  OperationalTelemetryOptions,
+  OperationalTelemetryReport,
+  EndOperation,
+} from './utils/create-operational-telemetry.js';
+export type { OperationalProperties } from './utils/operational-properties.js';
+export { TelemetryConfigurator } from './TelemetryConfigurator.js';
+export { StartupCapture } from './lib/StartupCapture.js';
+export type { StartupCaptureOptions } from './lib/StartupCapture.js';
 
 export { Measurement } from './Measurement.js';
 export type { IMeasurement } from './Measurement.interface.js';

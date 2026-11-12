@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-signalr",
-  "version": "14.0.4",
+  "version": "14.1.0-next.1",
   "description": "",
   "type": "module",
   "sideEffects": false,
@@ -32,6 +32,8 @@
     "directory": "packages/modules/signalr"
   },
   "dependencies": {
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
     "@microsoft/signalr": "^10.0.0",
     "rxjs": "^7.8.1"
   },

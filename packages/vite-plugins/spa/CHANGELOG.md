@@ -1,5 +1,25 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.2.5-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-http@8.1.5-next.1
+  - @equinor/fusion-framework-module-msal@12.1.0-next.1
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.2
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.4
+
 ## 5.2.4
 
 ### Patch Changes
@@ -7,6 +27,39 @@
 - dd82e2f: Internal: bump locked Rollup from 4.65.1 to 4.67.4 for the build and development toolchain.
 - Updated dependencies [b5a3976]
   - @equinor/fusion-framework-module-telemetry@7.2.3
+
+## 5.2.4-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.3
+
+## 5.2.4-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.2
+
+## 5.2.4-next.0
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
 
 ## 5.2.3
 

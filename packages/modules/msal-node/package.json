@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-msal-node",
-  "version": "4.2.5",
+  "version": "4.3.0-next.1",
   "description": "Fusion Framework module for secure Azure AD authentication in Node.js using MSAL. Supports interactive, silent, and token-only authentication modes with encrypted token storage.",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -61,6 +61,8 @@
   "dependencies": {
     "@azure/msal-node": "^7.0.0",
     "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
     "open": "^11.0.0"
   },
   "optionalDependencies": {

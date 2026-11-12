@@ -110,6 +110,23 @@ provider.getWidgetConfig('my-widget').subscribe((config) => {
 });
 ```
 
+## Operational telemetry
+
+The provider implements `TelemetryConnectable` and obtains its shared handle through
+`telemetry.scope('widget')`, with a lazy factory fallback for older custom providers.
+Each widget owns a child scope; stage observers stay local,
+while timing, safe identity and disposal use the shared telemetry implementation.
+
+When the host registers telemetry, every widget reports one
+`fusion.widget.<stage>.duration` outcome for `load-manifest`, `load-config`, `import`
+and `load`, the outcome of each `initialize()` subscription (`cancelled` when the caller
+unsubscribes first). Failures add one sanitized `.failure` exception; stage failures carry
+a static reason code. Stages still running at `widget.dispose()` are `cancelled` with
+reason `unloaded`, or `disposed` when the widget module is disposed, and a disposed
+widget reports nothing more. Records carry only the validated `widgetKey` and `widgetVersion`. Custom
+providers opt in through the optional `IWidgetModuleProvider.connectTelemetry` method.
+See [Operational telemetry](../telemetry/docs/operational-telemetry.md).
+
 ## Exported entry points
 
 | Export path | Description |

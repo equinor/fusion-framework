@@ -8,6 +8,9 @@
   "references": [
     {
       "path": "../module"
+    },
+    {
+      "path": "../telemetry"
     }
   ],
   "include": ["src/**/*"],

@@ -1,5 +1,21 @@
 # @equinor/fusion-openapi-mock-server
 
+## 1.0.1-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+  - @equinor/fusion-imports@2.0.8-next.0
+  - @equinor/fusion-openapi-mock@0.2.4-next.0
+
 ## 1.0.0
 
 ### Major Changes
@@ -9,6 +25,12 @@
   Audit routes registered through `ServiceBuilder.middleware` or `createRouter`, plus handlers that read `params`. Prefer `/files/:file/extensions/:ext` with `/files/foo.json/extensions/html` to keep the values unambiguous, and update test clients alongside the route. If URLs must remain stable, register one segment parameter and parse it explicitly in the handler.
   
   Direct `createRouter` usage still uses `trailing: false`: `/files/` accepts exactly one trailing slash, not `/files` or `/files//`. Standalone service dispatch continues to normalize empty path segments before middleware matching; register `/files` for that entry point. Simple parameters in separate segments are unchanged. See the README's **Migration: path-to-regexp v9** section for examples and regression-check guidance.
+
+## 0.5.4-next.0
+
+### Patch Changes
+
+- @equinor/fusion-services@0.3.4-next.0
 
 ## 0.5.3
 

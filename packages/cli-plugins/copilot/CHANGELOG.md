@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-cli-plugin-copilot
 
+## 3.0.1-next.0
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework-cli@15.7.3-next.0
+
 ## 3.0.0
 
 ### Major Changes
@@ -7,6 +23,12 @@
 - dd82e2f: Internal: bump `agent-browser` from `0.39.4` to `0.41.0` for Copilot browser automation. The upstream Eve extension changes do not require a migration for this CLI integration.
   
   Require Node.js 22.22.2 or newer and update the terminal spinner to Ora 10.0.0. Upgrade Node.js before installing this release; the prerequisites previously documented Node.js 20.
+
+## 2.0.14-next.0
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.7.2-next.0
 
 ## 2.0.13
 

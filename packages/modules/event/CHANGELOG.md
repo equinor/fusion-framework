@@ -1,5 +1,28 @@
 # Change Log
 
+## 6.1.4-next.1
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+## 6.1.4-next.0
+
+### Patch Changes
+
+- 6d7f155: Keep the event provider alive through business and telemetry teardown so diagnostic
+  health reporting remains available while exporters flush and shut down.
+  
+  Ref: #5803.
+- Updated dependencies [6d7f155]
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 6.1.3
 
 ### Patch Changes

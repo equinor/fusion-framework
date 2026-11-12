@@ -9,7 +9,15 @@ import type {
 import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider.js';
-import { combineLatest, of, Subscription, firstValueFrom, lastValueFrom } from 'rxjs';
+import {
+  combineLatest,
+  defer,
+  of,
+  Subscription,
+  firstValueFrom,
+  lastValueFrom,
+  identity as identityOperator,
+} from 'rxjs';
 import { defaultIfEmpty, last, map, switchMap } from 'rxjs/operators';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
@@ -21,6 +29,11 @@ import type { AppBundleState, AppBundleStateInitial } from './types.js';
 import isEqual from 'fast-deep-equal';
 
 import { filterEmpty } from './filter-empty.js';
+
+import type {
+  OperationalTelemetry,
+  OperationalProperties,
+} from '@equinor/fusion-framework-module-telemetry';
 
 import './events.js';
 
@@ -276,6 +289,9 @@ export class App<
 {
   #state: FlowSubject<AppBundleState, Actions>;
 
+  /** Operational records of this app; closed when it unloads or its provider disposes. */
+  #telemetry: () => OperationalTelemetry | undefined;
+
   //#region === streams ===
 
   /** @inheritdoc */
@@ -380,16 +396,45 @@ export class App<
   /**
    * Creates a new {@link App} instance and starts its internal state machine.
    * @param value - Initial app bundle state (appKey, tag, and any pre-loaded data).
-   * @param args - The owning {@link AppModuleProvider} and an optional event module for lifecycle events.
+   * @param args - The owning {@link AppModuleProvider}, an optional event module for lifecycle events,
+   *   and the provider's operational telemetry, from which the app derives its own scope.
+   * @throws Never synchronously. A rejected module teardown started by `dispose()` is
+   *   re-thrown from its promise chain, so it stays as visible as before.
    */
   constructor(
     value: AppBundleStateInitial,
     args: {
       provider: AppModuleProvider;
       event?: ModuleType<EventModule>;
+      telemetry?: OperationalTelemetry | (() => OperationalTelemetry | undefined);
     },
   ) {
-    this.#state = createState(value, args.provider);
+    const parent = (): OperationalTelemetry | undefined =>
+      typeof args.telemetry === 'function' ? args.telemetry() : args.telemetry;
+    // Only static identity is exported; manifests, config and settings are never read for telemetry.
+    // Resolved when an operation ends, so it includes the version once the manifest is loaded.
+    const identity = (): OperationalProperties => {
+      const key = parent()?.safeIdentity(this.#state.value.appKey);
+      const version = parent()?.safeIdentity(this.#state.value.manifest?.build?.version, 'version');
+      // Unsafe or missing identity is omitted rather than exported.
+      return {
+        ...(key ? { appKey: key } : {}),
+        ...(version ? { appVersion: version } : {}),
+      };
+    };
+    // Each app owns a child scope of the provider's telemetry, so unloading one app cannot
+    // cancel another app's stages, while provider disposal still closes stages in flight.
+    let scope: OperationalTelemetry | undefined;
+    let unloaded = false;
+    const telemetry = (): OperationalTelemetry | undefined => {
+      // Apps created before telemetry connects still acquire a scope on their first later request.
+      if (!unloaded) {
+        scope ??= parent()?.createScope({ identity });
+      }
+      return scope;
+    };
+    this.#telemetry = telemetry;
+    this.#state = createState(value, args.provider, telemetry);
 
     const { appKey } = value;
     const { event } = args;
@@ -420,13 +465,49 @@ export class App<
     }
 
     this.dispose = () => {
+      // Repeated disposal keeps its existing behavior but records only the first unload.
+      const first = !unloaded;
+      unloaded = true;
+      // Teardown has separate ownership so closing load reporting never waits for its promise.
+      const unloadTelemetry = first ? parent()?.createScope({ identity }) : undefined;
+      scope?.close({ ...identity(), reason: 'unloaded' });
+      const endUnload = unloadTelemetry?.start('unload');
       subscriptions?.unsubscribe();
       // tear down modules of application, if an instance was loaded
-      if (this.#state.value.instance) {
-        // tear down modules of application
-        this.#state.value.instance.dispose();
+      // Typed as `void`, but module instances may return their teardown promise.
+      let disposal: unknown;
+      try {
+        disposal = this.#state.value.instance
+          ? // tear down modules of application
+            this.#state.value.instance.dispose()
+          : undefined;
+      } catch (error) {
+        // A synchronous teardown failure is recorded, then re-thrown exactly as before.
+        endUnload?.('failure');
+        unloadTelemetry?.close();
+        throw error;
       }
       this.#state.complete();
+      // Only the first disposal measures the unload.
+      if (!endUnload) {
+        return;
+      }
+      // Asynchronous module teardown ends the unload when it settles.
+      if (disposal instanceof Promise) {
+        // Re-throwing keeps an unhandled teardown rejection exactly as visible as before.
+        disposal
+          .then(
+            () => endUnload('success'),
+            (error: unknown) => {
+              endUnload('failure');
+              throw error;
+            },
+          )
+          .finally(() => unloadTelemetry?.close());
+      } else {
+        endUnload('success');
+        unloadTelemetry?.close();
+      }
     };
   }
 
@@ -602,7 +683,9 @@ export class App<
 
   /** @inheritdoc */
   public initialize(): Observable<AppInitializeResult> {
-    return new Observable((subscriber) => {
+    // Each subscription is one load attempt: its result, error or unsubscription is the
+    // terminal `load` outcome, so abandoned attempts cannot settle a later one.
+    return new Observable<AppInitializeResult>((subscriber) => {
       // dispatch initialize action to indicate that the application is initializing
       this.#state.next(actions.initialize());
       subscriber.add(
@@ -627,7 +710,12 @@ export class App<
           },
         }),
       );
-    });
+    }).pipe((source) =>
+      defer(() => {
+        // A cold load may be created before the provider receives its telemetry connection.
+        return source.pipe(this.#telemetry()?.measure('load') ?? identityOperator);
+      }),
+    );
   }
 
   /** @inheritdoc */

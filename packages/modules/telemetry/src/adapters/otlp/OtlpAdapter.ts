@@ -8,6 +8,7 @@ import {
 } from '@opentelemetry/sdk-logs';
 import { SeverityNumber, type LogAttributes, type Logger } from '@opentelemetry/api-logs';
 import { resourceFromAttributes } from '@opentelemetry/resources';
+import { context, ROOT_CONTEXT, trace, TraceFlags } from '@opentelemetry/api';
 
 /** Configuration for exporting Fusion telemetry with the standard OTLP/HTTP logs exporter. */
 export interface OtlpAdapterOptions {
@@ -58,7 +59,7 @@ export class OtlpAdapter extends BaseTelemetryAdapter {
           // Report once without replacing the SDK's failure result with a success.
           if (result.code !== 0 && !this.#reportedFailure) {
             this.#reportedFailure = true;
-            console.warn('OTLP log delivery failed; telemetry is best effort.', result.error);
+            console.warn('OTLP log delivery failed; telemetry is best effort.');
           }
           callback(result);
         });
@@ -114,12 +115,31 @@ export class OtlpAdapter extends BaseTelemetryAdapter {
       app && typeof app === 'object' && 'key' in app && typeof app.key === 'string'
         ? app.key
         : undefined;
+    // Built-in records carry only the host's own classification, never an inferred one;
+    // custom records keep their pre-existing metadata-based inference.
+    const source = item.diagnostic ? item.diagnostic.source : appKey ? 'app' : 'framework';
     const attributes: LogAttributes = {
-      source: appKey ? 'app' : 'framework',
       'fusion.telemetry.type': item.type,
       'fusion.telemetry.scope': item.scope,
-      ...(appKey ? { 'fusion.app.key': appKey } : {}),
     };
+    // Unclassified hosts export no source attribute rather than a guessed one.
+    if (source) {
+      attributes.source = source;
+    }
+    // Custom records may identify their app through inherited metadata.
+    if (appKey) {
+      attributes['fusion.app.key'] = appKey;
+    }
+    // Built-in records keep their origin rather than inheriting the exporter's host.
+    if (item.diagnostic) {
+      // Only the strict schema's primitive context is eligible for export.
+      for (const [key, value] of Object.entries(item.diagnostic)) {
+        // Omit absent optional identity and correlation fields.
+        if (value !== undefined) {
+          attributes[`fusion.diagnostic.${key}`] = value;
+        }
+      }
+    }
     // OTLP attributes accept primitive values, not arbitrary application objects.
     for (const [key, value] of Object.entries(item.properties ?? {})) {
       // Preserve supported values without serializing circular application objects.
@@ -140,6 +160,19 @@ export class OtlpAdapter extends BaseTelemetryAdapter {
     this.#logger.emit({
       body: item.name,
       attributes,
+      ...(item.diagnostic
+        ? {
+            timestamp: item.diagnostic.occurredAt,
+            context:
+              item.diagnostic.traceId && item.diagnostic.spanId
+                ? trace.setSpanContext(ROOT_CONTEXT, {
+                    traceId: item.diagnostic.traceId,
+                    spanId: item.diagnostic.spanId,
+                    traceFlags: item.diagnostic.traceFlags ?? TraceFlags.NONE,
+                  })
+                : ROOT_CONTEXT,
+          }
+        : { context: context.active() }),
       severityNumber: [
         SeverityNumber.DEBUG,
         SeverityNumber.INFO,

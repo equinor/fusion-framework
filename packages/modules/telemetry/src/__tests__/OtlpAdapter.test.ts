@@ -1,8 +1,11 @@
 import { createServer } from 'node:http';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http';
+import { TraceFlags } from '@opentelemetry/api';
+import { TelemetryMetricSchema } from '../schemas/index.js';
 import { TelemetryLevel, TelemetryType } from '@equinor/fusion-framework-module-telemetry';
 import { OtlpAdapter } from '../adapters/otlp/OtlpAdapter.js';
+import { createOperationalRecords } from '../utils/create-operational-records.js';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -37,6 +40,15 @@ describe('OtlpAdapter', () => {
         type: TelemetryType.Event,
         metadata: { fusion: { app: { key: 'example-app' } } },
       });
+      for (const record of createOperationalRecords({
+        source: { source: 'widget', hostId: 'widget-host' },
+        module: 'host',
+        operation: 'initialize',
+        outcome: 'failure',
+        duration: 0,
+      })) {
+        adapter.processItem(record);
+      }
       await adapter.forceFlush();
       await vi.waitFor(() =>
         expect(received).toMatchObject({
@@ -54,6 +66,26 @@ describe('OtlpAdapter', () => {
                         { key: 'source', value: { stringValue: 'app' } },
                       ]),
                     },
+                    {
+                      body: { stringValue: 'fusion.host.initialize.duration' },
+                      attributes: expect.arrayContaining([
+                        { key: 'source', value: { stringValue: 'widget' } },
+                        {
+                          key: 'fusion.diagnostic.hostId',
+                          value: { stringValue: 'widget-host' },
+                        },
+                        { key: 'fusion.telemetry.value', value: { intValue: 0 } },
+                      ]),
+                    },
+                    {
+                      body: { stringValue: 'fusion.host.initialize.failure' },
+                      attributes: expect.arrayContaining([
+                        {
+                          key: 'exception.message',
+                          value: { stringValue: 'fusion.host.initialize failed' },
+                        },
+                      ]),
+                    },
                   ],
                 },
               ],
@@ -68,6 +100,34 @@ describe('OtlpAdapter', () => {
         server.closeAllConnections();
       });
     }
+  });
+
+  it('exports unclassified built-in records without inferring a source or app identity', async () => {
+    const send = vi
+      .spyOn(OTLPLogExporter.prototype, 'export')
+      .mockImplementation((_records, callback) => {
+        callback({ code: 0 });
+      });
+    const adapter = new OtlpAdapter({ url: 'http://localhost:4318/v1/logs' });
+    await adapter.initialize();
+    for (const item of createOperationalRecords({
+      source: { hostId: 'custom-host', hostName: 'custom-shell' },
+      module: 'host',
+      operation: 'initialize',
+      outcome: 'success',
+      duration: 0,
+    })) {
+      adapter.processItem(item);
+    }
+    await adapter.forceFlush();
+    const [record] = send.mock.calls[0][0];
+    expect(record.attributes).toMatchObject({
+      'fusion.diagnostic.hostId': 'custom-host',
+      'fusion.diagnostic.hostName': 'custom-shell',
+    });
+    expect(record.attributes).not.toHaveProperty('source');
+    expect(record.attributes).not.toHaveProperty('fusion.app.key');
+    await adapter.shutdown();
   });
 
   it('uses the standard OTLP exporter with app key, source, and severity', async () => {
@@ -123,6 +183,52 @@ describe('OtlpAdapter', () => {
     }
     await vi.waitFor(() => expect(send).toHaveBeenCalledTimes(2));
     expect(warning).toHaveBeenCalledTimes(1);
+    await adapter.shutdown();
+  });
+
+  it('exports captured host origin, zero duration, time and trace context through the SDK', async () => {
+    const send = vi
+      .spyOn(OTLPLogExporter.prototype, 'export')
+      .mockImplementation((_records, callback) => {
+        callback({ code: 0 });
+      });
+    const adapter = new OtlpAdapter({ url: 'http://localhost:4318/v1/logs' });
+    await adapter.initialize();
+    adapter.processItem(
+      TelemetryMetricSchema.parse({
+        name: 'fusion.http.request.duration',
+        type: TelemetryType.Metric,
+        level: TelemetryLevel.Information,
+        scope: ['widget', 'operational'],
+        value: 0,
+        diagnostic: {
+          schemaVersion: 1,
+          source: 'widget',
+          hostId: 'widget-host',
+          module: 'http',
+          operation: 'request',
+          outcome: 'success',
+          unit: 'ms',
+          occurredAt: 1_700_000_000_123,
+          traceId: 'a'.repeat(32),
+          spanId: 'b'.repeat(16),
+          traceFlags: TraceFlags.SAMPLED,
+        },
+      }),
+    );
+    await adapter.forceFlush();
+    const [record] = send.mock.calls[0][0];
+    expect(record.spanContext).toMatchObject({
+      traceId: 'a'.repeat(32),
+      spanId: 'b'.repeat(16),
+      traceFlags: TraceFlags.SAMPLED,
+    });
+    expect(record.hrTime).toEqual([1_700_000_000, 123_000_000]);
+    expect(record.attributes).toMatchObject({
+      source: 'widget',
+      'fusion.telemetry.value': 0,
+      'fusion.diagnostic.hostId': 'widget-host',
+    });
     await adapter.shutdown();
   });
 

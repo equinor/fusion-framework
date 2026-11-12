@@ -6,6 +6,10 @@ import type { Action, Path, To } from './lib/types.js';
 
 import type { Observable } from 'rxjs';
 import type { IModuleProvider } from '@equinor/fusion-framework-module';
+import type {
+  ITelemetryProvider,
+  TelemetryConnectable,
+} from '@equinor/fusion-framework-module-telemetry';
 
 /**
  * Navigation provider interface.
@@ -21,7 +25,7 @@ import type { IModuleProvider } from '@equinor/fusion-framework-module';
  * console.log(nav.path.pathname); // '/users'
  * ```
  */
-export interface INavigationProvider extends IModuleProvider {
+export interface INavigationProvider extends IModuleProvider, TelemetryConnectable {
   /**
    * Observable stream of navigation state updates.
    * Emits localized paths (with basename removed) for consumers.
@@ -96,4 +100,12 @@ export interface INavigationProvider extends IModuleProvider {
    * @param state - Optional state to associate with the navigation
    */
   replace(to: To, state?: unknown): void;
+
+  /**
+   * Connects host telemetry once all providers exist, so navigation never waits on telemetry
+   * during initialization. Explicit `setTelemetry` configuration, including disabling it, wins.
+   * Optional: mock and custom providers may omit automatic telemetry wiring.
+   * @param telemetry - The host telemetry provider, when one is registered.
+   */
+  connectTelemetry?(telemetry: ITelemetryProvider | undefined): void;
 }

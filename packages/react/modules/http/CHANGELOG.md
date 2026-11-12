@@ -1,5 +1,25 @@
 # Change Log
 
+## 12.0.4-next.1
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+
+## 12.0.4-next.0
+
+### Patch Changes
+
+- Updated dependencies [f150ff4]
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-react-module@4.0.7-next.0
+
 ## 12.0.3
 
 ### Patch Changes

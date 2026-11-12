@@ -1,5 +1,80 @@
 # Change Log
 
+## 13.3.0-next.3
+
+### Patch Changes
+
+- daa0612: Internal: publish every package on the `next` pre-release tag so the whole framework can be installed as a coherent set.
+  
+  Packages without their own changes are bumped only to receive a `-next.N` version and the `next` dist-tag on npm. Install with:
+  
+  ```bash
+  pnpm add @equinor/fusion-framework-react-app@next
+  ```
+- b4c32d1: Internal: rebase the `next` pre-release line onto `main` after the stable release, so the `next` tag republishes these packages with the changes released on `latest`.
+- Updated dependencies [daa0612]
+- Updated dependencies [b4c32d1]
+  - @equinor/fusion-framework@9.1.0-next.3
+  - @equinor/fusion-framework-module@6.2.0-next.1
+  - @equinor/fusion-framework-module-app@8.3.0-next.1
+  - @equinor/fusion-framework-module-event@6.1.4-next.1
+  - @equinor/fusion-framework-module-http@8.1.5-next.1
+  - @equinor/fusion-framework-module-msal@12.1.0-next.1
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.4
+
+## 13.3.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [a27f40f]
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.3
+  - @equinor/fusion-framework@9.1.0-next.2
+
+## 13.3.0-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.2
+  - @equinor/fusion-framework@9.1.0-next.1
+
+## 13.3.0-next.0
+
+### Minor Changes
+
+- 6d7f155: Preserve app identity on built-in operational records through framework relays,
+  using the generic telemetry host fields: source kind `app`, with the manifest key and
+  build version as `hostName` and `hostVersion`. Report sanitized pre-provider
+  configuration failures to an eligible parent without replacing the original
+  application error or creating an exporter.
+  
+  Ref: #5803.
+
+### Patch Changes
+
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [6d7f155]
+- Updated dependencies [f150ff4]
+- Updated dependencies [f150ff4]
+- Updated dependencies [d8b1f10]
+- Updated dependencies [f150ff4]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+- Updated dependencies [6d7f155]
+- Updated dependencies [ef9d5f3]
+  - @equinor/fusion-framework@9.1.0-next.0
+  - @equinor/fusion-framework-module-app@8.3.0-next.0
+  - @equinor/fusion-framework-module-bookmark@4.2.0-next.0
+  - @equinor/fusion-framework-module-event@6.1.4-next.0
+  - @equinor/fusion-framework-module-http@8.1.5-next.0
+  - @equinor/fusion-framework-module-msal@12.1.0-next.0
+  - @equinor/fusion-framework-module-state@2.1.0-next.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0-next.0
+  - @equinor/fusion-framework-module@6.2.0-next.0
+
 ## 13.2.2
 
 ### Patch Changes

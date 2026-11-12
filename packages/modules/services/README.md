@@ -121,6 +121,15 @@ const photo = await people.photo('v2', 'blob', { azureId: 'azure-unique-id' });
 | `schemaSelector` | Creates a response selector that validates with a Zod schema |
 | `isApiPerson` | Type-guard factory for validating person entities by API version |
 
+## Operational telemetry
+
+When the telemetry module is available, `ApiProvider` records one
+`fusion.services.create-client.duration` metric per API client it creates, for named,
+service-discovery and custom factories alike, with one sanitized
+`fusion.services.create-client.failure` exception when no client can be created. Service
+names, URIs and errors are never recorded. Discovery resolution and HTTP attempts are reported
+by their own modules.
+
 ## Configuration
 
 The services module depends on:

@@ -22,7 +22,10 @@
     },
     "filename-convention": {
       "excludePattern": [
+        "*.actions.ts",
         "*.command.ts",
+        "*.flows.ts",
+        "*.reducer.ts",
         "*.d.ts",
         "client-msal.ts",
         "client.ts",

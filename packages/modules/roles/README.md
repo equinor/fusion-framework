@@ -206,8 +206,13 @@ framework.modules.event.addEventListener('onRoles.activateClaimableRoleAssignmen
 });
 ```
 
-The provider records success events and failure exceptions through the telemetry module. Its
-telemetry contains stable operation names and outcomes, but excludes account and role identifiers.
+When the telemetry module is enabled, every provider operation records one
+`fusion.roles.<operation>.duration` metric, such as `fusion.roles.get-access-roles.duration`,
+with a `success`, `failure` or `cancelled` outcome. Aborting `getAccessRoles` and a listener
+calling `preventDefault()` on activation are cancellations; a failure adds one sanitized
+`fusion.roles.<operation>.failure` exception. Account, assignment and role identifiers,
+request arguments and original errors are never recorded; the thrown `RolesError` is
+unchanged. These records replace the earlier `RolesProvider.<operation>` events and exceptions.
 
 ## Supply an internal client without service discovery
 

@@ -1,11 +1,19 @@
 import type { z } from 'zod';
 
 import type { TelemetryItem } from './types.js';
-import type { TelemetryExceptionSchema, TelemetryMetricSchema } from './schemas.js';
+import type {
+  TelemetryExceptionSchema,
+  TelemetryMetricSchema,
+} from './schemas/telemetry-item-schema.js';
 import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js';
 import type { Observable } from 'rxjs';
 import type { IMeasurement } from './Measurement.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
+import type { TelemetrySource } from './schemas/diagnostic-context.js';
+import type {
+  OperationalTelemetry,
+  OperationalTelemetryOptions,
+} from './utils/create-operational-telemetry.js';
 
 /**
  * Interface for telemetry providers used to track and measure telemetry events.
@@ -35,6 +43,28 @@ import type { ITelemetryAdapter } from './TelemetryAdapter.js';
  * - `TelemetryScope.Framework` - Reserved for internal use only (framework development)
  */
 export interface ITelemetryProvider {
+  /**
+   * Creates a connected operational scope owned by the calling module.
+   *
+   * Optional for compatibility with custom providers. Callers close the returned handle
+   * during their own teardown; telemetry provider disposal also stops delivery.
+   *
+   * @param module - Static kebab-case module label.
+   * @param options - Optional static identity resolved when measured work ends.
+   * @returns A connected operational telemetry handle.
+   * @throws {RangeError} When the module label is invalid.
+   * @example
+   * ```ts
+   * const scope = telemetry.scope?.('app');
+   * const end = scope?.start('load');
+   * end?.('success');
+   * scope?.close({ reason: 'disposed' });
+   * ```
+   */
+  scope?(module: string, options?: OperationalTelemetryOptions): OperationalTelemetry;
+
+  /** Origin available to optional operational integrations; custom providers may omit it. */
+  readonly source?: TelemetrySource;
   items: Observable<TelemetryItem>;
   /**
    * Releases provider resources and awaits pending exports when supported.
