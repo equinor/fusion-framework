@@ -10,7 +10,9 @@ const {
   openArticle,
   openFaqs,
   openSearch,
-  openGovernance
+  openGovernance,
+  openReleaseNotes,
+  openChat
 } = useHelpCenter();
 
 openHelp();
@@ -18,4 +20,6 @@ openArticle('article-slug-name');
 openFaqs();
 openSearch('search-input');
 openGovernance();
+openReleaseNotes();
+openChat('prompt the user can review before sending');
 ```
