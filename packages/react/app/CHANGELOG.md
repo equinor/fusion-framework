@@ -1,5 +1,25 @@
 # Change Log
 
+## 14.3.9
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-app@13.3.0
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-http@8.1.5
+  - @equinor/fusion-framework-module-navigation@8.0.0
+  - @equinor/fusion-framework-module@6.2.0
+  - @equinor/fusion-framework-react@9.0.5
+  - @equinor/fusion-framework-react-module-http@12.0.4
+  - @equinor/fusion-framework-react-module@4.0.7
+
 ## 14.3.9-next.0
 
 ### Patch Changes

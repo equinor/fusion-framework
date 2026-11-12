@@ -1,5 +1,34 @@
 # Change Log
 
+## 13.3.0
+
+### Minor Changes
+
+- e5180fc: Preserve app identity on built-in operational records through framework relays,
+  using the generic telemetry host fields: source kind `app`, with the manifest key and
+  build version as `hostName` and `hostVersion`. Report sanitized pre-provider
+  configuration failures to an eligible parent without replacing the original
+  application error or creating an exporter.
+  
+  Ref: #5803.
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-event@6.1.4
+  - @equinor/fusion-framework-module-http@8.1.5
+  - @equinor/fusion-framework-module-msal@12.1.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0
+  - @equinor/fusion-framework-module@6.2.0
+
 ## 13.3.0-next.3
 
 ### Patch Changes

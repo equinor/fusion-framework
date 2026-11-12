@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-vite-plugin-markdown
 
+## 1.1.6
+
+No changes in this release.
+
 ## 1.1.6-next.0
 
 ### Patch Changes

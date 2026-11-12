@@ -1,5 +1,9 @@
 # Change Log
 
+## 7.0.8
+
+No changes in this release.
+
 ## 7.0.8-next.0
 
 ### Patch Changes

@@ -1,5 +1,9 @@
 # Change Log
 
+## 4.0.7
+
+No changes in this release.
+
 ## 4.0.7-next.1
 
 ### Patch Changes

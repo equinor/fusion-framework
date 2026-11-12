@@ -1,5 +1,28 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-app@13.3.0
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-feature-flag@2.2.0
+  - @equinor/fusion-framework-module-navigation@8.0.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0
+  - @equinor/fusion-framework-module@6.2.0
+  - @equinor/fusion-framework-cli@15.7.3
+  - @equinor/fusion-framework-react@9.0.5
+  - @equinor/fusion-framework-react-module@4.0.7
+  - @equinor/fusion-imports@2.0.8
+
 ## 2.0.5-next.0
 
 ### Patch Changes

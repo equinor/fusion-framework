@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-load-env",
-  "version": "2.0.8-next.0",
+  "version": "2.0.8",
   "description": "Package loading environment variables from .env files",
   "keywords": [
     "env",

@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.0.10
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-navigation@8.0.0
+
 ## 5.0.10-next.0
 
 ### Patch Changes

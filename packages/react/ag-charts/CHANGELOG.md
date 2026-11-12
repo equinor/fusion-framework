@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-react-ag-charts
 
+## 15.0.6
+
+No changes in this release.
+
 ## 15.0.6-next.1
 
 ### Patch Changes

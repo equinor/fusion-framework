@@ -1,5 +1,9 @@
 # @equinor/fusion-openapi-mock-server
 
+## 1.0.1
+
+No changes in this release.
+
 ## 1.0.1-next.0
 
 ### Patch Changes

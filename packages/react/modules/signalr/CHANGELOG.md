@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.8
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-signalr@14.1.0
+
 ## 4.0.8-next.1
 
 ### Patch Changes

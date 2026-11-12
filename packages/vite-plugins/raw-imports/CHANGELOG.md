@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-vite-plugin-raw-imports
 
+## 2.0.6
+
+No changes in this release.
+
 ## 2.0.6-next.0
 
 ### Patch Changes

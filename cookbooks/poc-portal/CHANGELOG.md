@@ -1,5 +1,25 @@
 # poc-portal
 
+## 1.1.123
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-http@8.1.5
+  - @equinor/fusion-framework-module-msal@12.1.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0
+  - @equinor/fusion-framework-module@6.2.0
+  - @equinor/fusion-framework-react-app@14.3.9
+  - @equinor/fusion-framework-cli@15.7.3
+  - @equinor/fusion-framework-react@9.0.5
+
 ## 1.1.123-next.0
 
 ### Patch Changes

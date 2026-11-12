@@ -1,5 +1,9 @@
 # @equinor/fusion-openapi-mock
 
+## 0.2.4
+
+No changes in this release.
+
 ## 0.2.4-next.0
 
 ### Patch Changes

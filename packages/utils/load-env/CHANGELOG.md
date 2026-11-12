@@ -1,5 +1,9 @@
 # @equinor/fusion-load-env
 
+## 2.0.8
+
+No changes in this release.
+
 ## 2.0.8-next.0
 
 ### Patch Changes

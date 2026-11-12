@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-lint-lsp
 
+## 0.2.9
+
+No changes in this release.
+
 ## 0.2.9-next.0
 
 ### Patch Changes

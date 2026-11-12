@@ -1,5 +1,9 @@
 # Change Log
 
+## 9.2.6
+
+No changes in this release.
+
 ## 9.2.6-next.0
 
 ### Patch Changes

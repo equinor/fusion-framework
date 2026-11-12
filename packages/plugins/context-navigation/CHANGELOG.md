@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-plugin-context-navigation
 
+## 1.1.1
+
+No changes in this release.
+
 ## 1.1.1-next.1
 
 ### Patch Changes

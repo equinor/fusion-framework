@@ -1,5 +1,9 @@
 # Change Log
 
+## 5.0.6
+
+No changes in this release.
+
 ## 5.0.6-next.0
 
 ### Patch Changes

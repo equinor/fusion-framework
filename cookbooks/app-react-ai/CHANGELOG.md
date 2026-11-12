@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-cookbook-app-react-ai
 
+## 0.0.8
+
+No changes in this release.
+
 ## 0.0.8-next.0
 
 ### Patch Changes

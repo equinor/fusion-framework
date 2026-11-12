@@ -1,5 +1,40 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.11
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-app@13.3.0
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module-ag-grid@37.2.0
+  - @equinor/fusion-framework-module-analytics@3.1.13
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-bookmark@4.2.0
+  - @equinor/fusion-framework-module-context@9.1.0
+  - @equinor/fusion-framework-module-feature-flag@2.2.0
+  - @equinor/fusion-framework-module-navigation@8.0.0
+  - @equinor/fusion-framework-module-services@8.2.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0
+  - @equinor/fusion-framework-dev-server@2.3.4
+  - @equinor/fusion-framework-plugin-context-navigation@1.1.1
+  - @equinor/fusion-framework-react-components-bookmark@2.0.8
+  - @equinor/fusion-framework-react-components-people-provider@2.0.10
+  - @equinor/fusion-framework-react@9.0.5
+  - @equinor/fusion-framework-react-module-bookmark@7.0.4
+  - @equinor/fusion-observable@9.2.6
+  - @equinor/fusion-query@7.0.8
+
 ## 11.1.11-next.0
 
 ### Patch Changes

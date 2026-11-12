@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-components-roles
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-roles@0.4.0
+
 ## 0.2.3-next.1
 
 ### Patch Changes

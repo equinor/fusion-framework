@@ -1,5 +1,26 @@
 # @equinor/fusion-framework-module-analytics
 
+## 3.1.13
+
+### Patch Changes
+
+- e5180fc: Mark OTLP export requests with request-local diagnostic exclusion to prevent
+  shared HTTP telemetry from observing its own export traffic. Concurrent business
+  requests remain observable; no extra HTTP header or usage event is emitted.
+  
+  Ref: #5803.
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-context@9.1.0
+  - @equinor/fusion-framework-module-event@6.1.4
+  - @equinor/fusion-framework-module-http@8.1.5
+  - @equinor/fusion-framework-module@6.2.0
+  - @equinor/fusion-observable@9.2.6
+
 ## 3.1.13-next.0
 
 ### Patch Changes
