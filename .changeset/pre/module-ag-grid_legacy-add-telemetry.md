@@ -8,4 +8,4 @@ When the host has the telemetry module, the first call to the patched `agStyleIn
 
 `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
 
-Refs #5081, #5806
+Refs #5081, #5806, #5837.

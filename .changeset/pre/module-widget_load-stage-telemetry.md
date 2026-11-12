@@ -20,4 +20,6 @@ per-request observer argument.
 
 `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency. It is loaded only when host telemetry connects, so the module still imports and runs without it; `connectTelemetry` returns a promise that resolves once the connection applies.
 
-Ref: #5805.
+Cold widget loads resolve telemetry when subscribed, including observables created before the first telemetry connection.
+
+Refs #5805, #5837.

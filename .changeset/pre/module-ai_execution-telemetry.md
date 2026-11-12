@@ -8,4 +8,4 @@ Clients returned by `useModel`, `useEmbed` and `useIndex`, from built-in and cus
 
 `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency.
 
-Refs #5806
+Refs #5806, #5837.

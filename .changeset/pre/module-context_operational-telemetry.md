@@ -16,4 +16,6 @@ skipped work and records nothing. Context ids, titles and values are never inclu
 Custom providers opt in through the optional `IContextProvider.connectTelemetry` method.
 Context behavior, results and thrown errors are unchanged.
 
-Ref: #5805.
+Context resolution resolves telemetry when subscribed, including observables created before the first telemetry connection.
+
+Refs #5805, #5837.

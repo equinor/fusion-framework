@@ -19,4 +19,4 @@ the static `Navigation::action` name with a controlled action type instead of
 dynamic per-action names. Read navigation state/events locally when route data is
 needed; routing behavior itself is unchanged. Diagnostic failures cannot break navigation.
 
-Ref: #5803.
+Refs #5803, #5837.

@@ -19,4 +19,4 @@ optional `IStateProvider.connectTelemetry` method.
 
 `@equinor/fusion-framework-module-telemetry` is a new optional peer dependency. It is loaded only when host telemetry connects, so the module still imports and runs without it; `connectTelemetry` returns a promise that resolves once the connection applies.
 
-Ref: #5805.
+Refs #5805, #5837.
