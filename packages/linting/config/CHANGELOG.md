@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-lint-config
 
+## 1.2.2
+
+No changes in this release.
+
 ## 1.2.2-next.0
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # portal
 
+## 0.1.108
+
+### Patch Changes
+
+- @equinor/fusion-framework-cli@15.7.3
+
 ## 0.1.108-next.0
 
 ### Patch Changes

@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-vite-plugin-routes-dsl
 
+## 1.0.6
+
+No changes in this release.
+
 ## 1.0.6-next.0
 
 ### Patch Changes

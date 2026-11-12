@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.0.7
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-context@9.1.0
+
 ## 7.0.7-next.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cookbook-app-react-state
 
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-navigation@8.0.0
+  - @equinor/fusion-framework-module-state@2.1.0
+
 ## 1.0.5-next.1
 
 ### Patch Changes

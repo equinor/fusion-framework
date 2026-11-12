@@ -1,5 +1,35 @@
 # @equinor/fusion-framework-module-roles
 
+## 0.4.0
+
+### Minor Changes
+
+- e5180fc: Report Roles operations as timed operational records. Each operation records one
+  `fusion.roles.<operation>.duration` metric, for example
+  `fusion.roles.get-access-roles.duration`, with a `success`, `failure` or `cancelled`
+  outcome. Aborting `getAccessRoles` and a listener cancelling activation are cancellations;
+  failures add one sanitized `.failure` exception. Thrown `RolesError` values are unchanged.
+  The `RolesProvider` constructor still accepts a telemetry dependency that implements only
+  `trackEvent` and `trackException`; operational records need `track`, so such a provider
+  records nothing.
+  
+  **Migration:** the `RolesProvider.<operation>` debug events and failure exceptions are
+  replaced by these records. Failure records no longer carry the original error as a cause;
+  read the thrown `RolesError` locally when the cause is needed.
+  
+  Ref: #5804.
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-msal@12.1.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0
+  - @equinor/fusion-framework-module-telemetry@8.0.0
+  - @equinor/fusion-framework-module@6.2.0
+
 ## 0.4.0-next.1
 
 ### Patch Changes

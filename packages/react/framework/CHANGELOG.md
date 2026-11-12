@@ -1,5 +1,14 @@
 # Change Log
 
+## 9.0.5
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module@6.2.0
+
 ## 9.0.5-next.1
 
 ### Patch Changes

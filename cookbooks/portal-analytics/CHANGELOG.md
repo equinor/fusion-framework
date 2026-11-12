@@ -1,5 +1,32 @@
 # portal-analytics
 
+## 0.4.78
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-app@13.3.0
+  - @equinor/fusion-framework@9.1.0
+  - @equinor/fusion-framework-module-analytics@3.1.13
+  - @equinor/fusion-framework-module-app@8.3.0
+  - @equinor/fusion-framework-module-bookmark@4.2.0
+  - @equinor/fusion-framework-module-context@9.1.0
+  - @equinor/fusion-framework-module-navigation@8.0.0
+  - @equinor/fusion-framework-module-service-discovery@10.3.0
+  - @equinor/fusion-framework-react-app@14.3.9
+  - @equinor/fusion-framework-cli@15.7.3
+  - @equinor/fusion-framework-react@9.0.5
+  - @equinor/fusion-framework-react-router@2.4.8
+  - @equinor/fusion-observable@9.2.6
+  - @equinor/fusion-query@7.0.8
+
 ## 0.4.78-next.0
 
 ### Patch Changes

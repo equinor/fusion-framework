@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.0.4
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-bookmark@4.2.0
+
 ## 7.0.4-next.1
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 15.7.3
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-azure-identity@0.4.0
+  - @equinor/fusion-framework-dev-portal@11.1.11
+  - @equinor/fusion-framework-dev-server@2.3.4
+  - @equinor/fusion-imports@2.0.8
+  - @equinor/fusion-framework-vite-plugin-raw-imports@2.0.6
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.6
+
 ## 15.7.3-next.0
 
 ### Patch Changes

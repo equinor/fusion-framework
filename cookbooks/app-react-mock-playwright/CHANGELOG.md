@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-cookbook-app-react-mock-playwright
 
+## 0.0.10
+
+No changes in this release.
+
 ## 0.0.10-next.0
 
 ### Patch Changes

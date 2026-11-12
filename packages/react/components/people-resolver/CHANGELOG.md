@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 2.0.10
+
+### Patch Changes
+
+- Updated dependencies [e5180fc]
+  - @equinor/fusion-framework-module-services@8.2.0
+
 ## 2.0.10-next.0
 
 ### Patch Changes

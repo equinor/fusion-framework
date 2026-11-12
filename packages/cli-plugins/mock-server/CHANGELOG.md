@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-cli-plugin-mock-server
 
+## 0.3.4
+
+No changes in this release.
+
 ## 0.3.4-next.0
 
 ### Patch Changes

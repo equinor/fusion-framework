@@ -1,5 +1,9 @@
 # @equinor/fusion-services
 
+## 0.3.4
+
+No changes in this release.
+
 ## 0.3.4-next.1
 
 ### Patch Changes

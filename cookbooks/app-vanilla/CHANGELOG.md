@@ -1,5 +1,9 @@
 # @equinor/fusion-framework-cookbook-app-vanilla
 
+## 2.0.3
+
+No changes in this release.
+
 ## 2.0.3-next.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-lint-rules",
-  "version": "1.1.5-next.0",
+  "version": "1.1.5",
   "description": "Fusion-specific lint rules powered by tree-sitter",
   "keywords": [
     "equinor",
