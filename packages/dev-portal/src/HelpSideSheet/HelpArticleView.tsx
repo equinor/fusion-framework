@@ -40,13 +40,13 @@ const Styled = {
     }
     & th,
     & td {
-      border: 1px solid #dcdcdc;
+      border: 1px solid var(--eds-color-border-neutral-subtle);
       padding: 0.25rem 0.5rem;
     }
     & pre {
       overflow: auto;
       padding: 0.5rem;
-      background: #f7f7f7;
+      background: var(--eds-color-bg-neutral-canvas);
     }
   `,
 };

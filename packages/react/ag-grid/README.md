@@ -105,14 +105,18 @@ Override theme parameters during module configuration:
 enableAgGrid(configurator, (builder) => {
   builder.setTheme((theme) => {
     return theme.withParams({
-      backgroundColor: '#1f2836',
-      browserColorScheme: 'dark',
-      foregroundColor: '#FFF',
+      headerTextColor: 'var(--eds-color-text-accent-strong)',
       headerFontSize: 14,
     });
   });
 });
 ```
+
+The default Fusion theme uses EDS CSS custom properties and inherits the page's
+colour scheme, so it follows EDS light and dark mode. The host must load
+`@equinor/eds-tokens/css/variables`. Use `var(--eds-color-…)` values in overrides
+rather than hard-coded colours or the deprecated `tokens` object, and keep
+`browserColorScheme` as `inherit`.
 
 > [!TIP]
 > AG Grid has a [theme builder](https://www.ag-grid.com/theme-builder/) for
@@ -132,7 +136,7 @@ const MyComponent = () => {
   const [hasError, setHasError] = useState(false);
 
   const theme = useMemo(
-    () => baseTheme.withParams({ cellTextColor: hasError ? '#FF0000' : undefined }),
+    () => baseTheme.withParams({ cellTextColor: hasError ? 'var(--eds-color-text-danger-subtle)' : undefined }),
     [baseTheme, hasError],
   );
 

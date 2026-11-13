@@ -2,7 +2,10 @@ import { useCallback, useState, type ReactElement } from 'react';
 
 import { Typography } from '@equinor/eds-core-react';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
-import { SideSheet } from '@equinor/fusion-react-side-sheet';
+import { type HEXString, SideSheet } from '@equinor/fusion-react-side-sheet';
+
+// The Indicator prop is typed as a hex string but is interpolated into CSS, so an EDS variable works.
+const indicatorColor = 'var(--eds-color-bg-accent-fill-emphasis-default)' as HEXString;
 import { styled } from 'styled-components';
 
 import { HELP_PAGES } from './help-pages.js';
@@ -157,7 +160,7 @@ export const HelpSideSheet = (): ReactElement => {
       // The sheet is right-anchored, so a width beyond the viewport would push the sidebar off-screen.
       minWidth={Math.min(PANEL_WIDTH, window.innerWidth)}
     >
-      <SideSheet.Indicator color={'#007079'} />
+      <SideSheet.Indicator color={indicatorColor} />
       <SideSheet.Title title="Help" />
       <SideSheet.SubTitle subTitle={subTitle} />
       <SideSheet.Actions />

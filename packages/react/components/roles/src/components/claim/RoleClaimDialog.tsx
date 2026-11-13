@@ -18,7 +18,7 @@ const Styled = {
   width: 100%;
   margin: 0;
   border: 0;
-  border-top: 1px solid rgb(0 0 0 / 20%);
+  border-top: 1px solid var(--eds-color-border-neutral-subtle);
 `,
 
   DurationField: styled.div`
@@ -30,7 +30,7 @@ const Styled = {
   SelectedDuration: styled(Typography)`
   justify-self: end;
   margin-top: 0.75rem;
-  color: rgb(0 0 0 / 60%);
+  color: var(--eds-color-text-neutral-subtle);
   font-size: 0.875rem;
 `,
 };

@@ -1,7 +1,10 @@
 import { Button, Icon } from '@equinor/eds-core-react';
 import { Bookmark } from '@equinor/fusion-framework-react-components-bookmark';
 import { useBookmarkComponentContext } from '@equinor/fusion-framework-react-components-bookmark';
-import { SideSheet } from '@equinor/fusion-react-side-sheet';
+import { type HEXString, SideSheet } from '@equinor/fusion-react-side-sheet';
+
+// The Indicator prop is typed as a hex string but is interpolated into CSS, so an EDS variable works.
+const indicatorColor = 'var(--eds-color-bg-success-fill-emphasis-default)' as HEXString;
 
 /** Props for the {@link BookmarkSideSheet} component. */
 type BookmarkSideSheetProps = {
@@ -24,7 +27,7 @@ export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) =
 
   return (
     <SideSheet isOpen={isOpen} onClose={onClose} isDismissable={true} enableFullscreen={true}>
-      <SideSheet.Indicator color={'#258800'} />
+      <SideSheet.Indicator color={indicatorColor} />
       <SideSheet.Title title="Bookmarks" />
       <SideSheet.SubTitle subTitle={'Application bookmarks'} />
       <SideSheet.Actions>

@@ -1,20 +1,30 @@
 import { type Part, type Theme, createPart, createTheme, themeAlpine } from 'ag-grid-community';
 
-import { tokens } from '@equinor/eds-tokens';
-
 /**
  * Default Fusion theme for AG Grid.
  *
- * Based on the AG Grid `alpine` theme with Equinor brand overrides:
+ * Based on the AG Grid `alpine` theme with Equinor brand overrides. Colours reference
+ * EDS CSS custom properties from `@equinor/eds-tokens/css/variables`, so the grid
+ * follows the active EDS colour scheme (`data-color-scheme`, or the OS/browser preference):
  * - Font family set to `Equinor, sans-serif`
- * - Accent colour set to the EDS interactive primary resting token
+ * - Accent, background, foreground and border colours mapped to EDS semantic colours
+ * - Browser colour scheme (native scrollbars and inputs) inherited from the host page
+ *
+ * @remarks
+ * The host (portal or app) must load `@equinor/eds-tokens/css/variables`; there are
+ * no literal fallbacks, so the grid has no EDS colours without the stylesheet.
  *
  * Use {@link IAgGridConfigurator.setTheme | builder.setTheme()} to customise or
  * replace this theme during application configuration.
  */
 export const fusionTheme: Theme = themeAlpine.withParams({
   fontFamily: 'Equinor, sans-serif',
-  accentColor: tokens.colors.interactive.primary__resting.hex,
+  accentColor: 'var(--eds-color-bg-accent-fill-emphasis-default)',
+  backgroundColor: 'var(--eds-color-bg-neutral-surface)',
+  foregroundColor: 'var(--eds-color-text-neutral-strong)',
+  borderColor: 'var(--eds-color-border-neutral-subtle)',
+  // Alpine forces `light`, which would keep native controls light inside a dark page.
+  browserColorScheme: 'inherit',
 });
 
 /**

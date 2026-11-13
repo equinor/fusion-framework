@@ -22,15 +22,15 @@ const Styled = {
     gap: 0.25rem;
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #dcdcdc;
+    border: 1px solid var(--eds-color-border-neutral-subtle);
     border-radius: 4px;
-    background: #ffffff;
+    background: var(--eds-color-bg-neutral-surface);
     font: inherit;
     text-align: left;
     cursor: pointer;
 
     &:hover {
-      background: #deedee;
+      background: var(--eds-color-bg-accent-fill-muted-default);
     }
   `,
 };

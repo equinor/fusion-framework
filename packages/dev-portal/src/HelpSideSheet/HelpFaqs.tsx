@@ -20,10 +20,10 @@ const Styled = {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid #dcdcdc;
+    border-top: 1px solid var(--eds-color-border-neutral-subtle);
   `,
   Item: styled.li`
-    border-bottom: 1px solid #dcdcdc;
+    border-bottom: 1px solid var(--eds-color-border-neutral-subtle);
   `,
   Question: styled.button`
     display: flex;
@@ -33,15 +33,15 @@ const Styled = {
     width: 100%;
     padding: 0.75rem 0.5rem;
     border: none;
-    background: transparent;
-    color: #007079;
+    background: none;
+    color: var(--eds-color-text-accent-subtle);
     font: inherit;
     font-weight: 500;
     text-align: left;
     cursor: pointer;
 
     &:hover {
-      background: #deedee;
+      background: var(--eds-color-bg-accent-fill-muted-default);
     }
   `,
   Answer: styled.div`

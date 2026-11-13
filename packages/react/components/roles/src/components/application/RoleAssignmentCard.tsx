@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 const Styled = {
   Card: styled(Card)`
-    border: 1px solid rgb(0 0 0 / 20%);
+    border: 1px solid var(--eds-color-border-neutral-subtle);
     border-radius: 0.25rem;
     box-shadow: none;
   `,

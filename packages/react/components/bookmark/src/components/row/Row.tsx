@@ -1,5 +1,4 @@
 import { Icon, Typography } from '@equinor/eds-core-react';
-import { tokens } from '@equinor/eds-tokens';
 import { useOutsideClick } from '@equinor/eds-utils';
 import { type MutableRefObject, type ReactNode, useCallback, useRef } from 'react';
 import { MoreMenu } from './MoreMenu.js';
@@ -34,7 +33,7 @@ const Styled = {
   ListItem: styled.div`
         cursor: pointer;
         &:hover {
-            background-color: ${tokens.colors.ui.background__light.hex};
+            background-color: var(--eds-color-bg-neutral-canvas);
         }
 
         display: flex;
@@ -43,7 +42,7 @@ const Styled = {
         min-height: 32px;
         max-height: 32px;
         justify-content: space-between;
-        border-bottom: 1px solid ${tokens.colors.ui.background__medium.hex};
+        border-bottom: 1px solid var(--eds-color-border-neutral-subtle);
     `,
 };
 
@@ -86,7 +85,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
               e.stopPropagation();
               onMenuOpen(id);
             }}
-            color={tokens.colors.interactive.primary__resting.hex}
+            style={{ color: 'var(--eds-color-text-accent-subtle)' }}
             ref={pRef as unknown as MutableRefObject<SVGSVGElement>}
           />
         )}

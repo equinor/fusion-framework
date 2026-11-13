@@ -97,6 +97,7 @@ const devServer = await createDevServer({
 The portal is composed of these internal parts:
 
 - **`render`** — Entry point; creates a React root with theme, framework, and people-resolver providers.
+- **`installEdsColorScheme`** — Injects the `@equinor/eds-tokens/css/variables` stylesheet and sets `data-color-scheme` on `<html>` from the system colour preference, so `var(--eds-color-…)` styles, AG Grid and bookmarks preview in light or dark mode. Components still on the JavaScript `tokens` object or a forced light theme stay light.
 - **`configure`** — Configures all framework modules (telemetry, navigation, context navigation, bookmarks, feature flags, analytics, AG Grid, services).
 - **`analytics/`** — `configureAnalytics` registers the portal's collectors and adapters, and sends analytics to the mock Monitor service only when `resolveMockServerUrl()` finds the mock server origin the dev server sets on `window.FUSION_MOCK_SERVER_URL` for `--mock`.
 - **Context configuration** — `enableContext` wires the context module's path generator and path extractor to the shared context-navigation URL utilities.

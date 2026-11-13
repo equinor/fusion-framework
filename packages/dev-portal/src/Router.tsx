@@ -14,6 +14,7 @@ const Styled = {
         height: 100vh;
         overflow: hidden;
         grid-template-areas: 'head' 'main';
+        background-color: var(--eds-color-bg-neutral-surface);
     `,
   Head: styled.section`
         grid-area: head;
