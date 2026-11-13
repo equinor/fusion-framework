@@ -33,6 +33,7 @@ export { pack } from './pack.js';
 
 export { ConsoleLogger } from './utils/ConsoleLogger.js';
 export { defaultHeaders } from './utils/default-headers.js';
+export { resolveOctopusUrl } from './utils/resolve-octopus.js';
 
 export {
   type FusionFramework,

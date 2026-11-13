@@ -15,8 +15,28 @@ import { createDevServer } from './utils/create-dev-server.js';
 import type { CreateDevServerOptions } from './utils/create-dev-server-config.js';
 
 import { readPackageUp } from 'read-package-up';
-import { dirname } from 'node:path';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
+import { octopusAppPlugin } from '@equinor/fusion-framework-vite-plugin-octopus';
 import { loadViteConfig } from './helpers/load-vite-config.js';
+
+/**
+ * Finds the folder with the app's source, relative to the package root, from the manifest's
+ * entry point, so Vite can scan it at startup.
+ *
+ * @param root - Package root.
+ * @param entryPoint - Entry point from the app manifest, absolute or relative to the root.
+ * @returns The folder, or `undefined` when it is outside the package.
+ */
+const resolveSourceDir = (root: string, entryPoint?: string): string | undefined => {
+  if (!entryPoint) {
+    return undefined;
+  }
+  const dir = relative(
+    root,
+    dirname(isAbsolute(entryPoint) ? entryPoint : resolve(root, entryPoint)),
+  );
+  return dir.startsWith('..') ? undefined : dir || '.';
+};
 
 /**
  * Options for starting the application development server.
@@ -60,6 +80,12 @@ export interface StartAppDevServerOptions {
    * discovery instead of the default CI environment (optional).
    */
   mock?: string;
+
+  /**
+   * Octopus address (e.g. `http://localhost:2000`). When set, the app registers with Octopus
+   * while the dev server runs, so a local portal loads it from here (optional).
+   */
+  octopus?: string;
 }
 
 /**
@@ -125,12 +151,24 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
 
   const viteConfig = mergeConfigVite(localViteConfig, {
     server: {
-      port: options?.port || 3000,
+      // With Octopus the portal finds the app wherever it runs, so take any free port rather
+      // than 3000, which the portal itself uses.
+      port: options?.port || (options?.octopus ? 0 : 3000),
       host: options?.host || localViteConfig.server?.host || 'localhost',
       fs: {
         allow: allowFs,
       },
     },
+    plugins: options?.octopus
+      ? [
+          octopusAppPlugin({
+            appKey: appManifest.appKey,
+            octopusUrl: options.octopus,
+            mockUrl: options.mock,
+            sourceDir: resolveSourceDir(pkg.root, appManifest.build?.entryPoint),
+          }),
+        ]
+      : [],
   });
 
   const devServerConfig: CreateDevServerOptions = {
@@ -170,13 +208,19 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   await devServer.listen();
 
   log?.succeed('App development server started successfully');
-  // print the server URL for user convenience with `apps/<appKey>`
+  // print the server URL for user convenience with `apps/<appKey>`; with Octopus the port is
+  // picked at startup, so read it from the running server
   const protocol = devServer.config.server.https ? 'https' : 'http';
   const host = devServer.config.server.host || 'localhost';
-  const port = devServer.config.server.port || 5173;
+  const address = devServer.httpServer?.address();
+  const port =
+    (typeof address === 'object' && address?.port) || devServer.config.server.port || 5173;
   log?.info(
     `App development server is running at: ${protocol}://${host}:${port}/apps/${appManifest.appKey}`,
   );
+  if (options?.octopus) {
+    log?.info(`Registering ${appManifest.appKey} with Octopus at ${options.octopus}`);
+  }
   // Return the dev server instance for further use or testing
   return devServer;
 };
