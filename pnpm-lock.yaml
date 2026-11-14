@@ -1542,7 +1542,7 @@ importers:
         version: 15.1.0
       dotenv:
         specifier: ^18.0.4
-        version: 18.0.9
+        version: 18.0.10
       execa:
         specifier: ^10.0.0
         version: 10.2.1
@@ -1953,7 +1953,7 @@ importers:
         version: 5.0.4(msw@2.15.0(@types/node@26.6.2)(typescript@7.0.2))(playwright@1.63.0)(vite@8.3.7(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.108.1)(sass@1.105.0)(terser@5.49.1)(tsx@4.23.15))(vitest@5.0.4)
       dotenv:
         specifier: ^18.0.4
-        version: 18.0.9
+        version: 18.0.10
       playwright:
         specifier: 'catalog:'
         version: 1.63.0
@@ -3584,7 +3584,7 @@ importers:
     dependencies:
       dotenv:
         specifier: ^18.0.4
-        version: 18.0.9
+        version: 18.0.10
       dotenv-expand:
         specifier: ^1000.0.0
         version: 1000.0.0
@@ -10186,8 +10186,8 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  dotenv@18.0.9:
-    resolution: {integrity: sha512-3fVOW4cB02R066PUSwn8O4TJyz9NckQl7F81blIbaq9jKBm2tSmOKky7ZHIXzGvkVPXCSn6jkpziBPZdGFs8Tw==}
+  dotenv@18.0.10:
+    resolution: {integrity: sha512-89FAA1xchzK2mxVWdr5F/0rldwiueXs6zJM86rO66EzekR1iBdiXRthyG+m5GvkJaFH3C2LESzamTkgndmLT2A==}
     engines: {node: '>=12'}
     hasBin: true
 
@@ -20360,7 +20360,7 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  dotenv@18.0.9: {}
+  dotenv@18.0.10: {}
 
   double-ended-queue@2.1.0-0: {}
 
