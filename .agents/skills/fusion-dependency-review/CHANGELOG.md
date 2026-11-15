@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.6.0 - 2026-11-15
+
+### minor
+
+- [#462](https://github.com/equinor/fusion-skills/pull/462) [`bd6e289`](https://github.com/equinor/fusion-skills/commit/bd6e289f544ab54ddbeb2736d0f61c439407ea3f) - Apply repository-local Copilot review gates before human dependency-PR review; keep research verdicts, licence acceptance and CI independent of gate status.
+
+
+  refs equinor/fusion-core-tasks#3013
+
+### patch
+
+- [#455](https://github.com/equinor/fusion-skills/pull/455) [`3a501ab`](https://github.com/equinor/fusion-skills/commit/3a501ab1df73c11db97afbc22f803c0b577e7926) - Flag licence/terms changes in maintainer-merged pull requests instead of holding
+
+
+  - When review output is a pull request only a maintainer merges, a verified needs-a-human licence/terms change gets a visible `Licence/terms change, merging accepts it:` line instead of HOLD; the merge is the explicit acceptance
+  - Unverified terms, auto-merge or agent-merge paths and verdicts on existing pull requests still HOLD
+  - Align SKILL.md, verdict and impact advisors with the reference rule; add an eval case
+
+  resolves equinor/fusion-core-tasks#3000
+
+## 0.5.1 - 2026-11-13
+
+### patch
+
+- [#454](https://github.com/equinor/fusion-skills/pull/454) [`3b4ce5f`](https://github.com/equinor/fusion-skills/commit/3b4ce5fa02732cd60e2d0ff2a02ad5418f9f97ef) - Make the licence gate risk-tiered so routine licence changes no longer need a human
+
+
+  - Routine, no HOLD: permissive to permissive (MIT, Apache-2.0, BSD, ISC; CC-BY for docs) and changes in CI-only or build-only tooling that add no use restrictions; record a one-line evidence note
+  - Needs a human, HOLD as before: copyleft in shipped or linked code, commercial or dual licensing, licence keys or paid tiers, source-available or usage restrictions, narrowed terms for shipped or linked code, and unknown terms; when unsure, choose needs a human
+  - Keep full-interval licence evidence, keep MediatR as the needs-a-human example and add APM MIT to Apache-2.0 as the routine example
+  - Align SKILL.md and the research, impact and verdict advisors with the tiers
+
+  resolves equinor/fusion-core-tasks#2999
+
 ## 0.5.0 - 2026-11-10
 
 ### minor
