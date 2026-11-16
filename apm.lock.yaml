@@ -31,7 +31,7 @@ dependencies:
   content_hash: sha256:bd79157d065b8d20233c3523ef104a18ed8cf556296717487e3281d6c5e2de72
   constraint: ^1.6.3
   resolved_tag: v1.21.0
-  resolved_at: '2026-11-15T18:37:49+00:00'
+  resolved_at: '2026-11-16T06:14:32+00:00'
   declared_license: MIT
 - repo_url: equinor/fusion-skills
   name: fusion-skill-authoring
@@ -76,7 +76,7 @@ dependencies:
   content_hash: sha256:c3044dc354d87e7efa9bdec1364e275ca8bd868c81f7f189ffe218eb6ee779fb
   constraint: ^1.6.3
   resolved_tag: v1.21.0
-  resolved_at: '2026-11-15T18:37:49+00:00'
+  resolved_at: '2026-11-16T06:14:32+00:00'
 - repo_url: equinor/fusion-skills
   name: fusion-agent-content
   host: github.com
@@ -3498,4 +3498,3 @@ mcp_target_servers:
   - fusion-mcp
 mcp_config_provenance:
   fusion-mcp: fusion-developer
-...
