@@ -1,4 +1,5 @@
 import edsVariablesCss from '@equinor/eds-tokens/css/variables?inline';
+import { classicColourSchemeStyles } from '@equinor/fusion-react-styles';
 
 /** Media query for the OS/browser dark colour preference. */
 const darkSchemeQuery = '(prefers-color-scheme: dark)';
@@ -20,7 +21,8 @@ type EdsColorScheme = 'light' | 'dark';
  *
  * The dev portal is a library build, so a plain CSS import would not reach the page.
  * The EDS variables stylesheet is therefore inlined and injected once into `<head>`, together
- * with a page background using the EDS neutral surface colour.
+ * with a page background using the EDS neutral surface colour and, in dark mode, a mapping of the
+ * classic EDS colour variables so EDS 2.x components (including portalled ones) follow the scheme.
  * `data-color-scheme` on `<html>` is set from `prefers-color-scheme` and updated when the
  * preference changes, so EDS `var(--eds-color-…)` values, native controls and AG Grid
  * follow the active scheme.
@@ -33,7 +35,9 @@ export const installEdsColorScheme = (doc: Document = document): (() => void) =>
   if (!doc.getElementById(edsVariablesStyleId)) {
     const style = doc.createElement('style');
     style.id = edsVariablesStyleId;
-    style.textContent = [edsVariablesCss, pageBackgroundCss].join('\n');
+    style.textContent = [edsVariablesCss, classicColourSchemeStyles(), pageBackgroundCss].join(
+      '\n',
+    );
     doc.head.appendChild(style);
   }
 

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { classicColourVariables } from '@equinor/fusion-react-styles';
 
 import { installEdsColorScheme } from './install-eds-color-scheme';
 
@@ -65,6 +66,19 @@ describe('installEdsColorScheme', () => {
 
     media.emit(true);
     expect(read()).not.toBe(light);
+  });
+
+  it('maps the classic EDS variables only in dark mode', () => {
+    const media = stubMatchMedia(false);
+    installEdsColorScheme();
+    const [property] = Object.keys(classicColourVariables);
+    const read = () => getComputedStyle(document.documentElement).getPropertyValue(property).trim();
+
+    // Light mode keeps the classic look: EDS 2.x components fall back to their light defaults.
+    expect(read()).toBe('');
+
+    media.emit(true);
+    expect(read()).not.toBe('');
   });
 
   it.each(['light', 'dark'])(
