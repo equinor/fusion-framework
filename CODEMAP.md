@@ -246,6 +246,11 @@ Use this table instead of searching. "Start here" is the first file to open.
 
 ## Commands
 
+`pnpm build` keeps Turbo's normal parallelism. Resource-constrained CI and
+sandbox callers can explicitly select `pnpm build:ci`, which limits the same
+build to two concurrent tasks for a 4 GiB, 2-CPU validation budget; see
+[build concurrency](contributing/development.md#build-concurrency).
+
 PR checks on Linux wait up to 10 minutes for the successful `Save pnpm and Turbo caches`
 job in `Prime CI caches`, without waiting for unrelated Playwright jobs,
 and restore only the exact `main` base-commit Turbo cache. Stacked PRs pin current
@@ -266,6 +271,7 @@ The readiness gate and its regression tests live in
 | --- | --- |
 | Install | `pnpm install` |
 | Build all | `pnpm build` |
+| Build within the 4 GiB, 2-CPU validation budget | `pnpm build:ci` |
 | Build only affected | `pnpm build:affected` |
 | Test | `pnpm test` |
 | Test one project | `pnpm exec vitest run --project '<glob>'` |
