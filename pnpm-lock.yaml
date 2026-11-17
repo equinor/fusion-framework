@@ -2611,7 +2611,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^7.0.0
-        version: 7.2.1
+        version: 7.2.2
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -4227,6 +4227,10 @@ packages:
     resolution: {integrity: sha512-dSKdL9h/iercb4GumsKFh+wVvLe1ohuDPiviklgnQVHnY2FYNUlbQJ3E1Qd37vkof9CfraK9BQpCW1hoOg0znQ==}
     engines: {node: '>=0.8.0'}
 
+  '@azure/msal-common@16.16.2':
+    resolution: {integrity: sha512-IVoPgAup0hnpzwC8esxPxrrnDDVe0n3mmK+UU3JRmKWySKxBQrl+a30tTP3okmJ9Wc7dh+IgoNaUXkCxb2DBSg==}
+    engines: {node: '>=0.8.0'}
+
   '@azure/msal-node-extensions@5.6.1':
     resolution: {integrity: sha512-hYhazCsYBpUco9GGGlAR79/875eXUSO+jR5VcKyMAQ8nMs6iZjlxwRW53YLhOCBAgnsj8EIj7EwpEUcWoZEjaA==}
     engines: {node: '>=20'}
@@ -4234,8 +4238,8 @@ packages:
   '@azure/msal-node-runtime@0.20.6':
     resolution: {integrity: sha512-89Al7l5c8sOEA954d35WZOg1sCa2WKfgf7KyTbN9vIkKsoZrXdJ5+CPjy8+tQqWcsJTAMbQD4OWr7V09/xN8KA==}
 
-  '@azure/msal-node@7.2.1':
-    resolution: {integrity: sha512-6mntsfCNq7H1eAPSZik74jT3C5at4nRqiVk7OC+D5Hy3Pe3s76uwE4+J0xvDvlVPmoX2kasf3mSwUmzeq9rW/A==}
+  '@azure/msal-node@7.2.2':
+    resolution: {integrity: sha512-MjsAHC+KUSXYYC8P57lVXy5IgSeO+PraXzLLHZI6hcX7nx/hCokY6gTPm2JcKLI3W88mu7ozjObBVGKExZUhww==}
     engines: {node: '>=20'}
 
   '@azure/search-documents@13.0.0':
@@ -14119,7 +14123,7 @@ snapshots:
     dependencies:
       '@azure/core-auth': 1.11.0(supports-color@10.2.2)
       '@azure/identity': 4.14.1(supports-color@10.2.2)
-      '@azure/msal-node': 7.2.1
+      '@azure/msal-node': 7.2.2
       '@azure/msal-node-extensions': 5.6.1
       keytar: 7.9.0
       tslib: 2.8.1
@@ -14138,7 +14142,7 @@ snapshots:
       '@azure/core-util': 1.14.0(supports-color@10.2.2)
       '@azure/logger': 1.4.0(supports-color@10.2.2)
       '@azure/msal-browser': 5.28.0
-      '@azure/msal-node': 7.2.1
+      '@azure/msal-node': 7.2.2
       open: 11.0.4
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -14183,6 +14187,8 @@ snapshots:
 
   '@azure/msal-common@16.16.1': {}
 
+  '@azure/msal-common@16.16.2': {}
+
   '@azure/msal-node-extensions@5.6.1':
     dependencies:
       '@azure/msal-common': 16.16.1
@@ -14193,9 +14199,9 @@ snapshots:
   '@azure/msal-node-runtime@0.20.6':
     optional: true
 
-  '@azure/msal-node@7.2.1':
+  '@azure/msal-node@7.2.2':
     dependencies:
-      '@azure/msal-common': 16.16.1
+      '@azure/msal-common': 16.16.2
       jsonwebtoken: 9.0.3
 
   '@azure/search-documents@13.0.0(supports-color@10.2.2)':
