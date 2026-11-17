@@ -20,6 +20,7 @@
     "clean:build": "find . -type d \\( -name dist -o -name tmp -o -name .cache -o -name .turbo \\) -prune -exec rm -rf {} + && find . -type f -name \"tsconfig.tsbuildinfo\" -delete",
     "watch:packages": "turbo watch --filter './packages/**' build",
     "build": "turbo build --filter=!@equinor/fusion-framework-docs",
+    "build:ci": "pnpm build --concurrency=2",
     "build:all": "pnpm build && pnpm build:docs",
     "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
     "build:lint": "turbo build --filter './packages/linting/**' build",

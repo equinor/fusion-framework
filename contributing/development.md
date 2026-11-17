@@ -25,6 +25,27 @@ Once you've installed Node.js and pnpm, open Terminal and run the following:
   pnpm build
 ```
 
+## Build concurrency
+
+`pnpm build` keeps Turbo's normal parallelism (ten concurrent tasks by default),
+as do the other build scripts and direct Turbo calls. Local development and
+existing CI jobs are unchanged.
+
+Resource-constrained CI and sandbox callers must explicitly select `build:ci`:
+
+```sh
+pnpm build:ci
+```
+
+This runs the ordinary build with `--concurrency=2` so cold builds fit
+Greenkeeper's 4 GiB, 2-CPU validation budget. The limit applies only to this
+invocation; it does not skip packages or checks, change caching, or cap memory
+inside an individual task. `pnpm test` and `pnpm lint` remain unchanged.
+
+Callers must opt into `build:ci`; adding the script does not change Greenkeeper's
+externally defined task commands or existing GitHub Actions invocations.
+See [#6060](https://github.com/equinor/fusion-framework/issues/6060) for the
+default-concurrency OOM baseline and bounded-build measurements.
 
 ## Repo structure
 
