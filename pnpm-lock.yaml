@@ -1725,7 +1725,7 @@ importers:
     dependencies:
       '@azure/search-documents':
         specifier: ^13.0.0
-        version: 13.0.0(supports-color@10.2.2)
+        version: 13.1.0(supports-color@10.2.2)
       '@equinor/fusion-framework-cli-plugin-ai-base':
         specifier: workspace:*
         version: link:../ai-base
@@ -2212,7 +2212,7 @@ importers:
     dependencies:
       '@langchain/community':
         specifier: ^1.1.8
-        version: 1.1.29(@azure/search-documents@13.0.0(supports-color@10.2.2))(@browserbasehq/sdk@2.18.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.63.0)(deepmerge@4.3.1)(dotenv@16.4.5)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(zod@4.6.7))(@ibm-cloud/watsonx-ai@1.7.16(supports-color@10.2.2))(@langchain/core@1.3.6(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.47.0(undici@7.30.1)(zod@4.6.7)))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ibm-cloud-sdk-core@5.6.0(supports-color@10.2.2))(ignore@7.0.6)(jsdom@30.1.3)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(playwright@1.63.0)(undici@7.30.1)
+        version: 1.1.29(@azure/search-documents@13.1.0(supports-color@10.2.2))(@browserbasehq/sdk@2.18.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.63.0)(deepmerge@4.3.1)(dotenv@16.4.5)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(zod@4.6.7))(@ibm-cloud/watsonx-ai@1.7.16(supports-color@10.2.2))(@langchain/core@1.3.6(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.47.0(undici@7.30.1)(zod@4.6.7)))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ibm-cloud-sdk-core@5.6.0(supports-color@10.2.2))(ignore@7.0.6)(jsdom@30.1.3)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(playwright@1.63.0)(undici@7.30.1)
       '@langchain/core':
         specifier: ^1.0.1
         version: 1.3.6(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.47.0(undici@7.30.1)(zod@4.6.7))
@@ -2228,7 +2228,7 @@ importers:
         version: 1.25.0(supports-color@10.2.2)
       '@azure/search-documents':
         specifier: ^13.0.0
-        version: 13.0.0(supports-color@10.2.2)
+        version: 13.1.0(supports-color@10.2.2)
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -4187,6 +4187,10 @@ packages:
     resolution: {integrity: sha512-bMs8ekJLjX8wPV+9IPBges1SLPyuDtE9g5gLDWOpxzKcoOFQnpLGkbcT1tdw3FaAmDS1gnPmMmJ6y/T5B96kIA==}
     engines: {node: '>=22.0.0'}
 
+  '@azure/core-sse@2.4.0':
+    resolution: {integrity: sha512-BFNVsoYE843I/q5/OFNHpaYN8TK8W99OwU9ipToYXdwB14o92A16ZjD6JW/BZ8kO7fWSM4jK2EoojAQmXAOExw==}
+    engines: {node: '>=22.0.0'}
+
   '@azure/core-tracing@1.4.0':
     resolution: {integrity: sha512-eGwxD0AtncrxeBM4tG8R55Pc3rdX1hNW2WibJAgYpCVA6E93mvvVH+LcssoVjOBrSKWS55yEIHsk0X8ctHmfOQ==}
     engines: {node: '>=22.0.0'}
@@ -4242,9 +4246,9 @@ packages:
     resolution: {integrity: sha512-MjsAHC+KUSXYYC8P57lVXy5IgSeO+PraXzLLHZI6hcX7nx/hCokY6gTPm2JcKLI3W88mu7ozjObBVGKExZUhww==}
     engines: {node: '>=20'}
 
-  '@azure/search-documents@13.0.0':
-    resolution: {integrity: sha512-vFdbPUaH7epWcZl+8IjgBd4li8CLyzH55gIbncpGrcHdGNhf1i4n+LUNx96k3acYr1hWRuXqQol52VQ7GN+x1Q==}
-    engines: {node: '>=20.0.0'}
+  '@azure/search-documents@13.1.0':
+    resolution: {integrity: sha512-fLTFVYa7cMw6mbwlyCjg56gwzG4SWdcId53q0hLpBqo8Jsd9flxzXv4kiUD9HPurL9vC0rMaHy67tOukjX38Ig==}
+    engines: {node: '>=22.0.0'}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -14101,9 +14105,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@azure/core-sse@2.4.0':
+    dependencies:
+      tslib: 2.9.1
+
   '@azure/core-tracing@1.4.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   '@azure/core-util@1.14.0(supports-color@10.2.2)':
     dependencies:
@@ -14145,7 +14153,7 @@ snapshots:
   '@azure/logger@1.4.0(supports-color@10.2.2)':
     dependencies:
       '@typespec/ts-http-runtime': 0.3.8(supports-color@10.2.2)
-      tslib: 2.8.1
+      tslib: 2.9.1
     transitivePeerDependencies:
       - supports-color
 
@@ -14199,15 +14207,16 @@ snapshots:
       '@azure/msal-common': 16.16.2
       jsonwebtoken: 9.0.3
 
-  '@azure/search-documents@13.0.0(supports-color@10.2.2)':
+  '@azure/search-documents@13.1.0(supports-color@10.2.2)':
     dependencies:
       '@azure-rest/core-client': 2.8.0(supports-color@10.2.2)
       '@azure/core-auth': 1.11.0(supports-color@10.2.2)
       '@azure/core-rest-pipeline': 1.25.0(supports-color@10.2.2)
+      '@azure/core-sse': 2.4.0
       '@azure/core-tracing': 1.4.0
       '@azure/core-util': 1.14.0(supports-color@10.2.2)
       '@azure/logger': 1.4.0(supports-color@10.2.2)
-      tslib: 2.8.1
+      tslib: 2.9.1
     transitivePeerDependencies:
       - supports-color
 
@@ -15659,7 +15668,7 @@ snapshots:
       - openai
       - ws
 
-  '@langchain/community@1.1.29(@azure/search-documents@13.0.0(supports-color@10.2.2))(@browserbasehq/sdk@2.18.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.63.0)(deepmerge@4.3.1)(dotenv@16.4.5)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(zod@4.6.7))(@ibm-cloud/watsonx-ai@1.7.16(supports-color@10.2.2))(@langchain/core@1.3.6(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.47.0(undici@7.30.1)(zod@4.6.7)))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ibm-cloud-sdk-core@5.6.0(supports-color@10.2.2))(ignore@7.0.6)(jsdom@30.1.3)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(playwright@1.63.0)(undici@7.30.1)':
+  '@langchain/community@1.1.29(@azure/search-documents@13.1.0(supports-color@10.2.2))(@browserbasehq/sdk@2.18.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.63.0)(deepmerge@4.3.1)(dotenv@16.4.5)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(zod@4.6.7))(@ibm-cloud/watsonx-ai@1.7.16(supports-color@10.2.2))(@langchain/core@1.3.6(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.47.0(undici@7.30.1)(zod@4.6.7)))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(cheerio@1.2.0)(d3-dsv@3.0.1)(ibm-cloud-sdk-core@5.6.0(supports-color@10.2.2))(ignore@7.0.6)(jsdom@30.1.3)(jsonwebtoken@9.0.3)(lodash@4.18.1)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(playwright@1.63.0)(undici@7.30.1)':
     dependencies:
       '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.63.0)(deepmerge@4.3.1)(dotenv@16.4.5)(openai@7.47.0(undici@7.30.1)(zod@4.6.7))(zod@4.6.7)
       '@ibm-cloud/watsonx-ai': 1.7.16(supports-color@10.2.2)
@@ -15676,7 +15685,7 @@ snapshots:
       uuid: 14.0.3
       zod: 4.6.7
     optionalDependencies:
-      '@azure/search-documents': 13.0.0(supports-color@10.2.2)
+      '@azure/search-documents': 13.1.0(supports-color@10.2.2)
       '@browserbasehq/sdk': 2.18.0
       cheerio: 1.2.0
       d3-dsv: 3.0.1
