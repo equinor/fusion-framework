@@ -77,7 +77,8 @@ await octopus.close();
 
 - An app can run in several dev servers at once, e.g. a normal one and one in mock mode. The one that started last is used; when it stops, the next most recent takes over.
 - Octopus removes dev servers without a heartbeat for 15 seconds, and dev servers that stop answering (checked every 2 seconds, and on each request).
-- Octopus only listens on `127.0.0.1`, and only accepts `http://localhost` addresses.
+- Octopus only listens on `127.0.0.1`, only answers requests addressed to `localhost`, `127.0.0.1` or `[::1]` (so a web page can't reach it through DNS rebinding), and only accepts `http://localhost` addresses.
+- Octopus builds the address it forwards to from the registered dev server and the checked parts of the request: the app key, and for configs a build version made of letters, digits and `.`, `_`, `+`, `-`.
 
 ## Limits
 

@@ -133,8 +133,15 @@ describe('parseLocalUrl', () => {
 
 describe('parseAppRequest', () => {
   it.each([
-    ['/persons/me/apps/fusion-help', { type: 'api', appKey: 'fusion-help' }],
-    ['/apps/fusion-help/builds/1.5.11/config', { type: 'api', appKey: 'fusion-help' }],
+    ['/persons/me/apps/fusion-help', { type: 'manifest', appKey: 'fusion-help' }],
+    [
+      '/apps/fusion-help/builds/1.5.11/config',
+      { type: 'config', appKey: 'fusion-help', version: '1.5.11' },
+    ],
+    [
+      '/apps/fusion-help/builds/2.0.0-beta.1+build.5/config',
+      { type: 'config', appKey: 'fusion-help', version: '2.0.0-beta.1+build.5' },
+    ],
     [
       '/bundles/apps/fusion-help@1.5.11//Users/me/src/index.ts',
       { type: 'bundle', appKey: 'fusion-help', path: 'Users/me/src/index.ts' },
@@ -152,6 +159,9 @@ describe('parseAppRequest', () => {
     '/persons/me/apps/fusion-help/settings',
     '/apps/fusion-help/builds',
     '/persons/me/apps',
+    // Encoded slashes or other characters in the version never reach the dev server.
+    '/apps/fusion-help/builds/1.0.0%2F..%2F..%2Fsecret/config',
+    '/apps/fusion-help/builds/1.0.0%3Fx/config',
   ])('leaves %s to CI', (path) => {
     expect(parseAppRequest(path)).toBeUndefined();
   });

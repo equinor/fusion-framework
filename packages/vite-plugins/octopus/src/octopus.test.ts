@@ -98,6 +98,55 @@ describe('Octopus server', () => {
     expect(appRequests).toEqual(['/@fusion-api/apps/persons/me/apps/app-admin']);
   });
 
+  it("forwards config requests to the app's dev server, without the query", async () => {
+    await register(octopusUrl, 'app-admin', { url: appUrl, instanceId: 'a' });
+
+    const response = await fetch(`${octopusUrl}/proxy/apps/app-admin/builds/1.2.3/config?x=1`);
+
+    expect(response.headers.get('x-octopus')).toBe('hit');
+    expect(appRequests).toEqual(['/@fusion-api/apps/apps/app-admin/builds/1.2.3/config']);
+  });
+
+  it('answers a miss for a config request with an unexpected version', async () => {
+    await register(octopusUrl, 'app-admin', { url: appUrl, instanceId: 'a' });
+
+    const response = await fetch(
+      `${octopusUrl}/proxy/apps/app-admin/builds/1.0.0%2F..%2F..%2F@fs/config`,
+    );
+
+    expect(response.headers.get('x-octopus')).toBe('miss');
+    expect(appRequests).toEqual([]);
+  });
+
+  describe('requests addressed to another host', () => {
+    /** Sends a request with the given `Host` header, which `fetch` does not allow setting. */
+    const requestAs = (host: string, path: string) =>
+      new Promise<number>((resolve, reject) => {
+        const { port } = new URL(octopusUrl);
+        http
+          .get({ host: '127.0.0.1', port, path, headers: { host } }, (res) => {
+            res.resume();
+            resolve(res.statusCode ?? 0);
+          })
+          .on('error', reject);
+      });
+
+    it.each(['/', '/api/apps', '/proxy/persons/me/apps/app-admin'])(
+      'refuses %s, e.g. from a web page using DNS rebinding',
+      async (path) => {
+        await register(octopusUrl, 'app-admin', { url: appUrl, instanceId: 'a' });
+
+        expect(await requestAs('attacker.example:2000', path)).toBe(403);
+        expect(await requestAs('localhost:2000@attacker.example', path)).toBe(403);
+        expect(appRequests).toEqual([]);
+      },
+    );
+
+    it.each(['localhost:2000', '127.0.0.1:2000', '[::1]:2000'])('answers %s', async (host) => {
+      expect(await requestAs(host, '/api/apps')).toBe(200);
+    });
+  });
+
   it("redirects script requests to the app's dev server", async () => {
     await register(octopusUrl, 'fusion-chat', { url: appUrl, instanceId: 'a' });
 

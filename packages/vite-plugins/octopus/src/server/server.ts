@@ -138,6 +138,13 @@ const proxyToApp = (
  */
 export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions): http.Server =>
   http.createServer(async (req, res) => {
+    // A web page whose own host name resolves to this machine (DNS rebinding) sends its own
+    // host name here; only requests addressed to this machine are answered.
+    if (!parseLocalUrl(`http://${req.headers.host ?? ''}`)) {
+      sendJson(res, 403, { error: 'Octopus only answers requests to localhost' });
+      return;
+    }
+
     const url = new URL(req.url ?? '/', 'http://localhost');
 
     if (url.pathname === '/' && req.method === 'GET') {
@@ -230,18 +237,24 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
         return;
       }
 
+      // Only the registered origin and checked parts of the request make up the address, so a
+      // request can neither reach another host nor another path on the dev server.
+      const target = new URL(app.url);
+
       if (appRequest.type === 'bundle') {
         // Point straight at the app's dev server, so the module's root-relative imports
         // (e.g. `/@vite/client`) also resolve against that app.
-        res.writeHead(302, {
-          location: new URL(`/${appRequest.path}`, app.url).href,
-          [OCTOPUS_HEADER]: 'hit',
-        });
+        target.pathname = `/${appRequest.path}`;
+        res.writeHead(302, { location: target.href, [OCTOPUS_HEADER]: 'hit' });
         res.end();
         return;
       }
 
-      const target = new URL(`${APP_DEV_SERVER_API}${path}${url.search}`, app.url);
+      // The dev server's manifest and config routes take no query parameters.
+      target.pathname =
+        appRequest.type === 'manifest'
+          ? `${APP_DEV_SERVER_API}/persons/me/apps/${app.appKey}`
+          : `${APP_DEV_SERVER_API}/apps/${app.appKey}/builds/${appRequest.version}/config`;
       proxyToApp(req, res, app, target, () =>
         removeInstance(registry, app.appKey, app.instanceId, 'unreachable', onEvent),
       );
