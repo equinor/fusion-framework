@@ -1,0 +1,257 @@
+import type { Command } from 'commander';
+import isContinuousIntegration from 'is-ci';
+
+import {
+  TELEMETRY_OPTOUT_ENV,
+  createInvocationTraceContext,
+  resolveTelemetryConnectionString,
+  resolveTelemetryState,
+  setInvocationTraceContext,
+  writeTelemetrySettings,
+  type TelemetryState,
+} from '@equinor/fusion-framework-cli/bin';
+
+import {
+  exportInvocation as defaultExportInvocation,
+  type ExportInvocationOptions,
+  type InvocationOutcome,
+  type InvocationRecord,
+} from './export-invocation.js';
+import {
+  createMachineId,
+  resolveExceptionType,
+  resolveFusionEnvironment,
+  resolveInvocationCommand,
+} from './invocation-metadata.js';
+
+/** Default upper bound for exporting the invocation before the CLI exits. */
+export const DEFAULT_TELEMETRY_TIMEOUT_MS = 1500;
+
+/** Signals treated as cancellation; the CLI re-raises them after the bounded export. */
+const CANCEL_SIGNALS = { SIGINT: 2, SIGTERM: 15 } as const;
+type CancelSignal = keyof typeof CANCEL_SIGNALS;
+
+/** One-time notice explaining what is collected and how to opt out. */
+export const TELEMETRY_NOTICE = [
+  '',
+  'Fusion Framework CLI collects usage telemetry to improve the tool: the command name, the names',
+  'of options used, exit code, duration, error type, OS, architecture, Node.js version, CI',
+  'detection, the target Fusion environment and a hashed machine id. Argument and option values,',
+  'file paths, user names and tokens are never collected.',
+  `Opt out with ${TELEMETRY_OPTOUT_ENV}=1, DO_NOT_TRACK=1 or \`fusion-framework-cli telemetry disable\`.`,
+  'Learn more: https://github.com/equinor/fusion-framework/tree/main/packages/cli#telemetry',
+  '',
+  '',
+].join('\n');
+
+/** The parts of `process` the invocation lifecycle uses; injectable for tests. */
+export type TelemetryProcess = Pick<
+  NodeJS.Process,
+  | 'argv'
+  | 'env'
+  | 'pid'
+  | 'platform'
+  | 'arch'
+  | 'versions'
+  | 'exitCode'
+  | 'stderr'
+  | 'once'
+  | 'on'
+  | 'removeListener'
+  | 'listenerCount'
+  | 'kill'
+  | 'exit'
+>;
+
+/** Options for {@link startInvocationTelemetry}. */
+export interface StartInvocationTelemetryOptions {
+  /** Root command with all built-in and plugin commands registered. */
+  program: Command;
+  /** CLI package version. */
+  version: string;
+  /** Process to observe; defaults to the global `process`. */
+  process?: TelemetryProcess;
+  /** Whether the run is in CI; defaults to `is-ci`. */
+  ci?: boolean;
+  /** Upper bound for the export; defaults to {@link DEFAULT_TELEMETRY_TIMEOUT_MS}. */
+  timeoutMs?: number;
+  /** Exports the record; defaults to the Azure Monitor exporter. */
+  exportInvocation?: (record: InvocationRecord, options: ExportInvocationOptions) => Promise<void>;
+  /** Epoch milliseconds clock; injectable for tests. */
+  now?: () => number;
+  /** Machine id provider; injectable for tests. */
+  machineId?: () => string;
+}
+
+/** Handle to the running invocation's telemetry. */
+export interface InvocationTelemetry {
+  /** Trace id shared by the invocation request and outgoing Fusion requests. */
+  readonly traceId: string;
+  /**
+   * Records a failure from an error that escaped command parsing, exports the invocation and
+   * resolves; the caller then rethrows so the CLI fails exactly as it would without telemetry.
+   */
+  fail(error: unknown): Promise<void>;
+  /**
+   * Records a run that Commander ended itself (help, version or a usage error) with its exit
+   * code, exports the invocation and resolves; the caller then exits with the same code.
+   */
+  exit(exitCode: number, error?: unknown): Promise<void>;
+}
+
+/** Normalizes `process.exitCode`, which may be unset or a numeric string. */
+const toExitCode = (value: number | string | null | undefined): number => {
+  const code = Number(value ?? 0);
+  return Number.isInteger(code) ? code : 1;
+};
+
+/** Shows the one-time collection notice in interactive, non-CI sessions and remembers it. */
+const showNotice = (state: TelemetryState, proc: TelemetryProcess, ci: boolean): void => {
+  if (state.settings.noticeShown || ci || !proc.stderr.isTTY) return;
+  proc.stderr.write(TELEMETRY_NOTICE);
+  try {
+    writeTelemetrySettings(state.configPath, { noticeShown: true });
+  } catch {
+    // An unwritable config only means the notice is shown again next run.
+  }
+};
+
+/**
+ * Starts usage telemetry for one CLI invocation and exports exactly one request when it ends.
+ *
+ * Nothing happens when telemetry is disabled through `FUSION_CLI_TELEMETRY_OPTOUT`,
+ * `DO_NOT_TRACK` or `telemetry disable`. Otherwise the command path and option names are
+ * resolved from argv, outgoing Fusion requests join the invocation trace, and the invocation is
+ * exported with a bounded wait when the event loop drains (then the process exits with its exit
+ * code), when an error escapes parsing (see {@link InvocationTelemetry.fail}), when Commander
+ * ends the run itself (see {@link InvocationTelemetry.exit}), or on SIGINT/SIGTERM when no other
+ * handler owns the signal. Runs ended by an explicit `process.exit()` inside a command cannot be
+ * exported, since Node.js runs no asynchronous work after it.
+ *
+ * Exit codes, signals and errors are preserved; telemetry failures are swallowed.
+ *
+ * @param options - Program, version and injectable dependencies.
+ * @returns A handle to the running invocation, or `undefined` when telemetry is disabled.
+ */
+export const startInvocationTelemetry = (
+  options: StartInvocationTelemetryOptions,
+): InvocationTelemetry | undefined => {
+  try {
+    return start(options);
+  } catch {
+    // Telemetry setup must never prevent the command from running.
+    return undefined;
+  }
+};
+
+const start = (options: StartInvocationTelemetryOptions): InvocationTelemetry | undefined => {
+  const proc = options.process ?? process;
+  const state = resolveTelemetryState(proc.env);
+  if (!state.enabled) return undefined;
+
+  const now = options.now ?? Date.now;
+  const ci = options.ci ?? isContinuousIntegration;
+  const exportRecord = options.exportInvocation ?? defaultExportInvocation;
+  const connectionString = resolveTelemetryConnectionString(proc.env);
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TELEMETRY_TIMEOUT_MS;
+  const startTime = now();
+  const command = resolveInvocationCommand(options.program, proc.argv.slice(2));
+
+  // `telemetry` manages the preference itself, so it should not trigger the notice.
+  if (command.path[0] !== 'telemetry') {
+    showNotice(state, proc, ci);
+  }
+
+  const trace = createInvocationTraceContext();
+  setInvocationTraceContext(trace);
+
+  let fusionEnvironment: string | undefined;
+  let exceptionType: string | undefined;
+  let cancelledBy: CancelSignal | undefined;
+  let finished = false;
+
+  options.program.hook('preAction', (_program, actionCommand) => {
+    fusionEnvironment = resolveFusionEnvironment(actionCommand.opts().env);
+  });
+
+  const onUncaught = (error: unknown): void => {
+    exceptionType ??= resolveExceptionType(error);
+  };
+  proc.on('uncaughtExceptionMonitor', onUncaught);
+
+  const finish = async (exitCode: number): Promise<void> => {
+    if (finished) return;
+    finished = true;
+    setInvocationTraceContext(undefined);
+    // Respect an opt-out made during this run, e.g. `telemetry disable`.
+    if (!resolveTelemetryState(proc.env, state.configPath).enabled) return;
+    const outcome: InvocationOutcome =
+      cancelledBy || exitCode === 130 || exitCode === 143
+        ? 'cancelled'
+        : exitCode === 0
+          ? 'success'
+          : 'failure';
+    const record: InvocationRecord = {
+      traceId: trace.traceId,
+      spanId: trace.spanId,
+      version: options.version,
+      command: command.path.join(' '),
+      commandKind: command.kind,
+      optionNames: command.optionNames,
+      exitCode,
+      outcome,
+      ...(exceptionType ? { exceptionType } : {}),
+      startTime,
+      endTime: now(),
+      os: proc.platform,
+      arch: proc.arch,
+      nodeVersion: proc.versions.node ?? 'unknown',
+      ci,
+      ...(fusionEnvironment ? { fusionEnvironment } : {}),
+      machineId: (options.machineId ?? createMachineId)(),
+    };
+    try {
+      await exportRecord(record, { connectionString, timeoutMs });
+    } catch {
+      // Telemetry must never change the command's outcome.
+    }
+  };
+
+  proc.once('beforeExit', () => {
+    if (finished) return;
+    const exitCode = toExitCode(proc.exitCode);
+    // The command has drained; exit once the bounded export settles so in-flight exporter
+    // sockets or retry timers cannot hold the process open past the time bound.
+    void finish(exitCode).finally(() => proc.exit(exitCode));
+  });
+
+  const signalListeners = new Map<CancelSignal, () => void>();
+  for (const signal of Object.keys(CANCEL_SIGNALS) as CancelSignal[]) {
+    const onSignal = (): void => {
+      for (const [other, listener] of signalListeners) {
+        if (other !== signal) proc.removeListener(other, listener);
+      }
+      cancelledBy = signal;
+      // Another handler owns shutdown; the run is marked cancelled if it later drains.
+      if (proc.listenerCount(signal) > 0) return;
+      void finish(128 + CANCEL_SIGNALS[signal]).finally(() => {
+        // Our listener is already removed, so the default action terminates the process.
+        proc.kill(proc.pid, signal);
+      });
+    };
+    signalListeners.set(signal, onSignal);
+    proc.once(signal, onSignal);
+  }
+
+  return {
+    traceId: trace.traceId,
+    fail: async (error: unknown): Promise<void> => {
+      exceptionType ??= resolveExceptionType(error);
+      await finish(1);
+    },
+    exit: async (exitCode: number, error?: unknown): Promise<void> => {
+      if (exitCode !== 0 && error !== undefined) exceptionType ??= resolveExceptionType(error);
+      await finish(exitCode);
+    },
+  };
+};

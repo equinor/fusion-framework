@@ -6,6 +6,7 @@ import isContinuousIntegration from 'is-ci';
 
 import { FusionEnv, type Modules } from './fusion-env.js';
 import { identifyRequest } from './utils/identify-request.js';
+import { traceRequest } from './telemetry/trace-context.js';
 
 // Default scope for Fusion service discovery
 const FUSION_SERVICE_SCOPE = ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'];
@@ -100,6 +101,8 @@ export const configureFramework = (
       // Identify every outgoing request as coming from the CLI, so operators can tell Fusion
       // tooling traffic apart from other callers (diagnostics only, not for access control)
       builder.defaultHttpRequestHandler.set('fusion-cli-identification', identifyRequest);
+      // Join service requests to the CLI invocation trace; a no-op when telemetry is disabled
+      builder.defaultHttpRequestHandler.set('fusion-cli-trace', traceRequest);
       // Register the service discovery client with the HTTP module
       builder.configureClient('service_discovery', {
         baseUri,

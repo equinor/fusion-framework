@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import { Command, CommanderError } from 'commander';
 import chalk from 'chalk';
 import { config as loadDotEnv } from 'dotenv';
 
@@ -9,6 +9,7 @@ import { dirname, resolve } from 'node:path';
 import { readPackageUpSync } from 'read-package-up';
 
 import registerCommands from './commands/index.js';
+import { startInvocationTelemetry } from './telemetry/index.js';
 
 // Load environment variables from .env file without stdout contamination
 // Uses dotenv's quiet option to suppress informational messages that contaminate JSON output
@@ -72,5 +73,27 @@ program.version(pkg.packageJson.version, '-V, --version', 'CLI version');
 // Plugin config is resolved from process.cwd() or package.json root
 await registerCommands(program);
 
+// Starts after registration so plugin commands are recognised in the invocation record.
+const telemetry = startInvocationTelemetry({ program, version: pkg.packageJson.version });
+
+/** Makes Commander throw instead of calling `process.exit()`, on every registered command. */
+const throwOnCommanderExit = (command: Command): void => {
+  command.exitOverride();
+  for (const subcommand of command.commands) throwOnCommanderExit(subcommand);
+};
+
+// Help, version and usage errors would otherwise exit before the invocation can be exported.
+if (telemetry) throwOnCommanderExit(program);
+
 /** read action and options and start programs */
-program.parse();
+try {
+  await program.parseAsync();
+} catch (error) {
+  if (error instanceof CommanderError) {
+    // Commander has already written its output; exit with the code it would have used.
+    await telemetry?.exit(error.exitCode, error);
+    process.exit(error.exitCode);
+  }
+  await telemetry?.fail(error);
+  throw error;
+}
