@@ -227,6 +227,57 @@ calls. They identify the dev server instead with `X-Fusion-Dev-Server-Name` and
 - **Programmatic use.** `defaultHeaders` is exported from `@equinor/fusion-framework-cli/bin`, and
   `configureFramework` registers it on the framework HTTP client for you.
 
+## Telemetry
+
+The CLI sends one anonymous usage record per invocation, including plugin commands, to the Fusion
+Framework CLI Application Insights resource. The record helps maintainers see which commands are
+used and how often they fail. It is sent with Microsoft's
+[`@azure/monitor-opentelemetry-exporter`](https://www.npmjs.com/package/@azure/monitor-opentelemetry-exporter),
+without automatic collection, offline storage or SDK self-telemetry. The client IP tag is sent as
+`0.0.0.0`, so Application Insights derives no city or country from the sender's address.
+
+**Collected:** tool name and CLI version, the static command path (for example `app build`), the
+names of the options used, exit code, outcome (`success`, `failure` or `cancelled`), duration, the
+error type name, OS, architecture, Node.js version, whether the run is in CI, the target Fusion
+environment when it is a known name (`ci`, `fqa`, `tr`, `fprd`, `dev`), and a SHA-256 hash of the
+machine id.
+
+**Never collected:** argument and option values, file paths, URLs, error messages, user names, host
+names or tokens.
+
+### Opting out
+
+Telemetry is on by default. Any of the following turns it off:
+
+| Method                                      | Scope                  |
+| ------------------------------------------- | ---------------------- |
+| `FUSION_CLI_TELEMETRY_OPTOUT=1` (or `true`) | Current environment    |
+| `DO_NOT_TRACK=1`                            | Current environment    |
+| `ffc telemetry disable`                     | Persisted for the user |
+
+`ffc telemetry status` shows whether telemetry is enabled and why, and `ffc telemetry enable` turns
+it back on. The setting is stored in `fusion-framework-cli/telemetry.json` under
+`$XDG_CONFIG_HOME` (default `~/.config`), or `%APPDATA%` on Windows.
+
+The first interactive run prints a short notice about collection and opting out to stderr, then
+records that the notice was shown in a separate `telemetry-notice-shown` marker file in the same
+folder. Recording the notice never rewrites `telemetry.json`, so it cannot undo an opt-out made at
+the same time. The notice is not shown in CI or when stderr is not a terminal.
+
+### Behavior
+
+- **Never changes the command.** Exit codes, output, errors and signals are unchanged. Export
+  failures are ignored, and waiting for delivery is capped at 3 seconds, after which the CLI
+  exits. Delivery is best effort, so a record can be lost on a slow or unreliable network.
+- **Trace correlation.** While enabled, requests to Fusion services carry a W3C `traceparent`
+  header that shares the invocation's `operation_Id`. Requests to the telemetry endpoint are not
+  traced. The [request identification headers](#request-identification-headers) are sent whether
+  or not telemetry is enabled.
+- **Custom destination.** Set `FUSION_CLI_TELEMETRY_CONNECTION_STRING` to an Application Insights
+  connection string to send records elsewhere.
+- **Known gap.** Commands that end through their own `process.exit()` call exit before the record
+  can be sent, so those runs are not recorded.
+
 ## Documentation
 
 - [Developing Apps](docs/application.md) — build, configure, and deploy applications

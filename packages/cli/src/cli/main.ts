@@ -9,6 +9,7 @@ import { dirname, resolve } from 'node:path';
 import { readPackageUpSync } from 'read-package-up';
 
 import registerCommands from './commands/index.js';
+import { routeCommanderExits, startInvocationTelemetry } from './telemetry/index.js';
 
 // Load environment variables from .env file without stdout contamination
 // Uses dotenv's quiet option to suppress informational messages that contaminate JSON output
@@ -72,5 +73,21 @@ program.version(pkg.packageJson.version, '-V, --version', 'CLI version');
 // Plugin config is resolved from process.cwd() or package.json root
 await registerCommands(program);
 
+// Starts after registration so plugin commands are recognised in the invocation record.
+const telemetry = startInvocationTelemetry({ program, version: pkg.packageJson.version });
+
+// Help, version and usage errors would otherwise exit before the invocation can be exported.
+const isCommanderExit = telemetry ? routeCommanderExits(program, { telemetry }) : undefined;
+
 /** read action and options and start programs */
-program.parse();
+try {
+  await program.parseAsync();
+} catch (error) {
+  if (isCommanderExit?.(error)) {
+    // Commander has already written its output; exit with the code it would have used.
+    await telemetry?.exit(error.exitCode, error);
+    process.exit(error.exitCode);
+  }
+  await telemetry?.fail(error);
+  throw error;
+}

@@ -41,3 +41,5 @@ export {
 export { configureFramework, type FusionFrameworkSettings } from './configure-framework.js';
 export { resolveDefaultEnv } from './resolve-default-env.js';
 export { initializeFramework } from './initialize-framework.js';
+
+export * from './telemetry/index.js';
