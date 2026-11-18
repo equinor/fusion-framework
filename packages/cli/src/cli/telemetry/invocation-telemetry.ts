@@ -1,3 +1,5 @@
+import { inspect } from 'node:util';
+
 import type { Command } from 'commander';
 import isContinuousIntegration from 'is-ci';
 
@@ -124,8 +126,9 @@ const showNotice = (state: TelemetryState, proc: TelemetryProcess, ci: boolean):
  * resolved from argv, outgoing Fusion requests join the invocation trace, and the invocation is
  * exported with a bounded wait when the event loop drains (then the process exits with its exit
  * code), when an error escapes parsing (see {@link InvocationTelemetry.fail}), when Commander
- * ends the run itself (see {@link InvocationTelemetry.exit}), or on SIGINT/SIGTERM when no other
- * handler owns the signal. Runs ended by an explicit `process.exit()` inside a command cannot be
+ * ends the run itself (see {@link InvocationTelemetry.exit}), on an uncaught exception that no
+ * other handler owns (then the process exits with code 1, as Node.js would), or on SIGINT/SIGTERM
+ * when no other handler owns the signal. Runs ended by an explicit `process.exit()` inside a command cannot be
  * exported, since Node.js runs no asynchronous work after it.
  *
  * Exit codes, signals and errors are preserved; telemetry failures are swallowed.
@@ -178,6 +181,21 @@ const start = (options: StartInvocationTelemetryOptions): InvocationTelemetry | 
     exceptionType ??= resolveExceptionType(error);
   };
   proc.on('uncaughtExceptionMonitor', onUncaught);
+
+  // Node.js terminates on an uncaught exception without emitting `beforeExit`, so the CLI owns
+  // fatal errors while no other handler does: it prints the error as Node.js would, exports the
+  // invocation within the time bound, then exits with Node's fatal exit code 1.
+  const onFatal = (error: unknown): void => {
+    if (proc.listenerCount('uncaughtException') > 1) return;
+    proc.stderr.write(`\n${inspect(error)}\n\nNode.js v${proc.versions.node}\n`);
+    // `finished` is set synchronously, so a second fatal error while exporting exits at once.
+    if (finished) {
+      proc.exit(1);
+      return;
+    }
+    void finish(1).finally(() => proc.exit(1));
+  };
+  proc.on('uncaughtException', onFatal);
 
   const finish = async (exitCode: number): Promise<void> => {
     if (finished) return;

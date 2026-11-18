@@ -222,6 +222,40 @@ describe('startInvocationTelemetry', () => {
     expect(exported(exportInvocation)[0].exceptionType).toBe('TypeError');
   });
 
+  it('exports a fatal uncaught exception, prints it like Node.js and exits with code 1', async () => {
+    const proc = createProcess(['app', 'build']);
+    const { exportInvocation } = start(proc);
+    const error = new TypeError('background boom');
+
+    proc.emit('uncaughtExceptionMonitor', error);
+    proc.emit('uncaughtException', error);
+    await settle();
+
+    expect(proc.stderr.output).toContain('TypeError: background boom');
+    expect(proc.exit).toHaveBeenCalledExactlyOnceWith(1);
+    const [record] = exported(exportInvocation);
+    expect(record).toMatchObject({ exitCode: 1, outcome: 'failure', exceptionType: 'TypeError' });
+    expect(JSON.stringify(record)).not.toContain('background boom');
+
+    // A second fatal error while exporting exits at once without another record.
+    proc.emit('uncaughtException', new Error('again'));
+    expect(proc.exit).toHaveBeenCalledTimes(2);
+    expect(exportInvocation).toHaveBeenCalledOnce();
+  });
+
+  it('leaves uncaught exceptions to a handler the command installed', async () => {
+    const proc = createProcess(['app', 'build']);
+    const { exportInvocation } = start(proc);
+    proc.on('uncaughtException', () => undefined);
+
+    proc.emit('uncaughtException', new Error('handled'));
+    await settle();
+
+    expect(proc.exit).not.toHaveBeenCalled();
+    expect(proc.stderr.output).not.toContain('handled');
+    expect(exportInvocation).not.toHaveBeenCalled();
+  });
+
   it('exports a cancelled run on SIGINT, then re-raises the signal', async () => {
     const proc = createProcess(['app', 'build']);
     const { exportInvocation } = start(proc);
