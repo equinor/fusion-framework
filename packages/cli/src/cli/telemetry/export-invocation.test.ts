@@ -5,6 +5,7 @@ import { createServer, type Server } from 'node:https';
 import type { AddressInfo } from 'node:net';
 import { hostname, tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { getCACertificates, setDefaultCACertificates } from 'node:tls';
 import { gunzipSync } from 'node:zlib';
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
@@ -55,6 +56,8 @@ const createCertificate = (): { key: Buffer; cert: Buffer } | undefined => {
         '1',
         '-subj',
         '/CN=localhost',
+        '-addext',
+        'subjectAltName=IP:127.0.0.1',
         '-keyout',
         join(dir, 'key.pem'),
         '-out',
@@ -71,16 +74,15 @@ const createCertificate = (): { key: Buffer; cert: Buffer } | undefined => {
 };
 
 const tls = createCertificate();
-const previousRejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+const defaultCertificates = getCACertificates('default');
 
 beforeAll(() => {
-  // Trust the throwaway certificate for this file only.
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // Trust the throwaway certificate in addition to the defaults; validation stays enabled.
+  if (tls) setDefaultCACertificates([...defaultCertificates, tls.cert.toString()]);
 });
 
 afterAll(() => {
-  if (previousRejectUnauthorized === undefined) delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
-  else process.env.NODE_TLS_REJECT_UNAUTHORIZED = previousRejectUnauthorized;
+  setDefaultCACertificates(defaultCertificates);
 });
 
 /** Starts a fake ingestion endpoint; `respond` false leaves requests hanging. */
