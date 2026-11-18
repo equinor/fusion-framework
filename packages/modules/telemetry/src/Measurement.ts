@@ -10,6 +10,9 @@ import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 
 import { mergeTelemetryItem } from './utils/merge-telemetry-item.js';
 
+// Match downlevel `using` helpers without requiring or mutating the browser's Symbol.dispose.
+const disposeSymbol: typeof Symbol.dispose = Symbol.dispose ?? Symbol.for('Symbol.dispose');
+
 /**
  * Represents a telemetry measurement that tracks elapsed time and reports measurement data
  * to a telemetry provider. Supports cloning, resetting, and marking measurements as completed.
@@ -140,23 +143,36 @@ export class Measurement implements IMeasurement {
   }
 
   /**
-   * Disposes of the measurement instance. If the measurement has not yet been taken,
-   * this method ensures that it is performed before disposal.
+   * Completes an unmarked measurement without requiring `Symbol.dispose` support.
    *
-   * This method is intended to be used with the ECMAScript `Symbol.dispose` protocol,
-   * allowing for automatic resource management when used in a `using` statement.
+   * Call from a `finally` block in browsers without explicit resource management.
+   * Disposal reporting failures do not replace the operation's original error.
    *
-   * @see https://github.com/tc39/proposal-explicit-resource-management
+   * @example
+   * ```typescript
+   * const measurement = new Measurement(provider, { name: 'operation' });
+   * try {
+   *   await operation();
+   * } finally {
+   *   measurement.dispose();
+   * }
+   * ```
    */
-  [Symbol.dispose]() {
+  public dispose(): void {
     // Ensure a measurement is always taken before the instance is discarded
     if (!this.#measured) {
       try {
         this.measure();
       } catch {
-        // Silently handle errors during disposal to ensure cleanup always completes
-        // The measurement failure should not prevent proper resource disposal
+        // Keep disposal silent so a reporting failure does not replace the original operation error.
       }
     }
+  }
+
+  /**
+   * Preserves explicit resource management support for callers using `using`.
+   */
+  [disposeSymbol](): void {
+    this.dispose();
   }
 }

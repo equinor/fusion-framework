@@ -31,6 +31,7 @@
     "build": "tsc -b",
     "postbuild": "rollup -c rollup.config.js",
     "test": "vitest",
+    "test:browser": "vitest run --config vitest.browser.config.ts",
     "prepack": "pnpm build"
   },
   "keywords": [
@@ -67,6 +68,8 @@
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@vitest/browser-playwright": "catalog:vitest",
+    "playwright": "catalog:",
     "rollup": "^4.59.0",
     "typescript": "^7.0.2",
     "vite": "^8.0.0"

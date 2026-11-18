@@ -660,3 +660,13 @@ See [API Service Plugin docs](https://github.com/equinor/fusion-framework/tree/m
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! See [CONTRIBUTING.md](../../../CONTRIBUTING.md) for guidelines.
+
+To check bootstrap compatibility locally, build the SPA package and run its Vitest Browser Mode suite with Playwright's Chromium and WebKit:
+
+```sh
+pnpm --filter @equinor/fusion-framework-vite-plugin-spa exec playwright install chromium webkit
+pnpm --filter @equinor/fusion-framework-vite-plugin-spa build
+pnpm --filter @equinor/fusion-framework-vite-plugin-spa test:browser
+```
+
+The suite checks that the built bootstrap renders a test portal in both browsers, loading the original path with native support and only the fallback when `Symbol.dispose` is hidden.
