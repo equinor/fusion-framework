@@ -88,6 +88,11 @@ const settleWithin = async (task: Promise<unknown>, timeoutMs: number): Promise<
   clearTimeout(timer);
 };
 
+/** Exporter attribute that sets the `ai.location.ip` tag; it is never sent as a property. */
+const ANONYMOUS_CLIENT_IP_ATTRIBUTE = 'microsoft.client.ip';
+/** Unroutable address that keeps Application Insights from geolocating the sender. */
+const ANONYMOUS_CLIENT_IP = '0.0.0.0';
+
 /** Maps the record to request custom dimensions; only primitives from allowlisted fields. */
 const toAttributes = (record: InvocationRecord): Attributes => ({
   tool: TELEMETRY_TOOL_NAME,
@@ -155,7 +160,11 @@ export const exportInvocation = async (
       .startSpan(`${TELEMETRY_TOOL_NAME} ${record.command}`.trim(), {
         kind: SpanKind.SERVER,
         startTime: record.startTime,
-        attributes: toAttributes(record),
+        attributes: {
+          ...toAttributes(record),
+          // Sets `ai.location.ip`, so ingestion derives no city or country from the sender's IP.
+          [ANONYMOUS_CLIENT_IP_ATTRIBUTE]: ANONYMOUS_CLIENT_IP,
+        },
       });
     span.setStatus({
       code: record.outcome === 'success' ? SpanStatusCode.OK : SpanStatusCode.ERROR,

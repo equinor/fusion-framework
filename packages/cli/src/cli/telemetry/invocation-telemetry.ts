@@ -27,7 +27,7 @@ import {
 } from './invocation-metadata.js';
 
 /** Default upper bound for exporting the invocation before the CLI exits. */
-export const DEFAULT_TELEMETRY_TIMEOUT_MS = 1500;
+export const DEFAULT_TELEMETRY_TIMEOUT_MS = 3000;
 
 /** Signals treated as cancellation; the CLI re-raises them after the bounded export. */
 const CANCEL_SIGNALS = { SIGINT: 2, SIGTERM: 15 } as const;

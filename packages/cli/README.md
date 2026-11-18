@@ -233,7 +233,8 @@ The CLI sends one anonymous usage record per invocation, including plugin comman
 Framework CLI Application Insights resource. The record helps maintainers see which commands are
 used and how often they fail. It is sent with Microsoft's
 [`@azure/monitor-opentelemetry-exporter`](https://www.npmjs.com/package/@azure/monitor-opentelemetry-exporter),
-without automatic collection, offline storage or SDK self-telemetry.
+without automatic collection, offline storage or SDK self-telemetry. The client IP tag is sent as
+`0.0.0.0`, so Application Insights derives no city or country from the sender's address.
 
 **Collected:** tool name and CLI version, the static command path (for example `app build`), the
 names of the options used, exit code, outcome (`success`, `failure` or `cancelled`), duration, the
@@ -264,8 +265,8 @@ records that the notice was shown. The notice is not shown in CI or when stderr 
 ### Behavior
 
 - **Never changes the command.** Exit codes, output, errors and signals are unchanged. Export
-  failures are ignored, and waiting for delivery is capped at 1.5 seconds, after which the CLI
-  exits.
+  failures are ignored, and waiting for delivery is capped at 3 seconds, after which the CLI
+  exits. Delivery is best effort, so a record can be lost on a slow or unreliable network.
 - **Trace correlation.** While enabled, requests to Fusion services carry a W3C `traceparent`
   header that shares the invocation's `operation_Id`. Requests to the telemetry endpoint are not
   traced. The [request identification headers](#request-identification-headers) are sent whether

@@ -133,6 +133,7 @@ describe.skipIf(!tls)('exportInvocation', () => {
     expect(envelope.tags['ai.operation.name']).toBe('fusion-framework-cli app build');
     expect(envelope.tags['ai.cloud.role']).toBe('fusion-framework-cli');
     expect(envelope.tags['ai.cloud.roleInstance']).toBe(record.machineId);
+    expect(envelope.tags['ai.location.ip']).toBe('0.0.0.0');
     expect(JSON.stringify(envelope)).not.toContain(hostname());
     expect(envelope.data.baseData).toMatchObject({
       id: record.spanId,
