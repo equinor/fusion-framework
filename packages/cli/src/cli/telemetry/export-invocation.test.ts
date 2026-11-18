@@ -123,11 +123,12 @@ describe.skipIf(!tls)('exportInvocation', () => {
   it('sends exactly one safe request for the invocation and nothing else', async () => {
     const ingestion = await startIngestion();
 
-    await exportInvocation(record, {
+    const result = await exportInvocation(record, {
       connectionString: connectionString(ingestion.url),
       timeoutMs: 5000,
     });
 
+    expect(result).toBe('settled');
     expect(ingestion.envelopes).toHaveLength(1);
     const [envelope] = ingestion.envelopes;
     expect(envelope.data.baseType).toBe('RequestData');
@@ -194,10 +195,12 @@ describe.skipIf(!tls)('exportInvocation', () => {
     const ingestion = await startIngestion(false);
     const started = Date.now();
 
-    await exportInvocation(record, {
-      connectionString: connectionString(ingestion.url),
-      timeoutMs: 300,
-    });
+    await expect(
+      exportInvocation(record, {
+        connectionString: connectionString(ingestion.url),
+        timeoutMs: 300,
+      }),
+    ).resolves.toBe('timedOut');
 
     expect(Date.now() - started).toBeLessThan(1000);
   });
@@ -207,15 +210,19 @@ describe.skipIf(!tls)('exportInvocation', () => {
     const url = ingestion.url;
     await new Promise((resolve) => servers.pop()?.close(resolve));
 
-    await expect(
-      exportInvocation(record, { connectionString: connectionString(url), timeoutMs: 1000 }),
-    ).resolves.toBeUndefined();
+    const result = await exportInvocation(record, {
+      connectionString: connectionString(url),
+      timeoutMs: 1000,
+    });
+
+    // SDK retries may still be pending when the bound elapses.
+    expect(['settled', 'timedOut']).toContain(result);
   });
 
   it('skips export for an invalid connection string', async () => {
     await expect(
       exportInvocation(record, { connectionString: 'not-a-connection-string', timeoutMs: 1000 }),
-    ).resolves.toBeUndefined();
+    ).resolves.toBe('settled');
   });
 
   it('restores the environment after creating the exporter', async () => {

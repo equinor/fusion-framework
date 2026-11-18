@@ -45,6 +45,12 @@ export interface ExportInvocationOptions {
   timeoutMs: number;
 }
 
+/**
+ * How {@link exportInvocation} ended: `settled` when no exporter work remains, `timedOut` when
+ * the time bound elapsed first and a request or retry may still hold the event loop open.
+ */
+export type InvocationExportResult = 'settled' | 'timedOut';
+
 /** Tool name reported on every invocation record. */
 export const TELEMETRY_TOOL_NAME = 'fusion-framework-cli';
 
@@ -76,16 +82,23 @@ const withExporterEnv = <T>(create: () => T): T => {
   }
 };
 
-/** Resolves when `task` settles or `timeoutMs` elapses, whichever comes first; never rejects. */
-const settleWithin = async (task: Promise<unknown>, timeoutMs: number): Promise<void> => {
+/**
+ * Resolves when `task` settles or `timeoutMs` elapses, whichever comes first; never rejects.
+ * Resolves `true` when `task` settled in time.
+ */
+const settleWithin = async (task: Promise<unknown>, timeoutMs: number): Promise<boolean> => {
   let timer: NodeJS.Timeout | undefined;
-  await Promise.race([
-    task.catch(() => undefined),
-    new Promise<void>((resolve) => {
-      timer = setTimeout(resolve, timeoutMs);
+  const settled = await Promise.race([
+    task.then(
+      () => true,
+      () => true,
+    ),
+    new Promise<boolean>((resolve) => {
+      timer = setTimeout(() => resolve(false), timeoutMs);
     }),
   ]);
   clearTimeout(timer);
+  return settled;
 };
 
 /** Exporter attribute that sets the `ai.location.ip` tag; it is never sent as a property. */
@@ -126,12 +139,13 @@ const toAttributes = (record: InvocationRecord): Attributes => ({
  *
  * @param record - The invocation to export.
  * @param options - Destination and time bound.
- * @returns Resolves once delivery finished, failed, or the time bound elapsed.
+ * @returns Resolves once delivery finished or failed (`settled`), or the time bound elapsed
+ * (`timedOut`).
  */
 export const exportInvocation = async (
   record: InvocationRecord,
   options: ExportInvocationOptions,
-): Promise<void> => {
+): Promise<InvocationExportResult> => {
   const deadline = Date.now() + options.timeoutMs;
   let provider: TracerProvider;
   try {
@@ -172,8 +186,9 @@ export const exportInvocation = async (
     span.end(record.endTime);
   } catch {
     // Invalid destination: telemetry is silently skipped.
-    return;
+    return 'settled';
   }
-  await settleWithin(provider.forceFlush(), deadline - Date.now());
-  await settleWithin(provider.shutdown(), Math.max(0, deadline - Date.now()));
+  const flushed = await settleWithin(provider.forceFlush(), deadline - Date.now());
+  const shutDown = await settleWithin(provider.shutdown(), Math.max(0, deadline - Date.now()));
+  return flushed && shutDown ? 'settled' : 'timedOut';
 };

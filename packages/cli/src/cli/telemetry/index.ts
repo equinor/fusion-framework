@@ -10,6 +10,7 @@ export {
   exportInvocation,
   TELEMETRY_TOOL_NAME,
   type ExportInvocationOptions,
+  type InvocationExportResult,
   type InvocationOutcome,
   type InvocationRecord,
 } from './export-invocation.js';

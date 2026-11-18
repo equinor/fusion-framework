@@ -13,7 +13,7 @@ import {
   writeTelemetrySettings,
 } from '@equinor/fusion-framework-cli/bin';
 
-import type { InvocationRecord } from './export-invocation.js';
+import type { InvocationExportResult, InvocationRecord } from './export-invocation.js';
 import {
   TELEMETRY_NOTICE,
   startInvocationTelemetry,
@@ -87,7 +87,7 @@ const start = (
   exportInvocation: ReturnType<typeof vi.fn>;
   program: Command;
 } => {
-  const exportInvocation = vi.fn(async () => undefined);
+  const exportInvocation = vi.fn(async (): Promise<InvocationExportResult> => 'settled');
   const program = overrides.program ?? createProgram();
   let time = 1_000;
   const telemetry = startInvocationTelemetry({
@@ -165,11 +165,37 @@ describe('startInvocationTelemetry', () => {
       outcome: 'failure',
     });
     expect(exported(exportInvocation)[0].fusionEnvironment).toBeUndefined();
-    // Exits with the command's own code only after the bounded export settled.
-    expect(proc.exit).toHaveBeenCalledExactlyOnceWith(2);
-    expect(proc.exit.mock.invocationCallOrder[0]).toBeGreaterThan(
-      exportInvocation.mock.invocationCallOrder[0],
-    );
+  });
+
+  it('lets Node.js exit on its own once the export settled, after command shutdown work', async () => {
+    const proc = createProcess(['ai', 'chat']);
+    const { exportInvocation, program } = start(proc);
+
+    await program.parseAsync(proc.argv);
+    proc.emit('beforeExit');
+    // Shutdown work a plugin scheduled from `beforeExit` decides the final exit code.
+    proc.exitCode = 7;
+    await settle();
+    await settle();
+
+    expect(exportInvocation).toHaveBeenCalledOnce();
+    expect(proc.exit).not.toHaveBeenCalled();
+  });
+
+  it('ends the process only when exporter work outlived the time bound', async () => {
+    const proc = createProcess(['ai', 'chat']);
+    const exportInvocation = vi.fn(async (): Promise<InvocationExportResult> => 'timedOut');
+    const { program } = start(proc, { exportInvocation });
+
+    await program.parseAsync(proc.argv);
+    proc.emit('beforeExit');
+    proc.exitCode = 7;
+    await settle();
+    await settle();
+
+    expect(exportInvocation).toHaveBeenCalledOnce();
+    // Uses the exit code the command left, not the one seen when the event loop first drained.
+    expect(proc.exit).toHaveBeenCalledExactlyOnceWith(7);
   });
 
   it('records runs that Commander ends itself, keeping their exit code', async () => {

@@ -16,6 +16,7 @@ import {
 import {
   exportInvocation as defaultExportInvocation,
   type ExportInvocationOptions,
+  type InvocationExportResult,
   type InvocationOutcome,
   type InvocationRecord,
 } from './export-invocation.js';
@@ -78,7 +79,10 @@ export interface StartInvocationTelemetryOptions {
   /** Upper bound for the export; defaults to {@link DEFAULT_TELEMETRY_TIMEOUT_MS}. */
   timeoutMs?: number;
   /** Exports the record; defaults to the Azure Monitor exporter. */
-  exportInvocation?: (record: InvocationRecord, options: ExportInvocationOptions) => Promise<void>;
+  exportInvocation?: (
+    record: InvocationRecord,
+    options: ExportInvocationOptions,
+  ) => Promise<InvocationExportResult>;
   /** Epoch milliseconds clock; injectable for tests. */
   now?: () => number;
   /** Machine id provider; injectable for tests. */
@@ -124,8 +128,9 @@ const showNotice = (state: TelemetryState, proc: TelemetryProcess, ci: boolean):
  * Nothing happens when telemetry is disabled through `FUSION_CLI_TELEMETRY_OPTOUT`,
  * `DO_NOT_TRACK` or `telemetry disable`. Otherwise the command path and option names are
  * resolved from argv, outgoing Fusion requests join the invocation trace, and the invocation is
- * exported with a bounded wait when the event loop drains (then the process exits with its exit
- * code), when an error escapes parsing (see {@link InvocationTelemetry.fail}), when Commander
+ * exported with a bounded wait when the event loop drains (then Node.js exits on its own once
+ * the command's shutdown work finishes; the process is only ended early when exporter work
+ * outlived the time bound), when an error escapes parsing (see {@link InvocationTelemetry.fail}), when Commander
  * ends the run itself (see {@link InvocationTelemetry.exit}), on an uncaught exception that no
  * other handler owns (then the process exits with code 1, as Node.js would), or on SIGINT/SIGTERM
  * when no other handler owns the signal. Runs ended by an explicit `process.exit()` inside a command cannot be
@@ -197,12 +202,12 @@ const start = (options: StartInvocationTelemetryOptions): InvocationTelemetry | 
   };
   proc.on('uncaughtException', onFatal);
 
-  const finish = async (exitCode: number): Promise<void> => {
-    if (finished) return;
+  const finish = async (exitCode: number): Promise<InvocationExportResult> => {
+    if (finished) return 'settled';
     finished = true;
     setInvocationTraceContext(undefined);
     // Respect an opt-out made during this run, e.g. `telemetry disable`.
-    if (!resolveTelemetryState(proc.env, state.configPath).enabled) return;
+    if (!resolveTelemetryState(proc.env, state.configPath).enabled) return 'settled';
     const outcome: InvocationOutcome =
       cancelledBy || exitCode === 130 || exitCode === 143
         ? 'cancelled'
@@ -229,18 +234,23 @@ const start = (options: StartInvocationTelemetryOptions): InvocationTelemetry | 
       machineId: (options.machineId ?? createMachineId)(),
     };
     try {
-      await exportRecord(record, { connectionString, timeoutMs });
+      return await exportRecord(record, { connectionString, timeoutMs });
     } catch {
       // Telemetry must never change the command's outcome.
+      return 'settled';
     }
   };
 
   proc.once('beforeExit', () => {
     if (finished) return;
-    const exitCode = toExitCode(proc.exitCode);
-    // The command has drained; exit once the bounded export settles so in-flight exporter
-    // sockets or retry timers cannot hold the process open past the time bound.
-    void finish(exitCode).finally(() => proc.exit(exitCode));
+    void finish(toExitCode(proc.exitCode)).then((result) => {
+      // Once export settles, Node.js exits on its own, after any shutdown work the command
+      // scheduled from `beforeExit` and with the exit code that work leaves. Only exporter work
+      // that outlived the time bound would hold the process open; the unref'd timer ends it then,
+      // and never fires when nothing else keeps the event loop alive.
+      if (result !== 'timedOut') return;
+      setTimeout(() => proc.exit(toExitCode(proc.exitCode)), 0).unref();
+    });
   });
 
   const signalListeners = new Map<CancelSignal, () => void>();
