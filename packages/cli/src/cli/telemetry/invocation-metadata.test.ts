@@ -61,6 +61,22 @@ describe('resolveInvocationCommand', () => {
     expect(result.optionNames).toEqual(['--debug', '--env']);
   });
 
+  it('expands combined short flags and attached short values, never keeping values', () => {
+    const program = createProgram();
+    program.commands[0].commands[0].option('-d, --dry').option('-s, --strict');
+
+    const grouped = resolveInvocationCommand(program, ['app', 'build', '-ds', '-efprd']);
+    expect(grouped.optionNames).toEqual(['--dry', '--env', '--strict']);
+    expect(JSON.stringify(grouped)).not.toContain('fprd');
+
+    // A trailing value-taking short option reads its value from the next token.
+    const trailing = resolveInvocationCommand(program, ['app', 'build', '-dse', 'app', 'x']);
+    expect(trailing).toMatchObject({
+      path: ['app', 'build'],
+      optionNames: ['--dry', '--env', '--strict'],
+    });
+  });
+
   it('classifies plugin commands', () => {
     expect(resolveInvocationCommand(createProgram(), ['ai', 'chat', '--model', 'x'])).toEqual({
       path: ['ai', 'chat'],

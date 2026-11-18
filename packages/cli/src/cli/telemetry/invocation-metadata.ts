@@ -39,6 +39,37 @@ const findOption = (chain: readonly Command[], flag: string): Option | undefined
 };
 
 /**
+ * Expands an option token into the registered options it uses, following Commander's rules:
+ * `-abc` is `-a -b -c` while each is a boolean flag, and the first value-taking short option
+ * takes the rest of the group (`-efprd` is `-e` with value `fprd`). Values are never returned.
+ *
+ * @returns The matched options and whether the last one still expects a value in the next token.
+ */
+const expandOptionToken = (
+  chain: readonly Command[],
+  token: string,
+): { options: Option[]; awaitsValue: boolean } => {
+  const [flag, inlineValue] = token.split('=', 2);
+  const option = findOption(chain, flag);
+  if (option) {
+    const takesValue = option.required || option.optional;
+    return { options: [option], awaitsValue: takesValue && inlineValue === undefined };
+  }
+  // Only single-dash groups such as `-ds` or `-efprd` can combine short options.
+  if (token.startsWith('--') || token.length <= 2) return { options: [], awaitsValue: false };
+  const options: Option[] = [];
+  for (let index = 1; index < token.length; index++) {
+    const short = findOption(chain, `-${token[index]}`);
+    if (!short) break;
+    options.push(short);
+    if (short.required || short.optional) {
+      return { options, awaitsValue: index === token.length - 1 };
+    }
+  }
+  return { options, awaitsValue: false };
+};
+
+/**
  * Resolves the static command path and the names of registered options from argv.
  *
  * Only tokens that match registered command or option names are kept, so argument values,
@@ -62,20 +93,23 @@ export const resolveInvocationCommand = (
     // Everything after `--` is passed through verbatim and never inspected.
     if (token === '--') break;
     if (token.startsWith('-') && token.length > 1) {
-      const [flag, inlineValue] = token.split('=', 2);
+      const flag = token.split('=', 1)[0];
       if (flag === '-h' || flag === '--help') {
         optionNames.add('--help');
         continue;
       }
-      const option = findOption(chain, flag);
-      if (!option) continue;
-      const name = optionName(option);
-      if (name) optionNames.add(name);
+      const { options, awaitsValue } = expandOptionToken(chain, token);
+      for (const option of options) {
+        const name = optionName(option);
+        if (name) optionNames.add(name);
+      }
+      const last = options[options.length - 1];
+      if (!last || !awaitsValue) continue;
       // Skip the separate value token so it is never mistaken for a command name.
       const next = args[index + 1];
       const consumesNext =
-        option.required || (option.optional && next !== undefined && !next.startsWith('-'));
-      if (inlineValue === undefined && consumesNext) index++;
+        last.required || (last.optional && next !== undefined && !next.startsWith('-'));
+      if (consumesNext) index++;
       continue;
     }
     if (!walkingCommands) continue;
