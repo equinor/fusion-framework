@@ -76,9 +76,19 @@ await registerCommands(program);
 // Starts after registration so plugin commands are recognised in the invocation record.
 const telemetry = startInvocationTelemetry({ program, version: pkg.packageJson.version });
 
+/**
+ * Errors from Commander's own exit path, which it has already printed. Hooks and actions may
+ * throw other `CommanderError`s (e.g. `InvalidOptionArgumentError`) that nothing has printed.
+ */
+const commanderExits = new WeakSet<CommanderError>();
+
 /** Makes Commander throw instead of calling `process.exit()`, on every registered command. */
 const throwOnCommanderExit = (command: Command): void => {
-  command.exitOverride();
+  command.exitOverride((error) => {
+    commanderExits.add(error);
+    // Same as Commander's default override, which lets async subcommands keep running.
+    if (error.code !== 'commander.executeSubCommandAsync') throw error;
+  });
   for (const subcommand of command.commands) throwOnCommanderExit(subcommand);
 };
 
@@ -89,7 +99,7 @@ if (telemetry) throwOnCommanderExit(program);
 try {
   await program.parseAsync();
 } catch (error) {
-  if (error instanceof CommanderError) {
+  if (error instanceof CommanderError && commanderExits.has(error)) {
     // Commander has already written its output; exit with the code it would have used.
     await telemetry?.exit(error.exitCode, error);
     process.exit(error.exitCode);
