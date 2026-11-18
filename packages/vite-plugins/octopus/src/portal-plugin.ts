@@ -3,7 +3,7 @@ import http, { type IncomingMessage, type ServerResponse } from 'node:http';
 import type { Plugin } from 'vite';
 
 import { DEFAULT_OCTOPUS_URL } from './server/index.js';
-import { parseLocalUrl, type RegisteredApp } from './server/registry.js';
+import { parseLocalUrl, portOf, type RegisteredApp } from './server/registry.js';
 import { parseAppRequest } from './server/routes.js';
 import { OCTOPUS_HEADER, OCTOPUS_MOCK_HEADER, PROXY_PREFIX } from './server/server.js';
 import { type RunningOctopus, startOctopus } from './server/start.js';
@@ -71,7 +71,7 @@ export const ensureOctopus = async (
   }
 
   try {
-    state.running = await startOctopus(Number(url.port), (line) => log(`octopus: ${line}`));
+    state.running = await startOctopus(portOf(url), (line) => log(`octopus: ${line}`));
     log(`🐙 Octopus at ${octopusUrl} (started by the portal)`);
     return 'started';
   } catch (error) {
@@ -171,7 +171,14 @@ export const createAppSourceHandler =
       return;
     }
 
-    const appKey = decodeURIComponent(pathname.slice(APP_SOURCE_PATH.length + 1));
+    let appKey: string;
+    try {
+      appKey = decodeURIComponent(pathname.slice(APP_SOURCE_PATH.length + 1));
+    } catch {
+      res.writeHead(400, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid app key' }));
+      return;
+    }
     let source: AppSource = { source: 'ci' };
     try {
       const response = await fetch(`${octopusUrl}/api/apps`, {
@@ -221,7 +228,8 @@ const createCache = <T>(load: (key: string) => Promise<T>) => {
  * - that mock server lists the service (`/@fusion-mock/discovery`).
  *
  * Everything else, including the portal's own requests, goes on to `next()`, i.e. to CI. The
- * portal's token is not sent to the mock server.
+ * portal's token is not sent to the mock server. When the mock server does not list its services,
+ * the app's requests get a `502` instead of going to CI.
  *
  * @param octopusUrl - Octopus address.
  * @returns The handler.
@@ -235,7 +243,10 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
     const response = await fetch(`${mockUrl}/@fusion-mock/discovery`, {
       signal: AbortSignal.timeout(1000),
     });
-    const services = response.ok ? ((await response.json()) as Array<{ key: string }>) : [];
+    if (!response.ok) {
+      throw new Error(`answered ${response.status}`);
+    }
+    const services = (await response.json()) as Array<{ key: string }>;
     return new Set(services.map(({ key }) => key));
   });
 
@@ -251,12 +262,30 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
     let mockUrl: string | undefined;
     try {
       mockUrl = (await activeApps(octopusUrl)).find((app) => app.appKey === appKey)?.mockUrl;
-      if (!mockUrl || !service || !(await mockServices(mockUrl)).has(service)) {
-        next();
-        return;
-      }
     } catch {
-      // Octopus or the mock server is not answering; the request goes to CI.
+      // Octopus is not running, so no app is in mock mode; the request goes to CI.
+    }
+    if (!mockUrl || !service) {
+      next();
+      return;
+    }
+
+    let services: Set<string>;
+    try {
+      services = await mockServices(mockUrl);
+    } catch (error) {
+      // The app expects mock data. Falling back to CI would send its requests, with the real
+      // token, to real services, where a POST or DELETE changes real data.
+      res.writeHead(502, { 'content-type': 'application/json', [OCTOPUS_HEADER]: 'mock' });
+      res.end(
+        JSON.stringify({
+          error: `${appKey} runs in mock mode, but its mock server ${mockUrl} did not list its services (${(error as Error).message})`,
+        }),
+      );
+      return;
+    }
+    // Only services the mock server does not mock go to CI.
+    if (!services.has(service)) {
       next();
       return;
     }

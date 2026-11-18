@@ -166,6 +166,10 @@ export const octopusAppPlugin = (options: OctopusAppPluginOptions): Plugin => {
       httpServer.once('listening', () => {
         const { port } = httpServer.address() as AddressInfo;
         const url = `http://localhost:${port}`;
+        // Vite builds the addresses of imported assets (images, fonts, CSS `url()`) from this
+        // origin. Without it they are root-relative, and the portal would request them from its
+        // own origin. The port is only known now, since the dev server may take any free port.
+        server.config.server.origin ??= url;
         void register(url);
         timer = setInterval(() => void register(url), heartbeatMs);
         timer.unref();

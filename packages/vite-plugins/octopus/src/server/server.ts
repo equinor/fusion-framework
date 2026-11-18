@@ -2,7 +2,7 @@ import http, { type IncomingMessage, type ServerResponse } from 'node:http';
 import net from 'node:net';
 
 import { renderPage } from './page.js';
-import { parseLocalUrl, type RegisteredApp, type Registry } from './registry.js';
+import { parseLocalUrl, portOf, type RegisteredApp, type Registry } from './registry.js';
 import { parseAppRequest } from './routes.js';
 
 /** Prefix for app requests the portal forwards to Octopus, e.g. `/proxy/persons/me/apps/my-app`. */
@@ -23,7 +23,12 @@ export type RegistryEvent =
   | { type: 'registered' | 'unregistered' | 'expired' | 'unreachable'; app: RegisteredApp }
   | { type: 'replaced'; app: RegisteredApp; previous: RegisteredApp };
 
+/**
+ * Options for {@link createOctopusServer}: the registry the server reads and changes, and a
+ * listener that reports registry changes, e.g. for logging.
+ */
 export interface OctopusServerOptions {
+  /** Registered apps; the server's API and proxy read and change it. */
   registry: Registry;
   /** Called when the registry changes. */
   onEvent?: (event: RegistryEvent) => void;
@@ -54,6 +59,15 @@ const readJson = (req: IncomingMessage): Promise<unknown> =>
     });
     req.on('error', reject);
   });
+
+/** Decodes an app key from a request path; `undefined` for an invalid percent encoding. */
+const decodeAppKey = (value: string): string | undefined => {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return undefined;
+  }
+};
 
 /** Answers that Octopus does not serve the request, so the portal falls back to CI. */
 const sendMiss = (res: ServerResponse): void => {
@@ -136,8 +150,8 @@ const proxyToApp = (
  * @param options - Registry and event listener.
  * @returns An HTTP server that is not yet listening.
  */
-export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions): http.Server =>
-  http.createServer(async (req, res) => {
+export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions): http.Server => {
+  const handle = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     // A web page whose own host name resolves to this machine (DNS rebinding) sends its own
     // host name here; only requests addressed to this machine are answered.
     if (!parseLocalUrl(`http://${req.headers.host ?? ''}`)) {
@@ -160,16 +174,21 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
 
     const entry = url.pathname.match(/^\/api\/apps\/([^/]+)$/);
     if (entry) {
-      const appKey = decodeURIComponent(entry[1]);
-      if (!APP_KEY.test(appKey)) {
-        sendJson(res, 400, { error: `Invalid app key: ${appKey}` });
+      const appKey = decodeAppKey(entry[1]);
+      if (appKey === undefined || !APP_KEY.test(appKey)) {
+        sendJson(res, 400, { error: `Invalid app key: ${appKey ?? entry[1]}` });
         return;
       }
 
       if (req.method === 'PUT') {
         let body: { url?: unknown; mockUrl?: unknown; instanceId?: unknown; startedAt?: unknown };
         try {
-          body = (await readJson(req)) as typeof body;
+          const json = await readJson(req);
+          // `null`, arrays and other JSON values are not a registration.
+          if (typeof json !== 'object' || json === null || Array.isArray(json)) {
+            throw new Error('Request body is not a JSON object');
+          }
+          body = json;
         } catch (error) {
           sendJson(res, 400, { error: (error as Error).message });
           return;
@@ -262,7 +281,19 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
     }
 
     sendJson(res, 404, { error: 'Not found' });
+  };
+
+  return http.createServer((req, res) => {
+    // A failing request must not take Octopus down, nor the portal dev server that started it.
+    handle(req, res).catch((error: unknown) => {
+      if (!res.headersSent) {
+        sendJson(res, 500, { error: (error as Error).message });
+      } else {
+        res.end();
+      }
+    });
   });
+};
 
 /**
  * Checks whether something listens at an address.
@@ -273,8 +304,11 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
  */
 export const isReachable = (url: string, timeoutMs = 1000): Promise<boolean> =>
   new Promise((resolve) => {
-    const { hostname, port } = new URL(url);
-    const socket = net.connect({ host: hostname.replace(/^\[|\]$/g, ''), port: Number(port) });
+    const address = new URL(url);
+    const socket = net.connect({
+      host: address.hostname.replace(/^\[|\]$/g, ''),
+      port: portOf(address),
+    });
     const done = (result: boolean) => {
       socket.destroy();
       resolve(result);
@@ -284,7 +318,12 @@ export const isReachable = (url: string, timeoutMs = 1000): Promise<boolean> =>
     socket.once('error', () => done(false));
   });
 
+/**
+ * Options for {@link startHealthChecks}: the registry to clean up, how often and after how long
+ * entries are removed, and the probe that decides whether a dev server still answers.
+ */
 export interface HealthCheckOptions {
+  /** Registered apps; entries for stopped dev servers are removed from it. */
   registry: Registry;
   /** How often to check. */
   intervalMs?: number;
@@ -292,6 +331,7 @@ export interface HealthCheckOptions {
   ttlMs?: number;
   /** Checks whether an app's dev server still listens; replaceable in tests. */
   reachable?: (url: string) => Promise<boolean>;
+  /** Called for each removed entry. */
   onEvent?: (event: RegistryEvent) => void;
 }
 

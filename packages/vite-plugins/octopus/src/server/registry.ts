@@ -45,6 +45,15 @@ export const parseLocalUrl = (url: unknown): URL | undefined => {
 };
 
 /**
+ * Gets the port of an HTTP address. `URL` leaves the port empty when it is the protocol's
+ * default, so `http://localhost` and `http://localhost:80` both give 80.
+ *
+ * @param url - An `http:` address, as accepted by {@link parseLocalUrl}.
+ * @returns The port number.
+ */
+export const portOf = (url: URL): number => Number(url.port || 80);
+
+/**
  * Keeps track of which apps are served where.
  *
  * An app key can have several dev servers at once, e.g. a normal one and one in mock mode. The

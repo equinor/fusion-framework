@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseLocalUrl, Registry } from './registry.js';
+import { parseLocalUrl, portOf, Registry } from './registry.js';
 import { parseAppRequest } from './routes.js';
 
 describe('Registry', () => {
@@ -164,5 +164,15 @@ describe('parseAppRequest', () => {
     '/apps/fusion-help/builds/1.0.0%3Fx/config',
   ])('leaves %s to CI', (path) => {
     expect(parseAppRequest(path)).toBeUndefined();
+  });
+});
+
+describe('portOf', () => {
+  it.each([
+    ['http://localhost:5173', 5173],
+    ['http://localhost:80', 80],
+    ['http://localhost', 80],
+  ])('reads %s as port %i', (url, port) => {
+    expect(portOf(new URL(url))).toBe(port);
   });
 });

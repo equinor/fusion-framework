@@ -76,6 +76,27 @@ describe('Octopus server', () => {
     expect(response.status).toBe(400);
   });
 
+  it('rejects an invalid percent encoding in the app key, and keeps running', async () => {
+    const response = await fetch(`${octopusUrl}/api/apps/%`);
+
+    expect(response.status).toBe(400);
+    expect((await fetch(`${octopusUrl}/api/apps`)).status).toBe(200);
+  });
+
+  it.each(['null', '[]', '5', '"text"'])(
+    'rejects a registration body of %s, and keeps running',
+    async (body) => {
+      const response = await fetch(`${octopusUrl}/api/apps/fusion-help`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body,
+      });
+
+      expect(response.status).toBe(400);
+      expect((await fetch(`${octopusUrl}/api/apps`)).status).toBe(200);
+    },
+  );
+
   it('serves the page', async () => {
     const response = await fetch(octopusUrl);
 
@@ -312,6 +333,17 @@ describe('Octopus server', () => {
       await expect(appSource('fusion-help', 'http://localhost:1')).resolves.toEqual({
         source: 'ci',
       });
+    });
+
+    it('rejects an invalid percent encoding in the app key', async () => {
+      const handler = createAppSourceHandler(octopusUrl);
+      const portal = http.createServer((req, res) => void handler(req, res, () => res.end()));
+      servers.push(portal);
+      const portalUrl = await listen(portal);
+
+      const response = await fetch(`${portalUrl}/octopus/apps/%`);
+
+      expect(response.status).toBe(400);
     });
   });
 });
