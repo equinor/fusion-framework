@@ -9,6 +9,7 @@ export {
   readTelemetrySettings,
   resolveTelemetryConfigPath,
   resolveTelemetryState,
+  markTelemetryNoticeShown,
   writeTelemetrySettings,
   type TelemetrySettings,
   type TelemetryState,

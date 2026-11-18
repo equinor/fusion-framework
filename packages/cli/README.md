@@ -260,7 +260,9 @@ it back on. The setting is stored in `fusion-framework-cli/telemetry.json` under
 `$XDG_CONFIG_HOME` (default `~/.config`), or `%APPDATA%` on Windows.
 
 The first interactive run prints a short notice about collection and opting out to stderr, then
-records that the notice was shown. The notice is not shown in CI or when stderr is not a terminal.
+records that the notice was shown in a separate `telemetry-notice-shown` marker file in the same
+folder. Recording the notice never rewrites `telemetry.json`, so it cannot undo an opt-out made at
+the same time. The notice is not shown in CI or when stderr is not a terminal.
 
 ### Behavior
 

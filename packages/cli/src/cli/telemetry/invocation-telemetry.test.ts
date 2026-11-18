@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -414,6 +414,34 @@ describe('startInvocationTelemetry', () => {
     expect(TELEMETRY_NOTICE).toContain('FUSION_CLI_TELEMETRY_OPTOUT=1');
     expect(second.stderr.output).toBe('');
     expect(readTelemetrySettings(resolveTelemetryConfigPath(first.env)).noticeShown).toBe(true);
+  });
+
+  it('never rewrites the opt-out when recording the notice', () => {
+    const first = createProcess(['app', 'build']);
+    const configPath = resolveTelemetryConfigPath(first.env);
+    // `telemetry disable` from another shell lands while the first run shows its notice.
+    first.stderr.write = (chunk: string): boolean => {
+      writeTelemetrySettings(configPath, { enabled: false });
+      first.stderr.output += chunk;
+      return true;
+    };
+    start(first);
+
+    expect(first.stderr.output).toBe(TELEMETRY_NOTICE);
+    expect(readTelemetrySettings(configPath)).toEqual({ enabled: false, noticeShown: true });
+    // Only `telemetry enable|disable` writes the settings file; the notice uses its own marker.
+    rmSync(configPath);
+    start(createProcess(['app', 'build']));
+    expect(existsSync(configPath)).toBe(false);
+  });
+
+  it('replaces the settings file atomically without leaving temporary files', () => {
+    const configPath = resolveTelemetryConfigPath(createProcess([]).env);
+    writeTelemetrySettings(configPath, { enabled: false });
+    writeTelemetrySettings(configPath, { enabled: true });
+
+    expect(readTelemetrySettings(configPath)).toEqual({ enabled: true });
+    expect(readdirSync(dirname(configPath))).toEqual(['telemetry.json']);
   });
 
   it('suppresses the notice in CI and non-interactive sessions without persisting it', () => {

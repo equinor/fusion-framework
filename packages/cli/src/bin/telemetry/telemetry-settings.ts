@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 
@@ -12,9 +12,18 @@ export const DO_NOT_TRACK_ENV = 'DO_NOT_TRACK';
 export interface TelemetrySettings {
   /** Explicit user choice from `fusion-framework-cli telemetry enable|disable`. */
   enabled?: boolean;
-  /** Set once the one-time collection notice has been shown. */
+  /**
+   * Whether the one-time collection notice has been shown. Kept in its own marker file (see
+   * {@link markTelemetryNoticeShown}) so recording the notice never rewrites the user's choice.
+   */
   noticeShown?: boolean;
 }
+
+/** Name of the marker file, next to the settings file, that records the notice was shown. */
+const NOTICE_MARKER_FILE = 'telemetry-notice-shown';
+
+const resolveNoticeMarkerPath = (configPath: string): string =>
+  join(dirname(configPath), NOTICE_MARKER_FILE);
 
 /** Why telemetry is enabled or disabled for the current run. */
 export type TelemetryStateReason = 'default' | 'config' | 'optout-env' | 'do-not-track';
@@ -49,42 +58,72 @@ export const resolveTelemetryConfigPath = (
 
 /**
  * Reads persisted telemetry settings. Missing or unreadable files yield empty settings, so a
- * corrupt file can never stop a command.
+ * corrupt file can never stop a command; the notice state comes from its marker file.
  *
  * @param path - Settings file location.
  * @returns The boolean preferences found in the file.
  */
 export const readTelemetrySettings = (path: string): TelemetrySettings => {
+  const notice: TelemetrySettings = existsSync(resolveNoticeMarkerPath(path))
+    ? { noticeShown: true }
+    : {};
   try {
     const raw: unknown = JSON.parse(readFileSync(path, 'utf8'));
-    // Only known boolean preferences are honoured; anything else is ignored.
-    if (!raw || typeof raw !== 'object') return {};
-    const { enabled, noticeShown } = raw as Record<string, unknown>;
-    return {
-      ...(typeof enabled === 'boolean' ? { enabled } : {}),
-      ...(typeof noticeShown === 'boolean' ? { noticeShown } : {}),
-    };
+    // Only the known boolean preference is honoured; anything else is ignored.
+    if (!raw || typeof raw !== 'object') return notice;
+    const { enabled } = raw as Record<string, unknown>;
+    return { ...(typeof enabled === 'boolean' ? { enabled } : {}), ...notice };
   } catch {
-    return {};
+    return notice;
   }
 };
 
 /**
- * Merges and persists telemetry settings.
+ * Persists the user's telemetry choice.
+ *
+ * The file is replaced atomically (write to a temporary file, then rename), so a concurrent run
+ * never reads a half-written file and falls back to the default. Only `telemetry enable|disable`
+ * writes this file, so an explicit opt-out cannot be overwritten by other CLI bookkeeping.
  *
  * @param path - Settings file location.
- * @param update - Preferences to change.
- * @returns The merged settings.
+ * @param update - The choice to persist.
+ * @returns The resulting settings.
  * @throws When the file cannot be written; callers decide whether that matters.
  */
 export const writeTelemetrySettings = (
   path: string,
-  update: TelemetrySettings,
+  update: Pick<TelemetrySettings, 'enabled'>,
 ): TelemetrySettings => {
-  const settings = { ...readTelemetrySettings(path), ...update };
+  const { enabled } = { ...readTelemetrySettings(path), ...update };
+  const persisted = enabled === undefined ? {} : { enabled };
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, `${JSON.stringify(settings, null, 2)}\n`);
-  return settings;
+  const temporary = `${path}.${process.pid}.${Date.now()}.tmp`;
+  try {
+    writeFileSync(temporary, `${JSON.stringify(persisted, null, 2)}\n`);
+    renameSync(temporary, path);
+  } catch (error) {
+    rmSync(temporary, { force: true });
+    throw error;
+  }
+  return readTelemetrySettings(path);
+};
+
+/**
+ * Records that the one-time collection notice has been shown, by creating a marker file next to
+ * the settings file. Never touches the settings file itself, so it cannot undo an opt-out made
+ * by a concurrent `telemetry disable`.
+ *
+ * @param path - Settings file location.
+ * @throws When the marker cannot be created; callers decide whether that matters.
+ */
+export const markTelemetryNoticeShown = (path: string): void => {
+  mkdirSync(dirname(path), { recursive: true });
+  try {
+    writeFileSync(resolveNoticeMarkerPath(path), '', { flag: 'wx' });
+  } catch (error) {
+    // Another run already recorded the notice.
+    if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+  }
 };
 
 /**

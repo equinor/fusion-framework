@@ -6,10 +6,10 @@ import isContinuousIntegration from 'is-ci';
 import {
   TELEMETRY_OPTOUT_ENV,
   createInvocationTraceContext,
+  markTelemetryNoticeShown,
   resolveTelemetryConnectionString,
   resolveTelemetryState,
   setInvocationTraceContext,
-  writeTelemetrySettings,
   type TelemetryState,
 } from '@equinor/fusion-framework-cli/bin';
 
@@ -118,7 +118,7 @@ const showNotice = (state: TelemetryState, proc: TelemetryProcess, ci: boolean):
   if (state.settings.noticeShown || ci || !proc.stderr.isTTY) return;
   proc.stderr.write(TELEMETRY_NOTICE);
   try {
-    writeTelemetrySettings(state.configPath, { noticeShown: true });
+    markTelemetryNoticeShown(state.configPath);
   } catch {
     // An unwritable config only means the notice is shown again next run.
   }
