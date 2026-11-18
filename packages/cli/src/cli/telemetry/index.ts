@@ -14,3 +14,4 @@ export {
   type InvocationOutcome,
   type InvocationRecord,
 } from './export-invocation.js';
+export { routeCommanderExits, type RouteCommanderExitsOptions } from './commander-exit.js';

@@ -1,4 +1,4 @@
-import { Command, CommanderError } from 'commander';
+import { Command } from 'commander';
 import chalk from 'chalk';
 import { config as loadDotEnv } from 'dotenv';
 
@@ -9,7 +9,7 @@ import { dirname, resolve } from 'node:path';
 import { readPackageUpSync } from 'read-package-up';
 
 import registerCommands from './commands/index.js';
-import { startInvocationTelemetry } from './telemetry/index.js';
+import { routeCommanderExits, startInvocationTelemetry } from './telemetry/index.js';
 
 // Load environment variables from .env file without stdout contamination
 // Uses dotenv's quiet option to suppress informational messages that contaminate JSON output
@@ -76,30 +76,14 @@ await registerCommands(program);
 // Starts after registration so plugin commands are recognised in the invocation record.
 const telemetry = startInvocationTelemetry({ program, version: pkg.packageJson.version });
 
-/**
- * Errors from Commander's own exit path, which it has already printed. Hooks and actions may
- * throw other `CommanderError`s (e.g. `InvalidOptionArgumentError`) that nothing has printed.
- */
-const commanderExits = new WeakSet<CommanderError>();
-
-/** Makes Commander throw instead of calling `process.exit()`, on every registered command. */
-const throwOnCommanderExit = (command: Command): void => {
-  command.exitOverride((error) => {
-    commanderExits.add(error);
-    // Same as Commander's default override, which lets async subcommands keep running.
-    if (error.code !== 'commander.executeSubCommandAsync') throw error;
-  });
-  for (const subcommand of command.commands) throwOnCommanderExit(subcommand);
-};
-
 // Help, version and usage errors would otherwise exit before the invocation can be exported.
-if (telemetry) throwOnCommanderExit(program);
+const isCommanderExit = telemetry ? routeCommanderExits(program, { telemetry }) : undefined;
 
 /** read action and options and start programs */
 try {
   await program.parseAsync();
 } catch (error) {
-  if (error instanceof CommanderError && commanderExits.has(error)) {
+  if (isCommanderExit?.(error)) {
     // Commander has already written its output; exit with the code it would have used.
     await telemetry?.exit(error.exitCode, error);
     process.exit(error.exitCode);
