@@ -60,6 +60,8 @@ export type TelemetryProcess = Pick<
   | 'stderr'
   | 'once'
   | 'on'
+  | 'prependListener'
+  | 'prependOnceListener'
   | 'removeListener'
   | 'listenerCount'
   | 'kill'
@@ -200,43 +202,44 @@ const start = (options: StartInvocationTelemetryOptions): InvocationTelemetry | 
     }
     void finish(1).finally(() => proc.exit(1));
   };
-  proc.on('uncaughtException', onFatal);
+  // Runs first, so handlers registered with `once` have not removed themselves yet.
+  proc.prependListener('uncaughtException', onFatal);
 
   const finish = async (exitCode: number): Promise<InvocationExportResult> => {
     if (finished) return 'settled';
     finished = true;
     setInvocationTraceContext(undefined);
-    // Respect an opt-out made during this run, e.g. `telemetry disable`.
-    if (!resolveTelemetryState(proc.env, state.configPath).enabled) return 'settled';
     const outcome: InvocationOutcome =
       cancelledBy || exitCode === 130 || exitCode === 143
         ? 'cancelled'
         : exitCode === 0
           ? 'success'
           : 'failure';
-    const record: InvocationRecord = {
-      traceId: trace.traceId,
-      spanId: trace.spanId,
-      version: options.version,
-      command: command.path.join(' '),
-      commandKind: command.kind,
-      optionNames: command.optionNames,
-      exitCode,
-      outcome,
-      ...(exceptionType ? { exceptionType } : {}),
-      startTime,
-      endTime: now(),
-      os: proc.platform,
-      arch: proc.arch,
-      nodeVersion: proc.versions.node ?? 'unknown',
-      ci,
-      ...(fusionEnvironment ? { fusionEnvironment } : {}),
-      machineId: (options.machineId ?? createMachineId)(),
-    };
     try {
+      // Respect an opt-out made during this run, e.g. `telemetry disable`.
+      if (!resolveTelemetryState(proc.env, state.configPath).enabled) return 'settled';
+      const record: InvocationRecord = {
+        traceId: trace.traceId,
+        spanId: trace.spanId,
+        version: options.version,
+        command: command.path.join(' '),
+        commandKind: command.kind,
+        optionNames: command.optionNames,
+        exitCode,
+        outcome,
+        ...(exceptionType ? { exceptionType } : {}),
+        startTime,
+        endTime: now(),
+        os: proc.platform,
+        arch: proc.arch,
+        nodeVersion: proc.versions.node ?? 'unknown',
+        ci,
+        ...(fusionEnvironment ? { fusionEnvironment } : {}),
+        machineId: (options.machineId ?? createMachineId)(),
+      };
       return await exportRecord(record, { connectionString, timeoutMs });
     } catch {
-      // Telemetry must never change the command's outcome.
+      // Telemetry, including collecting its metadata, must never change the command's outcome.
       return 'settled';
     }
   };
@@ -268,7 +271,8 @@ const start = (options: StartInvocationTelemetryOptions): InvocationTelemetry | 
       });
     };
     signalListeners.set(signal, onSignal);
-    proc.once(signal, onSignal);
+    // Runs first, so the command's `once` handlers still count as owning the signal.
+    proc.prependOnceListener(signal, onSignal);
   }
 
   return {

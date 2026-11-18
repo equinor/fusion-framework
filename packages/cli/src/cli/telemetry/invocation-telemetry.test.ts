@@ -282,6 +282,21 @@ describe('startInvocationTelemetry', () => {
     expect(exportInvocation).not.toHaveBeenCalled();
   });
 
+  it('leaves uncaught exceptions to a once handler the command installed', async () => {
+    const proc = createProcess(['app', 'build']);
+    const handler = vi.fn();
+    // Installed before telemetry starts, so it would run (and remove itself) first.
+    proc.once('uncaughtException', handler);
+    const { exportInvocation } = start(proc);
+
+    proc.emit('uncaughtException', new Error('handled'));
+    await settle();
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(proc.exit).not.toHaveBeenCalled();
+    expect(exportInvocation).not.toHaveBeenCalled();
+  });
+
   it('exports a cancelled run on SIGINT, then re-raises the signal', async () => {
     const proc = createProcess(['app', 'build']);
     const { exportInvocation } = start(proc);
@@ -307,6 +322,37 @@ describe('startInvocationTelemetry', () => {
     proc.emit('beforeExit');
     await settle();
     expect(exported(exportInvocation)[0]).toMatchObject({ exitCode: 0, outcome: 'cancelled' });
+  });
+
+  it('leaves signals owned by a once handler alone', async () => {
+    const proc = createProcess(['app', 'build']);
+    const handler = vi.fn();
+    // Installed before telemetry starts, so it would run (and remove itself) first.
+    proc.once('SIGINT', handler);
+    const { exportInvocation } = start(proc);
+
+    proc.emit('SIGINT');
+    await settle();
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(proc.kill).not.toHaveBeenCalled();
+    expect(exportInvocation).not.toHaveBeenCalled();
+  });
+
+  it('keeps the command outcome when collecting the machine id throws', async () => {
+    const machineId = (): string => {
+      throw new Error('no network interfaces');
+    };
+    const proc = createProcess(['app', 'build']);
+    const { telemetry, exportInvocation } = start(proc, { machineId });
+    await expect(telemetry?.fail(new Error('command failed'))).resolves.toBeUndefined();
+    expect(exportInvocation).not.toHaveBeenCalled();
+
+    const exiting = createProcess(['app', 'build']);
+    start(exiting, { machineId });
+    exiting.emit('beforeExit');
+    await settle();
+    expect(exiting.exit).not.toHaveBeenCalled();
   });
 
   it('never lets an export failure escape', async () => {
