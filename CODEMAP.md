@@ -13,7 +13,7 @@ search to rediscover it.
 
 | Path | Contains | Published? |
 | --- | --- | --- |
-| `packages/*` | Framework libraries (68 packages) | Yes, via Changesets |
+| `packages/*` | Framework libraries (69 packages) | Yes, via Changesets |
 | `cookbooks/*` | Runnable example apps and portals | Yes (versioned, but examples) |
 | `eds-content/`, `eds/` | EDS design-system content and token tooling | No |
 | `vue-press/` | Documentation site | Partly |
@@ -154,6 +154,7 @@ Format: `package name` → path → role.
 | `@equinor/fusion-framework-vite-plugin-raw-imports` | `packages/vite-plugins/raw-imports` | Generic `?raw` imports |
 | `@equinor/fusion-framework-vite-plugin-react-router` | `packages/vite-plugins/react-router` | React Router file-route DSL compiler |
 | `@equinor/fusion-framework-vite-plugin-routes-dsl` | `packages/vite-plugins/routes-dsl` | `import.meta.resolve()` transform for route DSL |
+| `@equinor/fusion-framework-vite-plugin-octopus` | `packages/vite-plugins/octopus` | Octopus: local app registry and proxy, so a local portal loads apps from their dev servers |
 
 ### Linting (`packages/linting/*`)
 

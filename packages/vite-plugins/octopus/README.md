@@ -52,6 +52,7 @@ octopusPortalPlugin({ octopusUrl: 'http://localhost:2000' });
 - `GET /@fusion-api/octopus/apps/<appKey>` answers `{ "source": "local" | "mock" | "ci" }`, so the portal UI can show where an app comes from.
 - API requests from an app in mock mode go to its mock server, for the services the mock server lists (`/@fusion-mock/discovery`). The plugin recognises the app by the `x-fusion-app` header the framework adds to the app's requests, and doesn't forward the portal's token. Other services, other apps and the portal itself use CI. Answers from the mock server carry `x-octopus: mock`.
 - When nothing answers at the Octopus address, the plugin starts Octopus, and stops it when the dev server closes.
+- Requests only go to Octopus once it is known to run. While it starts, and when another program has its port, everything goes to CI. The portal's token is never sent to Octopus or the app's dev server.
 
 The plugin runs before other plugins (`enforce: 'pre'`), so it comes before the API proxy.
 

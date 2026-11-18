@@ -10,6 +10,17 @@ export type AppRequest =
   /** A script, served from the app's dev server. */
   | { type: 'bundle'; appKey: string; path: string };
 
+/**
+ * Parses the path and query of a request. `req.url` is a path, so it is placed after a fixed
+ * origin instead of being resolved against one, which would read `//host/x` as another host and
+ * throw for `//[`.
+ *
+ * @param url - The request's `url`, e.g. `/apps/persons/me/apps/my-app?x=1`.
+ * @returns A URL on `http://localhost` with the request's path and query; never throws.
+ */
+export const parseRequestUrl = (url = '/'): URL =>
+  new URL(`http://localhost${url.startsWith('/') ? url : `/${url}`}`);
+
 // Version-tagged manifests (`/apps/<key>@<tag>`), user settings and build lists always come from CI.
 const MANIFEST = /^\/persons\/me\/apps\/([^/@]+)$/;
 const CONFIG = /^\/apps\/([^/@]+)\/builds\/([^/]+)\/config$/;

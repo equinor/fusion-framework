@@ -4,7 +4,7 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { createServer, type ViteDevServer } from 'vite';
+import { createServer, type Plugin, type ViteDevServer } from 'vite';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { octopusAppPlugin } from './app-plugin.js';
@@ -128,6 +128,21 @@ describe('Vite plugins', () => {
   });
 
   describe('octopusPortalPlugin', () => {
+    /** Starts a portal dev server with the plugin, once it forwards requests to Octopus. */
+    const startPortal = async (octopusUrl: string, fallthrough: Plugin) => {
+      const lines: string[] = [];
+      const portal = await startVite([
+        fallthrough,
+        octopusPortalPlugin({ octopusUrl, log: (line) => lines.push(line) }),
+      ]);
+      await vi.waitFor(() =>
+        expect(lines.join('\n')).toMatch(
+          /Octopus at .* \((already running|started by the portal)\)/,
+        ),
+      );
+      return portal;
+    };
+
     it('starts Octopus when it is not running, and stops it with the dev server', async () => {
       const octopusUrl = await freeUrl();
       const { server } = await startVite([octopusPortalPlugin({ octopusUrl, log: () => {} })]);
@@ -140,6 +155,63 @@ describe('Vite plugins', () => {
       await vi.waitFor(async () => {
         await expect(fetch(`${octopusUrl}/api/apps`)).rejects.toThrow();
       });
+    });
+
+    it('sends nothing to another program on the Octopus port, and leaves requests to CI', async () => {
+      const otherRequests: Array<{ url?: string; authorization?: string }> = [];
+      const other = http.createServer((req, res) => {
+        otherRequests.push({ url: req.url, authorization: req.headers.authorization });
+        res.end('<html>not Octopus</html>');
+      });
+      const octopusUrl = await listen(other);
+      cleanup.push(() => close(other));
+
+      const lines: string[] = [];
+      const fallthrough = {
+        name: 'api-proxy-stand-in',
+        configureServer: (server: ViteDevServer) => {
+          server.middlewares.use('/@fusion-api', (_req, res) => {
+            res.end('ci');
+          });
+        },
+      };
+      const { url } = await startVite([
+        fallthrough,
+        octopusPortalPlugin({ octopusUrl, log: (line) => lines.push(line) }),
+      ]);
+      await vi.waitFor(() =>
+        expect(lines.join('\n')).toContain('Something other than Octopus answers'),
+      );
+      otherRequests.length = 0;
+
+      const headers = { authorization: 'Bearer real-token', 'x-fusion-app': 'my-app' };
+      const manifest = await fetch(`${url}/@fusion-api/apps/persons/me/apps/my-app`, { headers });
+      const api = await fetch(`${url}/@fusion-api/people/persons/me`, { headers });
+
+      expect(await manifest.text()).toBe('ci');
+      expect(await api.text()).toBe('ci');
+      expect(otherRequests.filter((request) => request.authorization)).toEqual([]);
+      expect(otherRequests.filter((request) => request.url?.startsWith('/proxy'))).toEqual([]);
+    });
+
+    it('answers a malformed request path instead of stopping the dev server', async () => {
+      const octopusUrl = await freeUrl();
+      const fallthrough = {
+        name: 'api-proxy-stand-in',
+        configureServer: (server: ViteDevServer) => {
+          server.middlewares.use('/@fusion-api', (_req, res) => {
+            res.end('ci');
+          });
+        },
+      };
+      const { url } = await startPortal(octopusUrl, fallthrough);
+
+      const response = await fetch(`${url}/@fusion-api//[`, {
+        headers: { 'x-fusion-app': 'my-app' },
+      });
+
+      expect(await response.text()).toBe('ci');
+      expect((await fetch(`${url}/@fusion-api/octopus/apps/my-app`)).status).toBe(200);
     });
 
     it('answers where an app comes from, and leaves other requests to the API proxy', async () => {
@@ -158,10 +230,7 @@ describe('Vite plugins', () => {
           });
         },
       };
-      const { url } = await startVite([
-        fallthrough,
-        octopusPortalPlugin({ octopusUrl, log: () => {} }),
-      ]);
+      const { url } = await startPortal(octopusUrl, fallthrough);
 
       const source = await fetch(`${url}/@fusion-api/octopus/apps/my-app`).then((r) => r.json());
       const other = await fetch(`${url}/@fusion-api/apps/persons/me/apps/other-app`);
@@ -202,10 +271,7 @@ describe('Vite plugins', () => {
           });
         },
       };
-      const { url } = await startVite([
-        fallthrough,
-        octopusPortalPlugin({ octopusUrl, log: () => {} }),
-      ]);
+      const { url } = await startPortal(octopusUrl, fallthrough);
       const request = (path: string, headers: Record<string, string> = {}, body?: string) =>
         fetch(`${url}/@fusion-api${path}`, {
           method: body ? 'POST' : 'GET',
@@ -262,10 +328,7 @@ describe('Vite plugins', () => {
             });
           },
         };
-        const { url } = await startVite([
-          fallthrough,
-          octopusPortalPlugin({ octopusUrl, log: () => {} }),
-        ]);
+        const { url } = await startPortal(octopusUrl, fallthrough);
 
         const response = await fetch(`${url}/@fusion-api/people/persons/me`, {
           method: 'DELETE',

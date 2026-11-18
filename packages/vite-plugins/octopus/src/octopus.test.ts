@@ -38,11 +38,14 @@ describe('Octopus server', () => {
   let octopusUrl: string;
   let appUrl: string;
   let appRequests: string[];
+  let appAuthorizations: Array<string | undefined>;
 
   beforeEach(async () => {
     appRequests = [];
+    appAuthorizations = [];
     const appServer = http.createServer((req, res) => {
       appRequests.push(req.url ?? '');
+      appAuthorizations.push(req.headers.authorization);
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ source: 'local' }));
     });
@@ -74,6 +77,13 @@ describe('Octopus server', () => {
     });
 
     expect(response.status).toBe(400);
+  });
+
+  it('keeps a request path starting with // on this machine, and keeps running', async () => {
+    const response = await fetch(`${octopusUrl}//[`);
+
+    expect(response.status).toBe(404);
+    expect((await fetch(`${octopusUrl}/api/apps`)).status).toBe(200);
   });
 
   it('rejects an invalid percent encoding in the app key, and keeps running', async () => {
@@ -272,6 +282,17 @@ describe('Octopus server', () => {
       const response = await fetch(`${portalUrl}/apps/persons/me/apps/fusion-help`);
 
       expect(await response.json()).toEqual({ source: 'local' });
+    });
+
+    it("does not pass the portal's token on to Octopus or the app's dev server", async () => {
+      await register(octopusUrl, 'fusion-help', { url: appUrl, instanceId: 'a' });
+      const portalUrl = await startPortal();
+
+      await fetch(`${portalUrl}/apps/persons/me/apps/fusion-help`, {
+        headers: { authorization: 'Bearer real-token' },
+      });
+
+      expect(appAuthorizations).toEqual([undefined]);
     });
 
     it('falls back to CI for apps Octopus does not serve', async () => {

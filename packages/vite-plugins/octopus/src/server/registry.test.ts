@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { parseLocalUrl, portOf, Registry } from './registry.js';
-import { parseAppRequest } from './routes.js';
+import { parseAppRequest, parseRequestUrl } from './routes.js';
 
 describe('Registry', () => {
   const createRegistry = () => {
@@ -174,5 +174,22 @@ describe('portOf', () => {
     ['http://localhost', 80],
   ])('reads %s as port %i', (url, port) => {
     expect(portOf(new URL(url))).toBe(port);
+  });
+});
+
+describe('parseRequestUrl', () => {
+  it.each([
+    ['/apps/persons/me/apps/my-app?x=1', '/apps/persons/me/apps/my-app', '?x=1'],
+    // Resolving against an origin would read these as another host, or throw.
+    ['//evil.example/x', '//evil.example/x', ''],
+    ['//[', '//[', ''],
+    ['no-slash', '/no-slash', ''],
+    [undefined, '/', ''],
+  ])('keeps %s on localhost', (url, pathname, search) => {
+    const parsed = parseRequestUrl(url);
+
+    expect(parsed.host).toBe('localhost');
+    expect(parsed.pathname).toBe(pathname);
+    expect(parsed.search).toBe(search);
   });
 });

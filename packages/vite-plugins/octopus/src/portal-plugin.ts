@@ -4,7 +4,7 @@ import type { Plugin } from 'vite';
 
 import { DEFAULT_OCTOPUS_URL } from './server/index.js';
 import { parseLocalUrl, portOf, type RegisteredApp } from './server/registry.js';
-import { parseAppRequest } from './server/routes.js';
+import { parseAppRequest, parseRequestUrl } from './server/routes.js';
 import { OCTOPUS_HEADER, OCTOPUS_MOCK_HEADER, PROXY_PREFIX } from './server/server.js';
 import { type RunningOctopus, startOctopus } from './server/start.js';
 
@@ -114,7 +114,7 @@ export const createAppRequestHandler = (
   const warnedMockApps = new Set<string>();
 
   return (req, res, next) => {
-    const url = new URL(req.url ?? '/', 'http://localhost');
+    const url = parseRequestUrl(req.url);
     const path = url.pathname.replace(/^\/apps/, '');
     const appRequest = parseAppRequest(path);
     if (!url.pathname.startsWith('/apps/') || !appRequest) {
@@ -123,9 +123,11 @@ export const createAppRequestHandler = (
     }
 
     const target = new URL(`${octopusUrl}${PROXY_PREFIX}${path}${url.search}`);
+    // The app's dev server answers without the portal's token, so it never leaves the portal.
+    const { authorization: _, ...headers } = req.headers;
     const proxyReq = http.request(
       target,
-      { method: req.method, headers: { ...req.headers, host: target.host } },
+      { method: req.method, headers: { ...headers, host: target.host } },
       (proxyRes) => {
         if (proxyRes.headers[OCTOPUS_HEADER] !== 'hit') {
           proxyRes.resume();
@@ -165,7 +167,7 @@ export const createAppRequestHandler = (
 export const createAppSourceHandler =
   (octopusUrl: string): RequestHandler =>
   async (req, res, next) => {
-    const { pathname } = new URL(req.url ?? '/', 'http://localhost');
+    const { pathname } = parseRequestUrl(req.url);
     if (!pathname.startsWith(`${APP_SOURCE_PATH}/`)) {
       next();
       return;
@@ -257,7 +259,7 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
       return;
     }
 
-    const url = new URL(req.url ?? '/', 'http://localhost');
+    const url = parseRequestUrl(req.url);
     const service = url.pathname.split('/')[1];
     let mockUrl: string | undefined;
     try {
@@ -334,6 +336,8 @@ export interface OctopusPortalPluginOptions {
  * - API requests from an app in mock mode go to its mock server, for the services it mocks.
  * - When nothing answers at the Octopus address, the plugin starts Octopus, and stops it again
  *   when the dev server closes.
+ * - Requests only go to Octopus once it is known to run. While it starts, and when another
+ *   program has its port, everything goes to CI. The portal's token is never sent to Octopus.
  *
  * The plugin runs before other plugins (`enforce: 'pre'`), so its handlers come before the API
  * proxy.
@@ -355,8 +359,13 @@ export const octopusPortalPlugin = (options: OctopusPortalPluginOptions = {}): P
 
       const state: EnsureOctopusState = {};
       let closed = false;
+      // Requests only go to Octopus once it is known to run there. While starting, and when
+      // another program has the port or Octopus is not on this machine, everything goes to CI,
+      // so no request, and none of the portal's headers, reach an unrelated program.
+      let forwarding = false;
       // An Octopus started here lives as long as this dev server.
-      void ensureOctopus(octopusUrl, { log, state }).then(() => {
+      void ensureOctopus(octopusUrl, { log, state }).then((status) => {
+        forwarding = status === 'running' || status === 'started';
         if (closed) {
           void state.running?.close();
         }
@@ -370,8 +379,14 @@ export const octopusPortalPlugin = (options: OctopusPortalPluginOptions = {}): P
       const handleMockApi = createMockApiHandler(octopusUrl);
       const handleAppRequest = createAppRequestHandler(octopusUrl, log);
       server.middlewares.use(apiBase, (req, res, next) => {
-        void handleAppSource(req, res, () =>
-          handleMockApi(req, res, () => handleAppRequest(req, res, next)),
+        // A failing handler answers through Vite's error handler instead of stopping the dev server.
+        const run = (handler: RequestHandler, then: () => void) =>
+          Promise.resolve()
+            .then(() => handler(req, res, then))
+            .catch((error: unknown) => next(error));
+
+        void run(handleAppSource, () =>
+          forwarding ? run(handleMockApi, () => run(handleAppRequest, next)) : next(),
         );
       });
     },

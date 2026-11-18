@@ -3,7 +3,7 @@ import net from 'node:net';
 
 import { renderPage } from './page.js';
 import { parseLocalUrl, portOf, type RegisteredApp, type Registry } from './registry.js';
-import { parseAppRequest } from './routes.js';
+import { parseAppRequest, parseRequestUrl } from './routes.js';
 
 /** Prefix for app requests the portal forwards to Octopus, e.g. `/proxy/persons/me/apps/my-app`. */
 export const PROXY_PREFIX = '/proxy';
@@ -159,7 +159,7 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
       return;
     }
 
-    const url = new URL(req.url ?? '/', 'http://localhost');
+    const url = parseRequestUrl(req.url);
 
     if (url.pathname === '/' && req.method === 'GET') {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
