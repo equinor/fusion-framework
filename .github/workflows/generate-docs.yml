@@ -66,9 +66,10 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      # `./` builds production with main's build-docs; `$/` would use the preview branch's copy.
       - name: Build production documentation
         if: ${{ steps.mode.outputs.value == 'true' }}
-        uses: $/.github/actions/build-docs
+        uses: ./.github/actions/build-docs
         with:
           upload-artifact: false
 
