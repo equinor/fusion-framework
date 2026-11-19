@@ -46,20 +46,20 @@ jobs:
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
         with:
           wait-for-turbo-cache: "true"
 
-      - uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1
+      - uses: reviewdog/action-setup@v1.5.0
 
       - name: Lint source files
-        uses: mongolyy/reviewdog-action-biome@75ddd5f0b3c303388bb6213aef110e0f5a4e1925 # v2
+        uses: mongolyy/reviewdog-action-biome@v2.13.0
         with:
           github_token: ${{ github.token }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
@@ -89,22 +89,22 @@ jobs:
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
         with:
           wait-for-turbo-cache: "true"
 
-      - uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1
+      - uses: reviewdog/action-setup@v1.5.0
 
       - name: Build affected packages
         id: build
         continue-on-error: true
-        uses: ./.github/actions/build-packages
+        uses: $/.github/actions/build-packages
         with:
           only-affected: true
 
@@ -112,7 +112,7 @@ jobs:
         run: node process-turbo-build-log.cjs > tsc-build.log
 
       - name: Upload build log
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           path: tsc-build.log
 
@@ -132,13 +132,13 @@ jobs:
     # runs-on: fusion-gh-runner-fusion-framework.borked
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           fetch-depth: 1
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
         with:
           wait-for-turbo-cache: "true"
 
@@ -155,7 +155,7 @@ jobs:
           echo "version=${version#Version }" >> "$GITHUB_OUTPUT"
 
       - name: Restore Playwright browsers
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        uses: actions/cache/restore@v6.1.0
         with:
           path: ~/.cache/ms-playwright
           key: playwright-fusion-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}

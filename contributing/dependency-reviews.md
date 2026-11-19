@@ -95,6 +95,25 @@ Merging this setup points npm Dependabot at `main`. Dependabot closes its pull r
 `maintenance/dependencies` and opens new ones against `main`. Pull requests that still target the stream keep
 their legacy workflows until they drain.
 
+## GitHub Actions lockfile
+
+Every workflow is onboarded to [`.github/workflows/actions.lock`](../.github/workflows/actions.lock), which
+pins each direct and transitive action to a reviewed commit
+([GitHub guide](https://docs.github.com/en/actions/how-tos/secure-your-work/lock-workflow-dependencies)).
+
+- Reference actions by full semver tag (`actions/checkout@v7.0.1`); the lockfile holds the commit. A commit
+  SHA with a version comment also works where a test requires it, but never a tag-object SHA.
+- Reference this repository's composite actions as `$/.github/actions/<name>`, never `./`, so they run at
+  the workflow's commit and the actions they use are locked.
+- After adding a workflow or changing a `uses:` line, run `gh actions-lock`, then `gh actions-lock --verify`,
+  and commit the lockfile with the workflow change. Install the tool with
+  `gh extension install github/gh-actions-lock`.
+- Dependabot bumps actions in `.github/workflows` and `.github/actions/*` and regenerates the lockfile in the
+  same PR. Review a changed `commit` like any dependency bump; investigate a changed `owner_id` or `repo_id`.
+- Never edit the lockfile by hand, and never run `--accept-moved` in automation.
+- Calls to reusable workflows in other repositories need a full 40-character commit SHA; that repository owns
+  its own lockfile.
+
 ## Changeset requirements
 
 A changeset is mandatory when the dependency update touches a published package. See the [changeset guide](changeset.md) and the changeset decision section in `.github/instructions/dependabot-pr.instructions.md` for details.

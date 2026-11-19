@@ -47,12 +47,12 @@ jobs:
       packages: read
       id-token: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Combine Dependabot updates on greenkeeper/dependencies
-        uses: ./.github/actions/greenkeeper-maintenance
+        uses: $/.github/actions/greenkeeper-maintenance
         with:
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
           orchestrator-image: ${{ env.GREENKEEPER_ORCHESTRATOR_IMAGE }}

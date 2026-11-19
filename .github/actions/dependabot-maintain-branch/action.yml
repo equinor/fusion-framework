@@ -46,7 +46,7 @@ runs:
   steps:
     - name: Read published verdict
       id: verdict
-      uses: ./.github/actions/dependabot-read-verdict
+      uses: $/.github/actions/dependabot-read-verdict
       with:
         github-token: ${{ inputs.github-token }}
         pr-number: ${{ inputs.pr-number }}

@@ -21,7 +21,7 @@ runs:
   using: composite
   steps:
     - name: Setup Node.js
-      uses: actions/setup-node@v7
+      uses: actions/setup-node@v7.1.0
       with:
         node-version: ${{ inputs.node-version }}
 
@@ -34,7 +34,7 @@ runs:
     - name: Restore node_modules
       if: inputs.cache-node-modules == 'true'
       id: node-modules-restore
-      uses: actions/cache/restore@v6
+      uses: actions/cache/restore@v6.1.0
       with:
         path: |
           node_modules
@@ -55,7 +55,7 @@ runs:
     # installing from scratch. Saving/pruning the cache is done separately by
     # the prime-pnpm-cache workflow on push to main, not on every job here.
     - name: Restore pnpm store
-      uses: actions/cache/restore@v6
+      uses: actions/cache/restore@v6.1.0
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
         key: pnpm-store-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -73,7 +73,7 @@ runs:
     - name: Restore exact PR Turbo cache
       if: inputs.cache-turbo == 'true' && inputs.wait-for-turbo-cache == 'true'
       id: turbo-cache-exact
-      uses: actions/cache/restore@v6
+      uses: actions/cache/restore@v6.1.0
       with:
         path: .turbo/cache
         key: ${{ steps.turbo-cache-ready.outputs.key }}
@@ -84,7 +84,7 @@ runs:
     - name: Restore Turbo cache
       if: inputs.cache-turbo == 'true' && inputs.wait-for-turbo-cache != 'true'
       id: turbo-cache-restore
-      uses: actions/cache/restore@v6
+      uses: actions/cache/restore@v6.1.0
       with:
         path: .turbo/cache
         key: turbo-fusion-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}

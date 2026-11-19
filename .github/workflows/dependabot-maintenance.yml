@@ -50,7 +50,7 @@ jobs:
       contents: write
       pull-requests: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           fetch-depth: 0
@@ -58,7 +58,7 @@ jobs:
 
       - name: Ensure, initialize, sync, or reset maintenance branch
         id: branch
-        uses: ./.github/actions/dependabot-maintenance-stream
+        uses: $/.github/actions/dependabot-maintenance-stream
         with:
           branch: ${{ env.MAINTENANCE_BRANCH }}
           operation: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || (inputs.operation == 'sync' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) && 'sync' || 'ensure' }}
@@ -77,7 +77,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ env.MAINTENANCE_BRANCH }}
           fetch-depth: 0
@@ -87,7 +87,7 @@ jobs:
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       - name: Install Playwright Chromium
         run: pnpm --filter @equinor/fusion-framework-vitest-plugin-react-app exec playwright install --with-deps chromium
@@ -114,14 +114,14 @@ jobs:
       pull-requests: write
     steps:
       # Only trusted default-branch code runs here; the maintenance branch is read through git, never executed.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
       - name: Create or update draft promotion pull request
         id: promotion
-        uses: ./.github/actions/dependabot-promotion-pr
+        uses: $/.github/actions/dependabot-promotion-pr
         with:
           branch: ${{ env.MAINTENANCE_BRANCH }}
           github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
@@ -129,7 +129,7 @@ jobs:
 
       - name: Mark ready and enable squash auto-merge for the validated head
         if: needs.validate.result == 'success'
-        uses: ./.github/actions/dependabot-enable-auto-merge
+        uses: $/.github/actions/dependabot-enable-auto-merge
         with:
           expected-head-sha: ${{ needs.validate.outputs.head_sha }}
           github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}

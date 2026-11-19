@@ -42,7 +42,7 @@ jobs:
       dist-tag: ${{ steps.channel.outputs.dist-tag }}
       mode: ${{ steps.select-mode.outputs.mode || 'none' }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
 
       # `main` publishes stable releases; the telemetry feature branch publishes
       # pre-releases only while changesets pre-release mode is active.
@@ -75,7 +75,7 @@ jobs:
 
       - name: Setup node and install deps
         if: steps.channel.outputs.channel != 'skip'
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       # version: changesets are pending, so open/update the release PR.
       # publish: versions in the workspace are not on npm yet.
@@ -83,7 +83,7 @@ jobs:
       - name: Select changesets mode
         id: select-mode
         if: steps.channel.outputs.channel != 'skip'
-        uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
+        uses: changesets/action/select-mode@v2.1.2
 
   version:
     name: Create or update release pull request
@@ -97,19 +97,19 @@ jobs:
     outputs:
       pr-number: ${{ steps.version.outputs.pr-number }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Configure git user (trigger actor)
-        uses: ./.github/actions/config-git-user
+        uses: $/.github/actions/config-git-user
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       - name: Create or update release pull request
         id: version
-        uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
+        uses: changesets/action/version@v2.1.2
         with:
           script: pnpm changeset:version
           pr-title: ${{ needs.select-mode.outputs.channel == 'next' && '🤖 Bip Bop - Fusion Framework Pre-Release' || '🤖 Bip Bop - Fusion Framework Release' }}
@@ -130,15 +130,15 @@ jobs:
     outputs:
       published: ${{ steps.publish.outputs.published }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Configure git user (trigger actor)
-        uses: ./.github/actions/config-git-user
+        uses: $/.github/actions/config-git-user
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       # Fails before anything is published when a package is new to npm or has
       # repository metadata that OIDC provenance would reject. Trust state itself
@@ -157,7 +157,7 @@ jobs:
       # short-lived npm publish token and attaches provenance automatically.
       - name: Publish to npm
         id: publish
-        uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
+        uses: changesets/action/publish@v2.1.2
         with:
           script: ${{ needs.select-mode.outputs.channel == 'stable' && 'pnpm changeset:publish' || format('pnpm publish -r --no-git-checks --report-summary --tag {0}', needs.select-mode.outputs.dist-tag) }}
           create-github-releases: ${{ needs.select-mode.outputs.channel == 'stable' }}
@@ -188,15 +188,15 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Configure git user (trigger actor)
-        uses: ./.github/actions/config-git-user
+        uses: $/.github/actions/config-git-user
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       - name: Verify npm trusted publishing prerequisites
         run: pnpm npm-trust preflight
@@ -211,7 +211,7 @@ jobs:
           fi
 
       - name: Create and publish snapshot
-        uses: ./.github/actions/changeset-snapshot
+        uses: $/.github/actions/changeset-snapshot
         with:
           tag: ${{ inputs.tag }}
 
@@ -237,7 +237,7 @@ jobs:
     outputs:
       should-publish: ${{ steps.check.outputs.should-publish }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -265,12 +265,12 @@ jobs:
       contents: read
       id-token: write # Required for OIDC login to Azure (Marketplace publish)
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup node and install deps
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       # allowBuilds disables this by default (pnpm-workspace.yaml) since it's
       # only needed here; vsce needs the native signing binary to publish.
@@ -287,7 +287,7 @@ jobs:
         run: pnpm turbo build --filter=fusion-ts-lint-vscode...
 
       - name: Azure login (Marketplace publisher identity)
-        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906
+        uses: azure/login@v3.1.0
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
