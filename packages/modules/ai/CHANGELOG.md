@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-ai
 
+## 7.2.1
+
+### Patch Changes
+
+- 191e993: Internal: preserve the AI proxy's supported Azure Search API version when updating the Search SDK.
+
 ## 7.2.0
 
 ### Minor Changes
