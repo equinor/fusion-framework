@@ -22,11 +22,7 @@ export interface OctopusAppPluginOptions {
 
 const REQUEST_TIMEOUT_MS = 1000;
 
-// One instance ID per process: the CLI may merge the Vite config more than once, but the dev
-// server registers once.
-const instanceId = `${process.pid}-${randomUUID().slice(0, 8)}`;
-// Lets Octopus keep the most recently started dev server active, even after Octopus restarts.
-const startedAt = Date.now();
+// The CLI may merge the Vite config, and so this plugin, more than once; each server registers once.
 const configuredServers = new WeakSet<object>();
 
 /**
@@ -61,7 +57,9 @@ export const isLocalOrigin = (origin: string): boolean => {
  * @returns A Vite plugin for the app dev server.
  */
 export const octopusAppPlugin = (options: OctopusAppPluginOptions): Plugin => {
-  const { appKey, mockUrl, sourceDir, heartbeatMs = 5000 } = options;
+  const { appKey, mockUrl, heartbeatMs = 5000 } = options;
+  // Glob patterns use `/`, while a path from `path.relative` on Windows uses `\`.
+  const sourceDir = options.sourceDir?.replaceAll('\\', '/');
   const octopusUrl = options.octopusUrl.replace(/\/$/, '');
 
   return {
@@ -90,6 +88,11 @@ export const octopusAppPlugin = (options: OctopusAppPluginOptions): Plugin => {
       }
       configuredServers.add(server);
       const logger = server.config.logger;
+      // Each dev server is its own instance, also when one process runs several, so one cannot
+      // replace or unregister the other.
+      const instanceId = `${process.pid}-${randomUUID().slice(0, 8)}`;
+      // Lets Octopus keep the most recently started dev server active, even after Octopus restarts.
+      const startedAt = Date.now();
 
       // `ffc app dev` turns Vite's CORS handling off; allow only portals on this machine here.
       server.middlewares.use((req, res, next) => {
@@ -164,6 +167,13 @@ export const octopusAppPlugin = (options: OctopusAppPluginOptions): Plugin => {
       };
 
       httpServer.once('listening', () => {
+        // Octopus only proxies plain HTTP dev servers on this machine.
+        if (server.config.server.https) {
+          logger.warn(
+            `🐙 ${appKey} is not registered with Octopus: the dev server uses HTTPS, and Octopus only loads apps from http:// dev servers. Turn off server.https to load it in a local portal.`,
+          );
+          return;
+        }
         const { port } = httpServer.address() as AddressInfo;
         const url = `http://localhost:${port}`;
         // Vite builds the addresses of imported assets (images, fonts, CSS `url()`) from this

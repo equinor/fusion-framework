@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   createAppRequestHandler,
   createAppSourceHandler,
+  createMockApiHandler,
   type EnsureOctopusState as EnsureState,
   ensureOctopus,
 } from './portal-plugin.js';
@@ -439,4 +440,76 @@ describe('startHealthChecks', () => {
     expect(registry.list().map(({ appKey }) => appKey)).toEqual(['app-admin']);
     expect(events).toEqual(['unreachable fusion-help']);
   });
+});
+
+describe('mock API route', () => {
+  const servers: http.Server[] = [];
+  /** What the Octopus stand-in answers; tests change it between requests. */
+  let octopusAnswer: { status: number; apps: object[] };
+  let octopusUrl: string;
+  let mockUrl: string;
+  let portalUrl: string;
+
+  beforeEach(async () => {
+    const mock = http.createServer((req, res) => {
+      res.end(
+        req.url === '/@fusion-mock/discovery' ? JSON.stringify([{ key: 'people' }]) : 'mocked',
+      );
+    });
+    mockUrl = await listen(mock);
+
+    octopusAnswer = { status: 200, apps: [] };
+    const octopus = http.createServer((_req, res) => {
+      res.writeHead(octopusAnswer.status, { 'content-type': 'application/json' });
+      res.end(JSON.stringify(octopusAnswer.apps));
+    });
+    octopusUrl = await listen(octopus);
+
+    const handler = createMockApiHandler(octopusUrl);
+    const portal = http.createServer((req, res) => void handler(req, res, () => res.end('ci')));
+    portalUrl = await listen(portal);
+    servers.push(mock, octopus, portal);
+  });
+
+  afterEach(async () => {
+    await Promise.all(servers.splice(0).map(close));
+  });
+
+  const request = (appKey: string) =>
+    fetch(`${portalUrl}/people/persons/me`, { headers: { 'x-fusion-app': appKey } });
+
+  it('sends requests to a mock instance as soon as it is active', async () => {
+    octopusAnswer.apps = [{ appKey: 'my-app', url: 'http://localhost:5173' }];
+    expect(await (await request('my-app')).text()).toBe('ci');
+
+    octopusAnswer.apps = [{ appKey: 'my-app', url: 'http://localhost:5174', mockUrl }];
+
+    expect(await (await request('my-app')).text()).toBe('mocked');
+  });
+
+  it.each([
+    [
+      'answers an error',
+      () => {
+        octopusAnswer.status = 500;
+      },
+    ],
+    ['stops', () => close(servers[1])],
+  ])(
+    'answers 502 for an app last seen in mock mode when Octopus %s, and sends other apps to CI',
+    async (_case, breakOctopus) => {
+      octopusAnswer.apps = [{ appKey: 'mock-app', url: 'http://localhost:5173', mockUrl }];
+      expect(await (await request('mock-app')).text()).toBe('mocked');
+
+      await breakOctopus();
+      const mockApp = await request('mock-app');
+      const otherApp = await request('other-app');
+
+      expect(mockApp.status).toBe(502);
+      expect(await mockApp.json()).toEqual({
+        error: expect.stringContaining('cannot confirm it still is'),
+      });
+      expect(await otherApp.text()).toBe('ci');
+    },
+  );
 });

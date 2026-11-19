@@ -45,7 +45,16 @@ const listCommand = createCommand('list')
   .action(async (options: { url?: string }) => {
     const url = resolveUrl(options.url);
     const apps = await fetch(`${url}/api/apps`)
-      .then((response) => response.json() as Promise<RegisteredApp[]>)
+      .then(async (response) => {
+        const body: unknown = response.ok
+          ? await response.json().catch(() => undefined)
+          : undefined;
+        // An error, or another program at the address, is not a list of apps.
+        if (!Array.isArray(body)) {
+          throw new Error(`Octopus at ${url} answered ${response.status} without a list of apps.`);
+        }
+        return body as RegisteredApp[];
+      })
       .catch((error) => fail(url, error));
 
     if (apps.length === 0) {
@@ -71,11 +80,18 @@ const unregisterCommand = createCommand('unregister')
       method: 'DELETE',
     }).catch((error) => fail(url, error));
 
-    console.log(
-      response.ok
-        ? `Unregistered ${appKey}. It stays unregistered until its dev server or Octopus restarts.`
-        : `${appKey} is not registered.`,
-    );
+    if (response.ok) {
+      console.log(
+        `Unregistered ${appKey}. It stays unregistered until its dev server or Octopus restarts.`,
+      );
+    } else if (response.status === 404) {
+      console.log(`${appKey} is not registered.`);
+    } else {
+      fail(
+        url,
+        new Error(`Octopus at ${url} answered ${response.status}: ${await response.text()}`),
+      );
+    }
   });
 
 /**

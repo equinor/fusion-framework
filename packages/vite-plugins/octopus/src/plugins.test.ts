@@ -4,7 +4,7 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { createServer, type Plugin, type ViteDevServer } from 'vite';
+import { createLogger, createServer, type Plugin, type ViteDevServer } from 'vite';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { octopusAppPlugin } from './app-plugin.js';
@@ -124,6 +124,66 @@ describe('Vite plugins', () => {
       const code = await fetch(`${url}/logo.png?import`).then((r) => r.text());
 
       expect(code).toContain(`"${url}/logo.png"`);
+    });
+
+    it('registers each dev server in a process as its own instance', async () => {
+      const registry = new Registry();
+      const octopus = createOctopusServer({ registry });
+      const octopusUrl = await listen(octopus);
+      cleanup.push(() => close(octopus));
+
+      const first = await startVite([octopusAppPlugin({ appKey: 'my-app', octopusUrl })]);
+      await vi.waitFor(() => expect(registry.instances()).toHaveLength(1));
+      const second = await startVite([octopusAppPlugin({ appKey: 'my-app', octopusUrl })]);
+      await vi.waitFor(() => expect(registry.instances()).toHaveLength(2));
+
+      // The dev server started last is active; closing the other one leaves it registered.
+      expect(registry.get('my-app')?.url).toBe(second.url);
+      await first.server.close();
+      await vi.waitFor(() => expect(registry.instances()).toHaveLength(1));
+      expect(registry.get('my-app')?.url).toBe(second.url);
+    });
+
+    it('does not register a dev server that uses HTTPS, and says why', async () => {
+      const registry = new Registry();
+      const octopus = createOctopusServer({ registry });
+      const octopusUrl = await listen(octopus);
+      cleanup.push(() => close(octopus));
+      const warnings: string[] = [];
+      const logger = createLogger('silent');
+      logger.warn = (message) => void warnings.push(message);
+
+      const server = await createServer({
+        root,
+        configFile: false,
+        customLogger: logger,
+        // No certificate is needed: the plugin decides when the server starts listening.
+        server: { port: 0, host: '127.0.0.1', https: {} },
+        optimizeDeps: { noDiscovery: true },
+        plugins: [octopusAppPlugin({ appKey: 'my-app', octopusUrl })],
+      });
+      await server.listen();
+      cleanup.push(() => server.close());
+
+      await vi.waitFor(() => expect(warnings.join('\n')).toContain('uses HTTPS'));
+      expect(registry.instances()).toEqual([]);
+    });
+
+    it('builds the source scan patterns with / also from a Windows path', () => {
+      const plugin = octopusAppPlugin({
+        appKey: 'my-app',
+        octopusUrl: 'http://localhost:1',
+        sourceDir: 'apps\\my-app\\src',
+      });
+      const config = (plugin.config as (config: object) => { optimizeDeps: { entries: string[] } })(
+        {},
+      );
+
+      expect(config.optimizeDeps.entries).toEqual([
+        'apps/my-app/src/**/*.{ts,tsx,js,jsx}',
+        '!apps/my-app/src/**/*.d.ts',
+        '!apps/my-app/src/**/*.test.*',
+      ]);
     });
   });
 

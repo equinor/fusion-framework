@@ -203,7 +203,7 @@ export const createAppSourceHandler =
 /** Header the Fusion Framework adds to an app's requests, with the app key. */
 export const APP_KEY_HEADER = 'x-fusion-app';
 
-/** How long the active apps and a mock server's services are reused, in milliseconds. */
+/** How long a mock server's list of services is reused, in milliseconds. */
 const CACHE_MS = 2000;
 
 /** Caches the result of `load` for {@link CACHE_MS} per key; failures are not cached. */
@@ -230,17 +230,32 @@ const createCache = <T>(load: (key: string) => Promise<T>) => {
  * - that mock server lists the service (`/@fusion-mock/discovery`).
  *
  * Everything else, including the portal's own requests, goes on to `next()`, i.e. to CI. The
- * portal's token is not sent to the mock server. When the mock server does not list its services,
- * the app's requests get a `502` instead of going to CI.
+ * portal's token is not sent to the mock server. The app's requests get a `502` instead of going
+ * to CI when its mock server does not list its services, or when Octopus cannot be asked and the
+ * app was in mock mode at the last answer.
  *
  * @param octopusUrl - Octopus address.
  * @returns The handler.
  */
 export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
-  const activeApps = createCache(async () => {
-    const response = await fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) });
-    return response.ok ? ((await response.json()) as RegisteredApp[]) : [];
-  });
+  // Asked for every request, since a mock instance can become active at any time; requests
+  // arriving while a lookup is under way share it.
+  let pendingLookup: Promise<RegisteredApp[]> | undefined;
+  const activeApps = (): Promise<RegisteredApp[]> => {
+    pendingLookup ??= fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Octopus answered ${response.status}`);
+        }
+        return (await response.json()) as RegisteredApp[];
+      })
+      .finally(() => {
+        pendingLookup = undefined;
+      });
+    return pendingLookup;
+  };
+  // Mock server of each app at the last successful lookup, for when Octopus cannot be asked.
+  const lastKnownMockUrls = new Map<string, string>();
   const mockServices = createCache(async (mockUrl) => {
     const response = await fetch(`${mockUrl}/@fusion-mock/discovery`, {
       signal: AbortSignal.timeout(1000),
@@ -263,9 +278,28 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
     const service = url.pathname.split('/')[1];
     let mockUrl: string | undefined;
     try {
-      mockUrl = (await activeApps(octopusUrl)).find((app) => app.appKey === appKey)?.mockUrl;
-    } catch {
-      // Octopus is not running, so no app is in mock mode; the request goes to CI.
+      const apps = await activeApps();
+      lastKnownMockUrls.clear();
+      for (const app of apps) {
+        if (app.mockUrl) {
+          lastKnownMockUrls.set(app.appKey, app.mockUrl);
+        }
+      }
+      mockUrl = lastKnownMockUrls.get(appKey);
+    } catch (error) {
+      // Without Octopus, an app last seen in mock mode cannot be confirmed to have left it; its
+      // requests could reach real services with the real token. Other apps go to CI as usual,
+      // so the portal keeps working while Octopus is down.
+      const lastMockUrl = lastKnownMockUrls.get(appKey);
+      if (lastMockUrl) {
+        res.writeHead(502, { 'content-type': 'application/json', [OCTOPUS_HEADER]: 'mock' });
+        res.end(
+          JSON.stringify({
+            error: `${appKey} was in mock mode (${lastMockUrl}), but Octopus at ${octopusUrl} cannot confirm it still is (${(error as Error).message})`,
+          }),
+        );
+        return;
+      }
     }
     if (!mockUrl || !service) {
       next();
