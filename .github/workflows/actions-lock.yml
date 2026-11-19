@@ -1,0 +1,36 @@
+name: Verify actions lockfile
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: actions-lock-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify actions lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      # Pinned so a new extension release cannot change what this check accepts.
+      - name: Install gh-actions-lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh extension install github/gh-actions-lock --pin v0.5.0
+
+      # `--ignore-local-actions` allows the deliberate `./` helpers that must run from a
+      # trusted checkout; every other local action is referenced as `$/` and fully locked.
+      - name: Verify lockfile matches workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh actions-lock --verify --ignore-local-actions

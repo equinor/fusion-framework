@@ -214,7 +214,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Mock Fusion services, help, or analytics for local runs and Playwright | `packages/utils/openapi-mock-server/src/presets/fusion` (analytics in `presets/fusion/analytics`), `ffc mock-server` wiring in `packages/cli-plugins/mock-server/src` |
 | Add an example for a feature | `cookbooks/app-react-*` |
 | Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
-| Add or change a workflow, composite action, or action version | `.github/workflows`, `.github/actions` (reference as `$/.github/actions/<name>`), then regenerate `.github/workflows/actions.lock` with `gh actions-lock` and check it with `gh actions-lock --verify`; rules in `contributing/dependency-reviews.md` |
+| Add or change a workflow, composite action, or action version | `.github/workflows`, `.github/actions` (reference as `$/.github/actions/<name>`), then regenerate `.github/workflows/actions.lock` with `gh actions-lock --ignore-local-actions` and check it with `gh actions-lock --verify --ignore-local-actions` (enforced on PRs by `.github/workflows/actions-lock.yml`); rules in `contributing/dependency-reviews.md` |
 | Configure Copilot CLI with Fusion AI in Actions | `.github/actions/setup-copilot-fusion-ai` |
 | Review, maintain, and auto-merge Dependabot PRs | `.github/workflows/dependabot-ai-review.yml` and `.github/actions/dependabot-*` (pr-context, read-verdict, review, publish-verdict, maintain-branch, enable-auto-merge) |
 | Solve an issue from a workflow | `.github/workflows/issue-solver.yml`, `.github/actions/publish-agent-patch` (uses the `docs` environment and its Fusion AI Azure federation) |

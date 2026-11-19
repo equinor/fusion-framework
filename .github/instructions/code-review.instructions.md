@@ -67,7 +67,7 @@ and expensive to find later:
   The release preflight rejects it, and npm provenance would too. Remind the author that a
   maintainer must run `pnpm npm-trust add <name>` before the first release.
 - A workflow or composite action that adds or changes a `uses:` reference without a matching
-  `.github/workflows/actions.lock` update, or that references a local action as `./` instead of `$/`.
+  `.github/workflows/actions.lock` update, or that references a local action as `./` instead of `$/` without a trusted-checkout reason.
   Unlocked actions fail once lockfile enforcement is on (see `contributing/dependency-reviews.md`).
 - npm publishing outside `.github/workflows/release.yml`, a renamed `release.yml` or `npm`
   environment, or a reintroduced npm token. npm trusts only that workflow and environment, so

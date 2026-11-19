@@ -103,11 +103,17 @@ pins each direct and transitive action to a reviewed commit
 
 - Reference actions by full semver tag (`actions/checkout@v7.0.1`); the lockfile holds the commit. A commit
   SHA with a version comment also works where a test requires it, but never a tag-object SHA.
-- Reference this repository's composite actions as `$/.github/actions/<name>`, never `./`, so they run at
-  the workflow's commit and the actions they use are locked.
-- After adding a workflow or changing a `uses:` line, run `gh actions-lock`, then `gh actions-lock --verify`,
-  and commit the lockfile with the workflow change. Install the tool with
-  `gh extension install github/gh-actions-lock`.
+- Reference this repository's composite actions as `$/.github/actions/<name>` so they run at the workflow's
+  commit and the actions they use are locked.
+- Use `./` only when a step must run an action from a different, trusted checkout than the commit that
+  triggered the run, for example token-holding helpers in `dependabot-maintenance.yml` that check out `main`
+  on pushes to `maintenance/dependencies`. `$/` would load them from the pushed branch. Such an action may use
+  only `run:` steps unless the same workflow also locks its actions through a `$/` reference.
+- After adding a workflow or changing a `uses:` line, run `gh actions-lock --ignore-local-actions`, then
+  `gh actions-lock --verify --ignore-local-actions`, and commit the lockfile with the workflow change. Install
+  the tool with `gh extension install github/gh-actions-lock`. The
+  [Verify actions lockfile](../.github/workflows/actions-lock.yml) check runs the same verification on PRs
+  that touch `.github/workflows` or `.github/actions`.
 - Dependabot bumps actions in `.github/workflows` and `.github/actions/*` and regenerates the lockfile in the
   same PR. Review a changed `commit` like any dependency bump; investigate a changed `owner_id` or `repo_id`.
 - Never edit the lockfile by hand, and never run `--accept-moved` in automation.
