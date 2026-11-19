@@ -10,7 +10,9 @@ import {
 /** Explains why the environment overrides the stored preference, if it does. */
 const envOverride = (): string | undefined => {
   const { reason } = resolveTelemetryState();
+  // Report the CLI-specific override before the cross-tool convention.
   if (reason === 'optout-env') return `disabled by ${TELEMETRY_OPTOUT_ENV}`;
+  // This convention is a distinct source of disabled state for CLI users.
   if (reason === 'do-not-track') return `disabled by ${DO_NOT_TRACK_ENV}`;
   return undefined;
 };
@@ -21,6 +23,7 @@ const setEnabled = (enabled: boolean): void => {
   writeTelemetrySettings(configPath, { enabled });
   console.log(`Telemetry ${enabled ? 'enabled' : 'disabled'}.`);
   const override = envOverride();
+  // Explain why enabling the stored preference cannot override environment policy.
   if (enabled && override) {
     console.log(`Note: telemetry stays ${override}.`);
   }

@@ -15,11 +15,11 @@ import {
 
 import type { InvocationExportResult, InvocationRecord } from './export-invocation.js';
 import {
-  TELEMETRY_NOTICE,
   startInvocationTelemetry,
   type StartInvocationTelemetryOptions,
   type TelemetryProcess,
-} from './invocation-telemetry.js';
+} from './start-invocation-telemetry.js';
+import { TELEMETRY_NOTICE } from './telemetry-notice.js';
 
 type FakeProcess = EventEmitter & {
   argv: string[];
@@ -36,8 +36,9 @@ type FakeProcess = EventEmitter & {
 
 let configHome: string;
 
-const createProcess = (args: string[], env: NodeJS.ProcessEnv = {}): FakeProcess =>
-  Object.assign(new EventEmitter(), {
+const createProcess = (args: string[], env: NodeJS.ProcessEnv = {}): FakeProcess => {
+  // Combine EventEmitter behavior with the process fields consumed by telemetry.
+  return Object.assign(new EventEmitter(), {
     argv: ['node', 'fusion-framework-cli', ...args],
     env: { XDG_CONFIG_HOME: configHome, ...env },
     pid: 4242,
@@ -55,6 +56,13 @@ const createProcess = (args: string[], env: NodeJS.ProcessEnv = {}): FakeProcess
     kill: vi.fn(),
     exit: vi.fn(),
   });
+};
+
+/** Bridges the EventEmitter-based fixture to the process methods used by telemetry. */
+const asTelemetryProcess = (proc: FakeProcess): TelemetryProcess => {
+  // The fixture omits process methods that the telemetry lifecycle never calls in these tests.
+  return proc as unknown as TelemetryProcess;
+};
 
 const createProgram = (): Command => {
   const program = new Command('fusion-framework-cli').exitOverride();
@@ -93,7 +101,7 @@ const start = (
   const telemetry = startInvocationTelemetry({
     program,
     version: '1.2.3',
-    process: proc as unknown as TelemetryProcess,
+    process: asTelemetryProcess(proc),
     ci: false,
     exportInvocation,
     now: () => (time += 500),
@@ -104,6 +112,7 @@ const start = (
 };
 
 const exported = (mock: ReturnType<typeof vi.fn>): InvocationRecord[] =>
+  // Narrow mock arguments for assertions against the exported telemetry contract.
   mock.mock.calls.map(([record]) => record as InvocationRecord);
 
 beforeEach(() => {
