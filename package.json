@@ -10,7 +10,7 @@
     "yarn": "please-use-pnpm",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@12.4.2",
+  "packageManager": "pnpm@12.21.0",
   "scripts": {
     "install": "pnpm version:generate",
     "version:generate": "node .github/scripts/generate-versions.mjs",
