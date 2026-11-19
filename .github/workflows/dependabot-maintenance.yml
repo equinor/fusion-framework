@@ -56,9 +56,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
 
+      # `./` runs the helper from the `main` checkout above. `$/` would load it from the pushed
+      # maintenance branch, handing the write token to untrusted code. Run-only helpers need no lockfile entry.
       - name: Ensure, initialize, sync, or reset maintenance branch
         id: branch
-        uses: $/.github/actions/dependabot-maintenance-stream
+        uses: ./.github/actions/dependabot-maintenance-stream
         with:
           branch: ${{ env.MAINTENANCE_BRANCH }}
           operation: ${{ inputs.operation == 'initialize' && 'initialize' || inputs.operation == 'reset' && 'reset' || (inputs.operation == 'sync' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) && 'sync' || 'ensure' }}
@@ -114,6 +116,7 @@ jobs:
       pull-requests: write
     steps:
       # Only trusted default-branch code runs here; the maintenance branch is read through git, never executed.
+      # Keep these helpers on `./` (default-branch checkout), never `$/` (the triggering commit).
       - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.repository.default_branch }}
@@ -121,7 +124,7 @@ jobs:
 
       - name: Create or update draft promotion pull request
         id: promotion
-        uses: $/.github/actions/dependabot-promotion-pr
+        uses: ./.github/actions/dependabot-promotion-pr
         with:
           branch: ${{ env.MAINTENANCE_BRANCH }}
           github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
@@ -129,7 +132,7 @@ jobs:
 
       - name: Mark ready and enable squash auto-merge for the validated head
         if: needs.validate.result == 'success'
-        uses: $/.github/actions/dependabot-enable-auto-merge
+        uses: ./.github/actions/dependabot-enable-auto-merge
         with:
           expected-head-sha: ${{ needs.validate.outputs.head_sha }}
           github-token: ${{ secrets.DEPENDABOT_AUTOMATION_TOKEN || github.token }}
