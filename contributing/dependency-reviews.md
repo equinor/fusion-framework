@@ -113,7 +113,9 @@ pins each direct and transitive action to a reviewed commit
   `gh actions-lock --verify --ignore-local-actions`, and commit the lockfile with the workflow change. Install
   the tool with `gh extension install github/gh-actions-lock`. The
   [Verify actions lockfile](../.github/workflows/actions-lock.yml) check runs the same verification on PRs
-  that touch `.github/workflows` or `.github/actions`.
+  that touch `.github/workflows` or `.github/actions`, plus a strict pass without `--ignore-local-actions`
+  for every workflow except `generate-docs.yml`. A new `./` exception that uses other actions must be added
+  to that exclusion list.
 - Dependabot bumps actions in `.github/workflows` and `.github/actions/*` and regenerates the lockfile in the
   same PR. Review a changed `commit` like any dependency bump; investigate a changed `owner_id` or `repo_id`.
 - Never edit the lockfile by hand, and never run `--accept-moved` in automation.

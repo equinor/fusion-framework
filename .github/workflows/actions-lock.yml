@@ -28,9 +28,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh extension install github/gh-actions-lock --pin v0.5.0
 
-      # `--ignore-local-actions` allows the deliberate `./` helpers that must run from a
-      # trusted checkout; every other local action is referenced as `$/` and fully locked.
+      # `--ignore-local-actions` allows the deliberate `./build-docs` in generate-docs.yml, whose
+      # actions are locked through its `$/` steps. The full-directory run also catches stale entries.
       - name: Verify lockfile matches workflows
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh actions-lock --verify --ignore-local-actions
+
+      # Strict pass: an accidental `./` reference to an action that uses other actions fails here.
+      # Run-only `./` helpers still pass, since they have nothing to lock.
+      - name: Verify local actions are locked
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mapfile -t workflows < <(find .github/workflows -maxdepth 1 -name '*.yml' ! -name generate-docs.yml | sort)
+          gh actions-lock --verify "${workflows[@]}"
