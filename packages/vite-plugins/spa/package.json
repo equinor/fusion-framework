@@ -11,7 +11,7 @@
     },
     "./bootstrap.js": {
       "import": "./dist/html/bootstrap.js",
-      "types": "./dist/types/html/bootstrap.d.ts"
+      "types": "./dist/types/html/webkit/bootstrap-feature-compatibility.d.ts"
     },
     "./sw.js": {
       "import": "./dist/html/sw.js",
