@@ -1,5 +1,11 @@
 # Change Log
 
+## 14.1.1
+
+### Patch Changes
+
+- 191e993: Internal: bump `@microsoft/signalr` from 10.0.11 to 11.0.0.
+
 ## 14.1.0
 
 ### Minor Changes

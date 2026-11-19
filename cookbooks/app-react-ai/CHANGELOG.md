@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-cookbook-app-react-ai
 
+## 0.0.9
+
+### Patch Changes
+
+- f36008f: Update the AI cookbook's locked @assistant-ui/react dependency to 0.15.33 and compatible helper releases.
+- 191e993: Internal: bump `@assistant-ui/react` from `0.15.34` to `0.15.36`.
+  
+  Internal: bump `@assistant-ui/react-markdown` from `0.14.25` to `0.14.26`.
+
 ## 0.0.8
 
 No changes in this release.
