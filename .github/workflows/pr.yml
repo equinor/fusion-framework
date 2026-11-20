@@ -59,7 +59,7 @@ jobs:
       - uses: reviewdog/action-setup@v1.5.0
 
       - name: Lint source files
-        uses: mongolyy/reviewdog-action-biome@v2.13.0
+        uses: mongolyy/reviewdog-action-biome@v2.14.0
         with:
           github_token: ${{ github.token }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
