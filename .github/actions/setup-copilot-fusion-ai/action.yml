@@ -58,7 +58,7 @@ runs:
         }
 
     - name: Azure login
-      uses: azure/login@v3.0.2
+      uses: azure/login@v3.1.0
       env:
         AZURE_CONFIG_DIR: ${{ runner.temp }}/fusion-azure
       with:
