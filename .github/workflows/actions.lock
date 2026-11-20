@@ -33,7 +33,7 @@ workflows:
     '.github/workflows/greenkeeper-maintenance.yml':
         - 'actions/checkout@v7.0.1'
         - 'azure/login@7ddb5af1ef8758cf1353cf3b42f940aee27ba21c'
-        - 'docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9'
+        - 'docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550'
     '.github/workflows/index-docs.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
@@ -139,9 +139,9 @@ dependencies:
         commit: 'sha1-ae32849d5ba541f9ae29e40e22a623bc13562f51'
         owner_id: 51163350
         repo_id: 202093906
-    'docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9':
-        ref: 'v3.7.0'
-        commit: 'sha1-c94ce9fb468520275223c153574b00df6fe4bcc9'
+    'docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550':
+        ref: 'v4.8.0'
+        commit: 'sha1-8aa5831fb8d48d8f76594c7ddde61ae58019f550'
         owner_id: 5429470
         repo_id: 287743349
     'microsoft/apm-action@v1.10.0':
