@@ -48,8 +48,10 @@ updates:
           - "vue"
           - "vuepress*"
   - package-ecosystem: "github-actions"
-    # Workflow files stored in the
-    # default location of `.github/workflows`
-    directory: "/"
+    # Workflows in `.github/workflows` and the composite actions they call.
+    # Dependabot regenerates `.github/workflows/actions.lock` with each bump.
+    directories:
+      - "/"
+      - "/.github/actions/*"
     schedule:
       interval: "weekly"

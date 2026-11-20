@@ -79,6 +79,7 @@ export class FusionSearchClient extends SearchClient<AzureAISearchDocument> {
   ) {
     super(endpoint, indexName, credential, {
       ...options,
+      serviceVersion: options?.serviceVersion ?? options?.apiVersion ?? '2026-04-01',
       additionalPolicies: [
         { policy: fusionPathRewritePolicy, position: 'perCall' },
         ...(options?.additionalPolicies ?? []),

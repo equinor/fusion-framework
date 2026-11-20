@@ -39,7 +39,7 @@ runs:
         TAG: ${{ inputs.tag }}
         GITHUB_TOKEN: ${{ inputs.gh-token }}
 
-    - uses: actions/upload-artifact@v7
+    - uses: actions/upload-artifact@v7.0.2
       if: ${{ steps.status.outputs.releases > 0 }}
       with:
         name: changeset-status

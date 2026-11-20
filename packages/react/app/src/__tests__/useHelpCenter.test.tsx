@@ -52,6 +52,12 @@ describe('useHelpCenter', () => {
     result.current.helpCenter.openReleaseNotes();
     await vi.waitFor(() => expect(received).toHaveLength(6));
 
+    result.current.helpCenter.openChat('Why can I not see any findings?');
+    await vi.waitFor(() => expect(received).toHaveLength(7));
+
+    result.current.helpCenter.openChat();
+    await vi.waitFor(() => expect(received).toHaveLength(8));
+
     expect(received).toEqual([
       { page: 'home' },
       { page: 'article', articleId: 'my-article' },
@@ -59,6 +65,8 @@ describe('useHelpCenter', () => {
       { page: 'search', search: 'my search' },
       { page: 'governance' },
       { page: 'release-notes' },
+      { page: 'chat', prompt: 'Why can I not see any findings?' },
+      { page: 'chat', prompt: undefined },
     ]);
   });
 });

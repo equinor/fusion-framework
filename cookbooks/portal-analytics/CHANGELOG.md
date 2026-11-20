@@ -1,5 +1,14 @@
 # portal-analytics
 
+## 0.4.79
+
+### Patch Changes
+
+- Updated dependencies [4573615]
+- Updated dependencies [04e3f7c]
+  - @equinor/fusion-framework-cli@15.8.0
+  - @equinor/fusion-framework-react-app@14.4.0
+
 ## 0.4.78
 
 ### Patch Changes

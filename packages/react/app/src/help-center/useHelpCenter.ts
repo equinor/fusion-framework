@@ -30,12 +30,23 @@ type OpenSearchDetail = HelpCenterEventDetailBase<
 
 type OpenGovernanceDetail = HelpCenterEventDetailBase<'governance'>;
 
+type OpenReleaseNotesDetail = HelpCenterEventDetailBase<'release-notes'>;
+
+type OpenChatDetail = HelpCenterEventDetailBase<
+  'chat',
+  {
+    prompt?: string;
+  }
+>;
+
 export type HelpCenterOpenEventDetail =
   | OpenHelpDetail
   | OpenArticleDetail
   | OpenFaqsDetail
   | OpenSearchDetail
-  | OpenGovernanceDetail;
+  | OpenGovernanceDetail
+  | OpenReleaseNotesDetail
+  | OpenChatDetail;
 
 /**
  * Interface for requesting help features.
@@ -74,6 +85,17 @@ export interface HelpCenter {
    * Requesting the portal to open the help sidesheet on the release notes page.
    */
   openReleaseNotes(): void;
+
+  /**
+   * Requesting the portal to open the help chat with an optional prompt.
+   *
+   * The prompt is placed in the chat input for the user to review and send; it is never
+   * submitted automatically. The portal treats the prompt as untrusted user input and may
+   * trim or shorten it, so do not include secrets or personal data.
+   *
+   * @param {string} [prompt] - Text to pre-fill in the chat input.
+   */
+  openChat(prompt?: string): void;
 }
 
 /**
@@ -149,6 +171,18 @@ export const useHelpCenter = (): HelpCenter => {
     });
   }, [eventModule]);
 
+  const openChat = useCallback(
+    (prompt?: string): void => {
+      eventModule.dispatchEvent(EVENT_NAME, {
+        detail: {
+          page: 'chat',
+          prompt,
+        },
+      });
+    },
+    [eventModule],
+  );
+
   return {
     openHelp,
     openArticle,
@@ -156,6 +190,7 @@ export const useHelpCenter = (): HelpCenter => {
     openSearch,
     openGovernance,
     openReleaseNotes,
+    openChat,
   };
 };
 

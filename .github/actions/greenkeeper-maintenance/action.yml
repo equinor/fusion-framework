@@ -28,7 +28,7 @@ runs:
   using: composite
   steps:
     - name: Authenticate with Framework's existing identity
-      uses: azure/login@0949e32778441b2c442592b7a0e6313466dc8f29 # v3.0.2
+      uses: azure/login@7ddb5af1ef8758cf1353cf3b42f940aee27ba21c # v3.0.2
       env:
         AZURE_CONFIG_DIR: ${{ runner.temp }}/greenkeeper-azure
       with:
@@ -54,7 +54,7 @@ runs:
         az account clear
 
     - name: Authenticate GHCR using the Framework job token
-      uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+      uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
       with:
         registry: ghcr.io
         username: ${{ github.actor }}

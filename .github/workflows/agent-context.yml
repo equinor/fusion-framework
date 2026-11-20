@@ -47,11 +47,11 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
 
@@ -60,7 +60,7 @@ jobs:
         run: node .github/scripts/verify-agent-context.mjs
 
       - name: Set up APM
-        uses: microsoft/apm-action@d723bb64ed70c135bbaf87d126b721dd2dae0439 # v1
+        uses: microsoft/apm-action@v1.10.0
         with:
           apm-version: '0.33.0'
           setup-only: "true"
