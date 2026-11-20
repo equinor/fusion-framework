@@ -92,13 +92,13 @@ jobs:
       id-token: write
       issues: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Setup workspace
-        uses: ./.github/actions/node-setup
+        uses: $/.github/actions/node-setup
 
       - name: Capture untrusted issue context
         env:
@@ -120,7 +120,7 @@ jobs:
 
       - name: Setup Copilot with Fusion AI
         id: copilot
-        uses: ./.github/actions/setup-copilot-fusion-ai
+        uses: $/.github/actions/setup-copilot-fusion-ai
         with:
           client-id: ${{ vars.FUSION_AI_SP_CLIENT_ID }}
           wire-model: ${{ inputs.model }}
@@ -256,7 +256,7 @@ jobs:
 
       - name: Upload Copilot execution JSONL
         if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: issue-copilot-jsonl-${{ inputs.issue_number }}
           path: ${{ runner.temp }}/issue-agent.jsonl
@@ -264,7 +264,7 @@ jobs:
           retention-days: 7
 
       - name: Upload proposal
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: issue-proposal-${{ inputs.issue_number }}
           path: |
@@ -298,18 +298,18 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.sha }}
 
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+      - uses: actions/download-artifact@v8.0.2
         with:
           name: issue-proposal-${{ inputs.issue_number }}
           path: ${{ runner.temp }}/issue-proposal
 
       - name: Publish validated patch as a draft
         id: publish
-        uses: ./.github/actions/publish-agent-patch
+        uses: $/.github/actions/publish-agent-patch
         env:
           GH_TOKEN: ${{ github.token }}
         with:
