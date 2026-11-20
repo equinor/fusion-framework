@@ -1,0 +1,32 @@
+name: Request Greenkeeper dependency assessment
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: Open Dependabot PR to assess in PoC Greenkeeper (export-only)
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  dispatch:
+    if: github.repository == 'equinor/fusion-framework' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    environment: docs
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Request assessment in PoC Greenkeeper
+        env:
+          PR_NUMBER: ${{ inputs.pr-number }}
+          GH_TOKEN: ${{ github.token }}
+          GREENKEEPER_DISPATCH_TOKEN: ${{ secrets.GREENKEEPER_DISPATCH_TOKEN }}
+        run: bash .github/actions/greenkeeper-dispatch/dispatch.sh
