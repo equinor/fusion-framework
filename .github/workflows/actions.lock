@@ -32,7 +32,7 @@ workflows:
         - 'actions/upload-pages-artifact@v5.0.0'
     '.github/workflows/greenkeeper-maintenance.yml':
         - 'actions/checkout@v7.0.1'
-        - 'azure/login@7ddb5af1ef8758cf1353cf3b42f940aee27ba21c'
+        - 'azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906'
         - 'docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9'
     '.github/workflows/index-docs.yml':
         - 'actions/cache@v6.1.0'
@@ -114,9 +114,9 @@ dependencies:
         repo_id: 496012378
         uses:
             - 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
-    'azure/login@7ddb5af1ef8758cf1353cf3b42f940aee27ba21c':
-        ref: 'v3.0.2'
-        commit: 'sha1-7ddb5af1ef8758cf1353cf3b42f940aee27ba21c'
+    'azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906':
+        ref: 'v3.1.0'
+        commit: 'sha1-a641126d1b8aa4d1fa005f4f92df94a3a4c4c906'
         owner_id: 6844498
         repo_id: 210798615
     'azure/login@v3.0.2':
