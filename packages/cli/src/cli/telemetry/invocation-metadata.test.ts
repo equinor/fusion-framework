@@ -1,12 +1,10 @@
 import { Command } from 'commander';
 import { describe, expect, it } from 'vitest';
 
-import {
-  createMachineId,
-  resolveExceptionType,
-  resolveFusionEnvironment,
-  resolveInvocationCommand,
-} from './invocation-metadata.js';
+import { createMachineId } from './create-machine-id.js';
+import { resolveExceptionType } from './resolve-exception-type.js';
+import { resolveFusionEnvironment } from './resolve-fusion-environment.js';
+import { resolveInvocationCommand } from './resolve-invocation-command.js';
 
 const createProgram = (): Command => {
   const program = new Command('fusion-framework-cli').option('--debug');
@@ -96,6 +94,7 @@ describe('resolveInvocationCommand', () => {
 
 describe('resolveExceptionType', () => {
   it('returns the type name only', () => {
+    /** Distinct error type used to verify that the message is not exported. */
     class TokenExpiredError extends Error {}
     expect(resolveExceptionType(new TokenExpiredError('token abc'))).toBe('TokenExpiredError');
     expect(resolveExceptionType('raw message')).toBe('string');
@@ -113,10 +112,16 @@ describe('resolveFusionEnvironment', () => {
 
 describe('createMachineId', () => {
   it('hashes the first external MAC, falling back to the host name', () => {
+    const address = {
+      address: '192.0.2.1',
+      netmask: '255.255.255.0',
+      family: 'IPv4',
+      cidr: '192.0.2.1/24',
+    } as const;
     const external = {
-      lo: [{ internal: true, mac: '00:00:00:00:00:00' }],
-      en0: [{ internal: false, mac: 'aa:bb:cc:dd:ee:ff' }],
-    } as unknown as Parameters<typeof createMachineId>[0];
+      lo: [{ ...address, internal: true, mac: '00:00:00:00:00:00' }],
+      en0: [{ ...address, internal: false, mac: 'aa:bb:cc:dd:ee:ff' }],
+    } satisfies Parameters<typeof createMachineId>[0];
 
     const id = createMachineId(external, 'my-host');
     expect(id).toMatch(/^[0-9a-f]{64}$/);

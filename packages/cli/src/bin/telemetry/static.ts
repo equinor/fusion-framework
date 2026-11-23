@@ -11,11 +11,8 @@ export const DEFAULT_TELEMETRY_CONNECTION_STRING =
 /** Environment variable that overrides {@link DEFAULT_TELEMETRY_CONNECTION_STRING}. */
 export const TELEMETRY_CONNECTION_STRING_ENV = 'FUSION_CLI_TELEMETRY_CONNECTION_STRING';
 
-/**
- * Resolves the telemetry destination: the override when set and non-empty, else the default.
- *
- * @param env - Environment to read; defaults to `process.env`.
- * @returns The Application Insights connection string to export to.
- */
-export const resolveTelemetryConnectionString = (env: NodeJS.ProcessEnv = process.env): string =>
-  env[TELEMETRY_CONNECTION_STRING_ENV]?.trim() || DEFAULT_TELEMETRY_CONNECTION_STRING;
+/** Environment variable that disables CLI telemetry when set to `1` or `true`. */
+export const TELEMETRY_OPTOUT_ENV = 'FUSION_CLI_TELEMETRY_OPTOUT';
+
+/** Cross-tool convention (https://consoledonottrack.com) that disables telemetry when `1`. */
+export const DO_NOT_TRACK_ENV = 'DO_NOT_TRACK';

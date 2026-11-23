@@ -1,10 +1,7 @@
-import { createHash } from 'node:crypto';
-import { hostname, networkInterfaces } from 'node:os';
-
 import type { Command, Option } from 'commander';
 
 /** Top-level commands shipped with the CLI; any other top-level command comes from a plugin. */
-export const BUILT_IN_COMMANDS: ReadonlySet<string> = new Set([
+const BUILT_IN_COMMANDS: ReadonlySet<string> = new Set([
   'app',
   'auth',
   'create',
@@ -12,9 +9,6 @@ export const BUILT_IN_COMMANDS: ReadonlySet<string> = new Set([
   'portal',
   'telemetry',
 ]);
-
-/** Fusion environments that may be reported; any other `--env` value is never exported. */
-const KNOWN_FUSION_ENVIRONMENTS: ReadonlySet<string> = new Set(['ci', 'fqa', 'tr', 'fprd', 'dev']);
 
 /** Static shape of an invocation, resolved from argv against the registered commands. */
 export interface InvocationCommand {
@@ -31,8 +25,11 @@ const optionName = (option: Option): string | undefined => option.long ?? option
 
 /** Finds a registered option, on the command or any ancestor, by its flag. */
 const findOption = (chain: readonly Command[], flag: string): Option | undefined => {
+  // Prefer the nearest registered option along the command path.
   for (const command of chain) {
+    // Preserve the declared long and short spellings for option lookup.
     const match = command.options.find((option) => option.long === flag || option.short === flag);
+    // Stop at the first owner to preserve command-path lookup precedence.
     if (match) return match;
   }
   return undefined;
@@ -51,6 +48,7 @@ const expandOptionToken = (
 ): { options: Option[]; awaitsValue: boolean } => {
   const [flag, inlineValue] = token.split('=', 2);
   const option = findOption(chain, flag);
+  // An exact registration takes precedence over interpreting a short-option group.
   if (option) {
     const takesValue = option.required || option.optional;
     return { options: [option], awaitsValue: takesValue && inlineValue === undefined };
@@ -58,10 +56,13 @@ const expandOptionToken = (
   // Only single-dash groups such as `-ds` or `-efprd` can combine short options.
   if (token.startsWith('--') || token.length <= 2) return { options: [], awaitsValue: false };
   const options: Option[] = [];
+  // Follow the group's left-to-right order until it reaches a value-taking option.
   for (let index = 1; index < token.length; index++) {
     const short = findOption(chain, `-${token[index]}`);
+    // The remainder cannot be attributed to a known registered option.
     if (!short) break;
     options.push(short);
+    // The rest of this token is the option's value, not more flags.
     if (short.required || short.optional) {
       return { options, awaitsValue: index === token.length - 1 };
     }
@@ -88,35 +89,46 @@ export const resolveInvocationCommand = (
   const optionNames = new Set<string>();
   let walkingCommands = true;
 
+  // Walk argv in order so values are skipped before they can be read as names.
   for (let index = 0; index < args.length; index++) {
     const token = args[index];
     // Everything after `--` is passed through verbatim and never inspected.
     if (token === '--') break;
+    // Resolve flags independently from command descent.
     if (token.startsWith('-') && token.length > 1) {
       const flag = token.split('=', 1)[0];
+      // Commander supplies help implicitly, so it need not be registered.
       if (flag === '-h' || flag === '--help') {
         optionNames.add('--help');
+        // Do not try to interpret implicit help as part of the command path.
         continue;
       }
       const { options, awaitsValue } = expandOptionToken(chain, token);
+      // Keep registered option names only, including names from grouped flags.
       for (const option of options) {
         const name = optionName(option);
+        // Omit an option when it has no usable name instead of recording the input.
         if (name) optionNames.add(name);
       }
       const last = options[options.length - 1];
+      // With no separate value to consume, handling of this flag is finished.
       if (!last || !awaitsValue) continue;
       // Skip the separate value token so it is never mistaken for a command name.
       const next = args[index + 1];
       const consumesNext =
         last.required || (last.optional && next !== undefined && !next.startsWith('-'));
+      // An optional value does not consume the next flag.
       if (consumesNext) index++;
+      // Never feed a flag or its value into command lookup.
       continue;
     }
+    // Positional arguments end command discovery but not option discovery.
     if (!walkingCommands) continue;
     const current = chain[chain.length - 1];
-    const next = current.commands.find(
-      (command) => command.name() === token || command.aliases().includes(token),
-    );
+    const next = current.commands
+      // Resolve aliases to the same command as the canonical name.
+      .find((command) => command.name() === token || command.aliases().includes(token));
+    // Record only a name we found in the registered command tree.
     if (next) {
       chain.push(next);
       path.push(next.name());
@@ -128,51 +140,4 @@ export const resolveInvocationCommand = (
 
   const kind = path.length === 0 || BUILT_IN_COMMANDS.has(path[0]) ? 'builtin' : 'plugin';
   return { path, optionNames: [...optionNames].sort(), kind };
-};
-
-/**
- * Returns the type name of a thrown value, never its message or stack.
- *
- * @param error - Value that terminated the invocation.
- * @returns A plain identifier such as `TypeError`, or `Error` when no safe name exists.
- */
-export const resolveExceptionType = (error: unknown): string => {
-  if (error === null || typeof error !== 'object') return typeof error;
-  const name = (error as { constructor?: { name?: unknown } }).constructor?.name;
-  return typeof name === 'string' && /^[A-Za-z_$][\w$]{0,63}$/.test(name) ? name : 'Error';
-};
-
-/**
- * Returns the target Fusion environment when it is one of the known environments.
- * Custom values may identify private infrastructure, so they are never reported.
- *
- * @param value - Value of the command's `--env` option.
- * @returns The lower-case environment name, or `undefined`.
- */
-export const resolveFusionEnvironment = (value: unknown): string | undefined => {
-  if (typeof value !== 'string') return undefined;
-  const env = value.trim().toLowerCase();
-  return KNOWN_FUSION_ENVIRONMENTS.has(env) ? env : undefined;
-};
-
-/**
- * Returns a stable, one-way machine identifier, so usage can be counted per machine without
- * exporting host names or hardware addresses.
- *
- * @param interfaces - Network interfaces; defaults to the host's.
- * @param host - Host name used when no hardware address exists; defaults to the host's.
- * @returns Hex SHA-256 of the first external hardware address, or of the host name.
- */
-export const createMachineId = (
-  interfaces: ReturnType<typeof networkInterfaces> = networkInterfaces(),
-  host: string = hostname(),
-): string => {
-  const mac = Object.values(interfaces)
-    .flat()
-    .find(
-      (entry) => entry && !entry.internal && entry.mac && entry.mac !== '00:00:00:00:00:00',
-    )?.mac;
-  return createHash('sha256')
-    .update(`fusion-framework-cli:${mac ?? host}`)
-    .digest('hex');
 };
