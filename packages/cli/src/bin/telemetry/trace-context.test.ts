@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { telemetryExportRequest } from '@equinor/fusion-framework-module';
 
-import { setInvocationTraceContext, traceRequest } from './trace-context.js';
+import { setInvocationTraceContext } from './set-invocation-trace-context.js';
+import { traceRequest } from './trace-request.js';
 
 const context = { traceId: '0af7651916cd43dd8448eb211c80319c', spanId: 'b7ad6b7169203331' };
 

@@ -15,11 +15,11 @@ import {
 
 import type { InvocationExportResult, InvocationRecord } from './export-invocation.js';
 import {
-  TELEMETRY_NOTICE,
   startInvocationTelemetry,
   type StartInvocationTelemetryOptions,
   type TelemetryProcess,
-} from './invocation-telemetry.js';
+} from './start-invocation-telemetry.js';
+import { TELEMETRY_NOTICE } from './static.js';
 
 type FakeProcess = EventEmitter & {
   argv: string[];
@@ -36,8 +36,9 @@ type FakeProcess = EventEmitter & {
 
 let configHome: string;
 
-const createProcess = (args: string[], env: NodeJS.ProcessEnv = {}): FakeProcess =>
-  Object.assign(new EventEmitter(), {
+const createProcess = (args: string[], env: NodeJS.ProcessEnv = {}): FakeProcess => {
+  // Use real listener ordering with fake exit and signal operations.
+  return Object.assign(new EventEmitter(), {
     argv: ['node', 'fusion-framework-cli', ...args],
     env: { XDG_CONFIG_HOME: configHome, ...env },
     pid: 4242,
@@ -55,6 +56,7 @@ const createProcess = (args: string[], env: NodeJS.ProcessEnv = {}): FakeProcess
     kill: vi.fn(),
     exit: vi.fn(),
   });
+};
 
 const createProgram = (): Command => {
   const program = new Command('fusion-framework-cli').exitOverride();
@@ -90,10 +92,12 @@ const start = (
   const exportInvocation = vi.fn(async (): Promise<InvocationExportResult> => 'settled');
   const program = overrides.program ?? createProgram();
   let time = 1_000;
+  // The fixture implements the exercised process surface, not every Node overload.
+  const process = proc as unknown as TelemetryProcess;
   const telemetry = startInvocationTelemetry({
     program,
     version: '1.2.3',
-    process: proc as unknown as TelemetryProcess,
+    process,
     ci: false,
     exportInvocation,
     now: () => (time += 500),
@@ -104,7 +108,9 @@ const start = (
 };
 
 const exported = (mock: ReturnType<typeof vi.fn>): InvocationRecord[] =>
-  mock.mock.calls.map(([record]) => record as InvocationRecord);
+  mock.mock.calls
+    // Ignore exporter options when asserting the payload sent by the CLI.
+    .map(([record]) => record as InvocationRecord);
 
 beforeEach(() => {
   configHome = mkdtempSync(join(tmpdir(), 'ffc-telemetry-'));

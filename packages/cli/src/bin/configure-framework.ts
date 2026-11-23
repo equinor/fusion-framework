@@ -6,7 +6,7 @@ import isContinuousIntegration from 'is-ci';
 
 import { FusionEnv, type Modules } from './fusion-env.js';
 import { identifyRequest } from './utils/identify-request.js';
-import { traceRequest } from './telemetry/trace-context.js';
+import { traceRequest } from './telemetry/trace-request.js';
 
 // Default scope for Fusion service discovery
 const FUSION_SERVICE_SCOPE = ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'];

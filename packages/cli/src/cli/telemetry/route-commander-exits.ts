@@ -1,6 +1,6 @@
 import type { Command, CommanderError } from 'commander';
 
-import type { InvocationTelemetry } from './invocation-telemetry.js';
+import type { InvocationTelemetry } from './start-invocation-telemetry.js';
 
 /** Options for {@link routeCommanderExits}. */
 export interface RouteCommanderExitsOptions {
@@ -33,6 +33,7 @@ export const routeCommanderExits = (
 
   const override = (command: Command): void => {
     command.exitOverride((error) => {
+      // A standalone executable exits outside the synchronous parser path.
       if (error.code === 'commander.executeSubCommandAsync') {
         void telemetry.exit(error.exitCode).finally(() => exit(error.exitCode));
         return;
@@ -40,6 +41,7 @@ export const routeCommanderExits = (
       commanderExits.add(error);
       throw error;
     });
+    // Subcommands can end the process independently of the root command.
     for (const subcommand of command.commands) override(subcommand);
   };
   override(program);
