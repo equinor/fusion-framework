@@ -1,5 +1,26 @@
 # @equinor/fusion-framework-vitest-plugin-react-app
 
+## 2.0.7
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [4b55aa3]
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-cli@15.8.1
+  - @equinor/fusion-framework@9.1.1
+  - @equinor/fusion-framework-app@13.3.1
+  - @equinor/fusion-framework-module@6.2.1
+  - @equinor/fusion-framework-module-app@8.3.1
+  - @equinor/fusion-framework-module-feature-flag@2.2.1
+  - @equinor/fusion-framework-module-navigation@8.0.1
+  - @equinor/fusion-framework-module-telemetry@8.0.1
+  - @equinor/fusion-framework-react@9.0.6
+  - @equinor/fusion-framework-react-module@4.0.8
+  - @equinor/fusion-imports@2.0.9
+
 ## 2.0.6
 
 ### Patch Changes

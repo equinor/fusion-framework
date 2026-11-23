@@ -1,5 +1,23 @@
 # Change Log
 
+## 15.8.1
+
+### Patch Changes
+
+- 4b55aa3: Internal: reorganize CLI telemetry helpers and document their existing invariants to restore workspace lint without changing telemetry behavior or public exports.
+  
+  Refs: https://github.com/equinor/fusion-framework/issues/6088
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-dev-portal@11.1.12
+  - @equinor/fusion-framework-dev-server@2.3.5
+  - @equinor/fusion-framework-module-azure-identity@0.4.1
+  - @equinor/fusion-framework-vite-plugin-raw-imports@2.0.7
+  - @equinor/fusion-framework-vite-plugin-react-router@0.1.7
+  - @equinor/fusion-imports@2.0.9
+
 ## 15.8.0
 
 ### Minor Changes

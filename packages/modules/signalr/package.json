@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-signalr",
-  "version": "14.1.1",
+  "version": "14.1.2",
   "description": "",
   "type": "module",
   "sideEffects": false,
