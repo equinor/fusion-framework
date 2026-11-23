@@ -6,6 +6,7 @@ const BUILT_IN_COMMANDS: ReadonlySet<string> = new Set([
   'auth',
   'create',
   'disco',
+  'octopus',
   'portal',
   'telemetry',
 ]);

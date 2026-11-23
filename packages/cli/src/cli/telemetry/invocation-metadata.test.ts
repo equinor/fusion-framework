@@ -83,6 +83,19 @@ describe('resolveInvocationCommand', () => {
     });
   });
 
+  it('classifies octopus as a built-in command', () => {
+    const program = createProgram();
+    program.command('octopus').command('list').option('--url <url>');
+
+    expect(
+      resolveInvocationCommand(program, ['octopus', 'list', '--url', 'http://localhost:2100']),
+    ).toEqual({
+      path: ['octopus', 'list'],
+      optionNames: ['--url'],
+      kind: 'builtin',
+    });
+  });
+
   it('records help without a command', () => {
     expect(resolveInvocationCommand(createProgram(), ['-h'])).toEqual({
       path: [],
