@@ -4,15 +4,14 @@ How dependency update PRs are reviewed and merged in the Fusion Framework monore
 
 ## Overview
 
-Dependabot PRs target `maintenance/dependencies`. That branch collects the updates, its CI runs the full
-validation suite, and maintainers fix and validate the combined result there before it is promoted to `main`.
+Dependabot npm PRs target `main` directly (configured in `.github/dependabot.yml`) and are reviewed interactively by maintainers.
+Any remaining legacy PRs targeting `maintenance/dependencies` still run that branch's CI and promote to `main` via a maintainer-reviewed PR (`dependabot-maintenance.yml`).
 
 | Path | How |
 |------|-----|
-| Interactive | Review one PR with the APM-installed `fusion-dependency-review` skill. |
+| Interactive | Review each Dependabot PR with the APM-installed `fusion-dependency-review` skill and validate before merging to `main`. |
 
 Reviews follow the repository facts in the [Dependabot instructions](../.github/instructions/dependabot-pr.instructions.md).
-Promotion from `maintenance/dependencies` to `main` stays a maintainer-reviewed PR.
 
 ## GitHub Actions lockfile
 

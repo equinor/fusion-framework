@@ -1,6 +1,6 @@
 ---
 title: Combine Dependabot updates with Greenkeeper on one branch and pull request
-status: superseded
+status: retired
 date: 2026-10-30
 decision-makers:
   - Fusion Framework maintainers
@@ -11,7 +11,7 @@ scope:
 
 # Combine Dependabot updates with Greenkeeper on one branch and pull request
 
-> **Status note (2026-11-23):** The in-repository `greenkeeper-maintenance.yml` workflow and local action were removed so `equinor/fusion-framework` can return to `PUBLIC` visibility and restore npm Sigstore/SLSA provenance attestations (`equinor/fusion-core-tasks#3186`).
+> **Status note (2026-11-23):** Retired without an in-repository successor. The `greenkeeper-maintenance.yml` workflow and local action were removed so `equinor/fusion-framework` can return to `PUBLIC` visibility and restore npm Sigstore/SLSA provenance attestations (`equinor/fusion-core-tasks#3186`). Dependabot npm PRs target `main` directly for interactive review (`contributing/dependency-reviews.md`).
 
 ## Context
 
