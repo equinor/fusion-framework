@@ -27,7 +27,7 @@ pins each direct and transitive action to a reviewed commit
   triggered the run. Such an action may use
   only `run:` steps, since the lockfile cannot cover actions it uses.
 - After adding a workflow or changing a `uses:` line, run `gh actions-lock --ignore-local-actions`, then
-  `gh actions-lock --verify --ignore-local-actions`, and commit the lockfile with the workflow change. Install
+  `gh actions-lock --verify`, and commit the lockfile with the workflow change. Install
   the tool with `gh extension install github/gh-actions-lock`. The
   [Verify actions lockfile](../.github/workflows/actions-lock.yml) check runs a strict
   `gh actions-lock --verify`, without `--ignore-local-actions`, on PRs that touch `.github/workflows` or
