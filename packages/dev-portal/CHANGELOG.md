@@ -1,5 +1,34 @@
 # @equinor/fusion-framework-dev-portal
 
+## 11.1.12
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+- Updated dependencies [c374baf]
+  - @equinor/fusion-framework@9.1.1
+  - @equinor/fusion-framework-app@13.3.1
+  - @equinor/fusion-framework-dev-server@2.3.5
+  - @equinor/fusion-framework-module-ag-grid@37.2.1
+  - @equinor/fusion-framework-module-analytics@3.1.14
+  - @equinor/fusion-framework-module-app@8.3.1
+  - @equinor/fusion-framework-module-bookmark@4.2.1
+  - @equinor/fusion-framework-module-context@9.1.1
+  - @equinor/fusion-framework-module-feature-flag@2.2.1
+  - @equinor/fusion-framework-module-navigation@8.0.1
+  - @equinor/fusion-framework-module-services@8.2.1
+  - @equinor/fusion-framework-module-telemetry@8.0.1
+  - @equinor/fusion-framework-plugin-context-navigation@1.1.2
+  - @equinor/fusion-framework-react@9.0.6
+  - @equinor/fusion-framework-react-components-bookmark@2.0.9
+  - @equinor/fusion-framework-react-components-people-provider@2.0.11
+  - @equinor/fusion-framework-react-module-bookmark@7.0.5
+  - @equinor/fusion-observable@9.2.7
+  - @equinor/fusion-query@7.0.9
+
 ## 11.1.11
 
 ### Patch Changes

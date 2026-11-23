@@ -1,5 +1,20 @@
 # Change Log
 
+## 16.1.1
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-module@6.2.1
+  - @equinor/fusion-framework-module-event@6.1.5
+  - @equinor/fusion-framework-module-http@8.1.6
+  - @equinor/fusion-framework-module-service-discovery@10.3.1
+  - @equinor/fusion-observable@9.2.7
+  - @equinor/fusion-query@7.0.9
+
 ## 16.1.0
 
 ### Minor Changes

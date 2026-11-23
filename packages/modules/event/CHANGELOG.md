@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.1.5
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+
 ## 6.1.4
 
 ### Patch Changes

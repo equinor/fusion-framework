@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-dev-server
 
+## 2.3.5
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-vite-plugin-api-service@3.0.2
+  - @equinor/fusion-framework-vite-plugin-spa@5.2.6
+  - @equinor/fusion-log@2.0.9
+
 ## 2.3.4
 
 ### Patch Changes

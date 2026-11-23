@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 5.2.6
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-module@6.2.1
+  - @equinor/fusion-framework-module-http@8.1.6
+  - @equinor/fusion-framework-module-msal@12.1.1
+  - @equinor/fusion-framework-module-service-discovery@10.3.1
+  - @equinor/fusion-framework-module-telemetry@8.0.1
+
 ## 5.2.5
 
 ### Patch Changes
