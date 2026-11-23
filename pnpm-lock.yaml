@@ -2630,7 +2630,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^7.0.0
-        version: 7.2.2
+        version: 7.2.3
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -4245,8 +4245,8 @@ packages:
   '@azure/msal-node-runtime@0.20.6':
     resolution: {integrity: sha512-89Al7l5c8sOEA954d35WZOg1sCa2WKfgf7KyTbN9vIkKsoZrXdJ5+CPjy8+tQqWcsJTAMbQD4OWr7V09/xN8KA==}
 
-  '@azure/msal-node@7.2.2':
-    resolution: {integrity: sha512-MjsAHC+KUSXYYC8P57lVXy5IgSeO+PraXzLLHZI6hcX7nx/hCokY6gTPm2JcKLI3W88mu7ozjObBVGKExZUhww==}
+  '@azure/msal-node@7.2.3':
+    resolution: {integrity: sha512-eRIo5XuQAJrubo4514gEnmREKI35045LItjucOEK/YNQYj3LhEpYEbBdqjlu/wmd9Rcqp2c3GJ4ynFoEqby3sg==}
     engines: {node: '>=20'}
 
   '@azure/search-documents@13.1.0':
@@ -13885,7 +13885,7 @@ snapshots:
     dependencies:
       '@azure/core-auth': 1.11.0(supports-color@10.2.2)
       '@azure/identity': 4.14.1(supports-color@10.2.2)
-      '@azure/msal-node': 7.2.2
+      '@azure/msal-node': 7.2.3
       '@azure/msal-node-extensions': 5.6.2
       keytar: 7.9.0
       tslib: 2.8.1
@@ -13904,7 +13904,7 @@ snapshots:
       '@azure/core-util': 1.14.0(supports-color@10.2.2)
       '@azure/logger': 1.4.0(supports-color@10.2.2)
       '@azure/msal-browser': 5.30.0
-      '@azure/msal-node': 7.2.2
+      '@azure/msal-node': 7.2.3
       open: 11.0.4
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -13941,7 +13941,8 @@ snapshots:
     dependencies:
       '@azure/msal-common': 16.17.0
 
-  '@azure/msal-common@16.16.2': {}
+  '@azure/msal-common@16.16.2':
+    optional: true
 
   '@azure/msal-common@16.17.0': {}
 
@@ -13955,9 +13956,9 @@ snapshots:
   '@azure/msal-node-runtime@0.20.6':
     optional: true
 
-  '@azure/msal-node@7.2.2':
+  '@azure/msal-node@7.2.3':
     dependencies:
-      '@azure/msal-common': 16.16.2
+      '@azure/msal-common': 16.17.0
       jsonwebtoken: 9.0.3
 
   '@azure/search-documents@13.1.0(supports-color@10.2.2)':
