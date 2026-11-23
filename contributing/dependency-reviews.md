@@ -25,14 +25,13 @@ pins each direct and transitive action to a reviewed commit
   commit and the actions they use are locked.
 - Use `./` only when a step must run an action from a different, trusted checkout than the commit that
   triggered the run. Such an action may use
-  only `run:` steps unless the same workflow also locks its actions through a `$/` reference.
+  only `run:` steps, since the lockfile cannot cover actions it uses.
 - After adding a workflow or changing a `uses:` line, run `gh actions-lock --ignore-local-actions`, then
   `gh actions-lock --verify --ignore-local-actions`, and commit the lockfile with the workflow change. Install
   the tool with `gh extension install github/gh-actions-lock`. The
-  [Verify actions lockfile](../.github/workflows/actions-lock.yml) check runs the same verification on PRs
-  that touch `.github/workflows` or `.github/actions`, plus a strict pass without `--ignore-local-actions`
-  for every workflow except `generate-docs.yml`. A new `./` exception that uses other actions must be added
-  to that exclusion list.
+  [Verify actions lockfile](../.github/workflows/actions-lock.yml) check runs a strict
+  `gh actions-lock --verify`, without `--ignore-local-actions`, on PRs that touch `.github/workflows` or
+  `.github/actions`, so a `./` action that uses other actions fails it.
 - Dependabot bumps actions in `.github/workflows` and `.github/actions/*` and regenerates the lockfile in the
   same PR. Review a changed `commit` like any dependency bump; investigate a changed `owner_id` or `repo_id`.
 - Never edit the lockfile by hand, and never run `--accept-moved` in automation.
