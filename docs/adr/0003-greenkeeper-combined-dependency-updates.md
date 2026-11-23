@@ -1,6 +1,6 @@
 ---
 title: Combine Dependabot updates with Greenkeeper on one branch and pull request
-status: proposed
+status: retired
 date: 2026-10-30
 decision-makers:
   - Fusion Framework maintainers
@@ -10,6 +10,8 @@ scope:
 ---
 
 # Combine Dependabot updates with Greenkeeper on one branch and pull request
+
+> **Status note (2026-11-23):** Retired without an in-repository successor. The `greenkeeper-maintenance.yml` workflow and local action were removed so `equinor/fusion-framework` can return to `PUBLIC` visibility and restore npm Sigstore/SLSA provenance attestations (`equinor/fusion-core-tasks#3186`). Dependabot npm PRs target `main` directly for interactive review (`contributing/dependency-reviews.md`).
 
 ## Context
 
@@ -32,7 +34,7 @@ Replace the maintenance stream with Greenkeeper's combined branch once
 
 - npm Dependabot updates target `main` (no `target-branch`), because Greenkeeper reads Dependabot pull
   requests against the default branch.
-- [Greenkeeper dependency maintenance](../../.github/workflows/greenkeeper-maintenance.yml) runs on pushes to
+- `greenkeeper-maintenance.yml` (removed on 2026-11-23) ran on pushes to
   `main` and on manual dispatch (a weekday schedule is prepared but disabled during evaluation), in the protected `docs` environment with Framework's
   existing Fusion AI identity. During evaluation the workflow follows Greenkeeper's `main` channel
   tags, resolved to digests at run start; pin `@sha256` digests to freeze a reviewed version. The orchestrator image
