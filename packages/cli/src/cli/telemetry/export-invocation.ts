@@ -3,6 +3,8 @@ import { type Attributes, SpanKind, SpanStatusCode } from '@opentelemetry/api';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SimpleSpanProcessor, TracerProvider } from '@opentelemetry/sdk-trace';
 
+import { TELEMETRY_TOOL_NAME } from './telemetry-tool-name.js';
+
 /** Outcome of one CLI invocation. */
 export type InvocationOutcome = 'success' | 'failure' | 'cancelled';
 
@@ -51,9 +53,6 @@ export interface ExportInvocationOptions {
  */
 export type InvocationExportResult = 'settled' | 'timedOut';
 
-/** Tool name reported on every invocation record. */
-export const TELEMETRY_TOOL_NAME = 'fusion-framework-cli';
-
 /**
  * Exporter settings that are read from the environment at construction time. They disable
  * SDK self-telemetry (statsbeat and SDK stats) and the extra `_OTELRESOURCE_` metric, so the
@@ -68,14 +67,19 @@ const EXPORTER_ENV_OVERRIDES: Readonly<Record<string, string>> = {
 
 /** Runs `create` with the exporter overrides applied, restoring the caller's environment after. */
 const withExporterEnv = <T>(create: () => T): T => {
+  // Capture the caller's environment before applying settings required for one exporter instance.
   const previous = Object.fromEntries(
+    // Restore only these keys so unrelated environment changes remain untouched.
     Object.keys(EXPORTER_ENV_OVERRIDES).map((key) => [key, process.env[key]]),
   );
+  // The Azure SDK reads these overrides when constructing its exporter.
   Object.assign(process.env, EXPORTER_ENV_OVERRIDES);
   try {
     return create();
   } finally {
+    // Restore the exact prior values after construction, including absence.
     for (const [key, value] of Object.entries(previous)) {
+      // Delete keys that the caller did not define rather than leaving SDK overrides behind.
       if (value === undefined) delete process.env[key];
       else process.env[key] = value;
     }

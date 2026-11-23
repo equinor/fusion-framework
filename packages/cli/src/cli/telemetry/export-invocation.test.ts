@@ -98,6 +98,7 @@ const startIngestion = async (respond = true): Promise<{ url: string; envelopes:
       ).toString();
       const parsed: Envelope | Envelope[] = JSON.parse(text);
       envelopes.push(...(Array.isArray(parsed) ? parsed : [parsed]));
+      // Leave the connection open to exercise the export timeout path.
       if (!respond) return;
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ itemsReceived: 1, itemsAccepted: 1, errors: [] }));
@@ -113,6 +114,7 @@ const connectionString = (endpoint: string): string =>
   `InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=${endpoint}`;
 
 afterEach(async () => {
+  // Close every test server, including endpoints intentionally left hanging.
   for (const server of servers.splice(0)) {
     server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));

@@ -1,12 +1,10 @@
 import { Command } from 'commander';
 import { describe, expect, it } from 'vitest';
 
-import {
-  createMachineId,
-  resolveExceptionType,
-  resolveFusionEnvironment,
-  resolveInvocationCommand,
-} from './invocation-metadata.js';
+import { createMachineId } from './create-machine-id.js';
+import { resolveExceptionType } from './resolve-exception-type.js';
+import { resolveFusionEnvironment } from './resolve-fusion-environment.js';
+import { resolveInvocationCommand } from './resolve-invocation-command.js';
 
 const createProgram = (): Command => {
   const program = new Command('fusion-framework-cli').option('--debug');
@@ -96,6 +94,7 @@ describe('resolveInvocationCommand', () => {
 
 describe('resolveExceptionType', () => {
   it('returns the type name only', () => {
+    /** Represents a named error type without exporting its message or stack. */
     class TokenExpiredError extends Error {}
     expect(resolveExceptionType(new TokenExpiredError('token abc'))).toBe('TokenExpiredError');
     expect(resolveExceptionType('raw message')).toBe('string');
@@ -113,6 +112,7 @@ describe('resolveFusionEnvironment', () => {
 
 describe('createMachineId', () => {
   it('hashes the first external MAC, falling back to the host name', () => {
+    // The test fixture omits optional interface fields that the OS API may provide.
     const external = {
       lo: [{ internal: true, mac: '00:00:00:00:00:00' }],
       en0: [{ internal: false, mac: 'aa:bb:cc:dd:ee:ff' }],

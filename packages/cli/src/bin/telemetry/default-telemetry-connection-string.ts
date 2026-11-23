@@ -7,15 +7,3 @@
  */
 export const DEFAULT_TELEMETRY_CONNECTION_STRING =
   'InstrumentationKey=55ea24bf-2f99-4c40-acc6-48cb46614745;IngestionEndpoint=https://norwayeast-0.in.applicationinsights.azure.com/;LiveEndpoint=https://norwayeast.livediagnostics.monitor.azure.com/;ApplicationId=1ac0a15d-9bf3-4ef8-866a-23e0356b6d6e';
-
-/** Environment variable that overrides {@link DEFAULT_TELEMETRY_CONNECTION_STRING}. */
-export const TELEMETRY_CONNECTION_STRING_ENV = 'FUSION_CLI_TELEMETRY_CONNECTION_STRING';
-
-/**
- * Resolves the telemetry destination: the override when set and non-empty, else the default.
- *
- * @param env - Environment to read; defaults to `process.env`.
- * @returns The Application Insights connection string to export to.
- */
-export const resolveTelemetryConnectionString = (env: NodeJS.ProcessEnv = process.env): string =>
-  env[TELEMETRY_CONNECTION_STRING_ENV]?.trim() || DEFAULT_TELEMETRY_CONNECTION_STRING;

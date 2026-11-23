@@ -8,6 +8,10 @@ const { baseSearchClientConstructor } = vi.hoisted(() => ({
 
 vi.mock('@azure/search-documents', () => ({
   SearchClient: class {
+    /**
+     * Captures constructor arguments for assertions without creating a live search client.
+     * @param args - URL, index, credential and optional SearchClient settings.
+     */
     constructor(...args: unknown[]) {
       baseSearchClientConstructor(...args);
     }
