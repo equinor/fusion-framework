@@ -1,4 +1,4 @@
-name: Index Docs
+name: 🔎 Index Docs
 
 on:
   workflow_call:

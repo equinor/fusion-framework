@@ -1,4 +1,4 @@
-name: Visual checks
+name: 🎨 Visual Checks
 
 on:
   pull_request:

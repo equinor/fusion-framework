@@ -1,4 +1,4 @@
-name: PR
+name: 🧪 Pull Request CI
 
 on:
   pull_request:
@@ -165,9 +165,6 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
-
-      - name: Test maintenance branch lifecycle
-        run: node --test .github/scripts/dependabot-maintenance.test.mjs
 
       - name: Test npm trusted publishing tooling
         run: node --test .github/scripts/npm-trusted-publishing.test.mjs

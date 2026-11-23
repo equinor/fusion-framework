@@ -1,4 +1,4 @@
-name: Verify actions lockfile
+name: 🔒 Verify Actions Lockfile
 
 on:
   pull_request:

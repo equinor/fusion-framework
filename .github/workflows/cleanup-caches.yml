@@ -1,4 +1,4 @@
-name: Cleanup PR caches
+name: 🧹 Clean Up PR Caches
 
 # Actions cache entries are scoped to the ref that created them and are never
 # deleted automatically when a PR branch goes away, so they keep consuming

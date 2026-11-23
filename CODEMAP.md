@@ -216,7 +216,7 @@ Use this table instead of searching. "Start here" is the first file to open.
 | Configure the human Copilot Codespace and prebuild warm-up | `.devcontainer/devcontainer.json`, `.devcontainer/mcp.json` |
 | Add or change a workflow, composite action, or action version | `.github/workflows`, `.github/actions` (reference as `$/.github/actions/<name>`), then regenerate `.github/workflows/actions.lock` with `gh actions-lock --ignore-local-actions` and check it with `gh actions-lock --verify --ignore-local-actions` (enforced on PRs by `.github/workflows/actions-lock.yml`); rules in `contributing/dependency-reviews.md` |
 | Publish to npm, add a new public package, or fix npm trusted publishing | `.github/workflows/release.yml` (sole npm publisher, `npm` environment), `pnpm npm-trust` in `.github/scripts/npm-trusted-publishing.mjs` with tests in `.github/scripts/npm-trusted-publishing.test.mjs`, runbook in `contributing/npm-publishing.md`, agent workflow in `.agents/skills/custom-npm-publishing/SKILL.md`, policy in `docs/adr/0002-npm-trusted-publishing.md` |
-| Recover, sync, or promote the Dependabot maintenance branch | `.github/workflows/dependabot-maintenance.yml` (rebases the maintenance branch on pushes to `main`), `.github/actions/dependabot-maintenance-stream`, `.github/actions/dependabot-promotion-pr`, `.github/actions/dependabot-enable-auto-merge`, behavior tests in `.github/scripts/dependabot-maintenance.test.mjs`, policy in `docs/adr/0001-dependabot-maintenance-stream.md` |
+| Review Dependabot or Greenkeeper dependency updates | `.github/dependabot.yml` (Dependabot targets `main`), `contributing/dependency-reviews.md`, `.github/instructions/dependabot-pr.instructions.md` |
 | Change observable/state primitives | `packages/utils/observable/src` |
 | Change caching/fetching | `packages/utils/query/src` |
 
@@ -249,7 +249,7 @@ build to two concurrent tasks for a 4 GiB, 2-CPU validation budget; see
 [build concurrency](contributing/development.md#build-concurrency).
 
 PR checks on Linux wait up to 10 minutes for the successful `Save pnpm and Turbo caches`
-job in `Prime CI caches`, without waiting for unrelated Playwright jobs,
+job in `prime-pnpm-cache.yml`, without waiting for unrelated Playwright jobs,
 and restore only the exact `main` base-commit Turbo cache. Stacked PRs pin current
 `main` instead, since feature branches do not publish shared caches. Dispatched
 checks resolve the base through their `pr_number` input. Failed, cancelled, missing,
@@ -309,7 +309,7 @@ This file is hand-maintained. Update it when:
 
 Run `pnpm verify:agent-context` to check it against the real workspace. CI runs the same
 check on any PR that changes a package manifest or an agent-context file.
-The `Agent context` workflow also audits committed APM files, checks that a frozen
+The `agent-context.yml` workflow also audits committed APM files, checks that a frozen
 APM install leaves tracked and agent files unchanged, and audits the restored
 installation. It runs for ready-for-review PRs; automated PRs may need workflow approval.
 

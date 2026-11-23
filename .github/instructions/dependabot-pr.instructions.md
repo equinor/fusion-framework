@@ -10,7 +10,7 @@ Repository facts for Dependabot PRs. Review behavior comes from the APM-installe
 
 ## TL;DR (for AI agents)
 
-- Dependabot npm PRs target `main` directly (`.github/dependabot.yml`). Run `pnpm test && pnpm build && pnpm -w check` locally when changing code, and let PR CI validate before squash-merging. Legacy PRs targeting `maintenance/dependencies` still promote to `main` via maintainer-reviewed PRs.
+- Dependabot npm PRs target `main` directly (`.github/dependabot.yml`). Run `pnpm test && pnpm build && pnpm -w check` locally when changing code, and let PR CI validate before squash-merging.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
 - Refresh branches by rebasing only; never merge the base branch into a Dependabot branch.
 - Regenerate `pnpm-lock.yaml` with `pnpm install`; never hand-merge lockfile hunks or invent resolutions.
@@ -74,7 +74,7 @@ group. Direct runtime and type dependencies use `catalog:react`, defined in
 exact version. Preserve consumer-facing peer ranges. Type packages in the
 catalog do not need the same version as the runtime.
 
-Run the full validation suite locally when you change code (PR CI validates against `main`, and any legacy stream PRs validate on `maintenance/dependencies`):
+Run the full validation suite locally when you change code (PR CI validates against `main`):
 
 ```bash
 pnpm test && pnpm build && pnpm -w check
