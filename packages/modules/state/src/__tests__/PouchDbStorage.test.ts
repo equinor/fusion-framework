@@ -243,6 +243,125 @@ describe('PouchDbStorage', () => {
   });
 
   describe('conflict resolution', () => {
+    it('resolves live leaves hidden behind a deleted winner during startup', async () => {
+      const key = 'deleted-winner';
+      const originalGet = db.get.bind(db);
+      let openRevsReads = 0;
+      const get = vi.spyOn(db, 'get').mockImplementation(async (id, options) => {
+        if (id === key) {
+          if (options && 'open_revs' in options) {
+            openRevsReads += 1;
+            // PouchDB overloads get() as a document read even though open_revs returns leaf wrappers.
+            return (
+              openRevsReads === 1 ? [{ ok: { _id: key, _rev: '2-live-leaf', value: 'live' } }] : []
+            ) as never;
+          }
+          throw { status: 404 };
+        }
+        return originalGet(id, options);
+      });
+      const deletedRow = {
+        total_rows: 1,
+        offset: 0,
+        rows: [{ id: key, key, value: { rev: '3-deleted-winner', deleted: true }, doc: null }],
+      };
+      const allDocs = vi.spyOn(db, 'allDocs');
+      allDocs
+        .mockResolvedValueOnce({ total_rows: 0, offset: 0, rows: [] } as never)
+        .mockResolvedValue(deletedRow as never);
+      const originalChanges = db.changes.bind(db);
+      // Keep initialization's live feed intact; replace only the one-shot history response.
+      const changes = vi.spyOn(db, 'changes').mockImplementation((options) => {
+        if (options?.since === '0') {
+          return Promise.resolve({
+            results: [{ id: key, seq: 1, changes: [{ rev: '3-deleted-winner' }], deleted: true }],
+            last_seq: 1,
+          } as never);
+        }
+        return originalChanges(options);
+      });
+      const bulkDocs = vi
+        .spyOn(db, 'bulkDocs')
+        .mockResolvedValue([{ ok: true, id: key, rev: '3-deleted-winner' }] as never);
+      const storage = new PouchDbStorage(db);
+      try {
+        await storage.initialize();
+        await vi.waitFor(
+          () => expect(changes.mock.calls.some(([options]) => options?.since === '0')).toBe(true),
+          { timeout: 10_000 },
+        );
+        await vi.waitFor(() => expect(openRevsReads).toBe(2), { timeout: 10_000 });
+
+        expect(changes).toHaveBeenCalledWith({
+          since: '0',
+          style: 'all_docs',
+          limit: expect.any(Number),
+        });
+        expect(bulkDocs).toHaveBeenCalledWith([{ _id: key, _rev: '2-live-leaf', _deleted: true }]);
+      } finally {
+        storage[Symbol.dispose]();
+        get.mockRestore();
+        allDocs.mockRestore();
+        changes.mockRestore();
+        bulkDocs.mockRestore();
+      }
+    }, 15_000);
+
+    it('re-reads a key when a new live winner races with its deletion', async () => {
+      const key = 'delete-race';
+      const original = await db.put({ _id: key, value: 'original' });
+      const parentRevision = original.rev.slice(2);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      let injected = false;
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (!injected && isDeletionBatch(documents)) {
+          injected = true;
+          const revisionId = 'f'.repeat(32);
+          await originalBulkDocs(
+            [
+              {
+                _id: key,
+                _rev: `2-${revisionId}`,
+                _revisions: { start: 2, ids: [revisionId, parentRevision] },
+                value: 'concurrent live leaf',
+              },
+            ],
+            { new_edits: false },
+          );
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const storage = new PouchDbStorage(db);
+      await expect(storage.removeItem({ key })).resolves.toMatchObject({ status: 'success' });
+      expect(injected).toBe(true);
+      await expect(db.get(key)).rejects.toMatchObject({ status: 404 });
+      const leaves = await db.get(key, { open_revs: 'all' });
+      expect(
+        leaves.filter((leaf) => 'ok' in leaf && !('_deleted' in leaf.ok && leaf.ok._deleted)),
+      ).toHaveLength(0);
+      storage[Symbol.dispose]();
+    });
+
+    it('uses one bulk metadata read instead of per-item winner reads', async () => {
+      const get = vi.spyOn(db, 'get');
+      const allDocs = vi.spyOn(db, 'allDocs');
+      const storage = new PouchDbStorage(db);
+
+      await expect(
+        storage.putItems([
+          { key: 'bulk-one', value: 1 },
+          { key: 'bulk-two', value: 2 },
+          { key: 'bulk-three', value: 3 },
+        ]),
+      ).resolves.toHaveLength(3);
+
+      expect(get).not.toHaveBeenCalled();
+      expect(allDocs).toHaveBeenCalledTimes(1);
+      storage[Symbol.dispose]();
+    });
+
     it('continues resolving successful batches beyond 1500 losing leaves', async () => {
       const key = 'large-conflict';
       await seedConflictLeaves(db, key, 1_602);

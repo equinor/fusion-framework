@@ -86,6 +86,8 @@ PouchDB selects a winning revision when concurrent writes create multiple live l
 does not automatically remove the losing leaves. The state storage keeps that winner and
 tombstones losing revisions when it detects conflicts, including conflicts already present
 when storage initializes and conflicts introduced by later replication. Values are not merged.
+The startup scan also checks deleted-change history, because `allDocs` omits tombstone winners;
+its per-scope sequence checkpoint is stored locally and is not replicated.
 
 `removeItem`, `removeItems`, and scoped `clear` tombstone every live leaf for each selected
 document. This prevents a currently known losing value from reappearing after the deletion is
