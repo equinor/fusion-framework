@@ -29,7 +29,7 @@ runs:
       shell: bash
       run: |
         corepack enable pnpm
-        corepack install --global pnpm@12.4.2
+        corepack install --global pnpm@12.23.0
 
     - name: Restore node_modules
       if: inputs.cache-node-modules == 'true'

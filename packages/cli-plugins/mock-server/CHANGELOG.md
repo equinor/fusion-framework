@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cli-plugin-mock-server
 
+## 0.3.5
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+
 ## 0.3.4
 
 No changes in this release.

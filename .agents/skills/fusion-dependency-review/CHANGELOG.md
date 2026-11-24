@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.7.1 - 2026-11-21
+
+### patch
+
+- [#499](https://github.com/equinor/fusion-skills/pull/499) [`14a3592`](https://github.com/equinor/fusion-skills/commit/14a359218a76802da27a4a46f54cbdfb34c151ff) - Document repository-pinned Bun regeneration and frozen verification, including observed incomplete-lockfile
+
+  and newer-format risks. Distinguish missing distributed licence files from unknown terms: corroborated
+  permissive text is routine evidence; matching declaration-only gaps require visible maintainer-only PR
+  acceptance flags. Preserve notice obligations, stricter repository policy and HOLD for unknown or conflicting terms.
+
+  resolves equinor/fusion-skills#469
+  resolves equinor/fusion-skills#461
+
+- [#493](https://github.com/equinor/fusion-skills/pull/493) [`6ad5348`](https://github.com/equinor/fusion-skills/commit/6ad5348913e97384b0e38b8b51d22bb917135fd5) - Trim workflow summary from `SKILL.md` description to pure trigger and anti-trigger cues.
+
+## 0.7.0 - 2026-11-21
+
+### minor
+
+- [#476](https://github.com/equinor/fusion-skills/pull/476) [`05f2a51`](https://github.com/equinor/fusion-skills/commit/05f2a5120558c9cfe49ae247ed8b027d9b830d05) Thanks [@perkjelsvik](https://github.com/perkjelsvik)! - Review `actions.lock` changes in GitHub Actions dependency updates
+
+
+  - Treat `.github/workflows/actions.lock` changes as dependency updates. Research each changed direct or transitive `commit` like a version bump
+  - Hold a changed `owner_id`/`repo_id` until a maintainer investigates
+  - Treat `--relock` as a reviewed update. Use `--accept-moved` only after human upstream review, never in unattended runs
+  - Require passing `gh actions-lock --verify` at the reviewed head after an approved update. Missing or partial evidence is **not verified**. A failed verification needs changes
+  - Keep full 40-character SHA pins for reusable-workflow calls, even when a lockfile exists
+
+  resolves equinor/fusion-core-tasks#3163
+
+- [#484](https://github.com/equinor/fusion-skills/pull/484) [`cfb2f7b`](https://github.com/equinor/fusion-skills/commit/cfb2f7bfdce007805948b18af651268abc63b7d9) - Accept host-prefetched PR metadata, diffs and comments as sufficient input.
+
+
+  - Move `github` MCP from required to suggested; live `gh`/MCP lookup only fills missing context when the host grants GitHub access.
+  - Never abort analysis on missing live auth when prefetched context is supplied; interactive live-PR behavior is unchanged.
+  - Post-PR Copilot review gate runs at the publisher layer; host-managed runs return the verdict only.
+
+  resolves equinor/fusion-skills#481
+  refs equinor/fusion-skills#479
+
 ## 0.6.0 - 2026-11-15
 
 ### minor

@@ -83,6 +83,7 @@ const isCommanderExit = telemetry ? routeCommanderExits(program, { telemetry }) 
 try {
   await program.parseAsync();
 } catch (error) {
+  // Only Commander-owned exits have already printed the error or requested output.
   if (isCommanderExit?.(error)) {
     // Commander has already written its output; exit with the code it would have used.
     await telemetry?.exit(error.exitCode, error);

@@ -1,4 +1,4 @@
-name: Prime CI caches
+name: ⚡ Prime CI Caches
 
 # Saving the pnpm store cache used to happen inside every job that called
 # node-setup, so any push to main that triggered more than one workflow
@@ -9,7 +9,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: Prime CI caches-${{ github.ref }}
   # Only the latest push's lockfile matters for the cache, so a superseded
   # run for an older commit is wasted work — cancel it instead of queuing.
   cancel-in-progress: true

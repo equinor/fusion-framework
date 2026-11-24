@@ -4,96 +4,14 @@ How dependency update PRs are reviewed and merged in the Fusion Framework monore
 
 ## Overview
 
-Dependabot PRs target `maintenance/dependencies`. That branch collects the updates, its CI runs the full
-validation suite, and maintainers fix and validate the combined result there before it is promoted to `main`.
+Dependabot npm PRs target `main` directly (configured in `.github/dependabot.yml`) and are reviewed interactively by maintainers.
+Fusion Greenkeeper evaluates open dependency PRs targeting `main` and can propose a combined update for maintainer review. The legacy `maintenance/dependencies` branch is no longer automated.
 
 | Path | How |
 |------|-----|
-| Automated | Greenkeeper (when enabled) smell-tests each Dependabot PR, adds its changeset and merges it into `maintenance/dependencies`. It holds a PR only for breaking changes that need a maintainer decision. |
-| Interactive | Review one PR with the APM-installed `fusion-dependency-review` skill. |
+| Interactive | Review each Dependabot PR with the APM-installed `fusion-dependency-review` skill and validate before merging to `main`. |
 
-Both follow the repository facts in the [Dependabot instructions](../.github/instructions/dependabot-pr.instructions.md).
-Promotion from `maintenance/dependencies` to `main` stays a maintainer-reviewed PR.
-
-## AI review scheduling
-
-Dependabot AI research uses one repository-wide concurrency slot, shared by
-automatic reviews and manually dispatched research, maintenance, and resolution runs.
-Only one `research` job can run at a time, including its model calls. Publishing
-and branch maintenance remain outside that slot and retain the existing per-PR gates.
-
-The job uses `queue: max` with `cancel-in-progress: false`, so bursts across PRs
-wait rather than replacing pending research jobs. GitHub allows up to 100 pending
-jobs in the group; additional jobs are canceled when that queue is full.
-The existing workflow-level concurrency still coalesces pending runs for the same
-PR and operation category.
-
-This limits simultaneous reviews, not tokens per minute. A single review or other
-workflows sharing the model quota can still receive a 429 response; serialization
-does not replace bounded retry handling or provider quota management.
-
-See [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
-for queue behavior and capacity.
-
-## Greenkeeper dependency maintenance
-
-[Greenkeeper dependency maintenance](../.github/workflows/greenkeeper-maintenance.yml) combines open Dependabot
-updates on `greenkeeper/dependencies` with one pull request into `main`, titled
-`☘️ Greenkeeper: dependency updates`. See [ADR 0003](../docs/adr/0003-greenkeeper-combined-dependency-updates.md).
-Each run:
-
-1. Creates `greenkeeper/dependencies` from `main`, or rebases it onto `main`, and pushes it.
-2. For each open Dependabot pull request on `main`: applies the update without its lockfiles, researches only
-   a version it has not researched before, migrates when needed, runs light checks, adds or updates the
-   changeset, commits with `Dependabot-PR` and `Dependabot-Version` trailers, pushes and updates the pull request.
-3. Comments on each Dependabot pull request: included ones link the combined pull request, whose body closes
-   them on merge; held ones give the reason and stay open for Dependabot and maintainers.
-
-Nothing merges automatically. Review and merge the combined pull request like any other; a merge commit keeps the
-per-update commits. The next run starts a fresh branch after the combined pull request is merged or closed.
-
-### Execution and credentials
-
-The job runs in the protected `docs` environment. The local
-[`greenkeeper-maintenance` action](../.github/actions/greenkeeper-maintenance/action.yml) acquires short-lived
-Fusion AI and Fusion MCP tokens with Framework's existing identity (they are separate resources), clears the Azure session, then runs the Greenkeeper
-orchestrator image. The orchestrator starts its own isolated gateway and sandbox containers. During evaluation
-the workflow follows Greenkeeper's `main` channel tags, so Greenkeeper fixes reach the next run without a pull request
-here. Each run resolves the tags to digests once, runs only those digests and lists them in the run summary. To
-freeze a reviewed version, replace the tags in the workflow with `@sha256` digests. The orchestrator image carries
-Greenkeeper's task definitions and locked skills, so this repository holds no Greenkeeper task files.
-
-- `github.token`: reads Framework and the Greenkeeper images.
-- `APM_FUSION_SKILLS_TOKEN`: reads the private skills.
-- `DEPENDABOT_AUTOMATION_TOKEN`: pushes `greenkeeper/dependencies`, opens and updates its pull request and comments
-  on Dependabot pull requests. It never enters a sandbox.
-
-### Reading and debugging a run
-
-The run log has one collapsible group per phase and per update, each followed by a result line: `✓` added, `⏸` held,
-`✗` failed. Expand a group to see that update's worker progress, pushes and pull request updates.
-
-For more detail, use GitHub's debug mode: "Re-run with debug logging" for one run, or set the repository variable
-`ACTIONS_STEP_DEBUG` to `true` for every run. Each update's group and the run summary then list the warm-up's and
-each update's status, verdict, checks, diagnostics, limitations and changed files, with every credential redacted. That's the same kind of content the Dependabot pull request comments publish. Prompts, model
-output and raw logs never reach this public repository; use a local Greenkeeper run with its Aspire dashboard for those.
-
-### Activation and rollback
-
-Before enabling:
-
-1. Grant `DEPENDABOT_AUTOMATION_TOKEN` Contents write on `greenkeeper/dependencies`, Pull requests write and
-   Issues write (for comments). Make sure branch rules allow it to force-push that branch after a rebase.
-2. Optionally create the `☘️ Fusion Greenkeep` label; Greenkeeper applies it but never creates it.
-3. Run the workflow manually on `main` and review the combined pull request and comments it creates.
-
-Then set the repository variable `GREENKEEPER_MAINTENANCE_ENABLED` to `true`. Pushes to `main` then run
-Greenkeeper (the weekday schedule is commented out during evaluation), and the legacy main-push stream sync and the per-PR AI research for pull requests on
-`main` stop. To roll back, let an active run finish, unset the variable and close the combined pull request.
-
-Merging this setup points npm Dependabot at `main`. Dependabot closes its pull requests against
-`maintenance/dependencies` and opens new ones against `main`. Pull requests that still target the stream keep
-their legacy workflows until they drain.
+Reviews follow the repository facts in the [Dependabot instructions](../.github/instructions/dependabot-pr.instructions.md).
 
 ## GitHub Actions lockfile
 
@@ -106,8 +24,7 @@ pins each direct and transitive action to a reviewed commit
 - Reference this repository's composite actions as `$/.github/actions/<name>` so they run at the workflow's
   commit and the actions they use are locked.
 - Use `./` only when a step must run an action from a different, trusted checkout than the commit that
-  triggered the run, for example token-holding helpers in `dependabot-maintenance.yml` that check out `main`
-  on pushes to `maintenance/dependencies`. `$/` would load them from the pushed branch. Such an action may use
+  triggered the run. Such an action may use
   only `run:` steps unless the same workflow also locks its actions through a `$/` reference.
 - After adding a workflow or changing a `uses:` line, run `gh actions-lock --ignore-local-actions`, then
   `gh actions-lock --verify --ignore-local-actions`, and commit the lockfile with the workflow change. Install
@@ -166,7 +83,7 @@ refresh or replacement; the catalog migration does not repair them retroactively
 
 ### Full validation
 
-The full suite runs in CI on `maintenance/dependencies`, not per Dependabot PR:
+Run the full suite locally when changing code. Ready-for-review Dependabot PRs also run PR CI against `main`:
 
 ```bash
 pnpm test && pnpm build && pnpm -w check

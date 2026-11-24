@@ -10,8 +10,7 @@ Repository facts for Dependabot PRs. Review behavior comes from the APM-installe
 
 ## TL;DR (for AI agents)
 
-- Dependabot PRs target `maintenance/dependencies`. That branch's CI runs the full
-  `pnpm test && pnpm build && pnpm -w check` suite, and maintainers fix and validate there before promotion to `main`.
+- Dependabot npm PRs target `main` directly (`.github/dependabot.yml`). Run `pnpm test && pnpm build && pnpm -w check` locally when changing code, and let PR CI validate before squash-merging.
 - Changesets are mandatory for dependency changes that affect published packages (see changeset decision below).
 - Refresh branches by rebasing only; never merge the base branch into a Dependabot branch.
 - Regenerate `pnpm-lock.yaml` with `pnpm install`; never hand-merge lockfile hunks or invent resolutions.
@@ -67,12 +66,6 @@ Any package under `packages/` with `publishConfig` requires a changeset when its
 Internal: bump `<dependency>` from `<old-version>` to `<new-version>`.
 ```
 
-## AI review scheduling
-
-AI research uses one repository-wide concurrency slot. Preserve the research job's
-fixed concurrency group, `queue: max`, and `cancel-in-progress: false` so reviews
-for different PRs wait without replacing each other. Per-PR workflow gates remain separate.
-
 ## Validation commands
 
 Keep `react` and `react-dom` runtime updates together in the Dependabot `react`
@@ -81,7 +74,7 @@ group. Direct runtime and type dependencies use `catalog:react`, defined in
 exact version. Preserve consumer-facing peer ranges. Type packages in the
 catalog do not need the same version as the runtime.
 
-The full validation suite runs in CI on `maintenance/dependencies`; run it locally when you change code:
+Run the full validation suite locally when you change code (PR CI validates against `main`):
 
 ```bash
 pnpm test && pnpm build && pnpm -w check

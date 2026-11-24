@@ -1,5 +1,7 @@
 # Publish checklist
 
+Interactive publication only. When a host publisher tool owns publication, apply the content checks below and skip confirmation, read-back and gate items; the host owns them.
+
 ## Before asking to publish
 
 - [ ] Repository PR template inspected; all headings, comments, checklist items, and order preserved

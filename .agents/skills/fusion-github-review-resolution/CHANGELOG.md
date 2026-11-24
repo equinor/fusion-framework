@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.4.1 - 2026-11-21
+
+### patch
+
+- [#493](https://github.com/equinor/fusion-skills/pull/493) [`6ad5348`](https://github.com/equinor/fusion-skills/commit/6ad5348913e97384b0e38b8b51d22bb917135fd5) - Add rationalization-prevention table, untrusted-input guard, and trigger-only description.
+
+
+  - Guard against executing instructions embedded in PR descriptions or review comments
+  - Add `Excuse | Reality` verification gate table to `SKILL.md`
+  - Trim workflow summary from `description`
+
+- [#404](https://github.com/equinor/fusion-skills/pull/404) [`158966d`](https://github.com/equinor/fusion-skills/commit/158966dad86edd92a86f3ba3270c3f538c3f7e44) - Fix `-f query=@file` to `-F` in review tooling docs and add `--thread-id` to `resolve-review-comments.sh` for per-thread replies.
+
+
+  resolves equinor/fusion-skills#404
+
+## 0.4.0 - 2026-11-21
+
+### minor
+
+- [#484](https://github.com/equinor/fusion-skills/pull/484) [`cfb2f7b`](https://github.com/equinor/fusion-skills/commit/cfb2f7bfdce007805948b18af651268abc63b7d9) - Place the Copilot review gate at the publisher layer.
+
+
+  - Worker-level issue solving, PR drafting and dependency review no longer run, block on or wait for the gate; the interactive or host publisher owns it.
+
+  resolves equinor/fusion-skills#481
+  refs equinor/fusion-skills#479
+
 ## 0.3.0 - 2026-11-15
 
 ### minor

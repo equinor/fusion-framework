@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 37.1.6
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-module-ag-grid@37.2.1
+
 ## 37.1.5
 
 ### Patch Changes

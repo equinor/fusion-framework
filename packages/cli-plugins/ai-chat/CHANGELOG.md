@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cli-plugin-ai-chat
 
+## 3.0.18
+
+### Patch Changes
+
+- de95578: Publish a patch from the public Fusion Framework repository to restore npm build provenance for consumers using pnpm's `trustPolicy: no-downgrade`. This changeset does not change package APIs or runtime behavior.
+  
+  Refs: https://github.com/equinor/fusion-core-tasks/issues/3187
+- Updated dependencies [de95578]
+  - @equinor/fusion-framework-cli-plugin-ai-base@4.0.18
+  - @equinor/fusion-framework-module@6.2.1
+  - @equinor/fusion-framework-module-ai@7.2.2
+
 ## 3.0.17
 
 ### Patch Changes

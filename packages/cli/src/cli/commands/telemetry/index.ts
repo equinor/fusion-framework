@@ -10,7 +10,9 @@ import {
 /** Explains why the environment overrides the stored preference, if it does. */
 const envOverride = (): string | undefined => {
   const { reason } = resolveTelemetryState();
+  // Name the override so users can find the setting that takes precedence.
   if (reason === 'optout-env') return `disabled by ${TELEMETRY_OPTOUT_ENV}`;
+  // The standard cross-tool override may be set independently of Fusion.
   if (reason === 'do-not-track') return `disabled by ${DO_NOT_TRACK_ENV}`;
   return undefined;
 };
@@ -21,6 +23,7 @@ const setEnabled = (enabled: boolean): void => {
   writeTelemetrySettings(configPath, { enabled });
   console.log(`Telemetry ${enabled ? 'enabled' : 'disabled'}.`);
   const override = envOverride();
+  // A successful write does not mean collection is active under an override.
   if (enabled && override) {
     console.log(`Note: telemetry stays ${override}.`);
   }

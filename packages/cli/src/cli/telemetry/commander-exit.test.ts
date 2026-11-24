@@ -5,8 +5,8 @@ import { join } from 'node:path';
 import { Command, CommanderError } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { routeCommanderExits } from './commander-exit.js';
-import type { InvocationTelemetry } from './invocation-telemetry.js';
+import { routeCommanderExits } from './route-commander-exits.js';
+import type { InvocationTelemetry } from './start-invocation-telemetry.js';
 
 let dir: string;
 

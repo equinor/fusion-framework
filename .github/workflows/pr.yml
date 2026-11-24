@@ -1,4 +1,4 @@
-name: PR
+name: 🧪 Pull Request CI
 
 on:
   pull_request:
@@ -59,7 +59,7 @@ jobs:
       - uses: reviewdog/action-setup@v1.5.0
 
       - name: Lint source files
-        uses: mongolyy/reviewdog-action-biome@v2.13.0
+        uses: mongolyy/reviewdog-action-biome@v2.14.0
         with:
           github_token: ${{ github.token }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
@@ -165,9 +165,6 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
-
-      - name: Test maintenance branch lifecycle
-        run: node --test .github/scripts/dependabot-maintenance.test.mjs .github/scripts/greenkeeper-maintenance.test.mjs
 
       - name: Test npm trusted publishing tooling
         run: node --test .github/scripts/npm-trusted-publishing.test.mjs

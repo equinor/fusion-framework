@@ -1,6 +1,6 @@
 ---
 title: Route routine Dependabot updates through a maintenance stream
-status: accepted
+status: retired
 date: 2026-09-28
 decision-makers:
   - Fusion Framework maintainers
@@ -11,8 +11,13 @@ scope:
 
 # Route routine Dependabot updates through a maintenance stream
 
-> Replaced by [ADR 0003](0003-greenkeeper-combined-dependency-updates.md) once Greenkeeper dependency
-> maintenance is enabled. This stream remains until no Dependabot pull requests target it.
+> **Status note (2026-11-23):** Retired as the default npm Dependabot flow. Automated AI research,
+> branch maintenance, and auto-merge into `maintenance/dependencies` (`dependabot-ai-review.yml`,
+> `dependabot-refresh.yml`) were removed so `equinor/fusion-framework` can return to `PUBLIC`
+> visibility (`equinor/fusion-core-tasks#3186`). npm Dependabot PRs now target `main` directly for
+> interactive review (`contributing/dependency-reviews.md`). The remaining legacy workflow
+> and its helpers were retired after PRs targeting `maintenance/dependencies` drained
+> (equinor/fusion-framework#6091). The branch was retained. The procedures below are historical.
 
 ## Context
 

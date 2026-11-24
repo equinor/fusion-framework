@@ -216,13 +216,27 @@ export class PersonController implements IPersonController {
   }
 
   /**
-   * Fetch the photo of a person, resolving by azureId when available, falling back to upn.
+   * Fetch a person's photo using azureId, or resolve their azureId from upn when azureId is absent.
    *
-   * TODO(#5088): why does this need to have data?!?
+   * The identifier object matches the person resolver's argument shape, which `createResolver`
+   * forwards unchanged. No full person data or separate `data` property is required: the named
+   * azureId/upn fields distinguish the lookup routes without guessing the kind of a string identifier.
+   * When both are supplied, azureId takes precedence; upn is not a retry after a failed photo request.
    *
-   * @param args - A matcher (azureId and/or upn) plus an optional abort signal
+   * The underlying people photo client requires azureId. A UPN-only request first looks for a
+   * matching person in the person and search caches, then searches by upn if needed to obtain
+   * azureUniqueId. Both routes use that Azure ID as the photo query's cache key, sharing the cached
+   * Blob regardless of which identifier the caller supplied. Person data is needed only to resolve
+   * a UPN to an Azure ID, not as input to the photo query.
+   *
+   * @param args - At least one identifier (azureId or upn) plus an optional abort signal
    * @returns An observable emitting the object URL of the person's photo
    * @throws Error if neither azureId nor upn is provided
+   * @example
+   * ```ts
+   * controller.getPhoto({ azureId: 'cbc6480d-12c1-467e-b0b8-cfbb22612daa' });
+   * controller.getPhoto({ upn: 'person@equinor.com' });
+   * ```
    */
   public getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string> {
     const { azureId, upn, signal } = args;
