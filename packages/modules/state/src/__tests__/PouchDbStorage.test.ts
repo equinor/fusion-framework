@@ -396,6 +396,44 @@ describe('PouchDbStorage', () => {
       storage[Symbol.dispose]();
     });
 
+    it('resolves conflicts written after startup scan passes a key', async () => {
+      const key = 'startup-race-conflict';
+      await db.put({ _id: key, value: 'initial' });
+      const originalAllDocs = db.allDocs.bind(db);
+      let injecting = false;
+      let injected = false;
+      vi.spyOn(db, 'allDocs').mockImplementation(async (options) => {
+        const result = await originalAllDocs(options as never);
+        if (!injecting) {
+          injecting = true;
+          // Introduce conflicts after the startup scan has already read this key as clean.
+          await seedConflictLeaves(db, key, 3);
+          injected = true;
+        }
+        return result;
+      });
+      const changes = vi.spyOn(db, 'changes');
+
+      const storage = new PouchDbStorage(db);
+      await storage.initialize();
+
+      // Wait until the startup scan has read `key` clean and injected the racing conflicts.
+      await vi.waitFor(() => {
+        expect(injected).toBe(true);
+      });
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+      expect(changes).toHaveBeenCalledWith(
+        expect.objectContaining({ since: expect.not.stringMatching(/^now$/) }),
+      );
+      storage[Symbol.dispose]();
+    });
+
     it('rechecks after a conflicting leaf arrives during cleanup', async () => {
       const key = 'racing-conflict';
       await seedConflictLeaves(db, key, 4);

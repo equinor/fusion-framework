@@ -296,48 +296,80 @@ export class PouchDbStorage implements IStorage, Disposable {
 
   /** Starts the live PouchDB change feed used to emit state events. */
   protected _initialize(): void {
-    // Subscribe to live changes in the PouchDB database
-    // This creates a persistent connection that will emit events for any future changes
-    const changes = this.#db.changes<{ value: AllowedValue }>({
-      since: 'now', // Start from current state (not historical changes)
-      live: true, // Keep connection alive for real-time updates
-      include_docs: true, // Include full document data in change events
-      conflicts: true,
-      filter: (doc) => {
-        // Only process documents that match our key prefix (if configured)
-        // This ensures we don't emit events for documents outside our namespace
-        if (this.#key_prefix) {
-          return doc._id.startsWith(this._generateKey(''));
+    let disposed = false;
+    let cancelFeed: VoidFunction | undefined;
+    this.#teardown.push(() => {
+      disposed = true;
+      cancelFeed?.();
+    });
+
+    // Capture a fixed update sequence before scanning so no write can land between the
+    // startup scan and a `since: 'now'` feed's asynchronous checkpoint.
+    void this.#db
+      .info()
+      .then((info) => {
+        // Do not start the live feed or startup scan if storage was disposed while awaiting info().
+        if (disposed || this.#events.closed) {
+          return;
         }
-        return true; // No prefix = process all documents
-      },
-    });
 
-    // Live sync can introduce a losing leaf after the storage instance has started.
-    changes.on('change', (change) => {
-      // Start cleanup only for changes that actually carry live conflict metadata.
-      if (change.doc && PouchDbConflictResolver.hasConflicts(change.doc)) {
-        this.#conflicts.schedule(change.id);
-      }
-    });
+        // Subscribe to live changes starting from the captured sequence so every later write
+        // arrives on the feed even if the startup scan has already passed its key.
+        const changes = this.#db.changes<{ value: AllowedValue }>({
+          since: info.update_seq,
+          live: true, // Keep connection alive for real-time updates
+          include_docs: true, // Include full document data in change events
+          conflicts: true,
+          filter: (doc) => {
+            // Only process documents that match our key prefix (if configured)
+            // This ensures we don't emit events for documents outside our namespace
+            if (this.#key_prefix) {
+              return doc._id.startsWith(this._generateKey(''));
+            }
+            return true; // No prefix = process all documents
+          },
+        });
 
-    const event$ = observePouchDbChange(changes, (doc) => ({
-      _id: doc._id,
-      key: this._extractKey(doc._id),
-      value: doc.value,
-    }));
+        // Live sync can introduce a losing leaf after the storage instance has started.
+        changes.on('change', (change) => {
+          // Start cleanup only for changes that actually carry live conflict metadata.
+          if (change.doc && PouchDbConflictResolver.hasConflicts(change.doc)) {
+            this.#conflicts.schedule(change.id);
+          }
+        });
 
-    const subscription = event$.subscribe({
-      next: (event) => this.#events.next(event as StateEventType),
-    });
-    subscription.add(() => changes.cancel());
+        const event$ = observePouchDbChange(changes, (doc) => ({
+          _id: doc._id,
+          key: this._extractKey(doc._id),
+          value: doc.value,
+        }));
 
-    this.#teardown.push(() => subscription.unsubscribe());
+        const subscription = event$.subscribe({
+          next: (event) => this.#events.next(event as StateEventType),
+        });
+        subscription.add(() => changes.cancel());
+        cancelFeed = () => subscription.unsubscribe();
 
-    // Existing local conflicts predate the live feed's `since: 'now'` checkpoint.
-    void this.#conflicts
-      .scanExisting()
-      .catch((error) => this.#reportConflictResolutionFailure('startup-scan', error));
+        // Scan documents present at or before `info.update_seq`; later writes arrive on `changes`.
+        void this.#conflicts
+          .scanExisting()
+          .catch((error) => this.#reportConflictResolutionFailure('startup-scan', error));
+      })
+      .catch((error) => {
+        // Disposal closes the event stream; ignore late startup errors afterward.
+        if (disposed || this.#events.closed) {
+          return;
+        }
+        this.#events.next(
+          new StateOperationEvent.Failure({
+            source: this,
+            detail: {
+              fn: 'initialize',
+              error: new StorageError('Failed to initialize storage', { cause: error }),
+            },
+          }),
+        );
+      });
   }
 
   /**
