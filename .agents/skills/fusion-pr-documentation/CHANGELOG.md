@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 - 2026-11-21
+
+### minor
+
+- [#484](https://github.com/equinor/fusion-skills/pull/484) [`cfb2f7b`](https://github.com/equinor/fusion-skills/commit/cfb2f7bfdce007805948b18af651268abc63b7d9) - Return PR content to host publisher tools without local files or `gh` mutations.
+
+
+  - Add host-managed publication mode: skip `.tmp/` drafts, `gh pr create`/`gh pr edit`, read-back and the Copilot gate; return title, body and linking choices to the host.
+  - Interactive publication, confirmation and gate guidance are unchanged.
+
+  resolves equinor/fusion-skills#481
+  refs equinor/fusion-skills#479
+
 ## 0.3.0 - 2026-11-15
 
 ### minor

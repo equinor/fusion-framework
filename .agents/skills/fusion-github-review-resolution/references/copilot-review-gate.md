@@ -3,6 +3,10 @@
 Use when user or repository policy requires Copilot before human review. Repository-local policy owns adoption
 and overrides these portable defaults; ordinary thread remediation does not start this gate automatically.
 
+Gate belongs to the publisher layer: whoever publishes the PR (interactive developer session or host publisher)
+runs it. Worker-level issue solving, PR drafting and dependency review without publication authority never run,
+block on or wait for it; they report content and leave the gate to the publisher.
+
 ## Enter and authorize
 
 - Before requesting human review, complete at least one Copilot PR review and leave no unresolved critical findings.
@@ -49,7 +53,7 @@ and overrides these portable defaults; ordinary thread remediation does not star
 
 ## Unattended service runs
 
-`fusion-service-mode/1` runs are report-only: they never request reviews, edit PRs or mark them ready. The
+Automated worker agents without PR authority do not request reviews, edit PRs, or mark them ready; the host's
 publisher that creates their PR (for example the Greenkeeper publisher) applies this section. Unattended runs with
 explicit PR authority keep the gate inside their time budget and never wait past it. Passed: mark ready. Blocked, rounds exhausted or review timed out: leave the PR draft, write the gate outcome,
 findings and next step into the PR body, and finish the run successfully. The next run or a person continues from
