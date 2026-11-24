@@ -31,7 +31,7 @@ dependencies:
   content_hash: sha256:d5f2cc6bc3dec9cbe5712893eb10c1a747105e2442276189345d5ec134985c9a
   constraint: ^1.6.3
   resolved_tag: v1.23.0
-  resolved_at: '2026-11-24T05:24:47+00:00'
+  resolved_at: '2026-11-24T11:14:00+00:00'
   declared_license: MIT
   carried_licenses:
   - path: LICENSE
@@ -82,7 +82,7 @@ dependencies:
   content_hash: sha256:20bf39456c8211cbbe602638eddc309544955f847bd26f629faff56d246fa9e8
   constraint: ^1.6.3
   resolved_tag: v1.23.0
-  resolved_at: '2026-11-24T05:24:47+00:00'
+  resolved_at: '2026-11-24T11:14:00+00:00'
   carried_licenses:
   - path: LICENSE
     source: LICENSE
