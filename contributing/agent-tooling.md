@@ -12,7 +12,7 @@ content hashes.
 
 1. Install the APM CLI by following the
    [official installation guide](https://microsoft.github.io/apm/getting-started/installation/).
-2. Use APM CLI **0.33.0**, matching the update and validation workflows. From the
+2. Use APM CLI **0.33.0**, matching the Framework validation workflow. From the
    repository root, restore the locked agent configuration:
 
    ```sh
@@ -37,7 +37,7 @@ pnpm verify:agent-context
 MCP configuration, and drift. `verify:agent-context` checks repository-specific agent
 instructions against the workspace.
 
-The `Agent context` workflow runs these checks for agent configuration changes once
+The `agent-context.yml` workflow runs these checks for agent configuration changes once
 a PR is ready for review. It audits committed files before installation so restoring
 a missing file cannot hide a broken commit, then verifies that a frozen install
 changes no tracked files and creates no untracked agent files, and audits again.
@@ -70,30 +70,17 @@ copy directly. Change the dependency version in `apm.yml`, or contribute the con
 change to its source repository. Repository-owned `custom-*` skills remain under
 `.agents/skills/` and are not replaced by an APM package update.
 
-The [`Update APM dependencies`](../.github/workflows/apm-update.yml) GitHub Actions
-workflow runs on weekdays (Monday-Friday) at 08:17 UTC and can also be run manually. It is a
-local copy of the [Fusion Skills APM Sync workflow](https://github.com/equinor/fusion-skills/blob/main/.github/workflows/apm-sync.yml),
-because this public repository cannot call that internal repository's reusable
-workflow. It uses APM CLI `0.33.0` and the `automation/apm-update` branch. The workflow
-refreshes dependencies within the declared ranges, regenerates the lockfile and
-managed agent configuration, and opens or updates a draft pull request. APM rewrites
-`generated_at` and `resolved_at` in the lockfile on every run, so a run that changes
-nothing else is discarded instead of opening a pull request.
-It does not run the audit or repository-specific context validation itself; the
-`Agent context` workflow above supplies those safeguards before an update is merged.
-
-The previous updater inherited APM `0.14.0` from the action's default. Its
-[2026-10-12 run](https://github.com/equinor/fusion-framework/actions/runs/38225101495)
-reported a successful update but left ten deployed skill directories missing.
-The explicit CLI version avoids that obsolete deployment behavior; keep it aligned
-between update and validation workflows when upgrading.
+[Fusion Greenkeeper](https://github.com/equinor/fusion-poc-greenkeeper) proposes APM
+updates for Framework through its central weekday dependency maintenance workflow.
+Framework's `agent-context.yml` still audits and validates those changes in PR CI,
+the same way it does for maintainer-authored updates.
 
 ## CI access to Fusion Skills
 
 `equinor/fusion-skills` is an internal repository, so the automatic job token of this
-public repository cannot clone it. The `Agent context` and `Update APM dependencies`
-workflows pass the repository secret `APM_FUSION_SKILLS_TOKEN` to APM as
+public repository cannot clone it. The `agent-context.yml` workflow
+passes the repository secret `APM_FUSION_SKILLS_TOKEN` to APM as
 `GITHUB_APM_PAT_EQUINOR`. The token needs read access to `equinor/fusion-skills` contents
-only. Without the secret the workflows fall back to the job token and fail with an
-authentication error during `apm audit`, `apm install` or `apm update`. Pull requests
+only. Without the secret the workflow falls back to the job token and fails with an
+authentication error during `apm audit` or `apm install`. Pull requests
 from forks never receive the secret, so those checks fail there by design.

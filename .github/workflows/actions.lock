@@ -9,14 +9,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
         - 'microsoft/apm-action@v1.10.0'
-    '.github/workflows/apm-update.yml':
-        - 'actions/checkout@v7.0.1'
-        - 'microsoft/apm-action@v1.10.0'
     '.github/workflows/cleanup-caches.yml': []
-    '.github/workflows/dependabot-maintenance.yml':
-        - 'actions/cache@v6.1.0'
-        - 'actions/checkout@v7.0.1'
-        - 'actions/setup-node@v7.1.0'
     '.github/workflows/generate-docs.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'

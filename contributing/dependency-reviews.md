@@ -5,7 +5,7 @@ How dependency update PRs are reviewed and merged in the Fusion Framework monore
 ## Overview
 
 Dependabot npm PRs target `main` directly (configured in `.github/dependabot.yml`) and are reviewed interactively by maintainers.
-Any remaining legacy PRs targeting `maintenance/dependencies` still run that branch's CI and promote to `main` via a maintainer-reviewed PR (`dependabot-maintenance.yml`).
+Fusion Greenkeeper evaluates open dependency PRs targeting `main` and can propose a combined update for maintainer review. The legacy `maintenance/dependencies` branch is no longer automated.
 
 | Path | How |
 |------|-----|
@@ -24,8 +24,7 @@ pins each direct and transitive action to a reviewed commit
 - Reference this repository's composite actions as `$/.github/actions/<name>` so they run at the workflow's
   commit and the actions they use are locked.
 - Use `./` only when a step must run an action from a different, trusted checkout than the commit that
-  triggered the run, for example token-holding helpers in `dependabot-maintenance.yml` that check out `main`
-  on pushes to `maintenance/dependencies`. `$/` would load them from the pushed branch. Such an action may use
+  triggered the run. Such an action may use
   only `run:` steps unless the same workflow also locks its actions through a `$/` reference.
 - After adding a workflow or changing a `uses:` line, run `gh actions-lock --ignore-local-actions`, then
   `gh actions-lock --verify --ignore-local-actions`, and commit the lockfile with the workflow change. Install
@@ -84,7 +83,7 @@ refresh or replacement; the catalog migration does not repair them retroactively
 
 ### Full validation
 
-The full suite runs in CI on `maintenance/dependencies`, not per Dependabot PR:
+Run the full suite locally when changing code. Ready-for-review Dependabot PRs also run PR CI against `main`:
 
 ```bash
 pnpm test && pnpm build && pnpm -w check

@@ -1,4 +1,4 @@
-name: pr review dismissed
+name: ↩️ Return PR to Draft on Review Dismissal
 on:
   pull_request_review:
     types:
