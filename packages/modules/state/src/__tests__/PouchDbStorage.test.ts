@@ -66,10 +66,10 @@ function createConflictError(document: TestDeletionDocument) {
 
 describe('PouchDbStorage', () => {
   let db: PouchDB.Database;
-  const dbName = 'test-db';
+  let dbCounter = 0;
 
   beforeEach(async () => {
-    db = PouchDbStorage.CreateDb(dbName);
+    db = PouchDbStorage.CreateDb(`test-db-${++dbCounter}`);
   });
 
   afterEach(async () => {
@@ -337,24 +337,55 @@ describe('PouchDbStorage', () => {
 
     it('continues resolving successful batches beyond 1500 losing leaves', async () => {
       const key = 'large-conflict';
-      await seedConflictLeaves(db, key, 1_602);
-      const winnerBefore = await db.get(key);
-      const storage = new PouchDbStorage(db);
-
-      await storage.initialize();
-      await vi.waitFor(
-        async () => {
-          const document = await db.get(key, { conflicts: true });
-          expect(document._conflicts ?? []).toHaveLength(0);
-        },
-        { timeout: 30_000 },
+      const winnerRev = '1-winner';
+      const remainingConflicts = new Set(
+        Array.from({ length: 1_602 }, (_, index) => `1-${String(index).padStart(32, '0')}`),
       );
+      const deletedRevisions: string[] = [];
+      const batchSizes: number[] = [];
+      const onError = vi.fn();
 
-      const winnerAfter = await db.get(key);
-      expect(winnerAfter._rev).toBe(winnerBefore._rev);
-      expect(winnerAfter.value).toBe(winnerBefore.value);
-      storage[Symbol.dispose]();
-    }, 30_000);
+      // Stub PouchDB reads and bulk deletions to exercise 4 full batches (>1,500 leaves)
+      // without paying fake-indexeddb's O(N^2) revision-tree merge cost in unit tests.
+      const originalGet = db.get.bind(db);
+      vi.spyOn(db, 'get').mockImplementation(((id: string, options?: PouchDB.Core.GetOptions) => {
+        if (id === key) {
+          return Promise.resolve({
+            _id: key,
+            _rev: winnerRev,
+            value: 'winner-value',
+            _conflicts: [...remainingConflicts],
+          });
+        }
+        return originalGet(id, options);
+      }) as typeof db.get);
+
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      vi.spyOn(db, 'bulkDocs').mockImplementation(async (documents, options) => {
+        if (isDeletionBatch(documents)) {
+          batchSizes.push(documents.length);
+          for (const document of documents) {
+            remainingConflicts.delete(document._rev);
+            deletedRevisions.push(document._rev);
+          }
+          return documents.map((document) => ({
+            ok: true,
+            id: document._id,
+            rev: `2-${document._rev.slice(2)}`,
+          }));
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const resolver = new PouchDbConflictResolver(db, { onError });
+      await resolver.resolve(key);
+
+      expect(onError).not.toHaveBeenCalled();
+      expect(remainingConflicts.size).toBe(0);
+      expect(deletedRevisions).not.toContain(winnerRev);
+      expect(batchSizes).toEqual([500, 500, 500, 102]);
+      resolver[Symbol.dispose]();
+    });
 
     it('preserves the winning revision while resolving a 293-leaf conflict on startup', async () => {
       const key = 'my-app::concurrent';
