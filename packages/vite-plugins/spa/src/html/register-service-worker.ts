@@ -119,105 +119,119 @@ export async function registerServiceWorker(
     // register the service worker with telemetry
     // updateViaCache: 'none' ensures the service worker script is always fetched fresh
     // This is important during development to pick up code changes
-    using measurement = telemetry.measure({
+    // Avoid `using` declarations because Safari/WebKit lacks both `using` syntax and `Symbol.dispose`.
+    const measurement = telemetry.measure({
       name: 'registerServiceWorker',
       level: TelemetryLevel.Information,
     });
-    const registration = await measurement.clone().resolve(
-      navigator.serviceWorker.register('/@fusion-spa-sw.js', {
-        type: 'module',
-        scope: '/',
-        updateViaCache: 'none',
-      }),
-      {
-        data: {
-          name: 'registerServiceWorker.register',
-          level: TelemetryLevel.Debug,
-        },
-      },
-    );
-
-    // Handle service worker updates/installations
-    // If there's a service worker waiting or installing, send config when it activates
-    if (registration.waiting) {
-      sendConfigToServiceWorker(registration.waiting);
-    }
-    // A worker still installing needs to reach the 'activated' state before it can receive config
-    if (registration.installing) {
-      registration.installing.addEventListener('statechange', (event) => {
-        const worker = event.target as ServiceWorker;
-        // Only send config once the worker has fully activated
-        if (worker.state === 'activated') {
-          sendConfigToServiceWorker(worker);
-        }
-      });
-    }
-
-    // Listen for controller changes (happens during hard refresh or updates)
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      // Only send config once this page is actually controlled by a worker
-      if (navigator.serviceWorker.controller) {
-        sendConfigToServiceWorker(navigator.serviceWorker.controller);
-      }
-    });
-
-    // wait for the service worker to be ready
-    const readyRegistration = await measurement.clone().resolve(navigator.serviceWorker.ready, {
-      data: {
-        name: 'registerServiceWorker.ready',
-        level: TelemetryLevel.Debug,
-      },
-    });
-
-    // ensure we have an active service worker before sending config
-    const activeWorker = readyRegistration.active;
-    // Without an active worker there's nothing to send config to
-    if (!activeWorker) {
-      console.error('[Service Worker Registration] Service worker is not active after ready state');
-      return;
-    }
-
-    // CRITICAL: Wait for the service worker to become the controller
-    // This ensures the service worker can intercept fetch requests
-    if (!navigator.serviceWorker.controller) {
-      await measurement.clone().resolve(
-        new Promise<void>((resolve) => {
-          let checkInterval: NodeJS.Timeout;
-
-          const finish = () => {
-            clearInterval(checkInterval);
-            navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
-            resolve();
-          };
-
-          const onControllerChange = () => finish();
-
-          // If controllerchange fires, the service worker has taken control
-          navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
-
-          // Polling fallback and timeout to prevent infinite waiting
-          checkInterval = setInterval(() => {
-            // Stop polling once a controller has taken over
-            if (navigator.serviceWorker.controller) finish();
-          }, 200);
-
-          setTimeout(finish, 5000);
+    try {
+      const registration = await measurement.clone().resolve(
+        navigator.serviceWorker.register('/@fusion-spa-sw.js', {
+          type: 'module',
+          scope: '/',
+          updateViaCache: 'none',
         }),
         {
           data: {
-            name: 'registerServiceWorker.controllerWait',
+            name: 'registerServiceWorker.register',
             level: TelemetryLevel.Debug,
           },
         },
       );
-    }
 
-    // send the config to the active service worker
-    sendConfigToServiceWorker(activeWorker);
+      // Handle service worker updates/installations
+      // If there's a service worker waiting or installing, send config when it activates
+      if (registration.waiting) {
+        sendConfigToServiceWorker(registration.waiting);
+      }
+      // A worker still installing needs to reach the 'activated' state before it can receive config
+      if (registration.installing) {
+        registration.installing.addEventListener('statechange', (event) => {
+          const worker = event.target as ServiceWorker;
+          // Only send config once the worker has fully activated
+          if (worker.state === 'activated') {
+            sendConfigToServiceWorker(worker);
+          }
+        });
+      }
 
-    // Also send to the controller if it exists and is different from active
-    if (navigator.serviceWorker.controller && navigator.serviceWorker.controller !== activeWorker) {
-      sendConfigToServiceWorker(navigator.serviceWorker.controller);
+      // Listen for controller changes (happens during hard refresh or updates)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        // Only send config once this page is actually controlled by a worker
+        if (navigator.serviceWorker.controller) {
+          sendConfigToServiceWorker(navigator.serviceWorker.controller);
+        }
+      });
+
+      // wait for the service worker to be ready
+      const readyRegistration = await measurement.clone().resolve(navigator.serviceWorker.ready, {
+        data: {
+          name: 'registerServiceWorker.ready',
+          level: TelemetryLevel.Debug,
+        },
+      });
+
+      // ensure we have an active service worker before sending config
+      const activeWorker = readyRegistration.active;
+      // Without an active worker there's nothing to send config to
+      if (!activeWorker) {
+        console.error(
+          '[Service Worker Registration] Service worker is not active after ready state',
+        );
+        return;
+      }
+
+      // CRITICAL: Wait for the service worker to become the controller
+      // This ensures the service worker can intercept fetch requests
+      if (!navigator.serviceWorker.controller) {
+        await measurement.clone().resolve(
+          new Promise<void>((resolve) => {
+            let checkInterval: NodeJS.Timeout;
+
+            const finish = () => {
+              clearInterval(checkInterval);
+              navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
+              resolve();
+            };
+
+            const onControllerChange = () => finish();
+
+            // If controllerchange fires, the service worker has taken control
+            navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
+
+            // Polling fallback and timeout to prevent infinite waiting
+            checkInterval = setInterval(() => {
+              // Stop polling once a controller has taken over
+              if (navigator.serviceWorker.controller) finish();
+            }, 200);
+
+            setTimeout(finish, 5000);
+          }),
+          {
+            data: {
+              name: 'registerServiceWorker.controllerWait',
+              level: TelemetryLevel.Debug,
+            },
+          },
+        );
+      }
+
+      // send the config to the active service worker
+      sendConfigToServiceWorker(activeWorker);
+
+      // Also send to the controller if it exists and is different from active
+      if (
+        navigator.serviceWorker.controller &&
+        navigator.serviceWorker.controller !== activeWorker
+      ) {
+        sendConfigToServiceWorker(navigator.serviceWorker.controller);
+      }
+    } finally {
+      try {
+        measurement.measure();
+      } catch {
+        // Telemetry cleanup must not mask registration failures or break teardown.
+      }
     }
   } catch (error) {
     telemetry.trackException({
