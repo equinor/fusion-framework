@@ -15,6 +15,7 @@ import { StorageError } from './StorageError.js';
 
 import { StateOperationEvent, type StateEventType } from '../events/index.js';
 import { observePouchDbChange } from './observe-pouch-db-change.js';
+import { PouchDbConflictResolver } from './PouchDbConflictResolver.js';
 
 const STORAGE_KEY_SEPARATOR = '::';
 
@@ -96,6 +97,9 @@ export class PouchDbStorage implements IStorage, Disposable {
   // Guards `initialize()` so a caller re-invoking it (the public method is documented as
   // safe to call repeatedly) can't pile up duplicate change-feed subscriptions or syncs.
   #initialized = false;
+
+  // Coordinates winner-preserving conflict cleanup and conflict-aware deletions for this scope.
+  #conflicts: PouchDbConflictResolver;
 
   /**
    * Static factory method for creating PouchDB instances.
@@ -245,6 +249,13 @@ export class PouchDbStorage implements IStorage, Disposable {
       // Use existing PouchDB instance (useful for testing or shared databases)
       this.#db = name_or_instance;
     }
+
+    this.#conflicts = new PouchDbConflictResolver(this.#db, {
+      keyPrefix: this.#key_prefix,
+      onError: (id, cause) => this.#reportConflictResolutionFailure(id, cause),
+    });
+    // Cancel pending conflict retries before completing the event stream on disposal.
+    this.#teardown.unshift(() => this.#conflicts[Symbol.dispose]());
   }
 
   /**
@@ -285,34 +296,102 @@ export class PouchDbStorage implements IStorage, Disposable {
 
   /** Starts the live PouchDB change feed used to emit state events. */
   protected _initialize(): void {
-    // Subscribe to live changes in the PouchDB database
-    // This creates a persistent connection that will emit events for any future changes
-    const changes = this.#db.changes<{ value: AllowedValue }>({
-      since: 'now', // Start from current state (not historical changes)
-      live: true, // Keep connection alive for real-time updates
-      include_docs: true, // Include full document data in change events
-      filter: (doc) => {
-        // Only process documents that match our key prefix (if configured)
-        // This ensures we don't emit events for documents outside our namespace
-        if (this.#key_prefix) {
-          return doc._id.startsWith(this._generateKey(''));
+    let disposed = false;
+    let cancelFeed: VoidFunction | undefined;
+    this.#teardown.push(() => {
+      disposed = true;
+      cancelFeed?.();
+    });
+
+    // Capture a fixed update sequence before scanning so no write can land between the
+    // startup scan and a `since: 'now'` feed's asynchronous checkpoint.
+    void this.#db
+      .info()
+      .then((info) => {
+        // Do not start the live feed or startup scan if storage was disposed while awaiting info().
+        if (disposed || this.#events.closed) {
+          return;
         }
-        return true; // No prefix = process all documents
-      },
-    });
 
-    const event$ = observePouchDbChange(changes, (doc) => ({
-      _id: doc._id,
-      key: this._extractKey(doc._id),
-      value: doc.value,
-    }));
+        // Subscribe to live changes starting from the captured sequence so every later write
+        // arrives on the feed even if the startup scan has already passed its key.
+        const changes = this.#db.changes<{ value: AllowedValue }>({
+          since: info.update_seq,
+          live: true, // Keep connection alive for real-time updates
+          include_docs: true, // Include full document data in change events
+          conflicts: true,
+          filter: (doc) => {
+            // Only process documents that match our key prefix (if configured)
+            // This ensures we don't emit events for documents outside our namespace
+            if (this.#key_prefix) {
+              return doc._id.startsWith(this._generateKey(''));
+            }
+            return true; // No prefix = process all documents
+          },
+        });
 
-    const subscription = event$.subscribe({
-      next: (event) => this.#events.next(event as StateEventType),
-    });
-    subscription.add(() => changes.cancel());
+        // Live sync can introduce a losing leaf after the storage instance has started.
+        changes.on('change', (change) => {
+          // Start cleanup only for changes that actually carry live conflict metadata.
+          if (change.doc && PouchDbConflictResolver.hasConflicts(change.doc)) {
+            this.#conflicts.schedule(change.id);
+          }
+        });
 
-    this.#teardown.push(() => subscription.unsubscribe());
+        const event$ = observePouchDbChange(changes, (doc) => ({
+          _id: doc._id,
+          key: this._extractKey(doc._id),
+          value: doc.value,
+        }));
+
+        const subscription = event$.subscribe({
+          next: (event) => this.#events.next(event as StateEventType),
+        });
+        subscription.add(() => changes.cancel());
+        cancelFeed = () => subscription.unsubscribe();
+
+        // Scan documents present at or before `info.update_seq`; later writes arrive on `changes`.
+        void this.#conflicts
+          .scanExisting()
+          .catch((error) => this.#reportConflictResolutionFailure('startup-scan', error));
+      })
+      .catch((error) => {
+        // Disposal closes the event stream; ignore late startup errors afterward.
+        if (disposed || this.#events.closed) {
+          return;
+        }
+        this.#events.next(
+          new StateOperationEvent.Failure({
+            source: this,
+            detail: {
+              fn: 'initialize',
+              error: new StorageError('Failed to initialize storage', { cause: error }),
+            },
+          }),
+        );
+      });
+  }
+
+  /**
+   * Publishes internal cleanup failures through the storage event stream.
+   * @param id - Document ID or scan label associated with the failure.
+   * @param cause - Original cleanup failure.
+   */
+  #reportConflictResolutionFailure(id: string, cause: unknown): void {
+    // Disposal closes the event stream; ignore late asynchronous failures afterward.
+    if (this.#events.closed) {
+      return;
+    }
+    this.#events.next(
+      new StateOperationEvent.Failure({
+        source: this,
+        detail: {
+          fn: 'resolveConflicts',
+          args: [id],
+          error: new StorageError(`Failed to resolve conflicting revisions for ${id}`, { cause }),
+        },
+      }),
+    );
   }
 
   /**
@@ -370,28 +449,25 @@ export class PouchDbStorage implements IStorage, Disposable {
       return [];
     }
 
-    // Prepare bulk deletion operations
-    // PouchDB uses _deleted flag instead of physically removing documents
-    // This preserves revision history and allows for replication
-    const deletions = allDocs.rows.map((row) => ({
-      _id: row.id, // Document ID (may include key prefix)
-      _rev: row.value.rev, // Current revision for conflict resolution
-      _deleted: true, // Mark as deleted (soft delete)
-    }));
-
-    // Execute bulk deletion operation for efficiency
-    const results = await this._executeBulk(deletions).catch((e) => {
-      // Wrap any errors in our custom StorageError for consistency
-      const error = new StorageError('Failed to clear items', { cause: e });
-      // Emit failure event for monitoring
-      this.#events.next(
-        new StateOperationEvent.Failure({
-          source: this,
-          detail: { fn: 'clear', args: [args], error },
-        }),
-      );
-      throw error;
-    });
+    // Re-fetch leaf revisions for every selected ID because allDocs exposes only the winner
+    // unless conflict metadata is requested; deletion must tombstone every live branch.
+    const results = await this.#conflicts
+      .removeDocuments(
+        // Extract document IDs for conflict-aware bulk tombstoning.
+        allDocs.rows.map((row) => row.id),
+      )
+      .catch((e) => {
+        // Wrap any errors in our custom StorageError for consistency
+        const error = new StorageError('Failed to clear items', { cause: e });
+        // Emit failure event for monitoring
+        this.#events.next(
+          new StateOperationEvent.Failure({
+            source: this,
+            detail: { fn: 'clear', args: [args], error },
+          }),
+        );
+        throw error;
+      });
 
     // Emit success event with operation details
     this.#events.next(
@@ -591,16 +667,26 @@ export class PouchDbStorage implements IStorage, Disposable {
       const key = this._generateKey(item.key); // Apply key prefix if configured
 
       // Try to get existing document for update, fallback to creation template
-      // This pattern handles both create and update operations seamlessly
-      const existingDoc = await this.#db.get(key).catch((_e) => {
-        // Document doesn't exist - create template for new document
-        // _rev: undefined tells PouchDB this is a new document
-        return { _id: key, _rev: undefined };
-      });
+      // Request conflict metadata on the same read to avoid an extra lookup for conflict-free puts.
+      const existingDoc = await this.#db
+        .get<{ value: AllowedValue }>(key, { conflicts: true })
+        .catch((_e) => {
+          // Document doesn't exist - create template for new document
+          // _rev: undefined tells PouchDB this is a new document
+          return { _id: key, _rev: undefined, _conflicts: undefined as string[] | undefined };
+        });
+
+      const hasExistingConflicts = PouchDbConflictResolver.hasConflicts(existingDoc);
+      const { _conflicts: _ignoredConflicts, ...docToUpdate } = existingDoc;
 
       // Perform the put operation - PouchDB handles create vs update automatically
       // based on whether _rev is provided (existing) or undefined (new)
-      const update = await this.#db.put({ ...existingDoc, value: item.value });
+      const update = await this.#db.put({ ...docToUpdate, value: item.value });
+
+      // Resolve pre-existing losing leaves even when the live change feed is not initialized.
+      if (hasExistingConflicts) {
+        this.#conflicts.schedule(key);
+      }
 
       // Build result based on PouchDB response
       const result: StorageResult = update.ok
@@ -721,24 +807,15 @@ export class PouchDbStorage implements IStorage, Disposable {
       const start = performance.now();
       const key = this._generateKey(item.key);
 
-      // Get the document to remove
-      const doc = await this.#db.get(key);
-
-      // Execute the remove operation
-      const dbResult = await this.#db.remove(doc);
-
-      // Build the result object - PouchDB returns either success objects or error objects
-      // We need to detect which type we received and handle accordingly
-      const result: StorageResult = dbResult.ok
-        ? {
-            status: 'success',
-            key: dbResult.id,
-          }
-        : {
-            status: 'error',
-            key: dbResult.id,
-            error: new Error('Failed to remove item'),
-          };
+      const [result] = await this.#conflicts.removeDocuments([key]);
+      // Missing results violate the one-result-per-requested-ID contract.
+      if (!result) {
+        throw new StorageError(`Failed to remove item ${item.key}: missing operation result`);
+      }
+      // Convert per-item failures into the existing operation-level rejection path.
+      if (result.status === 'error') {
+        throw result.error;
+      }
 
       // Emit success event with operation statistics
       this.#events.next(
@@ -807,14 +884,12 @@ export class PouchDbStorage implements IStorage, Disposable {
       return result;
     }
     try {
-      // Execute the bulk removal operation
-      // PouchDB's bulkDocs method is much more efficient than individual operations
-      const result = await this._executeBulk(
-        items.map((item) => ({
-          _id: this._generateKey(item.key),
-          _deleted: true,
-        })),
+      // Remove all live leaves per requested key while preserving caller order and duplicates.
+      const result = await this.#conflicts.removeDocuments(
+        // Apply key prefixing before bulk deletion.
+        items.map((item) => this._generateKey(item.key)),
       );
+
       // Emit success event with operation statistics
       this.#events.next(
         new StateOperationEvent.Success({
@@ -863,7 +938,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
     // Build the options for the allDocs query based on the include_scope flag and prefix
     const startkey = include_scope ? this._generateKey(prefix) : prefix;
-    const endkey = include_scope ? this._generateKey(`${prefix}\ufff0`) : prefix;
+    const endkey = include_scope ? this._generateKey(`${prefix ?? ''}\ufff0`) : prefix;
 
     try {
       // Execute the allDocs query

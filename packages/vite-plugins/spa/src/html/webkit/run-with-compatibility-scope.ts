@@ -1,9 +1,7 @@
 import type { IMeasurement } from '@equinor/fusion-framework-module-telemetry';
 
-import { disposeMeasurement } from './dispose-measurement.js';
-
 /**
- * Runs an operation and disposes its measurement on every exit path.
+ * Runs an operation and records its measurement on every exit path without `Symbol.dispose`.
  *
  * @param measurement - Measurement whose scope is ending.
  * @param run - Operation executed while the measurement is active.
@@ -16,6 +14,10 @@ export async function runWithCompatibilityScope(
   try {
     await run();
   } finally {
-    disposeMeasurement(measurement);
+    try {
+      measurement.measure();
+    } catch {
+      // Telemetry cleanup must not mask operation failures or break teardown.
+    }
   }
 }

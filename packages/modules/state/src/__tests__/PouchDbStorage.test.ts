@@ -1,13 +1,75 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { PouchDbConflictResolver } from '../storage/PouchDbConflictResolver.js';
 import { PouchDbStorage } from '../storage/PouchDbStorage.js';
 import { StateOperationEvent, StateChangeEvent, type StateEventType } from '../events/index.js';
 
+const EXPECTED_CONFLICT_RACE_ATTEMPTS = 3;
+const EXPECTED_CONFLICT_RETRY_CYCLES = 3;
+
+/**
+ * Seeds one document with multiple independently written leaf revisions.
+ * @param database - PouchDB database receiving the replica leaves.
+ * @param id - Full document ID.
+ * @param count - Number of concurrent leaves to insert.
+ * @returns Resolves after PouchDB has accepted the replica revisions.
+ */
+async function seedConflictLeaves(
+  database: PouchDB.Database,
+  id: string,
+  count: number,
+): Promise<void> {
+  const documents = Array.from({ length: count }, (_value, index) => {
+    const revisionId = index.toString(16).padStart(32, '0');
+    return {
+      _id: id,
+      _rev: `2-${revisionId}`,
+      _revisions: { start: 2, ids: [revisionId, 'root'] },
+      value: `value-${index}`,
+    };
+  });
+  await database.bulkDocs(documents, { new_edits: false });
+}
+
+type TestDeletionDocument = {
+  _id: string;
+  _rev: string;
+  _deleted: true;
+};
+
+function isDeletionBatch(value: unknown): value is TestDeletionDocument[] {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every(
+      (document: unknown): document is TestDeletionDocument =>
+        typeof document === 'object' &&
+        document !== null &&
+        '_id' in document &&
+        typeof document._id === 'string' &&
+        '_rev' in document &&
+        typeof document._rev === 'string' &&
+        '_deleted' in document &&
+        document._deleted === true,
+    )
+  );
+}
+
+function createConflictError(document: TestDeletionDocument) {
+  return {
+    id: document._id,
+    error: 'conflict',
+    name: 'conflict',
+    status: 409,
+    message: 'Injected stale revision',
+  };
+}
+
 describe('PouchDbStorage', () => {
   let db: PouchDB.Database;
-  const dbName = 'test-db';
+  let dbCounter = 0;
 
   beforeEach(async () => {
-    db = PouchDbStorage.CreateDb(dbName);
+    db = PouchDbStorage.CreateDb(`test-db-${++dbCounter}`);
   });
 
   afterEach(async () => {
@@ -134,6 +196,22 @@ describe('PouchDbStorage', () => {
       expect(spy).toHaveBeenCalledWith({ _id: 'my-app::foo', value: 1 });
     });
 
+    it('clears scoped keys beyond the default prefix boundary only', async () => {
+      await db.bulkDocs([
+        { _id: 'app::z', value: 'remove' },
+        { _id: 'other::z', value: 'keep' },
+      ]);
+      const storage = new PouchDbStorage(db, { key_prefix: 'app' });
+
+      await expect(storage.clear({ clear_all: false })).resolves.toMatchObject([
+        { status: 'success', key: 'app::z' },
+      ]);
+      await expect(db.get('app::z')).rejects.toMatchObject({ status: 404 });
+      await expect(db.get('other::z')).resolves.toMatchObject({ value: 'keep' });
+
+      storage[Symbol.dispose]();
+    });
+
     it('should filter items by prefix', async () => {
       const storage = new PouchDbStorage(db, { key_prefix: 'my-app' });
       await storage.putItem({ key: 'foo.name', value: 'John' });
@@ -162,6 +240,807 @@ describe('PouchDbStorage', () => {
           { key: 'bar.name', value: 'Jane' },
         ],
       });
+    });
+  });
+
+  describe('conflict resolution', () => {
+    it('re-reads a key when a new live winner races with its deletion', async () => {
+      const key = 'delete-race';
+      const original = await db.put({ _id: key, value: 'original' });
+      const parentRevision = original.rev.slice(2);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      let injected = false;
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (!injected && isDeletionBatch(documents)) {
+          injected = true;
+          const revisionId = 'f'.repeat(32);
+          await originalBulkDocs(
+            [
+              {
+                _id: key,
+                _rev: `2-${revisionId}`,
+                _revisions: { start: 2, ids: [revisionId, parentRevision] },
+                value: 'concurrent live leaf',
+              },
+            ],
+            { new_edits: false },
+          );
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const storage = new PouchDbStorage(db);
+      await expect(storage.removeItem({ key })).resolves.toMatchObject({ status: 'success' });
+      expect(injected).toBe(true);
+      await expect(db.get(key)).rejects.toMatchObject({ status: 404 });
+      const leaves = await db.get(key, { open_revs: 'all' });
+      expect(
+        leaves.filter((leaf) => 'ok' in leaf && !('_deleted' in leaf.ok && leaf.ok._deleted)),
+      ).toHaveLength(0);
+      storage[Symbol.dispose]();
+    });
+
+    it('avoids extra reads on conflict-free writes and cleans up conflicted putItem writes', async () => {
+      await db.info();
+      const storage = new PouchDbStorage(db);
+      const get = vi.spyOn(db, 'get');
+      const allDocs = vi.spyOn(db, 'allDocs');
+
+      await expect(storage.putItem({ key: 'clean', value: 1 })).resolves.toMatchObject({
+        status: 'success',
+      });
+      await expect(
+        storage.putItems([
+          { key: 'bulk-one', value: 1 },
+          { key: 'bulk-two', value: 2 },
+        ]),
+      ).resolves.toHaveLength(2);
+
+      // Single pre-write get for clean putItem; no extra get or post-write allDocs scan.
+      expect(get.mock.calls).toEqual([['clean', { conflicts: true }]]);
+      expect(allDocs).not.toHaveBeenCalled();
+
+      await seedConflictLeaves(db, 'conflicted', 3);
+      await expect(storage.putItem({ key: 'conflicted', value: 'updated' })).resolves.toMatchObject(
+        { status: 'success' },
+      );
+      await vi.waitFor(
+        async () => {
+          const document = await db.get('conflicted', { conflicts: true });
+          expect(document.value).toBe('updated');
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+      storage[Symbol.dispose]();
+    });
+
+    it('removes many items in bounded bulk passes without per-document get fan-out', async () => {
+      const items = Array.from({ length: 60 }, (_value, index) => ({
+        key: `bulk-del-${index}`,
+        value: index,
+      }));
+      await db.bulkDocs(items.map(({ key, value }) => ({ _id: key, value })));
+
+      const get = vi.spyOn(db, 'get');
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      const storage = new PouchDbStorage(db);
+
+      const results = await storage.removeItems(items.map(({ key }) => ({ key })));
+      expect(results).toHaveLength(items.length);
+      expect(results.every((result) => result.status === 'success')).toBe(true);
+      expect(get).not.toHaveBeenCalled();
+      expect(bulkDocs).toHaveBeenCalledTimes(1);
+      storage[Symbol.dispose]();
+    });
+
+    it('continues resolving successful batches beyond 1500 losing leaves', async () => {
+      const key = 'large-conflict';
+      const winnerRev = '1-winner';
+      const remainingConflicts = new Set(
+        Array.from({ length: 1_602 }, (_, index) => `1-${String(index).padStart(32, '0')}`),
+      );
+      const deletedRevisions: string[] = [];
+      const batchSizes: number[] = [];
+      const onError = vi.fn();
+
+      // Stub PouchDB reads and bulk deletions to exercise 4 full batches (>1,500 leaves)
+      // without paying fake-indexeddb's O(N^2) revision-tree merge cost in unit tests.
+      const originalGet = db.get.bind(db);
+      vi.spyOn(db, 'get').mockImplementation(((id: string, options?: PouchDB.Core.GetOptions) => {
+        if (id === key) {
+          return Promise.resolve({
+            _id: key,
+            _rev: winnerRev,
+            value: 'winner-value',
+            _conflicts: [...remainingConflicts],
+          });
+        }
+        return originalGet(id, options);
+      }) as typeof db.get);
+
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      vi.spyOn(db, 'bulkDocs').mockImplementation(async (documents, options) => {
+        if (isDeletionBatch(documents)) {
+          batchSizes.push(documents.length);
+          for (const document of documents) {
+            remainingConflicts.delete(document._rev);
+            deletedRevisions.push(document._rev);
+          }
+          return documents.map((document) => ({
+            ok: true,
+            id: document._id,
+            rev: `2-${document._rev.slice(2)}`,
+          }));
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const resolver = new PouchDbConflictResolver(db, { onError });
+      await resolver.resolve(key);
+
+      expect(onError).not.toHaveBeenCalled();
+      expect(remainingConflicts.size).toBe(0);
+      expect(deletedRevisions).not.toContain(winnerRev);
+      expect(batchSizes).toEqual([500, 500, 500, 102]);
+      resolver[Symbol.dispose]();
+    });
+
+    it('preserves the winning revision while resolving a 293-leaf conflict on startup', async () => {
+      const key = 'my-app::concurrent';
+      await seedConflictLeaves(db, key, 293);
+      const winnerBefore = await db.get(key);
+      const storage = new PouchDbStorage(db, { key_prefix: 'my-app' });
+
+      await storage.initialize();
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      const winnerAfter = await db.get(key);
+      expect(winnerAfter._rev).toBe(winnerBefore._rev);
+      expect(winnerAfter.value).toBe(winnerBefore.value);
+      storage[Symbol.dispose]();
+    });
+
+    it('resolves conflicts introduced after initialization', async () => {
+      const key = 'live-conflict';
+      const storage = new PouchDbStorage(db);
+      await storage.initialize();
+
+      // Let the since-now feed attach before simulating a replicated conflict.
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      await seedConflictLeaves(db, key, 3);
+
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      storage[Symbol.dispose]();
+    });
+
+    it('resolves conflicts written after startup scan passes a key', async () => {
+      const key = 'startup-race-conflict';
+      await db.put({ _id: key, value: 'initial' });
+      const originalAllDocs = db.allDocs.bind(db);
+      let injecting = false;
+      let injected = false;
+      vi.spyOn(db, 'allDocs').mockImplementation(async (options) => {
+        const result = await originalAllDocs(options as never);
+        if (!injecting) {
+          injecting = true;
+          // Introduce conflicts after the startup scan has already read this key as clean.
+          await seedConflictLeaves(db, key, 3);
+          injected = true;
+        }
+        return result;
+      });
+      const changes = vi.spyOn(db, 'changes');
+
+      const storage = new PouchDbStorage(db);
+      await storage.initialize();
+
+      // Wait until the startup scan has read `key` clean and injected the racing conflicts.
+      await vi.waitFor(() => {
+        expect(injected).toBe(true);
+      });
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+      expect(changes).toHaveBeenCalledWith(
+        expect.objectContaining({ since: expect.not.stringMatching(/^now$/) }),
+      );
+      storage[Symbol.dispose]();
+    });
+
+    it('rechecks after a conflicting leaf arrives during cleanup', async () => {
+      const key = 'racing-conflict';
+      await seedConflictLeaves(db, key, 4);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      let injected = false;
+      let winnerBeforeCleanup: string | undefined;
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (!injected && Array.isArray(documents)) {
+          injected = true;
+          const revisionId = 'f'.repeat(32);
+          await originalBulkDocs(
+            [
+              {
+                _id: key,
+                _rev: `2-${revisionId}`,
+                _revisions: { start: 2, ids: [revisionId, 'root'] },
+                value: 'racing-value',
+              },
+            ],
+            { new_edits: false },
+          );
+          winnerBeforeCleanup = (await db.get(key))._rev;
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const storage = new PouchDbStorage(db);
+      await storage.initialize();
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      expect(injected).toBe(true);
+      expect((await db.get(key))._rev).toBe(winnerBeforeCleanup);
+      storage[Symbol.dispose]();
+    });
+
+    it('continues after a partial bulk deletion failure', async () => {
+      const key = 'partial-conflict';
+      await seedConflictLeaves(db, key, 4);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      let failedOneRevision = false;
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (!failedOneRevision && isDeletionBatch(documents) && documents.length > 1) {
+          failedOneRevision = true;
+          const [failedDocument, ...successfulDocuments] = documents;
+          const successfulResults = await originalBulkDocs(successfulDocuments, options);
+          return [createConflictError(failedDocument), ...successfulResults];
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const storage = new PouchDbStorage(db);
+      await storage.initialize();
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      expect(failedOneRevision).toBe(true);
+      storage[Symbol.dispose]();
+    });
+
+    it('surfaces a permanent failure in a partially successful bulk removal', async () => {
+      const successfulKey = 'permanent-partial-success';
+      const failingKey = 'permanent-partial-failure';
+      await db.bulkDocs([
+        { _id: successfulKey, value: 'remove me' },
+        { _id: failingKey, value: 'keep me' },
+      ]);
+
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (
+          isDeletionBatch(documents) &&
+          documents.some((document) => document._id === failingKey)
+        ) {
+          const successfulDocuments = documents.filter(
+            (document) => document._id === successfulKey,
+          );
+          const successfulResults =
+            successfulDocuments.length > 0
+              ? await originalBulkDocs(successfulDocuments, options)
+              : [];
+          let resultIndex = 0;
+          return documents.map((document) =>
+            document._id === failingKey
+              ? {
+                  id: document._id,
+                  error: 'forbidden',
+                  name: 'forbidden',
+                  status: 403,
+                  message: 'Injected permanent deletion failure',
+                }
+              : successfulResults[resultIndex++],
+          );
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const storage = new PouchDbStorage(db);
+      const results = await storage.removeItems([{ key: successfulKey }, { key: failingKey }]);
+
+      expect(results[0]).toMatchObject({ status: 'success', key: successfulKey });
+      expect(results[1]).toMatchObject({ status: 'error', key: failingKey });
+      if (results[1]?.status !== 'error') {
+        throw new Error('Expected the permanent deletion failure to be returned');
+      }
+      expect(results[1].error.message).toContain('Failed to remove item');
+      await expect(db.get(successfulKey)).rejects.toMatchObject({ status: 404 });
+      await expect(db.get(failingKey)).resolves.toMatchObject({ value: 'keep me' });
+      storage[Symbol.dispose]();
+    });
+
+    it('retries after queued changes when consecutive race failures exhaust a retry cycle', async () => {
+      const key = 'queued-race';
+      await seedConflictLeaves(db, key, 4);
+      const storage = new PouchDbStorage(db);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      let raceFailures = 0;
+      let queuedChange = false;
+      const observedChange = new Promise<void>((resolve) => {
+        const subscription = storage.events$.subscribe((event) => {
+          if (
+            event.type === StateChangeEvent.Created.Type ||
+            event.type === StateChangeEvent.Updated.Type
+          ) {
+            subscription.unsubscribe();
+            resolve();
+          }
+        });
+      });
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (isDeletionBatch(documents) && raceFailures < EXPECTED_CONFLICT_RACE_ATTEMPTS) {
+          raceFailures += 1;
+          if (raceFailures === EXPECTED_CONFLICT_RACE_ATTEMPTS) {
+            const revisionId = 'f'.repeat(32);
+            await originalBulkDocs(
+              [
+                {
+                  _id: key,
+                  _rev: `2-${revisionId}`,
+                  _revisions: { start: 2, ids: [revisionId, 'root'] },
+                  value: 'racing-value',
+                },
+              ],
+              { new_edits: false },
+            );
+            await observedChange;
+            queuedChange = true;
+          }
+          return documents.map(createConflictError);
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      await storage.initialize();
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      expect(raceFailures).toBe(EXPECTED_CONFLICT_RACE_ATTEMPTS);
+      expect(queuedChange).toBe(true);
+      expect(bulkDocs.mock.calls.filter(([documents]) => isDeletionBatch(documents))).toHaveLength(
+        EXPECTED_CONFLICT_RACE_ATTEMPTS + 1,
+      );
+      storage[Symbol.dispose]();
+    }, 30_000);
+
+    it('reports persistent conflict cleanup failures after bounded retries', async () => {
+      const key = 'persistent-race';
+      await seedConflictLeaves(db, key, 3);
+      const storage = new PouchDbStorage(db);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      const reportFailure = vi.fn();
+      const subscription = storage.events$.subscribe((event) => {
+        if (event.type === StateOperationEvent.Failure.Type) {
+          reportFailure(event);
+        }
+      });
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (isDeletionBatch(documents)) {
+          return documents.map(createConflictError);
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      await storage.initialize();
+      await vi.waitFor(() => expect(reportFailure).toHaveBeenCalledOnce(), { timeout: 10_000 });
+
+      expect(bulkDocs.mock.calls.filter(([documents]) => isDeletionBatch(documents))).toHaveLength(
+        EXPECTED_CONFLICT_RACE_ATTEMPTS * (EXPECTED_CONFLICT_RETRY_CYCLES + 1),
+      );
+      subscription.unsubscribe();
+      storage[Symbol.dispose]();
+    });
+
+    it('emits only one failure per active pass when schedule coalesces onto a failing resolution', async () => {
+      const key = 'coalesced-failure';
+      await seedConflictLeaves(db, key, 3);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      let firstDeleteStarted: VoidFunction | undefined;
+      let releaseFirstDelete: VoidFunction | undefined;
+      const deleteInFlight = new Promise<void>((resolve) => {
+        firstDeleteStarted = resolve;
+      });
+      let failedFirstPass = false;
+      vi.spyOn(db, 'bulkDocs').mockImplementation(async (documents, options) => {
+        if (!failedFirstPass && isDeletionBatch(documents)) {
+          failedFirstPass = true;
+          firstDeleteStarted?.();
+          await new Promise<void>((resolve) => {
+            releaseFirstDelete = resolve;
+          });
+          return documents.map((document) => ({
+            id: document._id,
+            error: 'forbidden',
+            name: 'forbidden',
+            status: 403,
+            message: 'Injected permanent cleanup failure',
+          }));
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const onError = vi.fn();
+      const resolver = new PouchDbConflictResolver(db, { onError });
+      const scanPromise = resolver.scanExisting();
+      await deleteInFlight;
+
+      // Coalesce multiple schedule calls while scanExisting() is awaiting the failing pass.
+      resolver.schedule(key);
+      resolver.schedule(key);
+      releaseFirstDelete?.();
+      await scanPromise;
+
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      resolver[Symbol.dispose]();
+    });
+
+    it('does not duplicate failure reports when scanExisting encounters an already-active resolution', async () => {
+      const key = 'scan-overlaps-active-failure';
+      await seedConflictLeaves(db, key, 3);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      let firstDeleteStarted: VoidFunction | undefined;
+      let releaseFirstDelete: VoidFunction | undefined;
+      const deleteInFlight = new Promise<void>((resolve) => {
+        firstDeleteStarted = resolve;
+      });
+      let failedFirstPass = false;
+      const bulkDocs = vi.spyOn(db, 'bulkDocs').mockImplementation(async (documents, options) => {
+        if (!failedFirstPass && isDeletionBatch(documents)) {
+          failedFirstPass = true;
+          firstDeleteStarted?.();
+          await new Promise<void>((resolve) => {
+            releaseFirstDelete = resolve;
+          });
+          return documents.map((document) => ({
+            id: document._id,
+            error: 'forbidden',
+            name: 'forbidden',
+            status: 403,
+            message: 'Injected permanent cleanup failure',
+          }));
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const onError = vi.fn();
+      const resolver = new PouchDbConflictResolver(db, { onError });
+      resolver.schedule(key);
+      await deleteInFlight;
+
+      const originalAllDocs = db.allDocs.bind(db);
+      const scanReadRow = new Promise<void>((resolve) => {
+        vi.spyOn(db, 'allDocs').mockImplementationOnce(async (options) => {
+          const response = await originalAllDocs(options as never);
+          resolve();
+          return response;
+        });
+      });
+
+      const scanPromise = resolver.scanExisting();
+      await scanReadRow;
+      await Promise.resolve();
+      releaseFirstDelete?.();
+      await scanPromise;
+
+      await vi.waitFor(() => expect(onError).toHaveBeenCalledTimes(1), { timeout: 10_000 });
+      expect(bulkDocs).toHaveBeenCalledTimes(1);
+      resolver[Symbol.dispose]();
+    });
+
+    it('cancels a scheduled conflict retry when disposed', async () => {
+      const key = 'cancelled-race';
+      await seedConflictLeaves(db, key, 3);
+      const storage = new PouchDbStorage(db);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      bulkDocs.mockImplementation(async (documents, options) => {
+        if (isDeletionBatch(documents)) {
+          return documents.map(createConflictError);
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      await storage.initialize();
+      await vi.waitFor(
+        () =>
+          expect(
+            bulkDocs.mock.calls.filter(([documents]) => isDeletionBatch(documents)),
+          ).toHaveLength(EXPECTED_CONFLICT_RACE_ATTEMPTS),
+        { timeout: 2_000 },
+      );
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      storage[Symbol.dispose]();
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      expect(bulkDocs.mock.calls.filter(([documents]) => isDeletionBatch(documents))).toHaveLength(
+        EXPECTED_CONFLICT_RACE_ATTEMPTS,
+      );
+    });
+
+    it('converges repeated concurrent writes and deletion after an offline replica reconnects', async () => {
+      const localName = `replica-local-${Date.now()}`;
+      const remote = PouchDbStorage.CreateDb(`replica-remote-${Date.now()}`);
+      const offline = PouchDbStorage.CreateDb(`replica-offline-${Date.now()}`);
+      let local = PouchDbStorage.CreateDb(localName);
+      let deletionStorage: PouchDbStorage | undefined;
+      let reloadedStorage: PouchDbStorage | undefined;
+      const appKeys = ['app::remove', 'app::clear', 'app::keep'];
+      const outsideKey = 'other::keep';
+      let expectedWinners = new Map<string, { revision: string; value: string }>();
+
+      try {
+        await local.bulkDocs([
+          ...appKeys.map((_id) => ({ _id, value: 'initial' })),
+          { _id: outsideKey, value: 'outside-value' },
+        ]);
+        await local.replicate.to(remote);
+
+        for (let round = 0; round < 2; round += 1) {
+          for (const key of appKeys) {
+            const localDocument = await local.get(key);
+            const remoteDocument = await remote.get(key);
+            await local.put({ ...localDocument, value: `local-${round}-${key}` });
+            await remote.put({ ...remoteDocument, value: `remote-${round}-${key}` });
+          }
+          await local.sync(remote, { live: false });
+
+          expectedWinners = new Map();
+          for (const key of appKeys) {
+            const winner = await local.get(key, { conflicts: true });
+            expect(winner._conflicts ?? []).not.toHaveLength(0);
+            expectedWinners.set(key, { revision: winner._rev, value: winner.value });
+          }
+
+          const storages = [
+            new PouchDbStorage(local, { key_prefix: 'app' }),
+            new PouchDbStorage(remote, { key_prefix: 'app' }),
+          ];
+          try {
+            await Promise.all(storages.map((storage) => storage.initialize()));
+            await vi.waitFor(
+              async () => {
+                for (const database of [local, remote]) {
+                  for (const key of appKeys) {
+                    const document = await database.get(key, { conflicts: true });
+                    expect(document._conflicts ?? []).toHaveLength(0);
+                  }
+                }
+              },
+              { timeout: 10_000 },
+            );
+          } finally {
+            storages.forEach((storage) => {
+              storage[Symbol.dispose]();
+            });
+          }
+
+          for (let syncRound = 0; syncRound < 2; syncRound += 1) {
+            await local.sync(remote, { live: false });
+            await remote.sync(local, { live: false });
+          }
+          for (const database of [local, remote]) {
+            for (const key of appKeys) {
+              const document = await database.get(key, { conflicts: true });
+              expect(document._conflicts ?? []).toHaveLength(0);
+              expect(document._rev).toBe(expectedWinners.get(key)?.revision);
+              expect(document.value).toBe(expectedWinners.get(key)?.value);
+            }
+          }
+        }
+
+        await local.replicate.to(offline);
+        for (const key of appKeys) {
+          const offlineDocument = await offline.get(key);
+          expect(offlineDocument._rev).toBe(expectedWinners.get(key)?.revision);
+          expect(offlineDocument.value).toBe(expectedWinners.get(key)?.value);
+        }
+
+        deletionStorage = new PouchDbStorage(local, { key_prefix: 'app' });
+        await deletionStorage.initialize();
+        await expect(deletionStorage.removeItem({ key: 'remove' })).resolves.toMatchObject({
+          status: 'success',
+        });
+        const clearResults = await deletionStorage.clear({ clear_all: false });
+        expect(clearResults.map((result) => result.key).sort()).toEqual(
+          ['app::clear', 'app::keep'].sort(),
+        );
+        expect(clearResults.every((result) => result.status === 'success')).toBe(true);
+        deletionStorage[Symbol.dispose]();
+        deletionStorage = undefined;
+
+        await local.close();
+        local = PouchDbStorage.CreateDb(localName);
+        reloadedStorage = new PouchDbStorage(local, { key_prefix: 'app' });
+        await reloadedStorage.initialize();
+
+        for (let syncRound = 0; syncRound < 2; syncRound += 1) {
+          await local.sync(remote, { live: false });
+          await remote.sync(local, { live: false });
+        }
+        await offline.sync(local, { live: false });
+        await local.sync(offline, { live: false });
+        await offline.sync(local, { live: false });
+
+        for (const database of [local, remote, offline]) {
+          for (const key of appKeys) {
+            const rows = await database.allDocs({ keys: [key] });
+            expect(rows.rows[0]?.value).toHaveProperty('deleted', true);
+            await expect(database.get(key, { conflicts: true })).rejects.toMatchObject({
+              status: 404,
+            });
+          }
+          const scopedRows = await database.allDocs({
+            startkey: 'app::',
+            endkey: 'app::\ufff0',
+          });
+          expect(scopedRows.rows).toHaveLength(0);
+          await expect(database.get(outsideKey)).resolves.toMatchObject({
+            value: 'outside-value',
+          });
+        }
+      } finally {
+        deletionStorage?.[Symbol.dispose]();
+        reloadedStorage?.[Symbol.dispose]();
+        await Promise.all([local.destroy(), remote.destroy(), offline.destroy()]);
+      }
+    }, 30_000);
+
+    it('does not skip the next startup page when its cursor is deleted', async () => {
+      const prefix = 'page';
+      const cursorKey = `${prefix}::099`;
+      const conflictKey = `${prefix}::100`;
+      await db.bulkDocs(
+        Array.from({ length: 100 }, (_value, index) => ({
+          _id: `${prefix}::${index.toString().padStart(3, '0')}`,
+          value: index,
+        })),
+      );
+      await seedConflictLeaves(db, conflictKey, 2);
+
+      const originalAllDocs = db.allDocs.bind(db);
+      const allDocs = vi.spyOn(db, 'allDocs');
+      let deletedCursor: string | undefined;
+      allDocs.mockImplementationOnce(async (options) => {
+        const response = await originalAllDocs(options);
+        expect(response.rows).toHaveLength(100);
+        const lastRow = response.rows.at(-1);
+        if (lastRow) {
+          deletedCursor = lastRow.id;
+          await db.remove(lastRow.id, lastRow.value.rev);
+        }
+        return response;
+      });
+
+      const storage = new PouchDbStorage(db, { key_prefix: prefix });
+      await storage.initialize();
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(conflictKey, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      expect(deletedCursor).toBe(cursorKey);
+      storage[Symbol.dispose]();
+    });
+
+    it('replicates deletion tombstones for every live leaf', async () => {
+      const key = 'app::deleted';
+      const remote = PouchDbStorage.CreateDb(`remote-${Date.now()}`);
+      const storage = new PouchDbStorage(db, { key_prefix: 'app' });
+      try {
+        await seedConflictLeaves(db, key, 3);
+        await db.replicate.to(remote);
+
+        await expect(storage.removeItem({ key: 'deleted' })).resolves.toMatchObject({
+          status: 'success',
+        });
+        await db.sync(remote, { live: false });
+
+        const rows = await remote.allDocs({ keys: [key], include_docs: true, conflicts: true });
+        expect(rows.rows[0]?.value).toHaveProperty('deleted', true);
+        expect(rows.rows[0]?.doc?._conflicts ?? []).toHaveLength(0);
+        await expect(remote.get(key)).rejects.toMatchObject({ status: 404 });
+      } finally {
+        storage[Symbol.dispose]();
+        await remote.destroy();
+      }
+    });
+
+    it('removes losing leaves through bulk removal and scoped clear only', async () => {
+      const storage = new PouchDbStorage(db, { key_prefix: 'app' });
+      await seedConflictLeaves(db, 'app::bulk', 3);
+      await seedConflictLeaves(db, 'app::clear', 3);
+      await seedConflictLeaves(db, 'other::keep', 3);
+
+      await expect(storage.removeItems([{ key: 'bulk' }])).resolves.toMatchObject([
+        { status: 'success', key: 'app::bulk' },
+      ]);
+      await expect(storage.clear({ clear_all: false })).resolves.toMatchObject([
+        { status: 'success', key: 'app::clear' },
+      ]);
+
+      await expect(db.get('app::bulk')).rejects.toMatchObject({ status: 404 });
+      await expect(db.get('app::clear')).rejects.toMatchObject({ status: 404 });
+      await expect(db.get('other::keep', { conflicts: true })).resolves.toMatchObject({
+        _conflicts: expect.arrayContaining([expect.any(String)]),
+      });
+      storage[Symbol.dispose]();
+    });
+
+    it('splits local deletion calls by serialized payload size', async () => {
+      const suffix = 'x'.repeat(4_000);
+      const items = Array.from({ length: 250 }, (_value, index) => ({
+        key: `${index}-${suffix}`,
+        value: index,
+      }));
+      await db.bulkDocs(items.map(({ key, value }) => ({ _id: key, value })));
+
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      const storage = new PouchDbStorage(db);
+      const results = await storage.removeItems(items.map(({ key }) => ({ key })));
+
+      expect(results).toHaveLength(items.length);
+      expect(results.every((result) => result.status === 'success')).toBe(true);
+      expect(bulkDocs).toHaveBeenCalledTimes(2);
+      storage[Symbol.dispose]();
     });
   });
 });

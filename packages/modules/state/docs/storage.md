@@ -80,6 +80,27 @@ enableStateModule(configurator, async (builder) => {
 - **`filter`**: Apply custom filters to replicate only specific documents
 - **`since`**: Start replication from a specific sequence number
 
+## Resolving Replicated Conflicts
+
+PouchDB selects a winning revision when concurrent writes create multiple live leaves, but it
+does not automatically remove the losing leaves. The state storage keeps that winner and
+tombstones losing revisions when it detects conflicts, including conflicts already present
+when storage initializes and conflicts introduced by later replication. Values are not merged.
+
+`removeItem`, `removeItems`, and scoped `clear` tombstone every live leaf for each selected
+document. This prevents a currently known losing value from reappearing after the deletion is
+synced. It does not impose delete-wins over a later edit from an offline replica using a stale
+revision; PouchDB can select that live edit as the winner after synchronization. Delete-wins for
+stale offline writes would require a separate conflict policy.
+
+Direct local `bulkDocs` deletion calls are split into sequential batches capped at 500 revisions
+and approximately 1 MB of serialized payload. This bounds only these local calls; PouchDB
+replication forms separate HTTP batches that can include revision metadata, so this does not
+guarantee that replicated requests stay below a remote proxy's payload limit.
+
+As with other PouchDB bulk operations, individual document revisions can fail independently;
+bulk removal results report per-document failures.
+
 ## Configurable Pull Scheduling with PouchDbSyncStorage
 
 `PouchDbSyncStorage` wraps a local/remote database pair and starts replication for you. By
