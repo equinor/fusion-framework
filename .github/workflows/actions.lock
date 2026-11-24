@@ -28,7 +28,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
         - 'actions/upload-artifact@v7.0.2'
-        - 'mongolyy/reviewdog-action-biome@v2.13.0'
+        - 'mongolyy/reviewdog-action-biome@v2.14.0'
         - 'reviewdog/action-setup@v1.5.0'
     '.github/workflows/prime-pnpm-cache.yml':
         - 'actions/cache@v6.1.0'
@@ -104,15 +104,15 @@ dependencies:
         commit: 'sha1-d723bb64ed70c135bbaf87d126b721dd2dae0439'
         owner_id: 6154722
         repo_id: 1173849682
-    'mongolyy/reviewdog-action-biome@v2.13.0':
-        ref: 'v2.13.0'
-        commit: 'sha1-75ddd5f0b3c303388bb6213aef110e0f5a4e1925'
+    'mongolyy/reviewdog-action-biome@v2.14.0':
+        ref: 'v2.14.0'
+        commit: 'sha1-ab2fed5c54d20c21319c5384cd8ea3b50e8d59d4'
         owner_id: 10972787
         repo_id: 732672863
         uses:
             - 'biomejs/setup-biome@4c91541eaada48f67d7dbd7833600ce162b68f51'
             - 'reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f'
-            - 'reviewdog/action-suggester@ac5ce6d94e35c00530447dc63c271e38e4fd36c6'
+            - 'reviewdog/action-suggester@fd22a83b1ebc13fd8aee5d57b06793fce6f20fb9'
     'reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f':
         ref: 'v1.5.0'
         commit: 'sha1-d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f'
@@ -123,9 +123,9 @@ dependencies:
         commit: 'sha1-d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f'
         owner_id: 48765237
         repo_id: 286005511
-    'reviewdog/action-suggester@ac5ce6d94e35c00530447dc63c271e38e4fd36c6':
-        ref: 'v1.26.3'
-        commit: 'sha1-ac5ce6d94e35c00530447dc63c271e38e4fd36c6'
+    'reviewdog/action-suggester@fd22a83b1ebc13fd8aee5d57b06793fce6f20fb9':
+        ref: 'v1.27.1'
+        commit: 'sha1-fd22a83b1ebc13fd8aee5d57b06793fce6f20fb9'
         owner_id: 48765237
         repo_id: 284627247
         uses:
