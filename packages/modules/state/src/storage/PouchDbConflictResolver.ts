@@ -116,6 +116,15 @@ export class PouchDbConflictResolver implements Disposable {
    * @param id - Full PouchDB document ID.
    */
   public schedule(id: string): void {
+    // Disposed storage must not start or queue new conflict cleanup work.
+    if (this.#disposed) {
+      return;
+    }
+    // Coalesce onto an active pass without attaching a duplicate error handler.
+    if (this.#activeResolutions.has(id)) {
+      this.#pendingResolutions.add(id);
+      return;
+    }
     void this.resolve(id).catch((error) => {
       // Suppress late asynchronous failures once storage teardown has started.
       if (!this.#disposed) {
@@ -188,6 +197,13 @@ export class PouchDbConflictResolver implements Disposable {
         // Only live documents carrying `_conflicts` require cleanup.
         if ('error' in row || !row.doc || !PouchDbConflictResolver.hasConflicts(row.doc)) {
           // Skip missing, deleted, or conflict-free rows without scheduling writes.
+          continue;
+        }
+        const active = this.#activeResolutions.get(row.id);
+        // Wait for an already-active pass without duplicating error reporting or queuing extra work.
+        if (active) {
+          await active.catch(() => undefined);
+          // The active pass's initiating caller owns error reporting for this run.
           continue;
         }
         try {

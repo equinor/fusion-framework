@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { PouchDbConflictResolver } from '../storage/PouchDbConflictResolver.js';
 import { PouchDbStorage } from '../storage/PouchDbStorage.js';
 import { StateOperationEvent, StateChangeEvent, type StateEventType } from '../events/index.js';
 
@@ -645,6 +646,110 @@ describe('PouchDbStorage', () => {
       );
       subscription.unsubscribe();
       storage[Symbol.dispose]();
+    });
+
+    it('emits only one failure per active pass when schedule coalesces onto a failing resolution', async () => {
+      const key = 'coalesced-failure';
+      await seedConflictLeaves(db, key, 3);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      let firstDeleteStarted: VoidFunction | undefined;
+      let releaseFirstDelete: VoidFunction | undefined;
+      const deleteInFlight = new Promise<void>((resolve) => {
+        firstDeleteStarted = resolve;
+      });
+      let failedFirstPass = false;
+      vi.spyOn(db, 'bulkDocs').mockImplementation(async (documents, options) => {
+        if (!failedFirstPass && isDeletionBatch(documents)) {
+          failedFirstPass = true;
+          firstDeleteStarted?.();
+          await new Promise<void>((resolve) => {
+            releaseFirstDelete = resolve;
+          });
+          return documents.map((document) => ({
+            id: document._id,
+            error: 'forbidden',
+            name: 'forbidden',
+            status: 403,
+            message: 'Injected permanent cleanup failure',
+          }));
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const onError = vi.fn();
+      const resolver = new PouchDbConflictResolver(db, { onError });
+      const scanPromise = resolver.scanExisting();
+      await deleteInFlight;
+
+      // Coalesce multiple schedule calls while scanExisting() is awaiting the failing pass.
+      resolver.schedule(key);
+      resolver.schedule(key);
+      releaseFirstDelete?.();
+      await scanPromise;
+
+      await vi.waitFor(
+        async () => {
+          const document = await db.get(key, { conflicts: true });
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      resolver[Symbol.dispose]();
+    });
+
+    it('does not duplicate failure reports when scanExisting encounters an already-active resolution', async () => {
+      const key = 'scan-overlaps-active-failure';
+      await seedConflictLeaves(db, key, 3);
+      const originalBulkDocs = db.bulkDocs.bind(db);
+      let firstDeleteStarted: VoidFunction | undefined;
+      let releaseFirstDelete: VoidFunction | undefined;
+      const deleteInFlight = new Promise<void>((resolve) => {
+        firstDeleteStarted = resolve;
+      });
+      let failedFirstPass = false;
+      const bulkDocs = vi.spyOn(db, 'bulkDocs').mockImplementation(async (documents, options) => {
+        if (!failedFirstPass && isDeletionBatch(documents)) {
+          failedFirstPass = true;
+          firstDeleteStarted?.();
+          await new Promise<void>((resolve) => {
+            releaseFirstDelete = resolve;
+          });
+          return documents.map((document) => ({
+            id: document._id,
+            error: 'forbidden',
+            name: 'forbidden',
+            status: 403,
+            message: 'Injected permanent cleanup failure',
+          }));
+        }
+        return originalBulkDocs(documents, options);
+      });
+
+      const onError = vi.fn();
+      const resolver = new PouchDbConflictResolver(db, { onError });
+      resolver.schedule(key);
+      await deleteInFlight;
+
+      const originalAllDocs = db.allDocs.bind(db);
+      const scanReadRow = new Promise<void>((resolve) => {
+        vi.spyOn(db, 'allDocs').mockImplementationOnce(async (options) => {
+          const response = await originalAllDocs(options as never);
+          resolve();
+          return response;
+        });
+      });
+
+      const scanPromise = resolver.scanExisting();
+      await scanReadRow;
+      await Promise.resolve();
+      releaseFirstDelete?.();
+      await scanPromise;
+
+      await vi.waitFor(() => expect(onError).toHaveBeenCalledTimes(1), { timeout: 10_000 });
+      expect(bulkDocs).toHaveBeenCalledTimes(1);
+      resolver[Symbol.dispose]();
     });
 
     it('cancels a scheduled conflict retry when disposed', async () => {
