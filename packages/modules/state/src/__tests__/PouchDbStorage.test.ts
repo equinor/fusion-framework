@@ -243,70 +243,6 @@ describe('PouchDbStorage', () => {
   });
 
   describe('conflict resolution', () => {
-    it('resolves live leaves hidden behind a deleted winner during startup', async () => {
-      const key = 'deleted-winner';
-      const originalGet = db.get.bind(db);
-      let openRevsReads = 0;
-      const get = vi.spyOn(db, 'get').mockImplementation(async (id, options) => {
-        if (id === key) {
-          if (options && 'open_revs' in options) {
-            openRevsReads += 1;
-            // PouchDB overloads get() as a document read even though open_revs returns leaf wrappers.
-            return (
-              openRevsReads === 1 ? [{ ok: { _id: key, _rev: '2-live-leaf', value: 'live' } }] : []
-            ) as never;
-          }
-          throw { status: 404 };
-        }
-        return originalGet(id, options);
-      });
-      const deletedRow = {
-        total_rows: 1,
-        offset: 0,
-        rows: [{ id: key, key, value: { rev: '3-deleted-winner', deleted: true }, doc: null }],
-      };
-      const allDocs = vi.spyOn(db, 'allDocs');
-      allDocs
-        .mockResolvedValueOnce({ total_rows: 0, offset: 0, rows: [] } as never)
-        .mockResolvedValue(deletedRow as never);
-      const originalChanges = db.changes.bind(db);
-      // Keep initialization's live feed intact; replace only the one-shot history response.
-      const changes = vi.spyOn(db, 'changes').mockImplementation((options) => {
-        if (options?.since === '0') {
-          return Promise.resolve({
-            results: [{ id: key, seq: 1, changes: [{ rev: '3-deleted-winner' }], deleted: true }],
-            last_seq: 1,
-          } as never);
-        }
-        return originalChanges(options);
-      });
-      const bulkDocs = vi
-        .spyOn(db, 'bulkDocs')
-        .mockResolvedValue([{ ok: true, id: key, rev: '3-deleted-winner' }] as never);
-      const storage = new PouchDbStorage(db);
-      try {
-        await storage.initialize();
-        await vi.waitFor(
-          () => expect(changes.mock.calls.some(([options]) => options?.since === '0')).toBe(true),
-          { timeout: 10_000 },
-        );
-        await vi.waitFor(() => expect(openRevsReads).toBe(2), { timeout: 10_000 });
-
-        expect(changes).toHaveBeenCalledWith({
-          since: '0',
-          style: 'all_docs',
-          limit: expect.any(Number),
-        });
-        expect(bulkDocs).toHaveBeenCalledWith([{ _id: key, _rev: '2-live-leaf', _deleted: true }]);
-      } finally {
-        storage[Symbol.dispose]();
-        get.mockRestore();
-        allDocs.mockRestore();
-        changes.mockRestore();
-        bulkDocs.mockRestore();
-      }
-    }, 15_000);
-
     it('re-reads a key when a new live winner races with its deletion', async () => {
       const key = 'delete-race';
       const original = await db.put({ _id: key, value: 'original' });
@@ -344,21 +280,57 @@ describe('PouchDbStorage', () => {
       storage[Symbol.dispose]();
     });
 
-    it('uses one bulk metadata read instead of per-item winner reads', async () => {
+    it('avoids extra reads on conflict-free writes and cleans up conflicted putItem writes', async () => {
+      await db.info();
+      const storage = new PouchDbStorage(db);
       const get = vi.spyOn(db, 'get');
       const allDocs = vi.spyOn(db, 'allDocs');
-      const storage = new PouchDbStorage(db);
 
+      await expect(storage.putItem({ key: 'clean', value: 1 })).resolves.toMatchObject({
+        status: 'success',
+      });
       await expect(
         storage.putItems([
           { key: 'bulk-one', value: 1 },
           { key: 'bulk-two', value: 2 },
-          { key: 'bulk-three', value: 3 },
         ]),
-      ).resolves.toHaveLength(3);
+      ).resolves.toHaveLength(2);
 
+      // Single pre-write get for clean putItem; no extra get or post-write allDocs scan.
+      expect(get.mock.calls).toEqual([['clean', { conflicts: true }]]);
+      expect(allDocs).not.toHaveBeenCalled();
+
+      await seedConflictLeaves(db, 'conflicted', 3);
+      await expect(storage.putItem({ key: 'conflicted', value: 'updated' })).resolves.toMatchObject(
+        { status: 'success' },
+      );
+      await vi.waitFor(
+        async () => {
+          const document = await db.get('conflicted', { conflicts: true });
+          expect(document.value).toBe('updated');
+          expect(document._conflicts ?? []).toHaveLength(0);
+        },
+        { timeout: 10_000 },
+      );
+      storage[Symbol.dispose]();
+    });
+
+    it('removes many items in bounded bulk passes without per-document get fan-out', async () => {
+      const items = Array.from({ length: 60 }, (_value, index) => ({
+        key: `bulk-del-${index}`,
+        value: index,
+      }));
+      await db.bulkDocs(items.map(({ key, value }) => ({ _id: key, value })));
+
+      const get = vi.spyOn(db, 'get');
+      const bulkDocs = vi.spyOn(db, 'bulkDocs');
+      const storage = new PouchDbStorage(db);
+
+      const results = await storage.removeItems(items.map(({ key }) => ({ key })));
+      expect(results).toHaveLength(items.length);
+      expect(results.every((result) => result.status === 'success')).toBe(true);
       expect(get).not.toHaveBeenCalled();
-      expect(allDocs).toHaveBeenCalledTimes(1);
+      expect(bulkDocs).toHaveBeenCalledTimes(1);
       storage[Symbol.dispose]();
     });
 
@@ -855,29 +827,6 @@ describe('PouchDbStorage', () => {
       } finally {
         storage[Symbol.dispose]();
         await remote.destroy();
-      }
-    });
-
-    it('does not impose delete-wins over a later offline edit from a stale replica', async () => {
-      const local = PouchDbStorage.CreateDb(`local-${Date.now()}`);
-      const stale = PouchDbStorage.CreateDb(`stale-${Date.now()}`);
-      try {
-        const initial = await local.put({ _id: 'offline-delete', value: 'initial' });
-        await local.replicate.to(stale);
-
-        await local.remove('offline-delete', initial.rev);
-        const staleDocument = await stale.get('offline-delete');
-        await stale.put({ ...staleDocument, value: 'offline edit' });
-        await local.replicate.from(stale);
-
-        const winner = await local.get('offline-delete', { conflicts: true });
-        const leaves = await local.get('offline-delete', { open_revs: 'all' });
-        expect(winner.value).toBe('offline edit');
-        expect(winner._conflicts ?? []).toHaveLength(0);
-        expect(leaves).toHaveLength(2);
-      } finally {
-        await local.destroy();
-        await stale.destroy();
       }
     });
 

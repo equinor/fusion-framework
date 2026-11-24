@@ -15,27 +15,9 @@ import { StorageError } from './StorageError.js';
 
 import { StateOperationEvent, type StateEventType } from '../events/index.js';
 import { observePouchDbChange } from './observe-pouch-db-change.js';
+import { PouchDbConflictResolver } from './PouchDbConflictResolver.js';
 
 const STORAGE_KEY_SEPARATOR = '::';
-const CONFLICT_SCAN_PAGE_SIZE = 100;
-const MAX_CONFLICT_RESOLUTION_ATTEMPTS = 3;
-const MAX_CONFLICT_RESOLUTION_RETRY_CYCLES = 3;
-const CONFLICT_RESOLUTION_RETRY_DELAY_MS = 250;
-const MAX_BULK_DELETE_DOCUMENTS = 500;
-const MAX_LOCAL_BULK_DELETE_PAYLOAD_BYTES = 1_000_000;
-
-type PouchDbDeletionDocument = {
-  _id: string;
-  _rev: string;
-  _deleted: true;
-};
-
-type PouchDbConflictDocument = {
-  _id: string;
-  _rev: string;
-  _deleted?: boolean;
-  _conflicts?: string[];
-};
 
 /**
  * Configuration options for PouchDbStorage instances.
@@ -71,44 +53,6 @@ function isPouchDbError(
   res: PouchDB.Core.Response | PouchDB.Core.Error,
 ): res is PouchDB.Core.Error {
   return !!(res as PouchDB.Core.Error).error;
-}
-
-/**
- * Reads a numeric HTTP-style status from a PouchDB error.
- * @param error - Value returned by a PouchDB operation.
- * @returns The PouchDB status code, when present.
- */
-function getPouchDbErrorStatus(error: unknown): number | undefined {
-  // PouchDB adapters expose status on error objects but may throw arbitrary values.
-  if (typeof error !== 'object' || error === null || !('status' in error)) {
-    return undefined;
-  }
-  return typeof error.status === 'number' ? error.status : undefined;
-}
-
-/**
- * Reads the current live conflict leaves from a PouchDB document.
- * @param document - Document returned with conflict metadata enabled.
- * @returns Conflicting leaf revisions, excluding malformed metadata.
- */
-function getConflictingRevisions(document: object): string[] {
-  // Avoid trusting adapter metadata until it has the string shape used by revision APIs.
-  if (!('_conflicts' in document) || !Array.isArray(document._conflicts)) {
-    return [];
-  }
-  const revisions: unknown[] = document._conflicts;
-  // Ignore malformed conflict metadata rather than passing it to a write operation.
-  return revisions.filter((revision): revision is string => typeof revision === 'string');
-}
-
-/**
- * Identifies revisions that became stale while a conflict-resolution pass was running.
- * @param error - Value returned by a PouchDB operation.
- * @returns True when the current revision tree should be fetched and retried.
- */
-function isRetryablePouchDbError(error: unknown): boolean {
-  const status = getPouchDbErrorStatus(error);
-  return status === 404 || status === 409;
 }
 
 /**
@@ -154,15 +98,8 @@ export class PouchDbStorage implements IStorage, Disposable {
   // safe to call repeatedly) can't pile up duplicate change-feed subscriptions or syncs.
   #initialized = false;
 
-  // Avoid concurrent cleanup writes for the same document while still scheduling a follow-up
-  // pass when replication adds another leaf during an active resolution.
-  #conflictResolutions = new Map<string, Promise<void>>();
-  #pendingConflictResolutions = new Set<string>();
-  #conflictRetryTimers = new Map<
-    string,
-    { timer: ReturnType<typeof setTimeout>; resolve: VoidFunction }
-  >();
-  #disposed = false;
+  // Coordinates winner-preserving conflict cleanup and conflict-aware deletions for this scope.
+  #conflicts: PouchDbConflictResolver;
 
   /**
    * Static factory method for creating PouchDB instances.
@@ -312,6 +249,13 @@ export class PouchDbStorage implements IStorage, Disposable {
       // Use existing PouchDB instance (useful for testing or shared databases)
       this.#db = name_or_instance;
     }
+
+    this.#conflicts = new PouchDbConflictResolver(this.#db, {
+      keyPrefix: this.#key_prefix,
+      onError: (id, cause) => this.#reportConflictResolutionFailure(id, cause),
+    });
+    // Cancel pending conflict retries before completing the event stream on disposal.
+    this.#teardown.unshift(() => this.#conflicts[Symbol.dispose]());
   }
 
   /**
@@ -372,10 +316,8 @@ export class PouchDbStorage implements IStorage, Disposable {
     // Live sync can introduce a losing leaf after the storage instance has started.
     changes.on('change', (change) => {
       // Start cleanup only for changes that actually carry live conflict metadata.
-      if (change.doc && getConflictingRevisions(change.doc).length > 0) {
-        void this.#resolveConflicts(change.id).catch((error) =>
-          this.#reportConflictResolutionFailure(change.id, error),
-        );
+      if (change.doc && PouchDbConflictResolver.hasConflicts(change.doc)) {
+        this.#conflicts.schedule(change.id);
       }
     });
 
@@ -393,543 +335,9 @@ export class PouchDbStorage implements IStorage, Disposable {
     this.#teardown.push(() => subscription.unsubscribe());
 
     // Existing local conflicts predate the live feed's `since: 'now'` checkpoint.
-    void this.#scanExistingConflicts().catch((error) =>
-      this.#reportConflictResolutionFailure('startup-scan', error),
-    );
-  }
-
-  /**
-   * Scans existing state documents in small pages so migration work does not block sync startup.
-   * @returns Resolves after every currently active document has been checked.
-   */
-  async #scanExistingConflicts(): Promise<void> {
-    let startkey: string | undefined = this.#key_prefix ? this._generateKey('') : undefined;
-    let cursor: string | undefined;
-
-    // Continue paginating until exhausted, yielding through async database reads between pages.
-    while (!this.#disposed) {
-      // Combine the current inclusive cursor with the scoped upper bound for this page.
-      const response = await this.#db.allDocs<{ value: AllowedValue }>({
-        include_docs: true,
-        conflicts: true,
-        limit: CONFLICT_SCAN_PAGE_SIZE,
-        ...(startkey !== undefined ? { startkey } : {}),
-        ...(this.#key_prefix ? { endkey: this._generateKey('\ufff0') } : {}),
-      });
-
-      // Resolve serially so a conflict-heavy page cannot fan out an unbounded number of writes.
-      for (const row of response.rows) {
-        // allDocs includes startkey when it exists; skip only that exact row, not its successor.
-        if (row.id === cursor) {
-          // Discard only the cursor row that this inclusive page returned.
-          continue;
-        }
-        // Disposal can happen while an earlier row is resolving, so stop before starting more I/O.
-        if (this.#disposed) {
-          return;
-        }
-        // Skip deleted rows, error rows and ordinary documents without conflict leaves.
-        if ('error' in row || !row.doc || getConflictingRevisions(row.doc).length === 0) {
-          // This row cannot produce conflict cleanup work.
-          continue;
-        }
-        try {
-          await this.#resolveConflicts(row.id);
-        } catch (error) {
-          this.#reportConflictResolutionFailure(row.id, error);
-        }
-      }
-
-      const lastRow = response.rows.at(-1);
-      // A short page or missing cursor means the range has been completely scanned.
-      if (response.rows.length < CONFLICT_SCAN_PAGE_SIZE || !lastRow) {
-        await this.#scanDeletedConflicts();
-        return;
-      }
-      startkey = lastRow.id;
-      cursor = lastRow.id;
-    }
-  }
-
-  /**
-   * Scans deleted revisions omitted by allDocs, resuming from a local per-scope checkpoint.
-   * @returns Resolves after deleted history through the latest scanned sequence is checked.
-   * @throws {StorageError} When the changes feed cannot advance safely.
-   */
-  async #scanDeletedConflicts(): Promise<void> {
-    const checkpointId = `_local/fusion-state-conflicts-${encodeURIComponent(this.#key_prefix ?? '')}`;
-    let since: number | string = '0';
-    try {
-      const checkpoint = await this.#db.get<{ sequence: number | string }>(checkpointId);
-      since = checkpoint.sequence;
-    } catch (error) {
-      // A missing checkpoint starts the one-time history scan; other read failures are unsafe to ignore.
-      if (getPouchDbErrorStatus(error) !== 404) {
-        throw error;
-      }
-    }
-
-    let hasFailures = false;
-    // Page through changes until the latest sequence is reached without monopolizing startup.
-    while (!this.#disposed) {
-      const response = await this.#db.changes({
-        since,
-        style: 'all_docs',
-        limit: CONFLICT_SCAN_PAGE_SIZE,
-      });
-      const deletedIds = new Set(
-        response.results
-          // Deleted winners are absent from allDocs and can still hide live conflict leaves.
-          .filter((change) => change.deleted)
-          // Resolve each document once even when several revisions changed in one page.
-          .map((change) => change.id)
-          // A scoped storage instance must not clean up another app's documents.
-          .filter((id) => (this.#key_prefix ? id.startsWith(this._generateKey('')) : true)),
-      );
-      // Each deleted document needs one fresh revision-tree check for this history page.
-      for (const id of deletedIds) {
-        try {
-          await this.#resolveConflicts(id);
-        } catch (error) {
-          hasFailures = true;
-          this.#reportConflictResolutionFailure(id, error);
-        }
-      }
-      // Disposal during asynchronous cleanup cancels the scan before checkpointing.
-      if (this.#disposed) {
-        return;
-      }
-
-      const nextSequence = response.last_seq;
-      // Only a short page proves this scan reached the current end of change history.
-      if (response.results.length < CONFLICT_SCAN_PAGE_SIZE) {
-        // Keep the old checkpoint when any row failed so the next startup retries that history.
-        if (!hasFailures) {
-          await this.#saveConflictScanSequence(checkpointId, nextSequence);
-        }
-        return;
-      }
-      // Refuse to loop forever if the database returns a full page without cursor progress.
-      if (nextSequence === since) {
-        throw new StorageError('Deleted conflict scan did not advance its changes checkpoint');
-      }
-      since = nextSequence;
-    }
-  }
-
-  /**
-   * Persists the per-scope deleted-conflict scan cursor for incremental future startups.
-   * @param checkpointId - Local-only checkpoint document ID.
-   * @param sequence - Changes sequence fully examined by the scan.
-   * @returns Resolves after the checkpoint write succeeds or another scanner wins the race.
-   * @throws {Error} When checkpoint reads or writes fail for reasons other than expected races.
-   */
-  async #saveConflictScanSequence(checkpointId: string, sequence: number | string): Promise<void> {
-    let checkpoint: PouchDB.Core.ExistingDocument<{ sequence: number | string }> | undefined;
-    try {
-      checkpoint = await this.#db.get<{ sequence: number | string }>(checkpointId);
-    } catch (error) {
-      // A missing checkpoint is created below; other errors prevent safe cursor advancement.
-      if (getPouchDbErrorStatus(error) !== 404) {
-        throw error;
-      }
-    }
-    try {
-      await this.#db.put({
-        _id: checkpointId,
-        ...(checkpoint ? { _rev: checkpoint._rev } : {}),
-        sequence,
-      });
-    } catch (error) {
-      // A competing scanner may have saved a newer cursor, so its conflict must not overwrite it.
-      if (getPouchDbErrorStatus(error) !== 409) {
-        throw error;
-      }
-    }
-  }
-
-  /**
-   * Removes losing leaves while preserving the database's current winning revision.
-   * @param id - Full PouchDB document ID.
-   * @returns Resolves when no live conflict leaves remain.
-   */
-  async #resolveConflicts(id: string): Promise<void> {
-    // Disposed storage must not schedule new cleanup work.
-    if (this.#disposed) {
-      return;
-    }
-    const activeResolution = this.#conflictResolutions.get(id);
-    // Coalesce duplicate events and remember that a later pass may be needed.
-    if (activeResolution) {
-      this.#pendingConflictResolutions.add(id);
-      return activeResolution;
-    }
-
-    const resolution = this.#resolveConflictsUntilStable(id).finally(() => {
-      this.#conflictResolutions.delete(id);
-      // Preserve a change received at completion and start a fresh read after releasing this pass.
-      if (this.#pendingConflictResolutions.delete(id) && !this.#disposed) {
-        void this.#resolveConflicts(id).catch((error) =>
-          this.#reportConflictResolutionFailure(id, error),
-        );
-      }
-    });
-    this.#conflictResolutions.set(id, resolution);
-    return resolution;
-  }
-
-  /**
-   * Rechecks a document after each write so replication races are handled using fresh leaves.
-   * @param id - Full PouchDB document ID.
-   * @returns Resolves when the document is stable or the storage is disposed.
-   * @throws {StorageError} When repeated no-progress races exhaust the retry budget.
-   */
-  async #resolveConflictsUntilStable(id: string): Promise<void> {
-    let raceAttempts = 0;
-    let retryCycles = 0;
-    // Re-fetch after each batch so successful work can continue and races use fresh revisions.
-    while (!this.#disposed) {
-      this.#pendingConflictResolutions.delete(id);
-      const result = await this.#resolveConflictPass(id);
-      // A disposal during database I/O ends the pass without scheduling retries.
-      if (this.#disposed) {
-        return;
-      }
-      // A queued change event requires another read even when the previous pass looked stable.
-      if (result === 'stable' && !this.#pendingConflictResolutions.has(id)) {
-        return;
-      }
-      // Only consecutive no-progress batches consume the race budget.
-      if (result === 'retry') {
-        raceAttempts += 1;
-        // Back off only after fresh reads confirm that conflicts still remain.
-        if (raceAttempts >= MAX_CONFLICT_RESOLUTION_ATTEMPTS) {
-          const remaining = await this.#getConflictDocument(id);
-          // A concurrent resolver or deletion may have already drained the conflict set.
-          if (this.#disposed || !remaining || getConflictingRevisions(remaining).length === 0) {
-            return;
-          }
-          // Surface persistent races rather than silently abandoning unresolved leaves.
-          if (retryCycles >= MAX_CONFLICT_RESOLUTION_RETRY_CYCLES) {
-            throw new StorageError(
-              `Conflict resolution made no progress after ${retryCycles + 1} retry cycles for ${id}`,
-            );
-          }
-          retryCycles += 1;
-          raceAttempts = 0;
-          await this.#waitForConflictResolutionRetry(
-            id,
-            CONFLICT_RESOLUTION_RETRY_DELAY_MS * 2 ** (retryCycles - 1),
-          );
-          // Re-fetch after backoff instead of spinning on a stale revision tree.
-          continue;
-        }
-      } else {
-        // Any actual progress resets the race cycle because the next batch has fresh state.
-        raceAttempts = 0;
-        // Successful progress starts a fresh retry budget if a later concurrent write races.
-        if (result === 'progress') {
-          retryCycles = 0;
-        }
-      }
-
-      // Yield between batches so large documents do not monopolize the event loop.
-      await new Promise<void>((resolve) => setTimeout(resolve, 0));
-    }
-  }
-
-  /**
-   * Delays another bounded conflict-resolution cycle and allows disposal to cancel it.
-   * @param id - Full PouchDB document ID.
-   * @param delayMs - Backoff delay before rechecking the document.
-   */
-  async #waitForConflictResolutionRetry(id: string, delayMs: number): Promise<void> {
-    // Do not register timers once teardown has started.
-    if (this.#disposed) {
-      return;
-    }
-    await new Promise<void>((resolve) => {
-      const timer = setTimeout(() => {
-        this.#conflictRetryTimers.delete(id);
-        resolve();
-      }, delayMs);
-      this.#conflictRetryTimers.set(id, { timer, resolve });
-    });
-  }
-
-  /**
-   * Deletes one bounded batch of losing leaves using the latest winner.
-   * @param id - Full PouchDB document ID.
-   * @returns Whether cleanup made progress, needs a race retry, or is stable.
-   */
-  async #resolveConflictPass(id: string): Promise<'stable' | 'progress' | 'retry'> {
-    const document = await this.#getConflictDocument(id);
-    // A missing document or disposal leaves nothing safe to resolve.
-    if (!document || this.#disposed) {
-      return 'stable';
-    }
-    // The winner is never tombstoned by conflict cleanup.
-    const conflicts = getConflictingRevisions(document).filter(
-      (revision) => revision !== document._rev,
-    );
-    // No losing leaves means the current revision tree is stable.
-    if (conflicts.length === 0) {
-      return 'stable';
-    }
-    const deleted = await this.#deleteRevisions(id, conflicts.slice(0, MAX_BULK_DELETE_DOCUMENTS));
-    // A zero-success batch indicates a race; successful batches continue in a later pass.
-    return deleted > 0 ? 'progress' : 'retry';
-  }
-
-  /**
-   * Fetches winner and conflict metadata, including a tombstoned winner for deletion recovery.
-   * @param id - Full PouchDB document ID.
-   * @returns The current document, or null when no revision exists.
-   * @throws {Error} When the database read fails for a reason other than a missing document.
-   */
-  async #getConflictDocument(id: string): Promise<PouchDbConflictDocument | null> {
-    try {
-      return await this.#db.get<{ value: AllowedValue }>(id, {
-        conflicts: true,
-      });
-    } catch (error) {
-      // Deleted winners return 404; use the key lookup and revision tree to find live leaves.
-      if (getPouchDbErrorStatus(error) === 404) {
-        const response = await this.#db.allDocs<{ value: AllowedValue }>({ keys: [id] });
-        const row = response.rows[0];
-        // A missing key or non-tombstoned winner confirms there is no deleted tree to inspect.
-        if (!row || 'error' in row || !row.value.deleted) {
-          return null;
-        }
-        const leaves = await this.#db.get<{ value: AllowedValue }>(id, { open_revs: 'all' });
-        const conflicts = leaves.flatMap((leaf) =>
-          'ok' in leaf && !('_deleted' in leaf.ok && leaf.ok._deleted) ? [leaf.ok._rev] : [],
-        );
-        // The deletion path is done once the tombstoned tree has no live leaf left.
-        if (conflicts.length === 0) {
-          return null;
-        }
-        return {
-          _id: id,
-          _rev: row.value.rev,
-          _deleted: true,
-          _conflicts: conflicts,
-        };
-      }
-      throw error;
-    }
-  }
-
-  /**
-   * Writes tombstones for a set of leaf revisions and reports non-race failures.
-   * @param id - Full PouchDB document ID.
-   * @param revisions - Leaf revisions to tombstone.
-   * @returns Number of revisions successfully tombstoned.
-   * @throws {StorageError} When PouchDB reports a non-retryable deletion failure.
-   */
-  async #deleteRevisions(id: string, revisions: string[]): Promise<number> {
-    // Tombstones target only these losing leaves, never the current winner.
-    const results = await this.#bulkDeleteDocuments(
-      revisions.map((_rev) => ({ _id: id, _rev, _deleted: true })),
-    );
-    // Inspect each result because bulkDocs can partially fail without rejecting.
-    const failures = results.filter(isPouchDbError);
-    // Conflicts and missing revisions are refreshed by the caller; permanent errors are surfaced.
-    const permanentFailures = failures.filter((failure) => !isRetryablePouchDbError(failure));
-    // Retryable races are refreshed by the caller; permanent errors must escape this pass.
-    if (permanentFailures.length > 0) {
-      throw new StorageError(`Failed to delete revisions for ${id}`, {
-        cause: new AggregateError(
-          permanentFailures,
-          `PouchDB could not delete revisions for ${id}`,
-        ),
-      });
-    }
-    return results.length - failures.length;
-  }
-
-  /**
-   * Sends tombstones in bounded local bulkDocs calls.
-   * Sequential batches keep repeated revisions for one document ordered and race-visible.
-   * @param deletions - Leaf revisions to tombstone.
-   * @returns PouchDB results for every submitted revision.
-   * @throws {StorageError} When a deletion cannot fit the local payload limit or bulkDocs rejects.
-   */
-  async #bulkDeleteDocuments(
-    deletions: PouchDbDeletionDocument[],
-  ): Promise<Array<PouchDB.Core.Response | PouchDB.Core.Error>> {
-    const results: Array<PouchDB.Core.Response | PouchDB.Core.Error> = [];
-    const encoder = new TextEncoder();
-    let offset = 0;
-
-    // Split local bulkDocs calls by count and serialized local document size.
-    while (offset < deletions.length) {
-      const batch: PouchDbDeletionDocument[] = [];
-      let payloadBytes = 1_024;
-      // Stop before crossing either local limit; advance only after adding a deletion.
-      while (offset < deletions.length && batch.length < MAX_BULK_DELETE_DOCUMENTS) {
-        const deletion = deletions[offset];
-        const deletionBytes =
-          encoder.encode(JSON.stringify(deletion)).byteLength + (batch.length > 0 ? 1 : 0);
-        // A single oversized tombstone cannot be made safe by splitting the batch.
-        if (payloadBytes + deletionBytes > MAX_LOCAL_BULK_DELETE_PAYLOAD_BYTES) {
-          // Fail rather than submit a batch that violates the local payload bound.
-          if (batch.length === 0) {
-            throw new StorageError('A deletion document exceeds the maximum bulk request size');
-          }
-          // The next outer batch starts at the same offset with an empty payload.
-          break;
-        }
-        batch.push(deletion);
-        payloadBytes += deletionBytes;
-        offset += 1;
-      }
-
-      // Sequential submission keeps batches for the same document race-visible.
-      results.push(...(await this.#db.bulkDocs(batch)));
-    }
-
-    return results;
-  }
-
-  /**
-   * Deletes every live leaf for one item, retrying when concurrent sync changes its revisions.
-   * @param id - Full PouchDB document ID.
-   * @returns Resolves when no live leaf remains.
-   * @throws {StorageError} When live revisions remain after bounded retries.
-   */
-  async #removeLiveLeaves(id: string): Promise<void> {
-    // Each retry re-reads the tree so a concurrent replication update cannot hide new leaves.
-    for (let attempt = 0; attempt < MAX_CONFLICT_RESOLUTION_ATTEMPTS; attempt++) {
-      const document = await this.#getConflictDocument(id);
-      // The document may have disappeared while deletion was in flight.
-      if (!document) {
-        return;
-      }
-
-      const revisions = new Set(getConflictingRevisions(document));
-      // Tombstone the winner only while it is live; deleted winner revisions are preserved.
-      if (!('_deleted' in document) || document._deleted !== true) {
-        revisions.add(document._rev);
-      }
-      // No live revision remains to delete.
-      if (revisions.size === 0) {
-        return;
-      }
-      await this.#deleteRevisions(id, [...revisions]);
-    }
-
-    const remaining = await this.#getConflictDocument(id);
-    // Confirm the retry budget actually removed every live leaf before reporting success.
-    if (
-      remaining &&
-      (!('_deleted' in remaining) ||
-        remaining._deleted !== true ||
-        getConflictingRevisions(remaining).length > 0)
-    ) {
-      throw new StorageError(`Failed to remove every live revision for ${id}`);
-    }
-  }
-
-  /**
-   * Deletes items by tombstoning every current live leaf and normalizes per-document failures.
-   * @param ids - Unique full PouchDB document IDs to remove.
-   * @returns One storage result for each requested document ID.
-   * @throws {StorageError} When bulk deletion fails without a document identifier.
-   */
-  async #removeDocuments(ids: string[]): Promise<StorageResult[]> {
-    // Avoid unnecessary reads and preserve the empty-input contract.
-    if (ids.length === 0) {
-      return [];
-    }
-
-    const response = await this.#db.allDocs<{ value: AllowedValue }>({
-      keys: ids,
-      include_docs: true,
-      conflicts: true,
-    });
-    const conflictedIds = new Set<string>();
-    // Track only existing revisions so a concurrent create is not treated as delete-wins.
-    const initialWinnerRevisions = new Map(
-      response.rows.flatMap((row) => ('error' in row ? [] : [[row.id, row.value.rev] as const])),
-    );
-    // Expand each row into tombstones for all currently known live leaves.
-    const deletions: PouchDbDeletionDocument[] = response.rows.flatMap((row) => {
-      // Missing/error rows have no revision that can be safely tombstoned.
-      if ('error' in row || !row.doc) {
-        return [];
-      }
-      const conflicts = getConflictingRevisions(row.doc);
-      // Re-read conflicted documents after the bulk attempt to catch revision races.
-      if (conflicts.length > 0) {
-        conflictedIds.add(row.id);
-      }
-      const revisions = new Set(conflicts);
-      // Include the winner only when it remains a live revision.
-      if (!('_deleted' in row.doc) || row.doc._deleted !== true) {
-        revisions.add(row.doc._rev);
-      }
-      // Emit one tombstone for each distinct known live leaf of this document.
-      return [...revisions].map((_rev) => ({ _id: row.id, _rev, _deleted: true }));
-    });
-
-    // Do not call bulkDocs for empty or fully deleted ranges.
-    const bulkResults = deletions.length > 0 ? await this.#bulkDeleteDocuments(deletions) : [];
-    const retryIds = conflictedIds;
-    // Inspect failed per-document results and schedule a fresh read for affected IDs.
-    for (const result of bulkResults) {
-      // Successful writes need no retry.
-      if (!isPouchDbError(result)) {
-        // Only failed rows need a fresh conflict-tree read.
-        continue;
-      }
-      // A failure without an ID cannot be attributed to an item result.
-      if (!result.id) {
-        throw new StorageError('PouchDB returned a deletion failure without a document ID', {
-          cause: result,
-        });
-      }
-      retryIds.add(result.id);
-    }
-
-    const postDelete = await this.#db.allDocs<{ value: AllowedValue }>({
-      keys: ids,
-      include_docs: true,
-      conflicts: true,
-    });
-    // Recheck every requested key because replication may race a successful tombstone write.
-    for (const row of postDelete.rows) {
-      // Tombstones, replaced winners, or new live conflicts all require another tree read.
-      if (
-        !('error' in row) &&
-        (row.value.deleted === true ||
-          (initialWinnerRevisions.has(row.id) &&
-            row.value.rev !== initialWinnerRevisions.get(row.id)) ||
-          (row.doc && getConflictingRevisions(row.doc).length > 0))
-      ) {
-        retryIds.add(row.id);
-      }
-    }
-
-    const retryIdsToRun = [...retryIds];
-    // Retry each affected document independently so one race does not hide others.
-    const retryResults = await Promise.all(
-      retryIdsToRun.map(async (id): Promise<[string, StorageError | undefined]> => {
-        try {
-          await this.#removeLiveLeaves(id);
-          return [id, undefined];
-        } catch (cause) {
-          return [id, new StorageError(`Failed to remove item ${id}`, { cause })];
-        }
-      }),
-    );
-    const retryErrors = new Map(retryResults);
-
-    // Return results in caller order, including IDs that did not need a retry.
-    return ids.map((id) => {
-      const error = retryErrors.get(id);
-      return error ? { status: 'error', key: id, error } : { status: 'success', key: id };
-    });
+    void this.#conflicts
+      .scanExisting()
+      .catch((error) => this.#reportConflictResolutionFailure('startup-scan', error));
   }
 
   /**
@@ -938,8 +346,8 @@ export class PouchDbStorage implements IStorage, Disposable {
    * @param cause - Original cleanup failure.
    */
   #reportConflictResolutionFailure(id: string, cause: unknown): void {
-    // Disposal closes the event stream; do not emit late asynchronous failures afterward.
-    if (this.#disposed) {
+    // Disposal closes the event stream; ignore late asynchronous failures afterward.
+    if (this.#events.closed) {
       return;
     }
     this.#events.next(
@@ -1011,18 +419,23 @@ export class PouchDbStorage implements IStorage, Disposable {
 
     // Re-fetch leaf revisions for every selected ID because allDocs exposes only the winner
     // unless conflict metadata is requested; deletion must tombstone every live branch.
-    const results = await this.#removeDocuments(allDocs.rows.map((row) => row.id)).catch((e) => {
-      // Wrap any errors in our custom StorageError for consistency
-      const error = new StorageError('Failed to clear items', { cause: e });
-      // Emit failure event for monitoring
-      this.#events.next(
-        new StateOperationEvent.Failure({
-          source: this,
-          detail: { fn: 'clear', args: [args], error },
-        }),
-      );
-      throw error;
-    });
+    const results = await this.#conflicts
+      .removeDocuments(
+        // Extract document IDs for conflict-aware bulk tombstoning.
+        allDocs.rows.map((row) => row.id),
+      )
+      .catch((e) => {
+        // Wrap any errors in our custom StorageError for consistency
+        const error = new StorageError('Failed to clear items', { cause: e });
+        // Emit failure event for monitoring
+        this.#events.next(
+          new StateOperationEvent.Failure({
+            source: this,
+            detail: { fn: 'clear', args: [args], error },
+          }),
+        );
+        throw error;
+      });
 
     // Emit success event with operation details
     this.#events.next(
@@ -1222,21 +635,26 @@ export class PouchDbStorage implements IStorage, Disposable {
       const key = this._generateKey(item.key); // Apply key prefix if configured
 
       // Try to get existing document for update, fallback to creation template
-      // This pattern handles both create and update operations seamlessly
-      const existingDoc = await this.#db.get(key).catch((_e) => {
-        // Document doesn't exist - create template for new document
-        // _rev: undefined tells PouchDB this is a new document
-        return { _id: key, _rev: undefined };
-      });
+      // Request conflict metadata on the same read to avoid an extra lookup for conflict-free puts.
+      const existingDoc = await this.#db
+        .get<{ value: AllowedValue }>(key, { conflicts: true })
+        .catch((_e) => {
+          // Document doesn't exist - create template for new document
+          // _rev: undefined tells PouchDB this is a new document
+          return { _id: key, _rev: undefined, _conflicts: undefined as string[] | undefined };
+        });
+
+      const hasExistingConflicts = PouchDbConflictResolver.hasConflicts(existingDoc);
+      const { _conflicts: _ignoredConflicts, ...docToUpdate } = existingDoc;
 
       // Perform the put operation - PouchDB handles create vs update automatically
       // based on whether _rev is provided (existing) or undefined (new)
-      const update = await this.#db.put({ ...existingDoc, value: item.value });
+      const update = await this.#db.put({ ...docToUpdate, value: item.value });
 
-      // Resolve any pre-existing losing leaves even when the live change feed is not initialized.
-      void this.#resolveConflicts(key).catch((error) =>
-        this.#reportConflictResolutionFailure(key, error),
-      );
+      // Resolve pre-existing losing leaves even when the live change feed is not initialized.
+      if (hasExistingConflicts) {
+        this.#conflicts.schedule(key);
+      }
 
       // Build result based on PouchDB response
       const result: StorageResult = update.ok
@@ -1309,33 +727,6 @@ export class PouchDbStorage implements IStorage, Disposable {
           value: item.value,
         })),
       );
-      // One metadata read avoids a separate winner lookup for every successful bulk item.
-      const successfulIds = [
-        ...new Set(
-          result.flatMap((outcome, index) =>
-            outcome.status === 'success' && items[index]
-              ? [this._generateKey(items[index].key)]
-              : [],
-          ),
-        ),
-      ];
-      // Empty success sets need no extra read and preserve bulk-write efficiency.
-      if (successfulIds.length > 0) {
-        const response = await this.#db.allDocs<{ value: AllowedValue }>({
-          keys: successfulIds,
-          include_docs: true,
-          conflicts: true,
-        });
-        // The single metadata response identifies only rows that actually need resolution.
-        for (const row of response.rows) {
-          // Avoid scheduling a second winner read for conflict-free bulk writes.
-          if (!('error' in row) && row.doc && getConflictingRevisions(row.doc).length > 0) {
-            void this.#resolveConflicts(row.id).catch((error) =>
-              this.#reportConflictResolutionFailure(row.id, error),
-            );
-          }
-        }
-      }
       // Emit success event with operation statistics
       this.#events.next(
         new StateOperationEvent.Success({
@@ -1384,7 +775,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const start = performance.now();
       const key = this._generateKey(item.key);
 
-      const [result] = await this.#removeDocuments([key]);
+      const [result] = await this.#conflicts.removeDocuments([key]);
       // Missing results violate the one-result-per-requested-ID contract.
       if (!result) {
         throw new StorageError(`Failed to remove item ${item.key}: missing operation result`);
@@ -1461,32 +852,11 @@ export class PouchDbStorage implements IStorage, Disposable {
       return result;
     }
     try {
-      // Deduplicate document IDs so repeated keys cannot race against their own tombstones.
-      // Deduplicate generated IDs before deleting, while preserving original order below.
-      const ids = [...new Set(items.map((item) => this._generateKey(item.key)))];
-      const uniqueResults = await this.#removeDocuments(ids);
-      const resultById = new Map<string, StorageResult>();
-      // Preserve the unique-ID request order while associating each outcome with its key.
-      for (const [index, id] of ids.entries()) {
-        const operationResult = uniqueResults[index];
-        // A missing result means PouchDB did not account for a requested unique ID.
-        if (!operationResult) {
-          throw new StorageError(`Failed to remove item ${id}: missing operation result`);
-        }
-        resultById.set(id, operationResult);
-      }
-
-      const result: StorageResult[] = [];
-      // Expand deduplicated outcomes back to the caller's original item list.
-      for (const item of items) {
-        const id = this._generateKey(item.key);
-        const operationResult = resultById.get(id);
-        // Map each original item back to its deduplicated operation result.
-        if (!operationResult) {
-          throw new StorageError(`Failed to remove item ${id}: missing operation result`);
-        }
-        result.push(operationResult);
-      }
+      // Remove all live leaves per requested key while preserving caller order and duplicates.
+      const result = await this.#conflicts.removeDocuments(
+        // Apply key prefixing before bulk deletion.
+        items.map((item) => this._generateKey(item.key)),
+      );
 
       // Emit success event with operation statistics
       this.#events.next(
@@ -1841,13 +1211,6 @@ export class PouchDbStorage implements IStorage, Disposable {
    * Cancels change feeds, completes event subjects, and closes connections.
    */
   [Symbol.dispose](): void {
-    this.#disposed = true;
-    // Cancel pending retries so disposal cannot keep asynchronous cleanup alive.
-    for (const { timer, resolve } of this.#conflictRetryTimers.values()) {
-      clearTimeout(timer);
-      resolve();
-    }
-    this.#conflictRetryTimers.clear();
     // Snapshot-and-clear rather than iterate `this.#teardown` directly - a teardown can itself
     // deregister other entries (e.g. `_pullOnce`'s `finish()` removing its own and a sibling
     // registration), and splicing the array mid-iteration would skip whatever shifted into the
