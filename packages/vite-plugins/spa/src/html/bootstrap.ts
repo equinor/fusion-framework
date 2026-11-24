@@ -147,85 +147,93 @@ enableTelemetry(configurator, {
 
   const telemetry = ref.telemetry;
 
-  // attach service discovery to the framework - append auth token to configured endpoints
-  using measurement = telemetry.measure({
+  // Avoid `using` declarations because Safari/WebKit lacks both `using` syntax and `Symbol.dispose`.
+  const measurement = telemetry.measure({
     name: 'bootstrap',
     level: TelemetryLevel.Information,
   });
 
-  await measurement.clone().resolve(registerServiceWorker(ref), {
-    data: {
-      level: TelemetryLevel.Debug,
-      name: 'bootstrap::registerServiceWorker',
-    },
-  });
-
-  // create a client for the portal service - this is used to fetch the portal manifest
-  const portalClient = await ref.serviceDiscovery.createClient('portal-config');
-
-  // fetch the portal manifest - this is used to load the portal template
-  const portalId = import.meta.env.FUSION_SPA_PORTAL_ID;
-  const portalTag = import.meta.env.FUSION_SPA_PORTAL_TAG ?? 'latest';
-  const portalProxy = import.meta.env.FUSION_SPA_PORTAL_PROXY ?? false;
-  const portal_manifest = await measurement
-    .clone()
-    .resolve(portalClient.json<PortalManifest>(`/portals/${portalId}@${portalTag}`), {
-      data: (manifest: PortalManifest) => ({
-        name: 'bootstrap::loadPortalManifest',
-        level: TelemetryLevel.Debug,
-        properties: {
-          portalId,
-          portalTag,
-          templateEntry: manifest.build.templateEntry,
-          manifestVersion: manifest.build.config?.version,
-          assetPath: manifest.build.assetPath,
-        },
-      }),
-    });
-
-  const portal_config = await measurement
-    .clone()
-    .resolve(portalClient.json(`/portals/${portalId}@${portalTag}/config`), {
+  try {
+    await measurement.clone().resolve(registerServiceWorker(ref), {
       data: {
-        name: 'bootstrap::loadPortalConfig',
         level: TelemetryLevel.Debug,
-        properties: {
-          portalId,
-          portalTag,
-        },
+        name: 'bootstrap::registerServiceWorker',
       },
     });
 
-  // create a entrypoint for the portal - this is used to render the portal
-  const el = document.createElement('div');
-  document.body.innerHTML = '';
-  document.body.appendChild(el);
+    // create a client for the portal service - this is used to fetch the portal manifest
+    const portalClient = await ref.serviceDiscovery.createClient('portal-config');
 
-  const portalEntryPoint = createPortalEntryPoint(
-    portalProxy ? '/portal-proxy' : undefined,
-    portal_manifest.build.assetPath,
-    portal_manifest.build.templateEntry,
-  );
-
-  // TODO(#5066): should test if the entrypoint is external or internal
-  // TODO(#5066): add proper return type
-  const { render } = await measurement
-    .clone()
-    .resolve(
-      importWithoutVite<Promise<{ render: (...args: unknown[]) => void }>>(portalEntryPoint),
-      {
-        data: {
-          name: 'bootstrap::loadPortalSourceCode',
+    // fetch the portal manifest - this is used to load the portal template
+    const portalId = import.meta.env.FUSION_SPA_PORTAL_ID;
+    const portalTag = import.meta.env.FUSION_SPA_PORTAL_TAG ?? 'latest';
+    const portalProxy = import.meta.env.FUSION_SPA_PORTAL_PROXY ?? false;
+    const portal_manifest = await measurement
+      .clone()
+      .resolve(portalClient.json<PortalManifest>(`/portals/${portalId}@${portalTag}`), {
+        data: (manifest: PortalManifest) => ({
+          name: 'bootstrap::loadPortalManifest',
           level: TelemetryLevel.Debug,
           properties: {
             portalId,
             portalTag,
-            entryPoint: portalEntryPoint,
+            templateEntry: manifest.build.templateEntry,
+            manifestVersion: manifest.build.config?.version,
+            assetPath: manifest.build.assetPath,
+          },
+        }),
+      });
+
+    const portal_config = await measurement
+      .clone()
+      .resolve(portalClient.json(`/portals/${portalId}@${portalTag}/config`), {
+        data: {
+          name: 'bootstrap::loadPortalConfig',
+          level: TelemetryLevel.Debug,
+          properties: {
+            portalId,
+            portalTag,
           },
         },
-      },
+      });
+
+    // create a entrypoint for the portal - this is used to render the portal
+    const el = document.createElement('div');
+    document.body.innerHTML = '';
+    document.body.appendChild(el);
+
+    const portalEntryPoint = createPortalEntryPoint(
+      portalProxy ? '/portal-proxy' : undefined,
+      portal_manifest.build.assetPath,
+      portal_manifest.build.templateEntry,
     );
 
-  // render the portal - this will load the portal template and render it
-  render(el, { ref, manifest: portal_manifest, config: portal_config });
+    // TODO(#5066): should test if the entrypoint is external or internal
+    // TODO(#5066): add proper return type
+    const { render } = await measurement
+      .clone()
+      .resolve(
+        importWithoutVite<Promise<{ render: (...args: unknown[]) => void }>>(portalEntryPoint),
+        {
+          data: {
+            name: 'bootstrap::loadPortalSourceCode',
+            level: TelemetryLevel.Debug,
+            properties: {
+              portalId,
+              portalTag,
+              entryPoint: portalEntryPoint,
+            },
+          },
+        },
+      );
+
+    // render the portal - this will load the portal template and render it
+    render(el, { ref, manifest: portal_manifest, config: portal_config });
+  } finally {
+    try {
+      measurement.measure();
+    } catch {
+      // Telemetry cleanup must not mask bootstrap failures or break teardown.
+    }
+  }
 })();
