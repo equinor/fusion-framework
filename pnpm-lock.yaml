@@ -2153,7 +2153,7 @@ importers:
         version: link:../core
       vscode-languageserver:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       vscode-languageserver-textdocument:
         specifier: ^1.0.12
         version: 1.0.16
@@ -13327,6 +13327,10 @@ packages:
     resolution: {integrity: sha512-USSfxg0vDIpTQqlQBGxF3mBARyoS8cU7LHLpbYNh6dOJt32dlskxPWB0Irrh5TllTmyf7oNLAvqDqzklbwwnpA==}
     engines: {node: '>=14.17.0'}
 
+  vscode-jsonrpc@10.0.1:
+    resolution: {integrity: sha512-fGdu32Sp4GeSQ2twML46WPMB6cFfIJ4Vdx1K5s/WPzUYdShVPCGKscYltn5hiNz748xKNJdBHgocAvuN48tLGw==}
+    engines: {node: '>=14.17.0'}
+
   vscode-jsonrpc@8.2.1:
     resolution: {integrity: sha512-kdjOSJ2lLIn7r1rtrMbbNCHjyMPfRnowdKjBQ+mGq6NAW5QY2bEZC/khaC5OR8svbbjvLEaIXkOq45e2X9BIbQ==}
     engines: {node: '>=14.0.0'}
@@ -13338,14 +13342,20 @@ packages:
   vscode-languageserver-protocol@3.18.5:
     resolution: {integrity: sha512-FW4fBMzZ99N8xeob4py0l050wgCoRgTpEq5Xcsb9lM1bc29UKGR/wSV+4knaqFxssFHajy7OzNiKP/m3U1ZEuA==}
 
+  vscode-languageserver-protocol@3.18.6:
+    resolution: {integrity: sha512-Ocoa4g/vyB66ZFkIKApV8/FTjQ+EYeOVDkq/nzw9SmfX+L6Ikl5KtL5AjmSAQ7nhqfud1ojiVuy+drHdvAlgUg==}
+
   vscode-languageserver-textdocument@1.0.16:
     resolution: {integrity: sha512-qeNEuOi9a3qkqRf7Gfez2WL2VwlBTLCNekHBGO9kxPVUp9XuY15yfTJ9jwvOwKI0I2MhUUfZq95NSp+LK1CLQg==}
 
   vscode-languageserver-types@3.18.5:
     resolution: {integrity: sha512-kPd6+JQNz3HMJvjKlqUxERSlZHAntl/aGpsk7ImwIh0ewDKDcjgAEyVSYciPiOJD3ftbK9IrfiqUeTZLSbCizw==}
 
-  vscode-languageserver@11.0.0:
-    resolution: {integrity: sha512-dOyMIyq0PNVJhTkj+FZoi3H8N3WffNSZEepfbQT+x2E16x1ONPacSx00DoVRqyVKO7PN35ixj/l2RQwQmStkNg==}
+  vscode-languageserver-types@3.18.6:
+    resolution: {integrity: sha512-DEDtik4YupS+nOg4JxqJ2H5ec/m4tTD9a5mGcBVGYkQKZQo1AIF3ZToiP8+A0kUzyhyqX5dMnPDEnhtmzts7GA==}
+
+  vscode-languageserver@11.0.1:
+    resolution: {integrity: sha512-cyErXyrWgM43lMGi/Yk/MaMlsJjH0iyJ7nIcDK2353mROz6jx5xJH08GPZDvM3xqttYkQYHR876sgKjLau+ZcQ==}
     hasBin: true
 
   vue-router@5.2.0:
@@ -23711,6 +23721,8 @@ snapshots:
 
   vscode-jsonrpc@10.0.0: {}
 
+  vscode-jsonrpc@10.0.1: {}
+
   vscode-jsonrpc@8.2.1(patch_hash=d78796f2e6ae0a6c190cb4da47138eafba7404e190b66f5ac22b382e16f04eca): {}
 
   vscode-languageclient@11.0.0(patch_hash=db4296afe90fd7dbb2167bc026c5859a3a17d0a8641640178789984456c87635):
@@ -23725,13 +23737,20 @@ snapshots:
       vscode-jsonrpc: 10.0.0
       vscode-languageserver-types: 3.18.5
 
+  vscode-languageserver-protocol@3.18.6:
+    dependencies:
+      vscode-jsonrpc: 10.0.1
+      vscode-languageserver-types: 3.18.6
+
   vscode-languageserver-textdocument@1.0.16: {}
 
   vscode-languageserver-types@3.18.5: {}
 
-  vscode-languageserver@11.0.0:
+  vscode-languageserver-types@3.18.6: {}
+
+  vscode-languageserver@11.0.1:
     dependencies:
-      vscode-languageserver-protocol: 3.18.5
+      vscode-languageserver-protocol: 3.18.6
 
   vue-router@5.2.0(@vue/compiler-sfc@3.5.45)(esbuild@0.28.1)(rolldown@1.2.2)(rollup@4.68.7)(vite@8.3.8(@types/node@26.6.2)(esbuild@0.28.1)(sass-embedded@1.108.2)(sass@1.108.2)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vue@3.5.45(typescript@7.0.2)):
     dependencies:
