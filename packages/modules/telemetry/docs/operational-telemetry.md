@@ -8,6 +8,75 @@ adapter or inherit an available parent.
 The contract was approved in [#5802](https://github.com/equinor/fusion-framework/issues/5802#issuecomment-6284993442)
 and implemented for [#5803](https://github.com/equinor/fusion-framework/issues/5803).
 
+For local diagnosis without an app-owned exporter, start with the
+[Aspire troubleshooting cookbook](../../../../cookbooks/app-react-dev-server-telemetry/README.md).
+
+## Coverage and record ownership
+
+Every module below also participates in host lifecycle capture when it is initialized.
+The table describes additional semantic records, not a promise of an operation span.
+Names below omit the `fusion.` prefix and, for measured operations, the `.duration`
+suffix. Each failed measured boundary adds one matching `.failure` exception.
+
+| Module | Additional records and boundary | Ownership / exclusions |
+| --- | --- | --- |
+| `http` | `http.request` via `createHttpTelemetry` | One actual transport attempt, through response headers, not body consumption. Framework default clients are instrumented by the framework; custom clients opt in. |
+| `service-discovery` | `service-discovery.resolve`; `fallback`, `cooldown`, `unknown-service`, `cache-hit` notifications | Discovery resolution is distinct from HTTP. Cache hits have no fabricated duration. Cache-hit diagnostics are debug level. |
+| `services` | `services.create-client` | Client creation, not each API call; transport/discovery own their records. |
+| `app` | `app.load-manifest`, `load-config`, `load-settings`, `update-settings`, `import`, `load`, `unload` | Stage outcomes and each initialize subscription; unload includes asynchronous teardown. Validated `appKey` / `appVersion` only. |
+| `widget` | `widget.load-manifest`, `load-config`, `import`, `load` | Widget stages, not renders; disposal cancels pending work, without a separate semantic unload duration. Validated widget identity only where available. |
+| `context` | `context.select`, `context.resolve` | Selection and resolution are separate boundaries, including cached resolution; no context IDs or values. |
+| `bookmark` | `bookmark.get`, `list`, `apply`, `create`, `update`, `delete`, `favourite-add`, `favourite-remove`, `payload-resolve` | Request and mutation outcomes, not bookmark contents or IDs. |
+| `state` | `state.get`, `list`, `store`, `remove`, `clear`; `state.sync-status`, `sync-error`, `sync-activity` notifications | Sync notifications aggregate in one-minute windows; no per-document export or stored state. See the [state contract](../../state/README.md#operational-telemetry). |
+| `feature-flag` | `feature-flag.toggle` | One outcome per toggle with requested/applied summary, not flag names or values. |
+| `auth` / MSAL | `msal.acquire-token`, `login`, `logout`, `handle-redirect`, `exchange-auth-code`; `silent-login-fallback` notification | Provider label is `msal`, not the module registry key `auth`; no accounts, scopes, codes or tokens. |
+| MSAL Node / Azure Identity | `msal-node.acquire-token`, `login`, `logout`; `azure-identity.acquire-token`, `login`, `logout` | Actual provider operations; no identity or credential values. |
+| `roles` | `roles.<operation>` (for example `get-access-roles`) | Provider operation outcomes, not role/assignment/account identifiers or backend payloads. |
+| `navigation` | `Navigation::navigated` | Safe action only; no route, search, state or action payload. Explicit `setTelemetry` also enables static debug notifications. |
+| `signalr` | `signalr.connect`, `reconnect`, `disconnect`; `connection-lost` notification | Connection lifecycle, never message payloads or per-message records. |
+| `ai` | `ai.model-invoke`, `model-stream`, `embed`, `search` | Model execution including tool-bound runnables, embeddings and retrievers; one terminal stream outcome, not each token. Tools' own execution, direct client construction and index writes are excluded. No prompts, completions, documents or tool payloads. |
+| `ag-grid` | `ag-grid.legacy-add` warning | First patched legacy `add()` use per host lifecycle, not cells, rows or renders. |
+| `module` | Module and host initialize/dispose records | Orchestrator owns boundaries; it does not depend on telemetry or export arbitrary configurator events. |
+| `event` | Lifecycle only | No blanket event-bus forwarding: events can contain application data and create feedback loops. |
+| `telemetry` | Lifecycle and controlled local pipeline-health reporting | Does not export its own delivery failures recursively or report shutdown through a closed sink. |
+| `analytics` | Lifecycle only in this operational contract | Usage analytics retains its separate pipeline; exporter-owned HTTP requests are marked to prevent recursive operational capture. |
+
+Query is a utility, not a module: optional `observeQueryTelemetry` owns
+`query.schedule`, `query.execute`, and cache notifications. Layered load, discovery,
+auth, query and transport records explain different boundaries. Do not add them together
+as though each were a separate user action. The per-module READMEs describe their
+operation-specific counters, cancellation reasons and aggregation windows.
+
+## Enable, filter or omit operational telemetry
+
+Normal framework/app/widget hosts already register telemetry. No adapter means no
+invented destination; optional modules continue working without a telemetry provider.
+Their `connectTelemetry` hooks run after initialization (except providers that already
+resolve telemetry as an initialization dependency). Work before connection is not replayed
+as a semantic operation; host startup capture covers initialization separately.
+
+To omit one module's relayed records while preserving other diagnostics and custom events:
+
+```ts
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+
+enableTelemetry(configurator, {
+  configure: (builder) => {
+    builder.setFilter({
+      relay: (item) => item.diagnostic?.module !== 'state',
+    });
+  },
+});
+```
+
+`setFilter({ relay })` controls parent relay; `setFilter({ adapter })` filters local
+adapter delivery. An individual adapter may also expose its own filter API. Filtering is not failover:
+an explicitly owned adapter still suppresses ancestor fallback export even if it rejects
+every record. `attachConfiguratorEvents: false` below disables lifecycle delivery only;
+it does not disable HTTP, module semantic records, custom events or dev-server tracing.
+To disable local development export, unset `FUSION_DEV_SERVER_OTLP_ENDPOINT` and restart
+the dev server; this does not remove a deliberately configured application exporter.
+
 ## Records and privacy
 
 Each attempted module initialization and default-phase module disposal produces one
@@ -42,14 +111,16 @@ builder.setSource({
 ```
 
 Source kinds, like module and operation names, must be lowercase kebab-case
-identifiers (`/^[a-z][a-z0-9-]*$/`), so URLs, user names or payload fragments cannot
-become exported labels. `setSource` throws a `RangeError` for anything else.
+identifiers (`/^[a-z][a-z0-9-]*$/`). This validates syntax, not privacy: a
+lowercase username can still match, so always use controlled static literals.
+`setSource` throws a `RangeError` for identifiers outside that pattern.
 `hostName` and `hostVersion` must be static identity, never request or user data.
 
 The bundled hosts use this generic contract rather than special fields: framework,
 app and widget hosts set `framework`, `app` and `widget`; the app host maps its
-manifest key and build version to `hostName` and `hostVersion`. Widget records omit
-widget manifest identity.
+manifest key and build version to `hostName` and `hostVersion`. Widget host lifecycle
+records omit widget manifest identity; semantic widget stages may include validated
+`widgetKey` and `widgetVersion` summary properties.
 
 Capture occurs before asynchronous enrichment. Relaying preserves origin, occurrence
 time and correlation. No spans or trace providers are created. OTLP logs use that
@@ -61,6 +132,55 @@ Built-in records ignore dynamic metadata and custom default scopes; custom telem
 retains the existing metadata and scope contract. Consumers of custom telemetry remain
 responsible for its privacy. The event bus is not a blanket export source, and usage
 analytics is not duplicated into operational telemetry.
+
+### Read exported OTLP fields
+
+Fusion metrics are **OTLP log records**, not native OpenTelemetry metrics. A successful
+request has body `fusion.http.request.duration`, severity `Information`, and for example:
+
+```json
+{
+  "fusion.telemetry.type": "metric",
+  "fusion.telemetry.value": 1502.4,
+  "fusion.diagnostic.schemaVersion": 1,
+  "fusion.diagnostic.module": "http",
+  "fusion.diagnostic.operation": "request",
+  "fusion.diagnostic.outcome": "success",
+  "fusion.diagnostic.unit": "ms",
+  "fusion.diagnostic.source": "app"
+}
+```
+
+This is an illustrative attribute subset, not a measured result. `occurredAt` is epoch
+milliseconds and becomes the log timestamp. `hostId` identifies one host lifecycle, not
+a person or request. Optional `hostName` / `hostVersion` describe that origin; do not
+replace them with the exporting portal's identity. Custom app events instead use inherited
+`fusion.app.key` and `source`. Primitive summary properties become `fusion.properties.*`;
+the numeric duration becomes `fusion.telemetry.value`. Failures additionally carry
+`exception.type: OperationalError` and a controlled `exception.message`; there is no
+original exception stack. A notification retains envelope unit `ms` for schema
+compatibility but has no duration value. Do not chart it as a zero-duration operation.
+
+Correlation fields exist only when an active span was captured at the boundary.
+No module-operation spans are created. A transport span can outlive the semantic
+measurement (for example during body streaming), and unrelated startup/notification
+logs can have no trace ID. Filter those by host/module/operation and occurrence time;
+never join unrelated records solely because they share `hostId`.
+
+### Contributor instrumentation checklist
+
+- Choose a static module/operation and one semantic owner; use existing shared scopes
+  rather than another event subscription or a duplicate HTTP measurement.
+- Record one terminal outcome per attempted boundary. Preserve original values/errors;
+  treat cancellation as cancellation and make disposal cancel owned pending work.
+- Allowlist bounded reason codes, counts and validated static identity. Never export
+  tokens, authorization headers, usernames, URLs/query values, payloads, stored state,
+  bookmark contents, AI prompts/completions, documents, tool arguments or raw errors.
+- Keep optional peers type-only at load time; connect without blocking business execution.
+  Bound stream summaries and queues; never emit a record for each token, row or sync poll.
+- Exercise success, failure, cancellation, unavailable telemetry, privacy, record counts,
+  parent/child routing and teardown. Mark exporter-owned HTTP requests to prevent loops.
+- Update this reference, the owning module's TSDoc/README and the applicable changeset.
 
 ## Choose the destination
 
@@ -249,14 +369,15 @@ custom providers.
 
 Every framework module wires operational telemetry the same way, in three steps:
 
-1. **Own a handle.** The provider creates one with `createOperationalTelemetry(module)` from
-   `@equinor/fusion-framework-module-telemetry/utils`, binding its static kebab-case module label.
+1. **Own a handle.** Prefer `telemetry.scope(module)` when connecting to a built-in provider.
+   The standalone `createOperationalTelemetry(module)` factory binds the same static
+   kebab-case module label for standalone handles and legacy custom providers.
 2. **Connect after initialization.** The provider implements `TelemetryConnectable` and its
    module descriptor calls `instance.connectTelemetry?.(modules.telemetry)` from
    `postInitialize`, so initialization never waits for telemetry and the module works without it.
-3. **Disconnect on teardown.** The provider calls `disconnect()` from `_addTeardown`.
-   Disconnection is final, so work that completes during or after disposal never reports into a
-   torn-down host.
+3. **Close on teardown.** The provider owns final closure from `_addTeardown`, so work that
+   completes during or after disposal never reports into a torn-down host. Use
+   `connect(undefined)` only for temporary disconnection.
 
 ```ts
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
@@ -455,6 +576,14 @@ This is a breaking change to automatic lifecycle telemetry, not custom tracking:
 
 ## Measured budget gates
 
+The approved [foundation contract](https://github.com/equinor/fusion-framework/issues/5802#issuecomment-6284993442)
+sets producer budgets, before intentional multi-destination export: at most `N + 1`
+initialization metrics for `N` attempted modules plus the host, a separate analogous
+disposal allowance, and at most one extra exception per failed boundary. Pipeline-health
+failures and explicitly enabled debug diagnostics are counted separately. The capture
+and enrichment limits above are bounds, not guarantees that an overloaded collector
+retains every record.
+
 The co-located `operational-budgets.test.ts` uses five warm-ups and 30 paired measured
 runs. On macOS with Node 24.19.0 and Vitest 5.0.4, one local isolated run measured:
 
@@ -471,6 +600,16 @@ Both workload increases were below `max(5 ms, 5% of baseline p95)`.
 These are in-process synthetic foundation measurements, not browser/device guarantees
 or collector/network benchmarks. Collector latency is excluded. Re-run the tests
 for the target environment; no sampling is used to conceal volume.
+
+On 2026-11-24, a second macOS / Node 24.19.0 / Vitest 5.0.4 run with
+`TELEMETRY_BUDGETS=1` passed all four budget tests: startup p95 was 1.397 ms off /
+1.795 ms on; the 100-attempt HTTP workload was 0.0112 ms off / 0.1486 ms on.
+The per-record test passed its 0.5 ms gate (it does not print an exact percentile).
+This was a shared developer environment, not an idle-machine rollout certification.
+The tests asserted 18 startup and 17 disposal metrics per instrumented host and
+3,500 HTTP records for 35 runs of 100 successful attempts. Failed-attempt volume,
+layered module workloads and privacy are checked separately in the owning integration
+suites; these foundation numbers alone do not measure all-module browser overhead.
 
 The default test run always checks record volume and per-record cost. The workload p95
 gates compare wall-clock time, so they only hold on a documented, otherwise idle

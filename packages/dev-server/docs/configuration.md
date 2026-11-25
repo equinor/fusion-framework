@@ -47,6 +47,10 @@ browser console; `log.level` controls terminal output.
 
 ## Send telemetry to an OTLP endpoint
 
+For an end-to-end, no-sign-in local workflow, see
+[Diagnose failed and slow operations with Aspire](../../../cookbooks/app-react-dev-server-telemetry/README.md).
+It covers the optional dashboard, controlled failure/delay fixtures, filtering and shutdown.
+
 Set `FUSION_DEV_SERVER_OTLP_ENDPOINT` in the environment of the process that starts the dev
 server. This works with `ffc app dev`, `createDevServer`, and `createDevServerConfig`; the app
 does not need to call `enableTelemetry` or register an exporter.
