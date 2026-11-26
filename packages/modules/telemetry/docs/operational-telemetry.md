@@ -20,7 +20,7 @@ suffix. Each failed measured boundary adds one matching `.failure` exception.
 
 | Module | Additional records and boundary | Ownership / exclusions |
 | --- | --- | --- |
-| `http` | `http.request` via `createHttpTelemetry` | One actual transport attempt, through response headers, not body consumption. Framework default clients are instrumented by the framework; custom clients opt in. |
+| `http` | `http.request` via `createHttpTelemetry` | One actual transport attempt, through response headers, not body consumption. Every client built by the framework host's HTTP module is instrumented, including configured named clients, unless its own `middlewareHandler` replaces the host middleware. App-owned and standalone clients opt in when not already instrumented. |
 | `service-discovery` | `service-discovery.resolve`; `fallback`, `cooldown`, `unknown-service`, `cache-hit` notifications | Discovery resolution is distinct from HTTP. Cache hits have no fabricated duration. Cache-hit diagnostics are debug level. |
 | `services` | `services.create-client` | Client creation, not each API call; transport/discovery own their records. |
 | `app` | `app.load-manifest`, `load-config`, `load-settings`, `update-settings`, `import`, `load`, `unload` | Stage outcomes and each initialize subscription; unload includes asynchronous teardown. Validated `appKey` / `appVersion` only. |
@@ -303,6 +303,11 @@ or cancellation contract; arbitrary application promises are not forcibly aborte
 
 Both integrations are optional and use lazy provider lookup. They do not wait for
 telemetry initialization or subscribe to business execution a second time.
+The framework host already instruments clients built by its HTTP module, including
+consumer-configured named clients. Do not add a second HTTP integration to those
+clients: it would duplicate duration and failure records. The manual HTTP example
+below is for an app-owned or standalone client without existing instrumentation,
+or a client whose replacement `middlewareHandler` bypasses the host middleware.
 
 ```ts
 import {

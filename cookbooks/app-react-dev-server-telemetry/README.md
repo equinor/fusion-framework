@@ -158,8 +158,12 @@ Operational measurements do not create spans, and the HTTP integration's log can
 `-` in that column even though the fetch instrumentation exported a request span.
 In that case use the app identity, timestamp, request span URL and duration in
 **Traces**. `hostId` groups a host lifecycle, not individual requests; temporal proximity
-is a diagnostic clue, not proof of parentage. Application-owned global tracer providers
-take precedence; their own exporter/context setup determines available request spans.
+is a diagnostic clue, not proof of parentage. An application-owned global tracer provider
+takes precedence only when registered **before** `enableDevServerTracing` runs.
+The SPA bootstrap enables development tracing before app startup; registering a
+provider later in app configuration does not redirect the already-bound fetch/XHR
+instrumentation to the app's exporter. When an earlier provider owns tracing, its
+own instrumentation, exporter and context setup determine available request spans.
 
 Fusion duration metrics appear in **Structured logs**, **not Metrics**. Standard
 development browser spans can include URL attributes; the operational record
@@ -212,7 +216,7 @@ can lose queued browser records. This is not durable storage.
 | Duration missing in Metrics | Look in Structured logs and keep Information visible; use `fusion.telemetry.value` with `fusion.diagnostic.unit: ms`. |
 | Old records or incomplete API results | Remove stale filters/check the time range; compare API `returnedCount` and `totalCount`. Clear/reproduce a small scenario rather than treating a page as full history. |
 | Data takes time or disappears under load | Logs/spans batch after about one second, up to 128 per batch and 2,048 queued; queues can drop records. HMR/reloads create new host IDs. |
-| No trace link or request spans | No active span means no log correlation. Check the separate Traces view and whether an app-owned tracer provider owns tracing. Not every operation has a span. |
+| No trace link or request spans | No active span means no log correlation. Check the separate Traces view. An app-owned global provider suppresses development tracing only if registered before the SPA's tracing setup; a later app provider does not redirect existing fetch/XHR spans. Not every operation has a span. |
 | Port conflict | Use the Compose port overrides below and change both the browser dashboard URL and `FUSION_DEV_SERVER_OTLP_ENDPOINT` accordingly. Do not stop unrelated containers. |
 
 ## Ports
