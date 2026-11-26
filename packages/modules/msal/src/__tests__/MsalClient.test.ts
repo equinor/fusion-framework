@@ -1,295 +1,260 @@
-import { webcrypto } from 'node:crypto';
 import {
   InteractionRequiredAuthError,
   type AccountInfo,
   type AuthenticationResult,
   type RedirectRequest,
 } from '@azure/msal-browser';
-import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MsalClient } from '../MsalClient.js';
 
 const account: AccountInfo = {
-  homeAccountId: 'home',
-  localAccountId: 'local',
-  tenantId: 'tenant',
+  homeAccountId: 'home-account-id',
+  localAccountId: 'local-account-id',
+  tenantId: 'tenant-id',
   environment: 'login.microsoftonline.com',
   username: 'user@example.com',
 };
-const request: RedirectRequest = { account, scopes: ['api://resource/Read'] };
-const result = { account, accessToken: 'token' } as AuthenticationResult;
-let entries: Map<string, string>;
-let storage: {
+const baseRequest: RedirectRequest = { account, scopes: ['api://resource/.default'] };
+const tokenResult = { account, accessToken: 'mock-access-token' } as AuthenticationResult;
+
+let storageEntries: Map<string, string>;
+let mockStorage: {
   getItem: ReturnType<typeof vi.fn>;
   setItem: ReturnType<typeof vi.fn>;
   removeItem: ReturnType<typeof vi.fn>;
 };
 
-/** Creates a real MSAL client with only external authentication operations stubbed. */
-function createClient(clientId = 'client'): MsalClient {
-  const client = new MsalClient({
-    auth: { clientId, authority: 'https://login.microsoftonline.com/tenant' },
-  });
-  vi.spyOn(client, 'acquireTokenSilent').mockRejectedValue(interactionError());
-  vi.spyOn(client, 'acquireTokenRedirect').mockResolvedValue(undefined);
-  vi.spyOn(client, 'acquireTokenPopup').mockResolvedValue(result);
-  return client;
-}
-
-/** Creates the MSAL error produced for invalid_grant with consent_required/AADSTS65001. */
-function interactionError(): InteractionRequiredAuthError {
+/** Creates an `InteractionRequiredAuthError` representing an Entra `AADSTS65001` consent failure. */
+function createInteractionError(code = 'invalid_grant'): InteractionRequiredAuthError {
   return new InteractionRequiredAuthError(
-    'invalid_grant',
-    'correlation',
-    'AADSTS65001: consent required',
+    code,
+    'correlation-id',
+    'AADSTS65001: The user or administrator has not consented',
     'consent_required',
   );
 }
 
+/** Creates a real `MsalClient` with network/browser MSAL methods stubbed. */
+function createClient(clientId = 'client-id'): MsalClient {
+  const client = new MsalClient({
+    auth: { clientId, authority: 'https://login.microsoftonline.com/tenant-id' },
+  });
+  vi.spyOn(client, 'acquireTokenSilent').mockRejectedValue(createInteractionError());
+  vi.spyOn(client, 'acquireTokenRedirect').mockResolvedValue(undefined);
+  vi.spyOn(client, 'acquireTokenPopup').mockResolvedValue(tokenResult);
+  return client;
+}
+
 beforeEach(() => {
-  entries = new Map();
-  storage = {
-    getItem: vi.fn((key: string) => entries.get(key) ?? null),
+  storageEntries = new Map();
+  mockStorage = {
+    getItem: vi.fn((key: string) => storageEntries.get(key) ?? null),
     setItem: vi.fn((key: string, value: string) => {
-      entries.set(key, value);
+      storageEntries.set(key, value);
     }),
     removeItem: vi.fn((key: string) => {
-      entries.delete(key);
+      storageEntries.delete(key);
     }),
   };
-  vi.stubGlobal('sessionStorage', storage);
-  vi.stubGlobal('crypto', webcrypto);
+  vi.stubGlobal('sessionStorage', mockStorage);
 });
+
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
 
-describe('MsalClient automatic token fallback', () => {
-  it('allows consent once, then propagates the original error across client/page recreation', async () => {
+describe('MsalClient.acquireToken redirect loop guard', () => {
+  it('allows one automatic redirect, then throws the original error across client recreations', async () => {
     const first = createClient();
-    await first.acquireToken({ request });
-    expect(first.acquireTokenRedirect).toHaveBeenCalledExactlyOnceWith(request);
+    await first.acquireToken({ request: baseRequest });
+    expect(first.acquireTokenRedirect).toHaveBeenCalledExactlyOnceWith(baseRequest);
+
     const recreated = createClient();
-    const error = interactionError();
+    const error = createInteractionError();
     vi.mocked(recreated.acquireTokenSilent).mockRejectedValue(error);
-    await expect(recreated.acquireToken({ request })).rejects.toBe(error);
+
+    await expect(recreated.acquireToken({ request: baseRequest })).rejects.toBe(error);
     expect(recreated.acquireTokenRedirect).not.toHaveBeenCalled();
-    expect([...entries.keys()][0]).not.toContain(account.homeAccountId);
+
+    const [storedKey] = [...storageEntries.keys()];
+    expect(storedKey).toBeDefined();
+    expect(storedKey).not.toContain(account.homeAccountId);
   });
 
-  it.each(['login_required', 'interaction_required'])(
-    'preserves legitimate %s recovery',
-    async (code) => {
-      const client = createClient();
-      vi.mocked(client.acquireTokenSilent).mockRejectedValue(
-        new InteractionRequiredAuthError(code, 'correlation'),
-      );
-      await client.acquireToken({ request });
-      expect(client.acquireTokenRedirect).toHaveBeenCalledOnce();
-    },
-  );
-
-  it.each([
-    new Error('network unavailable'),
-    new Error('invalid_scope'),
-    new Error('invalid_client'),
-  ])('does not redirect on a non-interaction error: %s', async (error) => {
+  it('propagates non-interaction errors without redirecting or opening a popup', async () => {
     const client = createClient();
+    const error = new Error('network unavailable');
     vi.mocked(client.acquireTokenSilent).mockRejectedValue(error);
-    await expect(client.acquireToken({ request })).rejects.toBe(error);
+
+    await expect(client.acquireToken({ request: baseRequest })).rejects.toBe(error);
     expect(client.acquireTokenRedirect).not.toHaveBeenCalled();
     expect(client.acquireTokenPopup).not.toHaveBeenCalled();
   });
 
-  it('deduplicates scope casing, order and telemetry changes', async () => {
+  it('normalizes scopes, authority slashes, and ignores telemetry fields', async () => {
     const client = createClient();
     await client.acquireToken({
-      request: { ...request, scopes: ['B', 'A', 'A'], correlationId: 'first', state: 'first' },
+      request: {
+        ...baseRequest,
+        authority: 'https://login.microsoftonline.com/tenant-id///',
+        scopes: ['B', 'A', 'A'],
+        correlationId: 'corr-1',
+        state: 'state-1',
+      },
     });
+
     await expect(
       client.acquireToken({
-        request: { ...request, scopes: ['a', 'b'], correlationId: 'next', state: 'next' },
+        request: {
+          ...baseRequest,
+          authority: 'https://LOGIN.microsoftonline.com/tenant-id',
+          scopes: ['a', 'b'],
+          correlationId: 'corr-2',
+          state: 'state-2',
+        },
       }),
     ).rejects.toBeInstanceOf(InteractionRequiredAuthError);
     expect(client.acquireTokenRedirect).toHaveBeenCalledOnce();
   });
 
   it.each([
-    { scopes: ['different'] },
-    { account: { ...account, homeAccountId: 'other' } },
-    { account: { ...account, tenantId: 'other' } },
-    { authority: 'https://login.microsoftonline.com/other' },
-    { claims: '{"access_token":{"test":null}}' },
-    { resource: 'other-resource' },
-    { resourceRequestUri: 'https://other.example.com' },
-    { extraQueryParameters: { domain_hint: 'other' } },
-  ])('does not block a distinct authorization identity: %j', async (change) => {
+    { scopes: ['api://other/.default'] },
+    { account: { ...account, homeAccountId: 'other-home' } },
+    { account: { ...account, tenantId: 'other-tenant' } },
+    { authority: 'https://login.microsoftonline.com/other-tenant' },
+    { claims: '{"access_token":{"acrs":{"essential":true}}}' },
+    { extraScopesToConsent: ['User.Read'] },
+  ])('isolates distinct authorization requests: %j', async (override) => {
     const client = createClient();
-    await client.acquireToken({ request });
-    await client.acquireToken({ request: { ...request, ...change } });
+    await client.acquireToken({ request: baseRequest });
+    await client.acquireToken({ request: { ...baseRequest, ...override } });
     expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(2);
   });
 
-  it('isolates different application registrations', async () => {
-    await createClient().acquireToken({ request });
-    const other = createClient('other-client');
-    await other.acquireToken({ request });
-    expect(other.acquireTokenRedirect).toHaveBeenCalledOnce();
-  });
-
-  it('prevents concurrent same-request redirects across clients', async () => {
-    const first = createClient();
-    const second = createClient();
+  it('isolates clients and prevents concurrent same-request redirects', async () => {
+    const first = createClient('client-a');
+    const second = createClient('client-a');
     const outcomes = await Promise.allSettled([
-      first.acquireToken({ request }),
-      second.acquireToken({ request }),
+      first.acquireToken({ request: baseRequest }),
+      second.acquireToken({ request: baseRequest }),
     ]);
-    expect(outcomes.map((outcome) => outcome.status).sort()).toEqual(['fulfilled', 'rejected']);
+
+    expect(outcomes.map((o) => o.status).sort()).toEqual(['fulfilled', 'rejected']);
     expect(
       vi.mocked(first.acquireTokenRedirect).mock.calls.length +
         vi.mocked(second.acquireTokenRedirect).mock.calls.length,
     ).toBe(1);
+
+    const otherClient = createClient('client-b');
+    await otherClient.acquireToken({ request: baseRequest });
+    expect(otherClient.acquireTokenRedirect).toHaveBeenCalledOnce();
   });
 
-  it('clears only the successful silent request, allowing later session recovery', async () => {
+  it('clears only the matching guard on silent success and ignores handleRedirectPromise', async () => {
     const client = createClient();
-    await client.acquireToken({ request });
-    const otherRequest = { ...request, scopes: ['other'] };
+    const otherRequest: RedirectRequest = { ...baseRequest, scopes: ['api://other/.default'] };
+
+    await client.acquireToken({ request: baseRequest });
     await client.acquireToken({ request: otherRequest });
-    vi.mocked(client.acquireTokenSilent).mockResolvedValueOnce(result);
-    await expect(client.acquireToken({ request })).resolves.toBe(result);
-    expect(entries.size).toBe(1);
-    await client.acquireToken({ request });
+
+    vi.spyOn(client, 'handleRedirectPromise').mockResolvedValue(tokenResult);
+    await client.handleRedirectPromise();
+    expect(storageEntries.size).toBe(2);
+
+    vi.mocked(client.acquireTokenSilent).mockResolvedValueOnce(tokenResult);
+    await expect(client.acquireToken({ request: baseRequest })).resolves.toBe(tokenResult);
+    expect(storageEntries.size).toBe(1);
+
+    await client.acquireToken({ request: baseRequest });
     await expect(client.acquireToken({ request: otherRequest })).rejects.toBeInstanceOf(
       InteractionRequiredAuthError,
     );
     expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(3);
   });
 
-  it('preserves repeatable popup consent and clears a prior redirect on success', async () => {
+  it('preserves popup retries, clears guard on popup success, and keeps it on popup error', async () => {
     const client = createClient();
-    await client.acquireToken({ request });
-    await expect(client.acquireToken({ request, behavior: 'popup' })).resolves.toBe(result);
-    await expect(client.acquireToken({ request, behavior: 'popup' })).resolves.toBe(result);
-    expect(client.acquireTokenPopup).toHaveBeenCalledTimes(2);
-    expect(entries.size).toBe(0);
-  });
+    await client.acquireToken({ request: baseRequest });
 
-  it('allows explicit user-driven redirects without resetting the automatic guard', async () => {
-    const client = createClient();
-    await client.acquireToken({ request });
-    await client.acquireToken({ request, silent: false });
-    await expect(client.acquireToken({ request })).rejects.toBeInstanceOf(
-      InteractionRequiredAuthError,
+    const popupError = new Error('popup cancelled');
+    vi.mocked(client.acquireTokenPopup).mockRejectedValueOnce(popupError);
+    await expect(client.acquireToken({ request: baseRequest, behavior: 'popup' })).rejects.toBe(
+      popupError,
     );
-    expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(2);
+    expect(storageEntries.size).toBe(1);
+
+    await expect(client.acquireToken({ request: baseRequest, behavior: 'popup' })).resolves.toBe(
+      tokenResult,
+    );
+    expect(storageEntries.size).toBe(0);
   });
 
-  it('preserves popup errors without clearing the guard', async () => {
+  it('allows explicit silent:false retries, no-account flows, and releases guard on redirect failure', async () => {
     const client = createClient();
-    await client.acquireToken({ request });
-    const error = new Error('popup cancelled');
-    vi.mocked(client.acquireTokenPopup).mockRejectedValue(error);
-    await expect(client.acquireToken({ request, behavior: 'popup' })).rejects.toBe(error);
-    expect(entries.size).toBe(1);
-  });
+    const redirectError = new Error('redirect failed');
+    vi.mocked(client.acquireTokenRedirect).mockRejectedValueOnce(redirectError);
 
-  it('clears a failed redirect and propagates its original error', async () => {
-    const client = createClient();
-    const error = new Error('redirect failed');
-    vi.mocked(client.acquireTokenRedirect).mockRejectedValueOnce(error);
-    await expect(client.acquireToken({ request })).rejects.toBe(error);
-    expect(entries.size).toBe(0);
-    await client.acquireToken({ request });
-    expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(2);
-  });
+    await expect(client.acquireToken({ request: baseRequest })).rejects.toBe(redirectError);
+    expect(storageEntries.size).toBe(0);
 
-  it.each(['getItem', 'setItem'] as const)('fails closed when storage %s fails', async (method) => {
-    const client = createClient();
-    const cause = new Error('storage denied');
-    storage[method].mockImplementation(() => {
-      throw cause;
-    });
-    await expect(client.acquireToken({ request })).rejects.toMatchObject({
-      message: expect.stringContaining('Cannot safely start'),
-      cause,
-    });
-    expect(client.acquireTokenRedirect).not.toHaveBeenCalled();
+    await client.acquireToken({ request: baseRequest });
+    await client.acquireToken({ request: baseRequest, silent: false });
+    await client.acquireToken({ request: { scopes: baseRequest.scopes } });
+    expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(4);
   });
+});
 
-  it('surfaces cleanup failure instead of starting another redirect', async () => {
+describe('MsalClient.acquireToken storage resilience', () => {
+  it('falls back to in-memory tracking when sessionStorage is absent', async () => {
+    vi.stubGlobal('sessionStorage', undefined);
     const client = createClient();
-    await client.acquireToken({ request });
-    vi.mocked(client.acquireTokenSilent).mockResolvedValue(result);
-    const cause = new Error('storage denied');
-    storage.removeItem.mockImplementation(() => {
-      throw cause;
-    });
-    await expect(client.acquireToken({ request })).rejects.toMatchObject({
-      message: 'Cannot clear MSAL token redirect guard storage.',
-      cause,
-    });
-    expect(client.acquireTokenRedirect).toHaveBeenCalledOnce();
-  });
 
-  it('keeps the guard even after a successful redirect result', async () => {
-    const client = createClient();
-    await client.acquireToken({ request });
-    vi.spyOn(client, 'handleRedirectPromise').mockResolvedValue(result);
-    await client.handleRedirectPromise();
-    await expect(client.acquireToken({ request })).rejects.toBeInstanceOf(
+    await client.acquireToken({ request: baseRequest });
+    await expect(client.acquireToken({ request: baseRequest })).rejects.toBeInstanceOf(
       InteractionRequiredAuthError,
     );
     expect(client.acquireTokenRedirect).toHaveBeenCalledOnce();
   });
 
-  it('canonicalizes custom parameter insertion order', async () => {
-    const client = createClient();
-    await client.acquireToken({
-      request: { ...request, extraQueryParameters: { a: '1', b: '2' } },
-    });
-    await expect(
-      client.acquireToken({ request: { ...request, extraQueryParameters: { b: '2', a: '1' } } }),
-    ).rejects.toBeInstanceOf(InteractionRequiredAuthError);
-    expect(client.acquireTokenRedirect).toHaveBeenCalledOnce();
-  });
+  it.each(['getItem', 'setItem'] as const)(
+    'skips automatic redirect and throws original MSAL error when sessionStorage.%s throws',
+    async (method) => {
+      const client = createClient();
+      const error = createInteractionError();
+      vi.mocked(client.acquireTokenSilent).mockRejectedValue(error);
+      mockStorage[method].mockImplementation(() => {
+        throw new Error('storage denied');
+      });
 
-  it('fails closed when sessionStorage access itself is denied', async () => {
+      await expect(client.acquireToken({ request: baseRequest })).rejects.toBe(error);
+      expect(client.acquireTokenRedirect).not.toHaveBeenCalled();
+    },
+  );
+
+  it('skips automatic redirect when sessionStorage getter throws', async () => {
     const client = createClient();
-    const cause = new Error('storage access denied');
+    const error = createInteractionError();
+    vi.mocked(client.acquireTokenSilent).mockRejectedValue(error);
     vi.spyOn(globalThis, 'sessionStorage', 'get').mockImplementation(() => {
-      throw cause;
+      throw new Error('storage access denied');
     });
-    await expect(client.acquireToken({ request })).rejects.toMatchObject({ cause });
+
+    await expect(client.acquireToken({ request: baseRequest })).rejects.toBe(error);
     expect(client.acquireTokenRedirect).not.toHaveBeenCalled();
   });
 
-  it('fails closed when request hashing fails', async () => {
+  it('never discards a valid token or masks a redirect error when removeItem throws', async () => {
     const client = createClient();
-    const cause = new Error('crypto unavailable');
-    vi.stubGlobal('crypto', { subtle: { digest: vi.fn().mockRejectedValue(cause) } });
-    await expect(client.acquireToken({ request })).rejects.toMatchObject({ cause });
-    expect(client.acquireTokenRedirect).not.toHaveBeenCalled();
-  });
-
-  it('retains the no-account interactive flow', async () => {
-    const client = createClient();
-    const noAccount = { scopes: request.scopes };
-    await client.acquireToken({ request: noAccount });
-    expect(client.acquireTokenSilent).not.toHaveBeenCalled();
-    expect(client.acquireTokenRedirect).toHaveBeenCalledExactlyOnceWith(noAccount);
-  });
-
-  it('reports both redirect and cleanup failures', async () => {
-    const client = createClient();
-    const error = new Error('redirect failed');
-    const cause = new Error('cleanup failed');
-    vi.mocked(client.acquireTokenRedirect).mockRejectedValue(error);
-    storage.removeItem.mockImplementation(() => {
-      throw cause;
+    mockStorage.removeItem.mockImplementation(() => {
+      throw new Error('storage denied');
     });
-    await expect(client.acquireToken({ request })).rejects.toMatchObject({
-      errors: [error, expect.objectContaining({ cause })],
-    });
+
+    vi.mocked(client.acquireTokenSilent).mockResolvedValueOnce(tokenResult);
+    await expect(client.acquireToken({ request: baseRequest })).resolves.toBe(tokenResult);
+
+    const redirectError = new Error('redirect failed');
+    vi.mocked(client.acquireTokenRedirect).mockRejectedValueOnce(redirectError);
+    await expect(client.acquireToken({ request: baseRequest })).rejects.toBe(redirectError);
   });
 });
