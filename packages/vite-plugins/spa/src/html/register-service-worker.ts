@@ -1,6 +1,13 @@
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { IMeasurement } from '@equinor/fusion-framework-module-telemetry';
 import { TelemetryLevel, type TelemetryModule } from '@equinor/fusion-framework-module-telemetry';
+import { runWithCompatibilityScope } from './webkit/run-with-compatibility-scope.js';
+
+type MeasurementScopeRunner = (
+  measurement: IMeasurement,
+  run: () => Promise<void>,
+) => Promise<void>;
 
 /**
  * Registers the Fusion SPA service worker and wires token acquisition.
@@ -20,6 +27,7 @@ import { TelemetryLevel, type TelemetryModule } from '@equinor/fusion-framework-
  * @param framework - An initialized Fusion Framework instance that
  *   includes the {@link MsalModule} (for token acquisition) and
  *   {@link TelemetryModule} (for structured logging).
+ * @returns A promise that resolves when service-worker registration finishes.
  * @throws {Error} When service workers are not supported by the browser.
  * @throws {Error} When the `FUSION_SPA_SERVICE_WORKER_RESOURCES`
  *   environment variable is not defined.
@@ -32,9 +40,36 @@ import { TelemetryLevel, type TelemetryModule } from '@equinor/fusion-framework-
  * await registerServiceWorker(framework);
  * ```
  */
+export function registerServiceWorker(
+  framework: ModulesInstance<[MsalModule, TelemetryModule]>,
+): Promise<void>;
+
+/**
+ * Registers the service worker using the runtime's measurement-scope implementation.
+ *
+ * @internal
+ * @param framework - An initialized Framework instance with MSAL and telemetry modules.
+ * @param runWithMeasurement - Measurement scope runner used by the selected bootstrap path.
+ * @returns A promise that resolves when service-worker registration finishes.
+ */
+export function registerServiceWorker(
+  framework: ModulesInstance<[MsalModule, TelemetryModule]>,
+  runWithMeasurement: MeasurementScopeRunner,
+): Promise<void>;
+
+/**
+ * Registers the service worker with a selected measurement-scope runner.
+ *
+ * @internal
+ * @param framework - An initialized Framework instance with MSAL and telemetry modules.
+ * @param runWithMeasurement - Measurement scope runner used by the selected bootstrap path.
+ * @returns A promise that resolves when service-worker registration finishes.
+ * @throws {Error} When service workers are unsupported or their resource configuration is missing.
+ */
 export async function registerServiceWorker(
   framework: ModulesInstance<[MsalModule, TelemetryModule]>,
-) {
+  runWithMeasurement: MeasurementScopeRunner = runWithCompatibilityScope,
+): Promise<void> {
   const telemetry = framework.telemetry;
   // Bail out early when the browser has no service worker support at all
   if ('serviceWorker' in navigator === false) {
@@ -119,12 +154,11 @@ export async function registerServiceWorker(
     // register the service worker with telemetry
     // updateViaCache: 'none' ensures the service worker script is always fetched fresh
     // This is important during development to pick up code changes
-    // Avoid `using` declarations because Safari/WebKit lacks both `using` syntax and `Symbol.dispose`.
     const measurement = telemetry.measure({
       name: 'registerServiceWorker',
       level: TelemetryLevel.Information,
     });
-    try {
+    await runWithMeasurement(measurement, async () => {
       const registration = await measurement.clone().resolve(
         navigator.serviceWorker.register('/@fusion-spa-sw.js', {
           type: 'module',
@@ -226,13 +260,7 @@ export async function registerServiceWorker(
       ) {
         sendConfigToServiceWorker(navigator.serviceWorker.controller);
       }
-    } finally {
-      try {
-        measurement.measure();
-      } catch {
-        // Telemetry cleanup must not mask registration failures or break teardown.
-      }
-    }
+    });
   } catch (error) {
     telemetry.trackException({
       name: `registerServiceWorker.${(error as Error).name}`,

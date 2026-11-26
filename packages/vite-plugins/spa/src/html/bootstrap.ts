@@ -12,14 +12,20 @@ import {
   TelemetryLevel,
   type TelemetryModule,
 } from '@equinor/fusion-framework-module-telemetry';
+import type { IMeasurement } from '@equinor/fusion-framework-module-telemetry';
 import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
 
 import { acquireMockServerToken } from './acquire-mock-server-token.js';
 import { createPortalEntryPoint } from './create-portal-entry-point.js';
 import { isEnabledEnvValue } from './is-enabled-env-value.js';
-import { registerServiceWorker } from './register-service-worker.js';
 
 import { version } from '../version.js';
+
+type RegisterServiceWorker = typeof import('./register-service-worker.js').registerServiceWorker;
+type MeasurementScopeRunner = (
+  measurement: IMeasurement,
+  run: () => Promise<void>,
+) => Promise<void>;
 
 // TODO(#5065): add type for portal manifest when available
 type PortalManifest = {
@@ -33,7 +39,7 @@ type PortalManifest = {
 // Allow dynamic import without vite
 const importWithoutVite = <T>(path: string): Promise<T> => import(/* @vite-ignore */ path);
 
-// Create Fusion Framework configurator
+// Create the Fusion Framework configurator
 const configurator = new ModulesConfigurator();
 
 const serviceDiscoveryUrl = new URL(
@@ -138,7 +144,17 @@ enableTelemetry(configurator, {
   },
 });
 
-(async () => {
+/**
+ * Initializes the configured SPA and completes its bootstrap measurement.
+ *
+ * @param registerServiceWorker - Service-worker registration implementation for the runtime.
+ * @param runWithMeasurement - Runs bootstrap work while the root measurement is active.
+ * @returns A promise that resolves when the bootstrap work finishes.
+ */
+export async function bootstrap(
+  registerServiceWorker: RegisterServiceWorker,
+  runWithMeasurement: MeasurementScopeRunner,
+): Promise<void> {
   // initialize the framework - this will create the framework instance and configure the modules
   const ref =
     await configurator.initialize<
@@ -147,13 +163,12 @@ enableTelemetry(configurator, {
 
   const telemetry = ref.telemetry;
 
-  // Avoid `using` declarations because Safari/WebKit lacks both `using` syntax and `Symbol.dispose`.
   const measurement = telemetry.measure({
     name: 'bootstrap',
     level: TelemetryLevel.Information,
   });
 
-  try {
+  await runWithMeasurement(measurement, async () => {
     await measurement.clone().resolve(registerServiceWorker(ref), {
       data: {
         level: TelemetryLevel.Debug,
@@ -229,11 +244,5 @@ enableTelemetry(configurator, {
 
     // render the portal - this will load the portal template and render it
     render(el, { ref, manifest: portal_manifest, config: portal_config });
-  } finally {
-    try {
-      measurement.measure();
-    } catch {
-      // Telemetry cleanup must not mask bootstrap failures or break teardown.
-    }
-  }
-})();
+  });
+}
