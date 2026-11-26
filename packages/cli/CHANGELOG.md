@@ -1,5 +1,13 @@
 # Change Log
 
+## 15.8.2
+
+### Patch Changes
+
+- bcbb145: Internal: require `simple-git` 4.1.0 or newer for safer command handling.
+- @equinor/fusion-framework-dev-server@2.3.6
+  - @equinor/fusion-framework-dev-portal@11.1.13
+
 ## 15.8.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.36
+
+### Patch Changes
+
+- 1fddfcc: Document operational telemetry coverage, safe fields, filtering, routing and measured foundation budgets. Link the app-development and dev-server guides to an Aspire troubleshooting workflow with explicit correlation and privacy limits.
+  
+  Refs: #5807, #5808.
+
 ## 0.4.35
 
 ### Patch Changes

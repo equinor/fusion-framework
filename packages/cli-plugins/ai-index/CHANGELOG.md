@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cli-plugin-ai-index
 
+## 3.0.20
+
+### Patch Changes
+
+- bcbb145: Internal: require `simple-git` 4.1.0 or newer for safer command handling.
+
 ## 3.0.19
 
 ### Patch Changes

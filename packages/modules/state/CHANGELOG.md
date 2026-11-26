@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-state
 
+## 2.1.2
+
+### Patch Changes
+
+- 7226074: Resolve replicated app-state conflicts by preserving the winning revision, removing losing leaves, and tombstoning every live leaf during deletion. Fixes #6093.
+
 ## 2.1.1
 
 ### Patch Changes
