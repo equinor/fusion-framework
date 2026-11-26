@@ -121,7 +121,7 @@
     "ora": "^10.0.0",
     "read-package-up": "^12.0.0",
     "semver": "^7.7.4",
-    "simple-git": "^4.0.1",
+    "simple-git": "^4.1.0",
     "vite": "^8.0.0",
     "vite-tsconfig-paths": "^6.0.4",
     "zod": "^4.4.3"
