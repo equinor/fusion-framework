@@ -28,8 +28,8 @@ instead of redirecting again.
 - **Manual recovery:** once configuration is fixed, a user-triggered retry via
   `acquireToken({ request, silent: false })` or `behavior: 'popup'` bypasses the automatic redirect
   guard. Do not call `silent: false` from an automatic retry loop.
-- **Reset behavior:** the guard clears automatically once silent or popup acquisition succeeds for
-  that request, or when the browser tab is closed.
+- **Reset behavior:** the guard clears automatically once silent, popup, or redirect token
+  acquisition succeeds for that request, or when the browser tab is closed.
 
 ## Getting Help
 

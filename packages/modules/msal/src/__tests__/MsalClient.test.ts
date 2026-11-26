@@ -1,11 +1,14 @@
 import {
+  CacheLookupPolicy,
   InteractionRequiredAuthError,
+  PublicClientApplication,
   type AccountInfo,
   type AuthenticationResult,
   type RedirectRequest,
+  type SilentRequest,
 } from '@azure/msal-browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { MsalClient } from '../MsalClient.js';
+import { MsalClient, type MsalClientConfig } from '../MsalClient.js';
 
 const account: AccountInfo = {
   homeAccountId: 'home-account-id',
@@ -24,6 +27,11 @@ let mockStorage: {
   removeItem: ReturnType<typeof vi.fn>;
 };
 
+/** Returns stored guard reservation keys (excluding the pending correlation pointer). */
+function guardKeys(): string[] {
+  return [...storageEntries.keys()].filter((key) => key.startsWith('fusion.msal.token-redirect.'));
+}
+
 /** Creates an `InteractionRequiredAuthError` representing an Entra `AADSTS65001` consent failure. */
 function createInteractionError(code = 'invalid_grant'): InteractionRequiredAuthError {
   return new InteractionRequiredAuthError(
@@ -35,9 +43,13 @@ function createInteractionError(code = 'invalid_grant'): InteractionRequiredAuth
 }
 
 /** Creates a real `MsalClient` with network/browser MSAL methods stubbed. */
-function createClient(clientId = 'client-id'): MsalClient {
+function createClient(
+  clientId = 'client-id',
+  overrides?: Partial<Omit<MsalClientConfig, 'auth'>>,
+): MsalClient {
   const client = new MsalClient({
     auth: { clientId, authority: 'https://login.microsoftonline.com/tenant-id' },
+    ...overrides,
   });
   vi.spyOn(client, 'acquireTokenSilent').mockRejectedValue(createInteractionError());
   vi.spyOn(client, 'acquireTokenRedirect').mockResolvedValue(undefined);
@@ -68,18 +80,42 @@ describe('MsalClient.acquireToken redirect loop guard', () => {
   it('allows one automatic redirect, then throws the original error across client recreations', async () => {
     const first = createClient();
     await first.acquireToken({ request: baseRequest });
-    expect(first.acquireTokenRedirect).toHaveBeenCalledExactlyOnceWith(baseRequest);
+    expect(first.acquireTokenRedirect).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ ...baseRequest, correlationId: expect.any(String) }),
+    );
+    expect(baseRequest.correlationId).toBeUndefined();
 
     const recreated = createClient();
     const error = createInteractionError();
+    const errorLog = vi.spyOn(recreated.getLogger(), 'error');
     vi.mocked(recreated.acquireTokenSilent).mockRejectedValue(error);
 
     await expect(recreated.acquireToken({ request: baseRequest })).rejects.toBe(error);
     expect(recreated.acquireTokenRedirect).not.toHaveBeenCalled();
+    expect(errorLog).toHaveBeenCalledWith(
+      expect.stringContaining('Automatic token redirect already attempted'),
+      expect.any(String),
+    );
 
-    const [storedKey] = [...storageEntries.keys()];
+    const [storedKey] = guardKeys();
     expect(storedKey).toBeDefined();
     expect(storedKey).not.toContain(account.homeAccountId);
+  });
+
+  it('guards automatic no-account requests (silent: true) while preserving explicit silent: false', async () => {
+    const noAccountRequest: RedirectRequest = { scopes: ['api://resource/.default'] };
+    const first = createClient();
+    await first.acquireToken({ request: noAccountRequest, silent: true });
+    expect(first.acquireTokenRedirect).toHaveBeenCalledOnce();
+
+    const recreated = createClient();
+    await expect(
+      recreated.acquireToken({ request: noAccountRequest, silent: true }),
+    ).rejects.toBeInstanceOf(InteractionRequiredAuthError);
+    expect(recreated.acquireTokenRedirect).not.toHaveBeenCalled();
+
+    await recreated.acquireToken({ request: noAccountRequest, silent: false });
+    expect(recreated.acquireTokenRedirect).toHaveBeenCalledOnce();
   });
 
   it('propagates non-interaction errors without redirecting or opening a popup', async () => {
@@ -132,9 +168,13 @@ describe('MsalClient.acquireToken redirect loop guard', () => {
     expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(2);
   });
 
-  it('isolates clients and prevents concurrent same-request redirects', async () => {
+  it('isolates clients and logs concurrent same-request duplicates below error level', async () => {
     const first = createClient('client-a');
     const second = createClient('client-a');
+    const firstErrorLog = vi.spyOn(first.getLogger(), 'error');
+    const secondErrorLog = vi.spyOn(second.getLogger(), 'error');
+    const secondWarnLog = vi.spyOn(second.getLogger(), 'warning');
+
     const outcomes = await Promise.allSettled([
       first.acquireToken({ request: baseRequest }),
       second.acquireToken({ request: baseRequest }),
@@ -145,32 +185,102 @@ describe('MsalClient.acquireToken redirect loop guard', () => {
       vi.mocked(first.acquireTokenRedirect).mock.calls.length +
         vi.mocked(second.acquireTokenRedirect).mock.calls.length,
     ).toBe(1);
+    expect(firstErrorLog).not.toHaveBeenCalled();
+    expect(secondErrorLog).not.toHaveBeenCalled();
+    expect(secondWarnLog).toHaveBeenCalledWith(
+      expect.stringContaining('already in progress'),
+      expect.any(String),
+    );
 
     const otherClient = createClient('client-b');
     await otherClient.acquireToken({ request: baseRequest });
     expect(otherClient.acquireTokenRedirect).toHaveBeenCalledOnce();
   });
 
-  it('clears only the matching guard on silent success and ignores handleRedirectPromise', async () => {
+  it('isolates forceRefresh and cacheLookupPolicy reservations from ordinary cached silent hits', async () => {
+    const client = createClient('client-id', {
+      cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken,
+    });
+    const forceRefreshRequest = { ...baseRequest, forceRefresh: true } as RedirectRequest &
+      SilentRequest;
+    const refreshOnlyRequest = {
+      ...baseRequest,
+      cacheLookupPolicy: CacheLookupPolicy.RefreshToken,
+    } as RedirectRequest & SilentRequest;
+
+    await client.acquireToken({ request: forceRefreshRequest });
+    await client.acquireToken({ request: refreshOnlyRequest });
+    expect(guardKeys()).toHaveLength(2);
+
+    // Ordinary cached hit uses default policy and must not clear refresh-only reservations.
+    vi.mocked(client.acquireTokenSilent).mockResolvedValueOnce(tokenResult);
+    await expect(client.acquireToken({ request: baseRequest })).resolves.toBe(tokenResult);
+    expect(guardKeys()).toHaveLength(2);
+
+    await expect(client.acquireToken({ request: forceRefreshRequest })).rejects.toBeInstanceOf(
+      InteractionRequiredAuthError,
+    );
+    await expect(client.acquireToken({ request: refreshOnlyRequest })).rejects.toBeInstanceOf(
+      InteractionRequiredAuthError,
+    );
+    expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(2);
+  });
+
+  it('clears only the matching guard on silent success and correlated handleRedirectPromise token', async () => {
     const client = createClient();
     const otherRequest: RedirectRequest = { ...baseRequest, scopes: ['api://other/.default'] };
 
     await client.acquireToken({ request: baseRequest });
     await client.acquireToken({ request: otherRequest });
+    const otherCorrelationId = vi.mocked(client.acquireTokenRedirect).mock.calls[1][0]
+      .correlationId as string;
+    expect(guardKeys()).toHaveLength(2);
 
-    vi.spyOn(client, 'handleRedirectPromise').mockResolvedValue(tokenResult);
+    // Null, empty-token, error, and unrelated login responses must retain both guards.
+    const superHandleRedirect = vi.spyOn(
+      PublicClientApplication.prototype,
+      'handleRedirectPromise',
+    );
+    superHandleRedirect.mockResolvedValueOnce(null);
+    await expect(client.handleRedirectPromise()).resolves.toBeNull();
+    superHandleRedirect.mockResolvedValueOnce({
+      ...tokenResult,
+      accessToken: '',
+      correlationId: otherCorrelationId,
+    });
     await client.handleRedirectPromise();
-    expect(storageEntries.size).toBe(2);
-
-    vi.mocked(client.acquireTokenSilent).mockResolvedValueOnce(tokenResult);
-    await expect(client.acquireToken({ request: baseRequest })).resolves.toBe(tokenResult);
-    expect(storageEntries.size).toBe(1);
-
-    await client.acquireToken({ request: baseRequest });
-    await expect(client.acquireToken({ request: otherRequest })).rejects.toBeInstanceOf(
+    superHandleRedirect.mockResolvedValueOnce({
+      ...tokenResult,
+      correlationId: 'unrelated-login-correlation-id',
+    });
+    await client.handleRedirectPromise();
+    superHandleRedirect.mockRejectedValueOnce(createInteractionError());
+    await expect(client.handleRedirectPromise()).rejects.toBeInstanceOf(
       InteractionRequiredAuthError,
     );
+    expect(guardKeys()).toHaveLength(2);
+
+    // Correlated redirect token clears only otherRequest, keeping baseRequest guarded.
+    superHandleRedirect.mockResolvedValueOnce({
+      ...tokenResult,
+      correlationId: otherCorrelationId,
+    });
+    await expect(client.handleRedirectPromise()).resolves.toMatchObject({
+      accessToken: tokenResult.accessToken,
+      correlationId: otherCorrelationId,
+    });
+    expect(guardKeys()).toHaveLength(1);
+
+    await expect(client.acquireToken({ request: baseRequest })).rejects.toBeInstanceOf(
+      InteractionRequiredAuthError,
+    );
+    await client.acquireToken({ request: otherRequest });
     expect(client.acquireTokenRedirect).toHaveBeenCalledTimes(3);
+
+    // Silent success clears baseRequest cleanly.
+    vi.mocked(client.acquireTokenSilent).mockResolvedValueOnce(tokenResult);
+    await expect(client.acquireToken({ request: baseRequest })).resolves.toBe(tokenResult);
+    expect(guardKeys()).toHaveLength(1);
   });
 
   it('preserves popup retries, clears guard on popup success, and keeps it on popup error', async () => {
@@ -182,15 +292,15 @@ describe('MsalClient.acquireToken redirect loop guard', () => {
     await expect(client.acquireToken({ request: baseRequest, behavior: 'popup' })).rejects.toBe(
       popupError,
     );
-    expect(storageEntries.size).toBe(1);
+    expect(guardKeys()).toHaveLength(1);
 
     await expect(client.acquireToken({ request: baseRequest, behavior: 'popup' })).resolves.toBe(
       tokenResult,
     );
-    expect(storageEntries.size).toBe(0);
+    expect(guardKeys()).toHaveLength(0);
   });
 
-  it('allows explicit silent:false retries, no-account flows, and releases guard on redirect failure', async () => {
+  it('allows explicit silent:false retries, direct no-account calls, and releases guard on redirect failure', async () => {
     const client = createClient();
     const redirectError = new Error('redirect failed');
     vi.mocked(client.acquireTokenRedirect).mockRejectedValueOnce(redirectError);

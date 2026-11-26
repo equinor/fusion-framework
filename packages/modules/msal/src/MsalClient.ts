@@ -1,7 +1,9 @@
 import {
   PublicClientApplication,
   InteractionRequiredAuthError,
+  type AuthenticationResult,
   type CacheLookupPolicy,
+  type HandleRedirectPromiseOptions,
   type SilentRequest,
   type Configuration,
   type EndSessionRequest,
@@ -102,7 +104,26 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     this.#tokenRedirectGuard = new TokenRedirectGuard(
       config.auth.clientId,
       this.getConfiguration().auth.authority,
+      config.cacheLookupPolicy,
     );
+  }
+
+  /**
+   * Handles the redirect response from Microsoft Entra ID and clears the matching
+   * automatic redirect guard entry when a guarded token redirect returns an access token.
+   *
+   * @param options - Optional MSAL redirect handling options
+   * @returns Promise resolving to the authentication result or `null` when no redirect response is present
+   */
+  override async handleRedirectPromise(
+    options?: HandleRedirectPromiseOptions,
+  ): Promise<AuthenticationResult | null> {
+    const result = await super.handleRedirectPromise(options);
+    // Clear only the guarded redirect reservation that produced this access token.
+    if (result?.accessToken && result.correlationId) {
+      this.#tokenRedirectGuard.clearByCorrelationId(result.correlationId);
+    }
+    return result;
   }
 
   /**
@@ -256,9 +277,10 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    * 1. If `silent=true` and an account is available, attempt silent token acquisition from cache.
    * 2. Only `InteractionRequiredAuthError` triggers automatic interactive fallback; other errors
    *    (network, invalid scope/client, configuration) propagate unchanged.
-   * 3. Automatic redirect fallback is attempted at most once per authorization request in the tab
-   *    session so persistent consent/pre-authorization failures (`AADSTS65001`) cannot loop.
-   *    Successful silent or popup acquisition clears the matching guard. Explicit `silent: false`
+   * 3. Automatic redirect fallback (`silent: true`) is attempted at most once per authorization
+   *    request in the tab session so persistent consent/pre-authorization failures (`AADSTS65001`)
+   *    cannot loop, including automatic requests with no active account. Successful silent, popup,
+   *    or correlated redirect token acquisition clears the matching guard. Explicit `silent: false`
    *    calls remain available for user-triggered retries.
    *
    * **Behavior differences:**
@@ -339,29 +361,56 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
         return result;
       }
       case 'redirect': {
-        // Guard only automatic fallback from silent failure; explicit silent:false remains user-driven.
-        if (interactionError) {
-          const guardResult = this.#tokenRedirectGuard.tryAcquire(request);
-          // Stop before redirecting again if this request was already attempted or cannot be guarded.
+        let redirectRequest = request;
+        // Guard automatic redirects when silent mode was requested; explicit silent:false remains user-driven.
+        if (silent) {
+          const correlationId = request.correlationId || TokenRedirectGuard.createCorrelationId();
+          const guardResult = this.#tokenRedirectGuard.tryAcquire(request, correlationId);
+          // Stop before redirecting again if this request is in progress, already attempted, or cannot be guarded.
           if (guardResult !== 'acquired') {
-            this.getLogger().error(
-              guardResult === 'already-attempted'
-                ? 'Automatic token redirect already attempted for this request. Check Entra API pre-authorization, admin consent, and requested scopes.'
-                : 'Skipping automatic token redirect because sessionStorage is unavailable to guard against redirect loops.',
-              request.correlationId || FUSION_CORRELATION_ID,
+            const logCorrelationId = request.correlationId || FUSION_CORRELATION_ID;
+            // Concurrent duplicates on the same page are expected during session renewal, not consent errors.
+            if (guardResult === 'in-progress') {
+              this.getLogger().warning(
+                'Automatic token redirect is already in progress for this request.',
+                logCorrelationId,
+              );
+            } else {
+              this.getLogger().error(
+                guardResult === 'already-attempted'
+                  ? 'Automatic token redirect already attempted for this request. Check Entra API pre-authorization, admin consent, and requested scopes.'
+                  : 'Skipping automatic token redirect because sessionStorage is unavailable to guard against redirect loops.',
+                logCorrelationId,
+              );
+            }
+            throw (
+              interactionError ??
+              new InteractionRequiredAuthError(
+                'interaction_required',
+                logCorrelationId,
+                'Automatic token redirect blocked because no account is available and a redirect was already attempted or cannot be guarded.',
+              )
             );
-            throw interactionError;
+          }
+          // Attach a correlation ID when absent so handleRedirectPromise can clear only this reservation.
+          if (!request.correlationId) {
+            redirectRequest = { ...request, correlationId };
           }
         }
         try {
           // Keep the reservation across navigation until token acquisition actually succeeds.
-          await this.acquireTokenRedirect(request);
+          await this.acquireTokenRedirect(redirectRequest);
         } catch (error) {
           // Redirect failed before navigating away; release the reservation and preserve the MSAL error.
-          if (interactionError) {
+          if (silent) {
             this.#tokenRedirectGuard.clear(request);
           }
           throw error;
+        } finally {
+          // Clear current-page in-flight state once redirect initiation settles.
+          if (silent) {
+            this.#tokenRedirectGuard.endAttempt(request);
+          }
         }
         break;
       }
