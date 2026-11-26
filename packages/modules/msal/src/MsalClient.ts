@@ -1,6 +1,9 @@
 import {
   PublicClientApplication,
+  InteractionRequiredAuthError,
+  type AuthenticationResult,
   type CacheLookupPolicy,
+  type HandleRedirectPromiseOptions,
   type SilentRequest,
   type Configuration,
   type EndSessionRequest,
@@ -16,6 +19,8 @@ import type {
   LoginResult,
   AcquireTokenOptions,
 } from './MsalClient.interface.js';
+
+import { TokenRedirectGuard } from './util/TokenRedirectGuard.js';
 
 export type { IMsalClient };
 
@@ -84,6 +89,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
   #tenantId?: string;
   #clientId?: string;
   #cacheLookupPolicy?: CacheLookupPolicy;
+  #tokenRedirectGuard: TokenRedirectGuard;
 
   /**
    * Creates a new MSAL client instance.
@@ -95,6 +101,29 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     this.#tenantId = config.auth?.tenantId;
     this.#clientId = config.auth?.clientId;
     this.#cacheLookupPolicy = config.cacheLookupPolicy;
+    this.#tokenRedirectGuard = new TokenRedirectGuard(
+      config.auth.clientId,
+      this.getConfiguration().auth.authority,
+      config.cacheLookupPolicy,
+    );
+  }
+
+  /**
+   * Handles the redirect response from Microsoft Entra ID and clears the matching
+   * automatic redirect guard entry when a guarded token redirect returns an access token.
+   *
+   * @param options - Optional MSAL redirect handling options
+   * @returns Promise resolving to the authentication result or `null` when no redirect response is present
+   */
+  override async handleRedirectPromise(
+    options?: HandleRedirectPromiseOptions,
+  ): Promise<AuthenticationResult | null> {
+    const result = await super.handleRedirectPromise(options);
+    // Clear only the guarded redirect reservation that produced this access token.
+    if (result?.accessToken && result.correlationId) {
+      this.#tokenRedirectGuard.clearByCorrelationId(result.correlationId);
+    }
+    return result;
   }
 
   /**
@@ -245,9 +274,14 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    *
    * @remarks
    * Token acquisition flow:
-   * 1. If silent=true and account available, attempt silent token acquisition from cache
-   * 2. On silent failure (or not attempted), use interactive method based on behavior
-   * 3. Interactive method based on behavior (popup or redirect)
+   * 1. If `silent=true` and an account is available, attempt silent token acquisition from cache.
+   * 2. Only `InteractionRequiredAuthError` triggers automatic interactive fallback; other errors
+   *    (network, invalid scope/client, configuration) propagate unchanged.
+   * 3. Automatic redirect fallback (`silent: true`) is attempted at most once per authorization
+   *    request in the tab session so persistent consent/pre-authorization failures (`AADSTS65001`)
+   *    cannot loop, including automatic requests with no active account. Successful silent, popup,
+   *    or correlated redirect token acquisition clears the matching guard. Explicit `silent: false`
+   *    calls remain available for user-triggered retries.
    *
    * **Behavior differences:**
    * - **Popup**: Opens authentication popup window and returns token result immediately
@@ -258,7 +292,10 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    * The default silent behavior is determined by presence of account in the request.
    * This provides optimal UX by minimizing unnecessary user interactions.
    *
-   * @throws {Error} If no `request` is provided in `options`.
+   * @throws {InteractionRequiredAuthError} When an automatic redirect was already attempted for
+   *   the request in this tab, or when guard storage cannot safely persist the attempt.
+   * @throws {Error} When no request is provided, `behavior` is invalid, or MSAL throws a
+   *   non-interaction error.
    */
   async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
     const { behavior = 'redirect', silent = !!options.request?.account, request } = options;
@@ -276,6 +313,8 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
       );
     }
 
+    let interactionError: InteractionRequiredAuthError | undefined;
+
     // Attempt silent token acquisition first
     // This fetches from cache or uses refresh token without user interaction
     if (silent) {
@@ -286,13 +325,20 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
             'Attempting to acquire token silently',
             request.correlationId || FUSION_CORRELATION_ID,
           );
-          return await this.acquireTokenSilent({
+          const result = await this.acquireTokenSilent({
             // Instance-level policy is the default; request-level cacheLookupPolicy takes precedence
             cacheLookupPolicy: this.#cacheLookupPolicy,
             ...(request as SilentRequest),
           });
-        } catch {
-          // Silent acquisition failed - fall back to interactive
+          this.#tokenRedirectGuard.clear(request);
+          return result;
+        } catch (error) {
+          // Network, configuration, and other non-interaction errors cannot be resolved interactively.
+          if (!(error instanceof InteractionRequiredAuthError)) {
+            throw error;
+          }
+          interactionError = error;
+          // Consent or session renewal may succeed interactively, so allow one guarded attempt.
           this.getLogger().warning(
             'Silent token acquisition failed, falling back to interactive',
             request.correlationId || FUSION_CORRELATION_ID,
@@ -308,15 +354,66 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
 
     // Perform interactive token acquisition
     switch (behavior) {
-      case 'popup':
+      case 'popup': {
         // Popup flow - returns token immediately after user grants permission
-        return await this.acquireTokenPopup(request);
-      case 'redirect':
-        // Redirect flow - browser navigates to Microsoft login page
-        // Returns void because browser navigation interrupts execution on current page
-        // Token will be available via handleRedirectPromise() after app loads on new page
-        await this.acquireTokenRedirect(request);
+        const result = await this.acquireTokenPopup(request);
+        this.#tokenRedirectGuard.clear(request);
+        return result;
+      }
+      case 'redirect': {
+        let redirectRequest = request;
+        // Guard automatic redirects when silent mode was requested; explicit silent:false remains user-driven.
+        if (silent) {
+          const correlationId = request.correlationId || TokenRedirectGuard.createCorrelationId();
+          const guardResult = this.#tokenRedirectGuard.tryAcquire(request, correlationId);
+          // Stop before redirecting again if this request is in progress, already attempted, or cannot be guarded.
+          if (guardResult !== 'acquired') {
+            const logCorrelationId = request.correlationId || FUSION_CORRELATION_ID;
+            // Concurrent duplicates on the same page are expected during session renewal, not consent errors.
+            if (guardResult === 'in-progress') {
+              this.getLogger().warning(
+                'Automatic token redirect is already in progress for this request.',
+                logCorrelationId,
+              );
+            } else {
+              this.getLogger().error(
+                guardResult === 'already-attempted'
+                  ? 'Automatic token redirect already attempted for this request. Check Entra API pre-authorization, admin consent, and requested scopes.'
+                  : 'Skipping automatic token redirect because sessionStorage is unavailable to guard against redirect loops.',
+                logCorrelationId,
+              );
+            }
+            throw (
+              interactionError ??
+              new InteractionRequiredAuthError(
+                'interaction_required',
+                logCorrelationId,
+                'Automatic token redirect blocked because no account is available and a redirect was already attempted or cannot be guarded.',
+              )
+            );
+          }
+          // Attach a correlation ID when absent so handleRedirectPromise can clear only this reservation.
+          if (!request.correlationId) {
+            redirectRequest = { ...request, correlationId };
+          }
+        }
+        try {
+          // Keep the reservation across navigation until token acquisition actually succeeds.
+          await this.acquireTokenRedirect(redirectRequest);
+        } catch (error) {
+          // Redirect failed before navigating away; release the reservation and preserve the MSAL error.
+          if (silent) {
+            this.#tokenRedirectGuard.clear(request);
+          }
+          throw error;
+        } finally {
+          // Clear current-page in-flight state once redirect initiation settles.
+          if (silent) {
+            this.#tokenRedirectGuard.endAttempt(request);
+          }
+        }
         break;
+      }
       default:
         throw new Error(
           `Invalid behavior provided: ${behavior}, please provide a valid behavior, see options.behavior for more information.`,
