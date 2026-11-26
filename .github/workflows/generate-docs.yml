@@ -66,10 +66,10 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      # `./` builds production with main's build-docs; `$/` would use the preview branch's copy.
+      # `$/` keeps build-docs and its actions locked; it only runs pnpm scripts, so main's checkout is what gets built.
       - name: Build production documentation
         if: ${{ steps.mode.outputs.value == 'true' }}
-        uses: ./.github/actions/build-docs
+        uses: $/.github/actions/build-docs
         with:
           upload-artifact: false
 

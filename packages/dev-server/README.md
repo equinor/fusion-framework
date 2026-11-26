@@ -59,6 +59,9 @@ Continue with [Getting started](docs/getting-started.md) for the complete mental
 
 ## Send app telemetry to a local OTLP collector
 
+Follow the [Aspire troubleshooting cookbook](../../cookbooks/app-react-dev-server-telemetry/README.md)
+to diagnose a controlled failure and slow request without adding an exporter to your app.
+
 From your application repository, set the environment variable when starting the dev server:
 
 ```sh

@@ -12,6 +12,8 @@ const measureWorkloadBudgets = process.env.TELEMETRY_BUDGETS === '1';
 const CALLS = 1000;
 const RUNS = 30;
 const WARMUP = 5;
+// The paired workload can exceed Vitest's default timeout when the full suite runs in parallel.
+const WORKLOAD_TIMEOUT_MS = 60_000;
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -38,29 +40,33 @@ async function mountGrids(capture: boolean, trackEvent: () => void): Promise<num
 }
 
 describe('AG Grid legacy add() telemetry budgets', () => {
-  it('emits one record per host for repeated legacy usage within the workload gate', async () => {
-    const trackEvent = vi.fn();
-    const base: number[] = [];
-    const measured: number[] = [];
-    // Paired warm-up and measured runs with only telemetry capture toggled.
-    for (let run = 0; run < WARMUP + RUNS; run++) {
-      const off = await mountGrids(false, trackEvent);
-      const on = await mountGrids(true, trackEvent);
-      // Warm-up runs are discarded.
-      if (run >= WARMUP) {
-        base.push(off);
-        measured.push(on);
+  it(
+    'emits one record per host for repeated legacy usage within the workload gate',
+    async () => {
+      const trackEvent = vi.fn();
+      const base: number[] = [];
+      const measured: number[] = [];
+      // Paired warm-up and measured runs with only telemetry capture toggled.
+      for (let run = 0; run < WARMUP + RUNS; run++) {
+        const off = await mountGrids(false, trackEvent);
+        const on = await mountGrids(true, trackEvent);
+        // Warm-up runs are discarded.
+        if (run >= WARMUP) {
+          base.push(off);
+          measured.push(on);
+        }
       }
-    }
 
-    // One record per connected host lifecycle, regardless of 1000 add() calls each.
-    expect(trackEvent).toHaveBeenCalledTimes(WARMUP + RUNS);
-    // Gate only on documented environments; always report the measurement.
-    if (measureWorkloadBudgets) {
-      expect(p95(measured) - p95(base)).toBeLessThanOrEqual(Math.max(5, p95(base) * 0.05));
-    }
-    console.info(
-      `AG Grid ${CALLS} add() p95 off=${p95(base).toFixed(3)}ms on=${p95(measured).toFixed(3)}ms`,
-    );
-  });
+      // One record per connected host lifecycle, regardless of 1000 add() calls each.
+      expect(trackEvent).toHaveBeenCalledTimes(WARMUP + RUNS);
+      // Gate only on documented environments; always report the measurement.
+      if (measureWorkloadBudgets) {
+        expect(p95(measured) - p95(base)).toBeLessThanOrEqual(Math.max(5, p95(base) * 0.05));
+      }
+      console.info(
+        `AG Grid ${CALLS} add() p95 off=${p95(base).toFixed(3)}ms on=${p95(measured).toFixed(3)}ms`,
+      );
+    },
+    WORKLOAD_TIMEOUT_MS,
+  );
 });
