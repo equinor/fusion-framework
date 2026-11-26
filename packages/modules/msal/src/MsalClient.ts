@@ -1,5 +1,6 @@
 import {
   PublicClientApplication,
+  InteractionRequiredAuthError,
   type CacheLookupPolicy,
   type SilentRequest,
   type Configuration,
@@ -16,6 +17,8 @@ import type {
   LoginResult,
   AcquireTokenOptions,
 } from './MsalClient.interface.js';
+
+import { TokenRedirectGuard } from './lib/TokenRedirectGuard.js';
 
 export type { IMsalClient };
 
@@ -84,6 +87,7 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
   #tenantId?: string;
   #clientId?: string;
   #cacheLookupPolicy?: CacheLookupPolicy;
+  #tokenRedirectGuard: TokenRedirectGuard;
 
   /**
    * Creates a new MSAL client instance.
@@ -95,6 +99,10 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     this.#tenantId = config.auth?.tenantId;
     this.#clientId = config.auth?.clientId;
     this.#cacheLookupPolicy = config.cacheLookupPolicy;
+    this.#tokenRedirectGuard = new TokenRedirectGuard(
+      config.auth.clientId,
+      this.getConfiguration().auth.authority,
+    );
   }
 
   /**
@@ -246,8 +254,11 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    * @remarks
    * Token acquisition flow:
    * 1. If silent=true and account available, attempt silent token acquisition from cache
-   * 2. On silent failure (or not attempted), use interactive method based on behavior
-   * 3. Interactive method based on behavior (popup or redirect)
+   * 2. Only InteractionRequiredAuthError permits automatic interactive fallback
+   * 3. Automatic redirect is attempted once per authorization request in this tab;
+   *    repeated failures propagate the original MSAL error (including consent_required).
+   *    Successful silent/popup acquisition clears that request's guard. Redirect-result
+   *    handling alone does not clear it. Explicit silent:false retries remain available.
    *
    * **Behavior differences:**
    * - **Popup**: Opens authentication popup window and returns token result immediately
@@ -258,7 +269,9 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
    * The default silent behavior is determined by presence of account in the request.
    * This provides optimal UX by minimizing unnecessary user interactions.
    *
-   * @throws {Error} If no `request` is provided in `options`.
+   * @throws {InteractionRequiredAuthError} When an automatic redirect was already attempted.
+   * @throws {Error} For non-interaction MSAL failures, unavailable guard storage/hashing,
+   * invalid behavior, or a missing request. Redirect/popup failures propagate unchanged.
    */
   async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
     const { behavior = 'redirect', silent = !!options.request?.account, request } = options;
@@ -276,6 +289,8 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
       );
     }
 
+    let interactionError: InteractionRequiredAuthError | undefined;
+
     // Attempt silent token acquisition first
     // This fetches from cache or uses refresh token without user interaction
     if (silent) {
@@ -286,13 +301,20 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
             'Attempting to acquire token silently',
             request.correlationId || FUSION_CORRELATION_ID,
           );
-          return await this.acquireTokenSilent({
+          const result = await this.acquireTokenSilent({
             // Instance-level policy is the default; request-level cacheLookupPolicy takes precedence
             cacheLookupPolicy: this.#cacheLookupPolicy,
             ...(request as SilentRequest),
           });
-        } catch {
-          // Silent acquisition failed - fall back to interactive
+          await this.#tokenRedirectGuard.clear(request);
+          return result;
+        } catch (error) {
+          // Network, configuration and other non-interaction errors cannot be fixed by redirecting.
+          if (!(error instanceof InteractionRequiredAuthError)) {
+            throw error;
+          }
+          interactionError = error;
+          // Consent may be user-grantable, so allow one guarded interactive attempt.
           this.getLogger().warning(
             'Silent token acquisition failed, falling back to interactive',
             request.correlationId || FUSION_CORRELATION_ID,
@@ -308,14 +330,39 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
 
     // Perform interactive token acquisition
     switch (behavior) {
-      case 'popup':
-        // Popup flow - returns token immediately after user grants permission
-        return await this.acquireTokenPopup(request);
+      case 'popup': // Popup flow - returns token immediately after user grants permission
+        {
+          const result = await this.acquireTokenPopup(request);
+          await this.#tokenRedirectGuard.clear(request);
+          return result;
+        }
       case 'redirect':
-        // Redirect flow - browser navigates to Microsoft login page
-        // Returns void because browser navigation interrupts execution on current page
-        // Token will be available via handleRedirectPromise() after app loads on new page
-        await this.acquireTokenRedirect(request);
+        // Only automatic fallback is guarded; silent:false remains an explicit user-driven retry.
+        if (interactionError && !(await this.#tokenRedirectGuard.reserve(request))) {
+          this.getLogger().error(
+            'Automatic token redirect already attempted. Check Entra API pre-authorization/admin consent and requested scopes; use a user-driven retry after correcting configuration.',
+            request.correlationId || FUSION_CORRELATION_ID,
+          );
+          throw interactionError;
+        }
+        try {
+          // Keep the marker across navigation, even if handleRedirectPromise succeeds:
+          // only acquiring a token for this request proves its authorization requirements were met.
+          await this.acquireTokenRedirect(request);
+        } catch (error) {
+          // A failed redirect did not navigate; permit a future retry but preserve the MSAL error.
+          if (interactionError) {
+            try {
+              await this.#tokenRedirectGuard.clear(request);
+            } catch (cause) {
+              throw new AggregateError(
+                [error, cause],
+                'MSAL token redirect failed and its guard could not be cleared.',
+              );
+            }
+          }
+          throw error;
+        }
         break;
       default:
         throw new Error(
