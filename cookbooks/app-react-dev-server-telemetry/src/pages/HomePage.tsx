@@ -15,6 +15,7 @@ type RequestState = 'idle' | 'loading' | 'success' | 'failure';
  * Produces a custom app event and HTTP request outcomes. The app adds no adapter or exporter of
  * its own; the dev server exports what the framework records.
  * @returns Buttons that record an event and send instrumented requests.
+ * @example <HomePage />
  */
 export function HomePage(): ReactElement {
   const telemetry = useAppModule<TelemetryModule>('telemetry');
@@ -40,15 +41,18 @@ export function HomePage(): ReactElement {
   };
 
   /**
-   * Requests this page; the collector receives only the request's duration and outcome.
-   * @param accept - Requested content type. The dev server serves this page as HTML but has no
-   *   JSON representation, so requesting JSON fails with 404.
+   * Requests a local fixture; operational records contain duration and outcome, not the URL.
+   * @param scenario - Explicitly selected local success, failure, or delayed response.
    */
-  const sendRequest = async (accept: 'text/html' | 'application/json'): Promise<void> => {
+  const sendRequest = async (scenario: 'success' | 'failure' | 'slow'): Promise<void> => {
     setRequest('loading');
     try {
-      const response = await client.fetch(`${window.location.pathname}?token=never-exported`, {
-        headers: { Accept: accept },
+      const path =
+        scenario === 'success'
+          ? window.location.pathname
+          : `/@fusion-api/__telemetry-cookbook/${scenario}`;
+      const response = await client.fetch(path, {
+        headers: { Accept: scenario === 'success' ? 'text/html' : 'application/json' },
       });
       setRequest(response.ok ? 'success' : 'failure');
     } catch {
@@ -63,19 +67,14 @@ export function HomePage(): ReactElement {
       <button type="button" onClick={sendTelemetryEvent}>
         Send telemetry event
       </button>
-      <button
-        type="button"
-        onClick={() => sendRequest('text/html')}
-        disabled={request === 'loading'}
-      >
+      <button type="button" onClick={() => sendRequest('success')} disabled={request === 'loading'}>
         Send HTTP request
       </button>
-      <button
-        type="button"
-        onClick={() => sendRequest('application/json')}
-        disabled={request === 'loading'}
-      >
+      <button type="button" onClick={() => sendRequest('failure')} disabled={request === 'loading'}>
         Send failing HTTP request
+      </button>
+      <button type="button" onClick={() => sendRequest('slow')} disabled={request === 'loading'}>
+        Send slow HTTP request
       </button>
       <p>Request: {request}</p>
     </div>

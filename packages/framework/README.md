@@ -148,6 +148,11 @@ The entry point has **no test-runner dependency**, and ships no mocking API of i
 
 ## Documentation
 
+For coverage, filtering, origin identity, privacy and budgets, see
+[Operational telemetry](../modules/telemetry/docs/operational-telemetry.md).
+For local failed/slow-request diagnosis, follow the
+[Aspire cookbook](../../cookbooks/app-react-dev-server-telemetry/README.md).
+
 | Guide | Covers |
 | --- | --- |
 | [Choosing a testing layer](./docs/testing-choosing-a-layer.md) | Which import to use for React app, framework, module, HTTP, and runner-level tests |

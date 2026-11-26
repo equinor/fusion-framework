@@ -4,7 +4,8 @@ import { HomePage } from './pages/HomePage';
 
 /**
  * Two routes are enough to produce navigation telemetry. The details link carries a sentinel
- * search parameter that must never appear in the collector.
+ * search parameter that must never appear in built-in operational logs. Standard browser
+ * tracing has a separate URL attribute contract, so this is deliberately not a real secret.
  */
 const routes: RouteObject[] = [
   {

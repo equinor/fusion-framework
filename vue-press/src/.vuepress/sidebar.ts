@@ -204,6 +204,10 @@ export default sidebar({
               link: 'react-app-environment-variables.md',
             },
             {
+              text: 'Diagnose with Aspire',
+              link: 'react-app-dev-server-telemetry.md',
+            },
+            {
               text: 'Feature Flags',
               link: 'react-app-feature-flag.md',
             },
@@ -743,6 +747,12 @@ export default sidebar({
     {
       text: 'Telemetry',
       link: 'telemetry/',
+      children: [
+        {
+          text: 'Operational telemetry',
+          link: 'telemetry/operational-telemetry.md',
+        },
+      ],
     },
     'widget/',
   ],
