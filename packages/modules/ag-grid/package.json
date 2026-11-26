@@ -60,8 +60,8 @@
     "@equinor/eds-tokens": "^2.2.0",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-telemetry": "workspace:^",
-    "ag-grid-community": "~36.2.0",
-    "ag-grid-enterprise": "~36.2.0",
+    "ag-grid-community": "~36.3.0",
+    "ag-grid-enterprise": "~36.3.0",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
