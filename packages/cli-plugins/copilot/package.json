@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@github/copilot-sdk": "^1.0.0",
-    "agent-browser": "^0.43.0",
+    "agent-browser": "^0.44.0",
     "chalk": "^6.0.0",
     "commander": "^15.0.0",
     "ora": "^10.0.0",
