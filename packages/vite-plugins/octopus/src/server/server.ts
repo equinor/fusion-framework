@@ -3,6 +3,7 @@ import net from 'node:net';
 
 import { renderPage } from './page.js';
 import { parseLocalUrl, portOf, type RegisteredApp, type Registry } from './registry.js';
+import { setResponseDeadline } from './response-deadline.js';
 import { parseAppRequest, parseRequestUrl } from './routes.js';
 
 /** Prefix for app requests the portal forwards to Octopus, e.g. `/proxy/persons/me/apps/my-app`. */
@@ -32,6 +33,13 @@ export interface OctopusServerOptions {
   registry: Registry;
   /** Called when the registry changes. */
   onEvent?: (event: RegistryEvent) => void;
+  /**
+   * How long, in milliseconds, to wait for a dev server's response headers before the request
+   * counts as failed and the dev server as unreachable. Defaults to 10000.
+   */
+  responseTimeoutMs?: number;
+  /** Checks whether a dev server still listens before redirecting to it; replaceable in tests. */
+  reachable?: (url: string) => Promise<boolean>;
 }
 
 const sendJson = (res: ServerResponse, status: number, body: unknown): void => {
@@ -111,6 +119,7 @@ const proxyToApp = (
   app: RegisteredApp,
   target: URL,
   onUnreachable: () => void,
+  responseTimeoutMs: number,
 ): void => {
   const appHeaders = {
     [OCTOPUS_HEADER]: 'hit',
@@ -124,6 +133,7 @@ const proxyToApp = (
       proxyRes.pipe(res);
     },
   );
+  setResponseDeadline(proxyReq, responseTimeoutMs, `Dev server ${app.url}`);
   proxyReq.on('error', () => {
     onUnreachable();
     if (!res.headersSent) {
@@ -150,7 +160,12 @@ const proxyToApp = (
  * @param options - Registry and event listener.
  * @returns An HTTP server that is not yet listening.
  */
-export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions): http.Server => {
+export const createOctopusServer = ({
+  registry,
+  onEvent,
+  responseTimeoutMs = 10_000,
+  reachable = (url) => isReachable(url),
+}: OctopusServerOptions): http.Server => {
   const handle = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     // A web page whose own host name resolves to this machine (DNS rebinding) sends its own
     // host name here; only requests addressed to this machine are answered.
@@ -250,12 +265,26 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
     if (url.pathname.startsWith(`${PROXY_PREFIX}/`)) {
       const path = url.pathname.slice(PROXY_PREFIX.length);
       const appRequest = parseAppRequest(path);
-      const app = appRequest && registry.get(appRequest.appKey);
+      let app = appRequest && registry.get(appRequest.appKey);
       // Only reads are served; a miss sends writes on to CI.
       const isRead = req.method === 'GET' || req.method === 'HEAD';
       if (!appRequest || !app || !isRead) {
         sendMiss(res);
         return;
+      }
+
+      // The browser loads scripts straight from the dev server, so make sure it still runs: a
+      // dev server can stop between health checks. A stopped one is removed, and the next most
+      // recent dev server of the app, if any, takes over.
+      if (appRequest.type === 'bundle') {
+        while (app && !(await reachable(app.url))) {
+          removeInstance(registry, app.appKey, app.instanceId, 'unreachable', onEvent);
+          app = registry.get(appRequest.appKey);
+        }
+        if (!app) {
+          sendMiss(res);
+          return;
+        }
       }
 
       // Only the registered origin and checked parts of the request make up the address, so a
@@ -276,8 +305,14 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
         appRequest.type === 'manifest'
           ? `${APP_DEV_SERVER_API}/persons/me/apps/${app.appKey}`
           : `${APP_DEV_SERVER_API}/apps/${app.appKey}/builds/${appRequest.version}/config`;
-      proxyToApp(req, res, app, target, () =>
-        removeInstance(registry, app.appKey, app.instanceId, 'unreachable', onEvent),
+      const { appKey, instanceId } = app;
+      proxyToApp(
+        req,
+        res,
+        app,
+        target,
+        () => removeInstance(registry, appKey, instanceId, 'unreachable', onEvent),
+        responseTimeoutMs,
       );
       return;
     }

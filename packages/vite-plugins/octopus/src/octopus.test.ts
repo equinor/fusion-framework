@@ -191,6 +191,50 @@ describe('Octopus server', () => {
     expect(response.headers.get('location')).toBe(`${appUrl}/Users/me/src/index.ts`);
   });
 
+  it('removes a dev server that accepts a request but never answers, and answers a miss', async () => {
+    const hanging = http.createServer(() => {});
+    const hangingUrl = await listen(hanging);
+    const quickOctopus = createOctopusServer({ registry, responseTimeoutMs: 200 });
+    const quickUrl = await listen(quickOctopus);
+    servers.push(hanging, quickOctopus);
+    await register(quickUrl, 'fusion-help', { url: hangingUrl, instanceId: 'a' });
+
+    const response = await fetch(`${quickUrl}/proxy/persons/me/apps/fusion-help`);
+
+    expect(response.headers.get('x-octopus')).toBe('miss');
+    expect(registry.get('fusion-help')).toBeUndefined();
+  });
+
+  it('does not redirect scripts to a dev server that stopped, and removes it', async () => {
+    await register(octopusUrl, 'fusion-chat', { url: 'http://localhost:1', instanceId: 'a' });
+
+    const response = await fetch(
+      `${octopusUrl}/proxy/bundles/apps/fusion-chat/0.1.2/src/index.ts`,
+      { redirect: 'manual' },
+    );
+
+    expect(response.headers.get('x-octopus')).toBe('miss');
+    expect(registry.get('fusion-chat')).toBeUndefined();
+  });
+
+  it('redirects scripts to the next dev server when the active one stopped', async () => {
+    await register(octopusUrl, 'fusion-chat', { url: appUrl, instanceId: 'old', startedAt: 1 });
+    await register(octopusUrl, 'fusion-chat', {
+      url: 'http://localhost:1',
+      instanceId: 'new',
+      startedAt: 2,
+    });
+
+    const response = await fetch(
+      `${octopusUrl}/proxy/bundles/apps/fusion-chat/0.1.2/src/index.ts`,
+      { redirect: 'manual' },
+    );
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get('location')).toBe(`${appUrl}/src/index.ts`);
+    expect(registry.get('fusion-chat')?.instanceId).toBe('old');
+  });
+
   it('answers a miss for apps that are not registered', async () => {
     const response = await fetch(`${octopusUrl}/proxy/persons/me/apps/fusion-tasks`);
 
@@ -422,6 +466,24 @@ describe('ensureOctopus', () => {
     expect(logs).toEqual([`🐙 Octopus at ${octopusUrl} (started by the portal)`]);
   });
 
+  it('starts Octopus on IPv6 loopback for an [::1] address', async () => {
+    const probe = http.createServer();
+    const port = await new Promise<number>((resolve) =>
+      probe.listen(0, '::1', () => resolve((probe.address() as AddressInfo).port)),
+    );
+    await close(probe);
+    const octopusUrl = `http://[::1]:${port}`;
+    const state: EnsureState = {};
+
+    const status = await ensureOctopus(octopusUrl, { log: () => {}, state });
+    if (state.running) {
+      cleanup.push(state.running.close);
+    }
+
+    expect(status).toBe('started');
+    expect(await fetch(`${octopusUrl}/api/apps`).then((r) => r.json())).toEqual([]);
+  });
+
   it('uses an Octopus that already runs', async () => {
     const octopus = createOctopusServer({ registry: new Registry() });
     const octopusUrl = await listen(octopus);
@@ -574,4 +636,75 @@ describe('mock API route', () => {
       expect(await otherApp.text()).toBe('ci');
     },
   );
+
+  /** Runs a handler with the given options behind its own portal stand-in. */
+  const startPortalWith = async (options: Parameters<typeof createMockApiHandler>[1]) => {
+    const handler = createMockApiHandler(octopusUrl, options);
+    const portal = http.createServer((req, res) => void handler(req, res, () => res.end('ci')));
+    const url = await listen(portal);
+    servers.push(portal);
+    return (appKey: string, method = 'GET') =>
+      fetch(`${url}/people/persons/me`, { method, headers: { 'x-fusion-app': appKey } });
+  };
+
+  it('keeps an app that is no longer listed fail-closed for a while, e.g. after an Octopus restart', async () => {
+    const send = await startPortalWith({ mockGraceMs: 300 });
+    octopusAnswer.apps = [{ appKey: 'mock-app', url: 'http://localhost:5173', mockUrl }];
+    expect(await (await send('mock-app')).text()).toBe('mocked');
+
+    // A restarted Octopus lists nothing until the app's next heartbeat.
+    octopusAnswer.apps = [];
+    const meanwhile = await send('mock-app', 'DELETE');
+    expect(meanwhile.status).toBe(502);
+    expect(await meanwhile.json()).toEqual({
+      error: expect.stringContaining('is not registered with Octopus'),
+    });
+
+    // Once the grace period is over, the app is no longer treated as being in mock mode.
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(await (await send('mock-app')).text()).toBe('ci');
+  });
+
+  it('forgets a mock app at once when it registers again without a mock server', async () => {
+    const send = await startPortalWith({ mockGraceMs: 60_000 });
+    octopusAnswer.apps = [{ appKey: 'my-app', url: 'http://localhost:5173', mockUrl }];
+    expect(await (await send('my-app')).text()).toBe('mocked');
+
+    octopusAnswer.apps = [{ appKey: 'my-app', url: 'http://localhost:5174' }];
+
+    expect(await (await send('my-app')).text()).toBe('ci');
+  });
+
+  it('keeps known mock apps fail-closed while Octopus is not available, and sends others to CI', async () => {
+    let available = true;
+    const send = await startPortalWith({ isAvailable: () => available });
+    octopusAnswer.apps = [{ appKey: 'mock-app', url: 'http://localhost:5173', mockUrl }];
+    expect(await (await send('mock-app')).text()).toBe('mocked');
+
+    // E.g. another program took the Octopus port.
+    available = false;
+
+    expect((await send('mock-app', 'POST')).status).toBe(502);
+    expect(await (await send('other-app')).text()).toBe('ci');
+  });
+
+  it('answers 502 when the mock server accepts a request but never answers', async () => {
+    const hanging = http.createServer((req, res) => {
+      if (req.url === '/@fusion-mock/discovery') {
+        res.end(JSON.stringify([{ key: 'people' }]));
+      }
+      // Other requests are never answered.
+    });
+    const hangingUrl = await listen(hanging);
+    servers.push(hanging);
+    const send = await startPortalWith({ responseTimeoutMs: 200 });
+    octopusAnswer.apps = [
+      { appKey: 'mock-app', url: 'http://localhost:5173', mockUrl: hangingUrl },
+    ];
+
+    const response = await send('mock-app');
+
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: expect.stringContaining('sent no response') });
+  });
 });

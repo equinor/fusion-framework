@@ -263,6 +263,66 @@ describe('Vite plugins', () => {
       });
     });
 
+    it('turns forwarding off when another program replaces the Octopus it used', async () => {
+      const mock = http.createServer((req, res) => {
+        res.end(
+          req.url === '/@fusion-mock/discovery' ? JSON.stringify([{ key: 'people' }]) : 'mocked',
+        );
+      });
+      const mockUrl = await listen(mock);
+      cleanup.push(() => close(mock));
+      const octopusUrl = await freeUrl();
+      const port = Number(new URL(octopusUrl).port);
+      const octopus = await startOctopus(port, () => {});
+      await fetch(`${octopusUrl}/api/apps/mock-app`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ url: mockUrl, mockUrl, instanceId: 'a' }),
+      });
+      const lines: string[] = [];
+      const fallthrough = {
+        name: 'api-proxy-stand-in',
+        configureServer: (server: ViteDevServer) => {
+          server.middlewares.use('/@fusion-api', (_req, res) => {
+            res.end('ci');
+          });
+        },
+      };
+      // Checks seldom enough that the port is taken again long before the next check.
+      const { url } = await startVite([
+        fallthrough,
+        octopusPortalPlugin({ octopusUrl, log: (line) => lines.push(line), checkMs: 1000 }),
+      ]);
+      await vi.waitFor(() => expect(lines.join('\n')).toContain('(already running)'));
+      const mockRequest = (method = 'GET') =>
+        fetch(`${url}/@fusion-api/people/persons/me`, {
+          method,
+          headers: { 'x-fusion-app': 'mock-app', cookie: 'session=secret' },
+        });
+      expect(await (await mockRequest()).text()).toBe('mocked');
+
+      await octopus.close();
+      const otherRequests: string[] = [];
+      const other = http.createServer((req, res) => {
+        otherRequests.push(req.url ?? '');
+        res.end('<html>not Octopus</html>');
+      });
+      await new Promise<void>((resolve) => other.listen(port, '127.0.0.1', () => resolve()));
+      cleanup.push(() => close(other));
+      await vi.waitFor(() => expect(lines.join('\n')).toContain('local apps are off'), {
+        timeout: 5000,
+      });
+      otherRequests.length = 0;
+
+      const manifest = await fetch(`${url}/@fusion-api/apps/persons/me/apps/mock-app`);
+      const write = await mockRequest('DELETE');
+
+      expect(await manifest.text()).toBe('ci');
+      // The app was in mock mode, so its writes neither reach the other program nor CI.
+      expect(write.status).toBe(502);
+      expect(otherRequests).toEqual([]);
+    });
+
     it('sends nothing to another program on the Octopus port, and leaves requests to CI', async () => {
       const otherRequests: Array<{ url?: string; authorization?: string }> = [];
       const other = http.createServer((req, res) => {

@@ -4,6 +4,7 @@ import type { Plugin } from 'vite';
 
 import { DEFAULT_OCTOPUS_URL } from './server/index.js';
 import { parseLocalUrl, portOf, type RegisteredApp } from './server/registry.js';
+import { setResponseDeadline } from './server/response-deadline.js';
 import { parseAppRequest, parseRequestUrl } from './server/routes.js';
 import { OCTOPUS_HEADER, OCTOPUS_MOCK_HEADER, PROXY_PREFIX } from './server/server.js';
 import { type RunningOctopus, startOctopus } from './server/start.js';
@@ -94,7 +95,10 @@ export const ensureOctopus = async (
   }
 
   try {
-    state.running = await startOctopus(portOf(url), (line) => log(`octopus: ${line}`));
+    // Listen where clients connect: `[::1]` is IPv6 loopback only, while `localhost` reaches
+    // `127.0.0.1` as well.
+    const host = url.hostname === '[::1]' ? '::1' : '127.0.0.1';
+    state.running = await startOctopus(portOf(url), (line) => log(`octopus: ${line}`), host);
     log(`🐙 Octopus at ${octopusUrl} (started by the portal)`);
     return 'started';
   } catch (error) {
@@ -267,7 +271,44 @@ const createCache = <T>(load: (key: string) => Promise<T>) => {
  * @param octopusUrl - Octopus address.
  * @returns The handler.
  */
-export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
+/** Options for {@link createMockApiHandler}. */
+export interface MockApiHandlerOptions {
+  /**
+   * Whether Octopus can be asked now. While it cannot, e.g. because another program has its
+   * port, apps last seen in mock mode get a `502` and all other apps go to CI. Defaults to always.
+   */
+  isAvailable?: () => boolean;
+  /**
+   * How long, in milliseconds, an app last seen in mock mode stays fail-closed after it is no
+   * longer registered. A restarted Octopus lists no apps until their next heartbeat, so the app
+   * must not fall through to CI meanwhile. Defaults to 15000, the time Octopus keeps an entry
+   * without a heartbeat.
+   */
+  mockGraceMs?: number;
+  /** How long, in milliseconds, to wait for the mock server's response headers. Defaults to 10000. */
+  responseTimeoutMs?: number;
+}
+
+/** A mock app's server, and since when it is no longer registered, if it is not. */
+interface KnownMockApp {
+  mockUrl: string;
+  missingSince?: number;
+}
+
+/** Answers that a request of an app in mock mode cannot go anywhere, rather than to CI. */
+const sendMockUnavailable = (res: ServerResponse, error: string): void => {
+  res.writeHead(502, { 'content-type': 'application/json', [OCTOPUS_HEADER]: 'mock' });
+  res.end(JSON.stringify({ error }));
+};
+
+export const createMockApiHandler = (
+  octopusUrl: string,
+  {
+    isAvailable = () => true,
+    mockGraceMs = 15_000,
+    responseTimeoutMs = 10_000,
+  }: MockApiHandlerOptions = {},
+): RequestHandler => {
   // Asked for every request, since a mock instance can become active at any time; requests
   // arriving while a lookup is under way share it.
   let pendingLookup: Promise<RegisteredApp[]> | undefined;
@@ -284,8 +325,31 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
       });
     return pendingLookup;
   };
-  // Mock server of each app at the last successful lookup, for when Octopus cannot be asked.
-  const lastKnownMockUrls = new Map<string, string>();
+  // Apps seen in mock mode, kept while Octopus cannot be asked or no longer lists them.
+  const knownMockApps = new Map<string, KnownMockApp>();
+
+  /** Updates the known mock apps from Octopus's answer. */
+  const remember = (apps: RegisteredApp[]): void => {
+    const now = Date.now();
+    const listed = new Map(apps.map((app) => [app.appKey, app]));
+    for (const [appKey, known] of knownMockApps) {
+      const app = listed.get(appKey);
+      if (app && !app.mockUrl) {
+        // Registered again without a mock server, so it has left mock mode.
+        knownMockApps.delete(appKey);
+      } else if (!app) {
+        known.missingSince ??= now;
+        if (now - known.missingSince > mockGraceMs) {
+          knownMockApps.delete(appKey);
+        }
+      }
+    }
+    for (const app of apps) {
+      if (app.mockUrl) {
+        knownMockApps.set(app.appKey, { mockUrl: app.mockUrl });
+      }
+    }
+  };
   const mockServices = createCache(async (mockUrl) => {
     const response = await fetch(`${mockUrl}/@fusion-mock/discovery`, {
       signal: AbortSignal.timeout(1000),
@@ -308,25 +372,30 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
     const service = url.pathname.split('/')[1];
     let mockUrl: string | undefined;
     try {
-      const apps = await activeApps();
-      lastKnownMockUrls.clear();
-      for (const app of apps) {
-        if (app.mockUrl) {
-          lastKnownMockUrls.set(app.appKey, app.mockUrl);
-        }
+      if (!isAvailable()) {
+        throw new Error('Octopus is not available');
       }
-      mockUrl = lastKnownMockUrls.get(appKey);
+      remember(await activeApps());
+      const known = knownMockApps.get(appKey);
+      // Not listed now, but recently in mock mode: e.g. Octopus restarted and the app has not
+      // sent its next heartbeat yet.
+      if (known?.missingSince !== undefined) {
+        sendMockUnavailable(
+          res,
+          `${appKey} was in mock mode (${known.mockUrl}), but is not registered with Octopus at ${octopusUrl} right now`,
+        );
+        return;
+      }
+      mockUrl = known?.mockUrl;
     } catch (error) {
       // Without Octopus, an app last seen in mock mode cannot be confirmed to have left it; its
       // requests could reach real services with the real token. Other apps go to CI as usual,
       // so the portal keeps working while Octopus is down.
-      const lastMockUrl = lastKnownMockUrls.get(appKey);
-      if (lastMockUrl) {
-        res.writeHead(502, { 'content-type': 'application/json', [OCTOPUS_HEADER]: 'mock' });
-        res.end(
-          JSON.stringify({
-            error: `${appKey} was in mock mode (${lastMockUrl}), but Octopus at ${octopusUrl} cannot confirm it still is (${(error as Error).message})`,
-          }),
+      const known = knownMockApps.get(appKey);
+      if (known) {
+        sendMockUnavailable(
+          res,
+          `${appKey} was in mock mode (${known.mockUrl}), but Octopus at ${octopusUrl} cannot confirm it still is (${(error as Error).message})`,
         );
         return;
       }
@@ -342,11 +411,9 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
     } catch (error) {
       // The app expects mock data. Falling back to CI would send its requests, with the real
       // token, to real services, where a POST or DELETE changes real data.
-      res.writeHead(502, { 'content-type': 'application/json', [OCTOPUS_HEADER]: 'mock' });
-      res.end(
-        JSON.stringify({
-          error: `${appKey} runs in mock mode, but its mock server ${mockUrl} did not list its services (${(error as Error).message})`,
-        }),
+      sendMockUnavailable(
+        res,
+        `${appKey} runs in mock mode, but its mock server ${mockUrl} did not list its services (${(error as Error).message})`,
       );
       return;
     }
@@ -369,6 +436,7 @@ export const createMockApiHandler = (octopusUrl: string): RequestHandler => {
         proxyRes.pipe(res);
       },
     );
+    setResponseDeadline(proxyReq, responseTimeoutMs, `Mock server ${mockUrl}`);
     proxyReq.on('error', (error) => {
       if (!res.headersSent) {
         res.writeHead(502, { 'content-type': 'application/json' });
@@ -454,7 +522,22 @@ export const octopusPortalPlugin = (options: OctopusPortalPluginOptions = {}): P
             }
             checking = true;
             void probeOctopus(octopusUrl)
-              .then((found) => (found === 'none' ? connect() : undefined))
+              .then(async (found) => {
+                if (found === 'none') {
+                  await connect();
+                  return;
+                }
+                // Another program took the port: send it nothing until Octopus answers again.
+                const octopusAnswers = found === 'octopus';
+                if (octopusAnswers !== forwarding) {
+                  forwarding = octopusAnswers;
+                  log(
+                    octopusAnswers
+                      ? `🐙 Octopus at ${octopusUrl} answers again; local apps are on`
+                      : `🐙 Something other than Octopus answers at ${octopusUrl}; local apps are off`,
+                  );
+                }
+              })
               .finally(() => {
                 checking = false;
               });
@@ -471,7 +554,7 @@ export const octopusPortalPlugin = (options: OctopusPortalPluginOptions = {}): P
       });
 
       const handleAppSource = createAppSourceHandler(octopusUrl);
-      const handleMockApi = createMockApiHandler(octopusUrl);
+      const handleMockApi = createMockApiHandler(octopusUrl, { isAvailable: () => forwarding });
       const handleAppRequest = createAppRequestHandler(octopusUrl, log);
       server.middlewares.use(apiBase, (req, res, next) => {
         // A failing handler answers through Vite's error handler instead of stopping the dev server.
@@ -480,8 +563,10 @@ export const octopusPortalPlugin = (options: OctopusPortalPluginOptions = {}): P
             .then(() => handler(req, res, then))
             .catch((error: unknown) => next(error));
 
+        // The mock handler also runs while forwarding is off, so apps last seen in mock mode
+        // stay fail-closed instead of reaching CI; it asks Octopus only while forwarding is on.
         void run(handleAppSource, () =>
-          forwarding ? run(handleMockApi, () => run(handleAppRequest, next)) : next(),
+          run(handleMockApi, () => (forwarding ? run(handleAppRequest, next) : next())),
         );
       });
     },

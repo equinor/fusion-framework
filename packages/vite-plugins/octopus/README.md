@@ -51,8 +51,8 @@ octopusPortalPlugin({ octopusUrl: 'http://localhost:2000' });
 - Manifest, config and script reads (`GET`, `HEAD`) for registered apps are answered from their dev server; everything else, including writes such as `PUT` of a build's config, goes on to the portal's API proxy (`/@fusion-api`), i.e. to CI.
 - `GET /@fusion-api/octopus/apps/<appKey>` answers `{ "source": "local" | "mock" | "ci" }`, so the portal UI can show where an app comes from.
 - API requests from an app in mock mode go to its mock server, for the services the mock server lists (`/@fusion-mock/discovery`). The plugin recognises the app by the `x-fusion-app` header the framework adds to the app's requests, and doesn't forward the portal's token. Other services, other apps and the portal itself use CI. Answers from the mock server carry `x-octopus: mock`.
-- An app in mock mode never falls back to CI for the services it mocks: when its mock server doesn't list its services, or Octopus can't confirm the app is still in mock mode, its requests get a `502`.
-- When nothing answers at the Octopus address, the plugin starts Octopus, and stops it when the dev server closes.
+- An app in mock mode never falls back to CI for the services it mocks: when its mock server doesn't list its services or doesn't answer within 10 seconds, or Octopus can't confirm the app is still in mock mode, its requests get a `502`. An app that drops out of Octopus's list, e.g. after an Octopus restart, stays like that for 15 seconds, until it registers again or is gone for good.
+- When nothing answers at the Octopus address, the plugin starts Octopus, and stops it when the dev server closes. While someone else runs it, e.g. `ffc octopus` or the dev server Vite replaces on a restart, the plugin checks every 2 seconds (`checkMs`) that it still answers: it starts its own when it's gone, and stops forwarding while another program answers instead.
 - Requests only go to Octopus once it is known to run. While it starts, and when another program has its port, everything goes to CI. The portal's token is never sent to Octopus or the app's dev server.
 
 The plugin runs before other plugins (`enforce: 'pre'`), so it comes before the API proxy.
@@ -78,8 +78,8 @@ await octopus.close();
 | `/proxy/<apps API path>` | Manifest, config and scripts of registered apps (`GET`, `HEAD`); `404` with `x-octopus: miss` otherwise |
 
 - An app can run in several dev servers at once, e.g. a normal one and one in mock mode, also in the same process. Each dev server registers as its own instance. The one that started last is used; when it stops, the next most recent takes over.
-- Octopus removes dev servers without a heartbeat for 15 seconds, and dev servers that stop answering (checked every 2 seconds, and on each request).
-- Octopus only listens on `127.0.0.1`, only answers requests addressed to `localhost`, `127.0.0.1` or `[::1]` (so a web page can't reach it through DNS rebinding), and only accepts `http://localhost` addresses.
+- Octopus removes dev servers without a heartbeat for 15 seconds, and dev servers that stop answering: checked every 2 seconds, before each script redirect, and when a request gets no response within 10 seconds.
+- Octopus only listens on loopback (`127.0.0.1`, or `::1` for an `[::1]` address), only answers requests addressed to `localhost`, `127.0.0.1` or `[::1]` (so a web page can't reach it through DNS rebinding), and only accepts `http://localhost` addresses.
 - Octopus builds the address it forwards to from the registered dev server and the checked parts of the request: the app key, and for configs a build version made of letters, digits and `.`, `_`, `+`, `-`.
 
 ## Limits

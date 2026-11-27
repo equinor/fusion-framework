@@ -28,6 +28,7 @@ export {
   createAppRequestHandler,
   createAppSourceHandler,
   createMockApiHandler,
+  type MockApiHandlerOptions,
   type EnsureOctopusState,
   ensureOctopus,
   type OctopusPortalPluginOptions,
