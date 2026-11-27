@@ -1816,8 +1816,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.28
       agent-browser:
-        specifier: ^0.43.0
-        version: 0.43.0
+        specifier: ^0.44.0
+        version: 0.44.0
       chalk:
         specifier: ^6.0.0
         version: 6.0.1
@@ -4070,42 +4070,42 @@ importers:
 
 packages:
 
-  '@agent-browser/cli-darwin-arm64@0.43.0':
-    resolution: {integrity: sha512-HV6GP59IjNnowlrXR/5rVM8msPWwQDEONt/tWC8STzUfKZQHKZI/Iv9sf2h2ZhwK8xwoqLhxpf+KxcFgJ0sExQ==}
+  '@agent-browser/cli-darwin-arm64@0.44.0':
+    resolution: {integrity: sha512-wI2TZs5jCQsldRougSJiXzafsvXQJuKY6Jb/Q9euT/1CBfr926ev10K1SOAkEDRIIuJW4a894LN5wrhRDk+wlQ==}
     cpu: [arm64]
     os: [darwin]
 
-  '@agent-browser/cli-darwin-x64@0.43.0':
-    resolution: {integrity: sha512-3NKnKFOWLYDYTz4bJxo4jt+GwjM4VtcW5FDrQY35eUrytig65FEDdXmXKuRbZGq9jEEWxh6rmpS4R6xS53XCaw==}
+  '@agent-browser/cli-darwin-x64@0.44.0':
+    resolution: {integrity: sha512-Y/oun8VYYGqCjItCrXztwF2AZM4VvjYd8dnGjUl22QKr3+J0jqhWiOVkC+cpWvzyHoV9CypMwjwW8tuCGJzOiw==}
     cpu: [x64]
     os: [darwin]
 
-  '@agent-browser/cli-linux-arm64-gnu@0.43.0':
-    resolution: {integrity: sha512-8DC234LGlXCn8A2YXGk6woy1uTjyexvtHd/TOQHLrV2sfUMZD647HTHEJyF+2z1J1oR34LaB5jqHJ9d0REC+Cw==}
+  '@agent-browser/cli-linux-arm64-gnu@0.44.0':
+    resolution: {integrity: sha512-/sE4wYAy+UskWTaktVruDT4Xfv9e2beMo2y3TLXtpNsBFmI47JdSUeWBHIS1DkBrP1QhinrNdWxcLz9PWjHt3w==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@agent-browser/cli-linux-arm64-musl@0.43.0':
-    resolution: {integrity: sha512-/dYeGX2E1lWZ25q1IZSVs6PaPmr0GmhHU8z/LtCh0anHN4ND50i5fOPbysRBaE8iQCBY74h+1R2kePfEqD7X4Q==}
+  '@agent-browser/cli-linux-arm64-musl@0.44.0':
+    resolution: {integrity: sha512-0+TCqRf1frUrrGHEyWh7tWvNB3O1wUJVju7JSVC7dItLvKAn4h8Vxqp/gXodEGchqiRdw1T2Loa2CKBa+c0Nug==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@agent-browser/cli-linux-x64-gnu@0.43.0':
-    resolution: {integrity: sha512-WY8vy2Saa3oRt6XEmz4Sae1W5qS9TjYcbX6IE+dxb8s2APfL9XyQjMHC6jBZrhwqDBIvUeTMCT/P2cq3XLPSBw==}
+  '@agent-browser/cli-linux-x64-gnu@0.44.0':
+    resolution: {integrity: sha512-3CzMurofm16tQ18mEKe/YLOZGVSDpInhILlccDrkd72en/KccQnFYzw4Pid/u2Nq6tL6ufT/5pyaJGzfHhyuwA==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@agent-browser/cli-linux-x64-musl@0.43.0':
-    resolution: {integrity: sha512-WpCI0cIaVIVj4trdduDmW90h51BAP5Nhx6lALOqHjUhOOae/TkLL4bK8gJfjPb/nOp2FRjsF1l77f6rVwkpsug==}
+  '@agent-browser/cli-linux-x64-musl@0.44.0':
+    resolution: {integrity: sha512-c1/JWPXG+g859WcCXrpgOFCD9Tig1+2a/jwOeEKYSBIFNwnmi1q7inR7oTFd1euWhELoMy0ovO19Ae2p/UAJOw==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@agent-browser/cli-win32-x64-msvc@0.43.0':
-    resolution: {integrity: sha512-xhk8wnHk3aiBFSR0pd1Ye3ay2jKjgRardgBJLiB9nXJv0ZkbeP/wh3X7jMiKUfUGE1qqJrKdaM5szQ6iz8/8+w==}
+  '@agent-browser/cli-win32-x64-msvc@0.44.0':
+    resolution: {integrity: sha512-S+Vs7mTXpjwLBSdA6ZzESLavQ5saiijaNWQfYN9yoVsQ2aYOKnu5zkZIxsaWjjJ1Too6pylR3g0ijLaTWZYjkQ==}
     cpu: [x64, arm64]
     os: [win32]
 
@@ -9450,8 +9450,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  agent-browser@0.43.0:
-    resolution: {integrity: sha512-TExwnZAW39fUBDJhUPrw8KKGmcjzBo7FxNqoP2/usHG1ODsjGI2jAWq3+Q6I5JYyBMjePFEsj8KGB68mALtglA==}
+  agent-browser@0.44.0:
+    resolution: {integrity: sha512-OIrY/BlPwdg8XB9rzEbBuDva0S/lQmQBCW735y+B80kDvZ8CDQsuYV8i6hmUr70qIZeTyjd74aymlUzHKbvO4Q==}
     engines: {node: '>=22.0.0'}
     hasBin: true
 
@@ -13746,25 +13746,25 @@ packages:
 
 snapshots:
 
-  '@agent-browser/cli-darwin-arm64@0.43.0':
+  '@agent-browser/cli-darwin-arm64@0.44.0':
     optional: true
 
-  '@agent-browser/cli-darwin-x64@0.43.0':
+  '@agent-browser/cli-darwin-x64@0.44.0':
     optional: true
 
-  '@agent-browser/cli-linux-arm64-gnu@0.43.0':
+  '@agent-browser/cli-linux-arm64-gnu@0.44.0':
     optional: true
 
-  '@agent-browser/cli-linux-arm64-musl@0.43.0':
+  '@agent-browser/cli-linux-arm64-musl@0.44.0':
     optional: true
 
-  '@agent-browser/cli-linux-x64-gnu@0.43.0':
+  '@agent-browser/cli-linux-x64-gnu@0.44.0':
     optional: true
 
-  '@agent-browser/cli-linux-x64-musl@0.43.0':
+  '@agent-browser/cli-linux-x64-musl@0.44.0':
     optional: true
 
-  '@agent-browser/cli-win32-x64-msvc@0.43.0':
+  '@agent-browser/cli-win32-x64-msvc@0.44.0':
     optional: true
 
   '@antfu/install-pkg@2.1.0':
@@ -19416,15 +19416,15 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  agent-browser@0.43.0:
+  agent-browser@0.44.0:
     optionalDependencies:
-      '@agent-browser/cli-darwin-arm64': 0.43.0
-      '@agent-browser/cli-darwin-x64': 0.43.0
-      '@agent-browser/cli-linux-arm64-gnu': 0.43.0
-      '@agent-browser/cli-linux-arm64-musl': 0.43.0
-      '@agent-browser/cli-linux-x64-gnu': 0.43.0
-      '@agent-browser/cli-linux-x64-musl': 0.43.0
-      '@agent-browser/cli-win32-x64-msvc': 0.43.0
+      '@agent-browser/cli-darwin-arm64': 0.44.0
+      '@agent-browser/cli-darwin-x64': 0.44.0
+      '@agent-browser/cli-linux-arm64-gnu': 0.44.0
+      '@agent-browser/cli-linux-arm64-musl': 0.44.0
+      '@agent-browser/cli-linux-x64-gnu': 0.44.0
+      '@agent-browser/cli-linux-x64-musl': 0.44.0
+      '@agent-browser/cli-win32-x64-msvc': 0.44.0
 
   agentkeepalive@4.6.0:
     dependencies:
