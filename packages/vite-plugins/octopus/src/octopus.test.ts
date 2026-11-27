@@ -65,10 +65,14 @@ describe('Octopus server', () => {
 
   it('registers and lists apps', async () => {
     const response = await register(octopusUrl, 'fusion-help', { url: appUrl, instanceId: 'a' });
-    const list = await fetch(`${octopusUrl}/api/apps`).then((r) => r.json());
+    const listResponse = await fetch(`${octopusUrl}/api/apps`);
 
     expect(response.status).toBe(200);
-    expect(list).toEqual([expect.objectContaining({ appKey: 'fusion-help', url: appUrl })]);
+    expect(await listResponse.json()).toEqual([
+      expect.objectContaining({ appKey: 'fusion-help', url: appUrl }),
+    ]);
+    // Clients take only a list marked like this for Octopus's.
+    expect(listResponse.headers.get('x-octopus')).toBe('registry');
   });
 
   it('rejects addresses outside this machine', async () => {
@@ -422,6 +426,17 @@ describe('Octopus server', () => {
       });
     });
 
+    it('reports CI when another program answers with a list of apps', async () => {
+      const other = http.createServer((_req, res) => {
+        res.writeHead(200, { 'content-type': 'application/json' });
+        res.end(JSON.stringify([{ appKey: 'fusion-help', url: appUrl }]));
+      });
+      const otherUrl = await listen(other);
+      servers.push(other);
+
+      await expect(appSource('fusion-help', otherUrl)).resolves.toEqual({ source: 'ci' });
+    });
+
     it('rejects an invalid percent encoding in the app key', async () => {
       const handler = createAppSourceHandler(octopusUrl);
       const portal = http.createServer((req, res) => void handler(req, res, () => res.end()));
@@ -496,6 +511,23 @@ describe('ensureOctopus', () => {
 
   it('does not mistake another program on the port for Octopus', async () => {
     const other = http.createServer((_req, res) => res.end('<html>something else</html>'));
+    const otherUrl = await listen(other);
+    cleanup.push(() => close(other));
+
+    await expect(ensureOctopus(otherUrl, { log: () => {}, state: {} })).resolves.toBe('port-taken');
+  });
+
+  it.each([
+    ['an empty JSON array', '[]'],
+    [
+      'a list that looks like registered apps',
+      '[{"appKey":"my-app","url":"http://localhost:5173"}]',
+    ],
+  ])('does not mistake another program answering with %s for Octopus', async (_case, body) => {
+    const other = http.createServer((_req, res) => {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(body);
+    });
     const otherUrl = await listen(other);
     cleanup.push(() => close(other));
 
@@ -583,8 +615,12 @@ describe('mock API route', () => {
     mockUrl = await listen(mock);
 
     octopusAnswer = { status: 200, apps: [] };
+    // Answers like Octopus, which marks its list of apps with `x-octopus: registry`.
     const octopus = http.createServer((_req, res) => {
-      res.writeHead(octopusAnswer.status, { 'content-type': 'application/json' });
+      res.writeHead(octopusAnswer.status, {
+        'content-type': 'application/json',
+        'x-octopus': 'registry',
+      });
       res.end(JSON.stringify(octopusAnswer.apps));
     });
     octopusUrl = await listen(octopus);

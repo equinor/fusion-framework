@@ -11,6 +11,13 @@ export const PROXY_PREFIX = '/proxy';
 
 /** Response header telling the portal whether Octopus served the request (`hit`) or not (`miss`). */
 export const OCTOPUS_HEADER = 'x-octopus';
+/**
+ * Value of {@link OCTOPUS_HEADER} on Octopus's list of apps (`GET /api/apps`). Clients require it
+ * before they treat an answer as Octopus's, so another program on the port is never mistaken
+ * for it, even if it answers with a JSON array.
+ */
+export const OCTOPUS_REGISTRY = 'registry';
+
 /** Response header with the mock server of an app running in mock mode. */
 export const OCTOPUS_MOCK_HEADER = 'x-octopus-mock';
 
@@ -183,7 +190,11 @@ export const createOctopusServer = ({
     }
 
     if (url.pathname === '/api/apps' && req.method === 'GET') {
-      sendJson(res, 200, registry.list());
+      res.writeHead(200, {
+        'content-type': 'application/json',
+        [OCTOPUS_HEADER]: OCTOPUS_REGISTRY,
+      });
+      res.end(JSON.stringify(registry.list()));
       return;
     }
 

@@ -18,6 +18,7 @@ export {
   type HealthCheckOptions,
   isReachable,
   OCTOPUS_HEADER,
+  OCTOPUS_REGISTRY,
   OCTOPUS_MOCK_HEADER,
   type OctopusServerOptions,
   PROXY_PREFIX,

@@ -72,7 +72,7 @@ await octopus.close();
 | Request | Answer |
 | --- | --- |
 | `GET /` | Page listing the registered apps, with a link to each app's dev page and an Unregister button |
-| `GET /api/apps` | Registered apps |
+| `GET /api/apps` | Registered apps, marked `x-octopus: registry`; the plugins only take an answer with that header for Octopus's |
 | `PUT /api/apps/:appKey` | Register or renew `{ url, mockUrl?, instanceId, startedAt? }`; `410` when unregistered by hand |
 | `DELETE /api/apps/:appKey[?instanceId=]` | Unregister; with `instanceId` only that dev server's entry, without it (by hand) all of them until they restart |
 | `/proxy/<apps API path>` | Manifest, config and scripts of registered apps (`GET`, `HEAD`); `404` with `x-octopus: miss` otherwise |

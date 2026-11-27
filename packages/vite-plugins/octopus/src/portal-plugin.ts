@@ -6,7 +6,12 @@ import { DEFAULT_OCTOPUS_URL } from './server/index.js';
 import { parseLocalUrl, portOf, type RegisteredApp } from './server/registry.js';
 import { setResponseDeadline } from './server/response-deadline.js';
 import { parseAppRequest, parseRequestUrl } from './server/routes.js';
-import { OCTOPUS_HEADER, OCTOPUS_MOCK_HEADER, PROXY_PREFIX } from './server/server.js';
+import {
+  OCTOPUS_HEADER,
+  OCTOPUS_MOCK_HEADER,
+  OCTOPUS_REGISTRY,
+  PROXY_PREFIX,
+} from './server/server.js';
 import { type RunningOctopus, startOctopus } from './server/start.js';
 
 /** Connect-style request handler, as used by Vite's dev server. */
@@ -32,6 +37,31 @@ export interface EnsureOctopusState {
   running?: RunningOctopus;
 }
 
+/** Thrown when something answers at the Octopus address, but not with Octopus's list of apps. */
+class NotOctopusError extends Error {}
+
+/**
+ * Gets the registered apps from Octopus. Only an answer marked as Octopus's own
+ * (`x-octopus: registry`) with a list counts, so another program on the port, even one that
+ * answers with a JSON array, is never taken for Octopus and its answer never trusted.
+ *
+ * @param octopusUrl - Octopus address.
+ * @returns The registered apps.
+ * @throws {NotOctopusError} When the answer is not Octopus's list of apps.
+ * @throws When nothing answers within a second.
+ */
+const fetchRegisteredApps = async (octopusUrl: string): Promise<RegisteredApp[]> => {
+  const response = await fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) });
+  const body: unknown =
+    response.ok && response.headers.get(OCTOPUS_HEADER) === OCTOPUS_REGISTRY
+      ? await response.json().catch(() => undefined)
+      : undefined;
+  if (!Array.isArray(body)) {
+    throw new NotOctopusError(`${octopusUrl} answered ${response.status}, but not as Octopus`);
+  }
+  return body as RegisteredApp[];
+};
+
 /** What answers at an Octopus address: Octopus, another program, or nothing. */
 type ProbeResult = 'octopus' | 'other' | 'none';
 
@@ -45,10 +75,12 @@ type ProbeResult = 'octopus' | 'other' | 'none';
  */
 const probeOctopus = async (octopusUrl: string): Promise<ProbeResult> => {
   try {
-    const response = await fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) });
-    const body: unknown = response.ok ? await response.json().catch(() => undefined) : undefined;
-    return Array.isArray(body) ? 'octopus' : 'other';
+    await fetchRegisteredApps(octopusUrl);
+    return 'octopus';
   } catch (error) {
+    if (error instanceof NotOctopusError) {
+      return 'other';
+    }
     // A timeout means a program holds the port without answering; any other failure, e.g. a
     // refused connection, means nothing answers.
     return (error as Error).name === 'TimeoutError' ? 'other' : 'none';
@@ -217,10 +249,7 @@ export const createAppSourceHandler =
     }
     let source: AppSource = { source: 'ci' };
     try {
-      const response = await fetch(`${octopusUrl}/api/apps`, {
-        signal: AbortSignal.timeout(1000),
-      });
-      const apps = response.ok ? ((await response.json()) as RegisteredApp[]) : [];
+      const apps = await fetchRegisteredApps(octopusUrl);
       const app = apps.find((entry) => entry.appKey === appKey);
       if (app) {
         source = app.mockUrl
@@ -228,7 +257,7 @@ export const createAppSourceHandler =
           : { source: 'local', url: app.url };
       }
     } catch {
-      // Octopus is not running, so the app comes from CI.
+      // Octopus is not running, or something else answers, so the app comes from CI.
     }
     res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
     res.end(JSON.stringify(source));
@@ -255,22 +284,6 @@ const createCache = <T>(load: (key: string) => Promise<T>) => {
   };
 };
 
-/**
- * Creates the handler that sends API requests from an app in mock mode to its mock server.
- *
- * A request below the API base, e.g. `/people/persons/me`, goes to the mock server
- * (`<mockUrl>/people/persons/me`) when:
- * - its `x-fusion-app` header names an app whose active Octopus entry has a mock server, and
- * - that mock server lists the service (`/@fusion-mock/discovery`).
- *
- * Everything else, including the portal's own requests, goes on to `next()`, i.e. to CI. The
- * portal's token is not sent to the mock server. The app's requests get a `502` instead of going
- * to CI when its mock server does not list its services, or when Octopus cannot be asked and the
- * app was in mock mode at the last answer.
- *
- * @param octopusUrl - Octopus address.
- * @returns The handler.
- */
 /** Options for {@link createMockApiHandler}. */
 export interface MockApiHandlerOptions {
   /**
@@ -301,6 +314,29 @@ const sendMockUnavailable = (res: ServerResponse, error: string): void => {
   res.end(JSON.stringify({ error }));
 };
 
+/**
+ * Creates the handler that sends API requests from an app in mock mode to its mock server.
+ *
+ * A request below the API base, e.g. `/people/persons/me`, goes to the mock server
+ * (`<mockUrl>/people/persons/me`) when:
+ * - its `x-fusion-app` header names an app whose active Octopus entry has a mock server, and
+ * - that mock server lists the service (`/@fusion-mock/discovery`).
+ *
+ * Everything else, including the portal's own requests, goes on to `next()`, i.e. to CI. The
+ * portal's token is not sent to the mock server.
+ *
+ * An app in mock mode never falls back to CI for the services it mocks, since its writes would
+ * reach real services with the real token. Its requests get a `502` instead when:
+ * - its mock server does not list its services, or sends no response in time;
+ * - Octopus cannot be asked, or is not available (`isAvailable`), and the app was in mock mode
+ *   at the last answer;
+ * - the app was in mock mode but is no longer listed, for up to `mockGraceMs`, e.g. while a
+ *   restarted Octopus waits for its next heartbeat.
+ *
+ * @param octopusUrl - Octopus address.
+ * @param options - Availability, grace period and response deadline; see {@link MockApiHandlerOptions}.
+ * @returns The handler.
+ */
 export const createMockApiHandler = (
   octopusUrl: string,
   {
@@ -313,16 +349,9 @@ export const createMockApiHandler = (
   // arriving while a lookup is under way share it.
   let pendingLookup: Promise<RegisteredApp[]> | undefined;
   const activeApps = (): Promise<RegisteredApp[]> => {
-    pendingLookup ??= fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) })
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`Octopus answered ${response.status}`);
-        }
-        return (await response.json()) as RegisteredApp[];
-      })
-      .finally(() => {
-        pendingLookup = undefined;
-      });
+    pendingLookup ??= fetchRegisteredApps(octopusUrl).finally(() => {
+      pendingLookup = undefined;
+    });
     return pendingLookup;
   };
   // Apps seen in mock mode, kept while Octopus cannot be asked or no longer lists them.
