@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import {
   checkExisting,
+  isUpstreamToolingOnly,
   localUrl,
   upstreamPackages,
   verifyRanges,
@@ -127,5 +128,70 @@ test('reuse requires the complete framework package set and the original upstrea
   const stable = { [name]: { ...release, version: release.stableVersion, integrity } };
   assert.throws(() =>
     verifyReuse({ ...manifest, packages: stable }, commit, tag, upstream, expected),
+  );
+});
+
+const webHead = 'd'.repeat(40);
+const webRepo = 'fusion-web-components';
+const reactRepo = 'fusion-react-components';
+const webComparison = {
+  base: webCommit,
+  mergeBase: webCommit,
+  head: webHead,
+  status: 'ahead',
+  total: 1,
+  commits: 1,
+  files: [
+    { path: 'CONTRIBUTING.md', status: 'modified', oldPath: null },
+    { path: 'scripts/dark-mode-preview.mjs', status: 'modified', oldPath: null },
+  ],
+};
+
+test('allows an unbroken Web descendant with only the documented tooling paths changed', () => {
+  assert.equal(isUpstreamToolingOnly(webRepo, webComparison, webCommit, webHead), true);
+  assert.equal(
+    isUpstreamToolingOnly(
+      webRepo,
+      { ...webComparison, mergeBase: reactCommit },
+      webCommit,
+      webHead,
+    ),
+    false,
+  );
+  assert.equal(
+    isUpstreamToolingOnly(webRepo, { ...webComparison, total: 251 }, webCommit, webHead),
+    false,
+  );
+});
+
+test('uses a repository-specific allowlist for the React comparison', () => {
+  const files = [{ path: 'scripts/dark-mode-preview.js', status: 'modified', oldPath: null }];
+  const comparison = { ...webComparison, files };
+  assert.equal(isUpstreamToolingOnly(reactRepo, comparison, webCommit, webHead), true);
+  assert.equal(isUpstreamToolingOnly(webRepo, comparison, webCommit, webHead), false);
+});
+
+test('blocks source, dependency, lockfile, and renamed-path changes even with tooling changes', () => {
+  for (const path of [
+    'packages/person/src/utils.ts',
+    'packages/person/package.json',
+    'package.json',
+    'bun.lock',
+  ]) {
+    const files = [...webComparison.files, { path, status: 'modified', oldPath: null }];
+    for (const repo of [webRepo, reactRepo]) {
+      assert.equal(
+        isUpstreamToolingOnly(repo, { ...webComparison, files }, webCommit, webHead),
+        false,
+        path,
+      );
+    }
+  }
+  const files = [
+    { path: 'CONTRIBUTING.md', status: 'renamed', oldPath: 'packages/person/src/utils.ts' },
+  ];
+  assert.equal(
+    isUpstreamToolingOnly(webRepo, { ...webComparison, files }, webCommit, webHead),
+    false,
   );
 });

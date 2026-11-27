@@ -34,6 +34,10 @@ const previewPaths = new Set([
   '.github/scripts/dark-mode-preview.test.mjs',
   'contributing/dark-mode-preview.md',
 ]);
+const upstreamPreviewPaths = new Map([
+  ['fusion-web-components', new Set(['CONTRIBUTING.md', 'scripts/dark-mode-preview.mjs'])],
+  ['fusion-react-components', new Set(['CONTRIBUTING.md', 'scripts/dark-mode-preview.js'])],
+]);
 const rangeChanges = [
   ['packages/dev-portal', 'devDependencies', 'fusion-react-errorboundary', '^2.0.15'],
   ['packages/dev-portal', 'devDependencies', 'fusion-react-side-sheet', '^2.2.0'],
@@ -122,7 +126,33 @@ export function checkExisting(metadata, name, { version, integrity: expected, ta
   return true;
 }
 
-function verifyHeads(commit, webCommit, reactCommit) {
+/** Allow read-only reuse only for complete, tooling-only upstream PR comparisons. */
+export function isUpstreamToolingOnly(
+  repo,
+  { base, mergeBase, head, status, total, commits, files },
+  source,
+  live,
+) {
+  const allowed = upstreamPreviewPaths.get(repo);
+  return (
+    allowed !== undefined &&
+    status === 'ahead' &&
+    base === source &&
+    mergeBase === source &&
+    head === live &&
+    Number.isInteger(total) &&
+    total > 0 &&
+    commits === total &&
+    Array.isArray(files) &&
+    files.length > 0 &&
+    files.length < 300 &&
+    files.every(
+      ({ path, status, oldPath }) => allowed.has(path) && status === 'modified' && oldPath === null,
+    )
+  );
+}
+
+function verifyHeads(commit, webCommit, reactCommit, reuse = false) {
   for (const [repo, number, expected] of [
     ['fusion-framework', '6035', commit],
     ['fusion-web-components', '2551', webCommit],
@@ -146,6 +176,27 @@ function verifyHeads(commit, webCommit, reactCommit) {
     if (repo === 'fusion-framework') {
       verifySource(commit, actual);
       verifySource(commit, 'HEAD');
+    } else if (actual !== expected && reuse) {
+      assert.match(actual, sha);
+      const comparison = JSON.parse(
+        execFileSync(
+          'gh',
+          [
+            'api',
+            `repos/equinor/${repo}/compare/${expected}...${actual}`,
+            '--jq',
+            '{base:.base_commit.sha,mergeBase:.merge_base_commit.sha,head:.commits[-1].sha,status,total:.total_commits,commits:(.commits|length),files:[.files[]?|{path:.filename,status,oldPath:.previous_filename}]}',
+          ],
+          { encoding: 'utf8' },
+        ),
+      );
+      assert.ok(
+        isUpstreamToolingOnly(repo, comparison, expected, actual),
+        `Unexpected live ${repo} head; changes are not proven tooling-only. Coordinate new snapshots.`,
+      );
+      console.log(
+        `Reusing ${repo} ${expected.slice(0, 8)}; ${actual.slice(0, 8)} changes only preview tooling or its guide`,
+      );
     } else {
       assert.equal(actual, expected, `Unexpected live ${repo} head; coordinate new snapshots`);
     }
@@ -204,7 +255,9 @@ function readPrivate(file) {
   return readFileSync(file);
 }
 
-async function preview(commit, webCommit, reactCommit, publish) {
+async function preview(commit, webCommit, reactCommit, mode) {
+  const publish = mode === '--publish';
+  const reuse = mode === '--reuse';
   for (const hash of [commit, webCommit, reactCommit]) assert.match(hash, sha);
   const webShort = webCommit.slice(0, 8);
   const reactShort = reactCommit.slice(0, 8);
@@ -253,7 +306,6 @@ async function preview(commit, webCommit, reactCommit, publish) {
     assert.equal(integrity(bytes), entry.integrity, `Tarball integrity mismatch: ${name}`);
     return bytes;
   };
-  verifyHeads(commit, webCommit, reactCommit);
   const frameworkShort = commit.slice(0, 8);
   const tag = `dark-mode-${frameworkShort}-${reactShort}-${webShort}`;
   const suffix = `-dark-mode.g${frameworkShort}.g${reactShort}.g${webShort}`;
@@ -277,6 +329,11 @@ async function preview(commit, webCommit, reactCommit, publish) {
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
   }
+  assert.ok(
+    !reuse || existingManifest,
+    `--reuse requires an existing qualified manifest: ${output}`,
+  );
+  verifyHeads(commit, webCommit, reactCommit, reuse);
   if (existingManifest) {
     verifyReuse(existingManifest, commit, tag, upstream, expected);
     for (const name of required) {
@@ -285,7 +342,7 @@ async function preview(commit, webCommit, reactCommit, publish) {
     for (const [name, entry] of Object.entries(existingManifest.packages)) {
       await download(name, { ...entry, tag }, await metadata(name));
     }
-    verifyHeads(commit, webCommit, reactCommit);
+    verifyHeads(commit, webCommit, reactCommit, reuse);
     console.log(`Reused ${expected.size} verified local packages; no writes; manifest: ${output}`);
     return;
   }
@@ -650,14 +707,14 @@ function packedManifest(file) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const [commit, webCommit, reactCommit, publish, ...extra] = process.argv.slice(2);
+  const [commit, webCommit, reactCommit, mode, ...extra] = process.argv.slice(2);
   assert.ok(
     commit &&
       webCommit &&
       reactCommit &&
       !extra.length &&
-      (publish === undefined || publish === '--publish'),
-    'Usage: node .github/scripts/dark-mode-preview.mjs <framework SHA> <web SHA> <react SHA> [--publish]',
+      (mode === undefined || mode === '--publish' || mode === '--reuse'),
+    'Usage: node .github/scripts/dark-mode-preview.mjs <framework SHA> <web SHA> <react SHA> [--publish | --reuse]',
   );
-  await preview(commit, webCommit, reactCommit, publish === '--publish');
+  await preview(commit, webCommit, reactCommit, mode);
 }

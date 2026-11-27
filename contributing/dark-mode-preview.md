@@ -8,10 +8,12 @@ From the Framework PR checkout, with Node 24, the repository's pinned pnpm, the 
 node .github/scripts/dark-mode-preview.mjs \
   238ff93ee22be32b82c17d1e86aa66cfd48b5f8e \
   090f40d9f068563ae5943ed911e31ab6849a8c8a \
-  ec11c849421411f069ed73335271041128dd1ed5
+  ec11c849421411f069ed73335271041128dd1ed5 --reuse
 ```
 
-Without `--publish`, this command builds and packs without writing to the registry. Append `--publish` to publish a new qualified set to loopback only. If the qualified framework manifest already exists, either invocation checks the source, upstream lineage, versions, tag and tarball SHA-512 digests and reuses the artifacts without republishing or rewriting the manifest. A missing tarball or a version or tag collision stops the run. Never overwrite or retag published versions.
+`--reuse` requires an existing framework manifest. It verifies source, upstream lineage, versions, tags and tarball SHA-512 digests without building, writing the manifest, or publishing. An upstream PR may advance from the supplied source SHA only if the complete comparison shows modifications limited to its root `CONTRIBUTING.md` and its own preview script (`scripts/dark-mode-preview.mjs` for Web or `scripts/dark-mode-preview.js` for React). It never substitutes a newer input manifest. Changes outside those paths, including package inputs and dependency or lock files, stop reuse.
+
+To build and pack without publishing, omit `--reuse`. Append `--publish` instead to publish a new qualified set to loopback only. These modes require exact live upstream heads; they verify and reuse an existing exact-head manifest without rewriting it. A missing tarball or a version or tag collision stops the run. Never overwrite or retag published versions.
 
 The producer checks the live upstream PR heads and accepts a Framework source ancestor only when the intervening changes are limited to this helper, its tests and this guide. It archives the selected commit, not working-tree edits or `node_modules`. The temporary workspace checks stable ranges separately from the exact prerelease pins. For this handoff it aligns the side-sheet and errorboundary ranges to `^3.0.0` only in staging. It leaves Web's `fusion-web-theme` at compatible 0.1.x and pins the React 0.2.0 snapshot only on compatible dependency edges. It uses Changesets release versions, builds and tests the source, and packs exact prerelease dependencies before checking the CLI's dependency graph. Nothing edits the real workspace, its lockfile, CI, or global registry settings.
 
