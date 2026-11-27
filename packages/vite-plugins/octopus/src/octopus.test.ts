@@ -1,5 +1,5 @@
 import http from 'node:http';
-import type { AddressInfo } from 'node:net';
+import net, { type AddressInfo } from 'node:net';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -304,6 +304,27 @@ describe('Octopus server', () => {
       expect(response.status).toBe(299);
     });
 
+    it.each(['PUT', 'POST', 'DELETE'])(
+      'sends a %s of a registered app to CI, since only reads are served locally',
+      async (method) => {
+        await register(octopusUrl, 'app-admin', { url: appUrl, instanceId: 'a' });
+        const portalUrl = await startPortal();
+
+        const response = await fetch(`${portalUrl}/apps/apps/app-admin/builds/1.2.3/config`, {
+          method,
+          body: method === 'DELETE' ? undefined : '{"environment":{}}',
+        });
+        // Octopus itself refuses writes as well, so they never reach the dev server.
+        const direct = await fetch(`${octopusUrl}/proxy/apps/app-admin/builds/1.2.3/config`, {
+          method,
+        });
+
+        expect(response.status).toBe(299);
+        expect(direct.headers.get('x-octopus')).toBe('miss');
+        expect(appRequests).toEqual([]);
+      },
+    );
+
     it('falls back to CI when Octopus is not running', async () => {
       const portalUrl = await startPortal('http://localhost:1');
 
@@ -417,6 +438,47 @@ describe('ensureOctopus', () => {
     cleanup.push(() => close(other));
 
     await expect(ensureOctopus(otherUrl, { log: () => {}, state: {} })).resolves.toBe('port-taken');
+  });
+
+  it('does not mistake a program that holds the port without answering for Octopus', async () => {
+    // Accepts connections but never answers, e.g. a hung process.
+    const sockets = new Set<net.Socket>();
+    const silent = net.createServer((socket) => {
+      sockets.add(socket);
+    });
+    const silentUrl = await listen(silent as unknown as http.Server);
+    cleanup.push(
+      () =>
+        new Promise<void>((resolve) => {
+          for (const socket of sockets) {
+            socket.destroy();
+          }
+          silent.close(() => resolve());
+        }),
+    );
+    const state: EnsureState = {};
+
+    await expect(ensureOctopus(silentUrl, { log: () => {}, state })).resolves.toBe('port-taken');
+    expect(state.running).toBeUndefined();
+  });
+
+  it('uses the Octopus another dev server started at the same moment', async () => {
+    const octopusUrl = await freePort();
+    const first: EnsureState = {};
+    const second: EnsureState = {};
+
+    // Both find nothing and try to start; one gets the port, the other sees EADDRINUSE.
+    const statuses = await Promise.all([
+      ensureOctopus(octopusUrl, { log: () => {}, state: first }),
+      ensureOctopus(octopusUrl, { log: () => {}, state: second }),
+    ]);
+    for (const { running } of [first, second]) {
+      if (running) {
+        cleanup.push(running.close);
+      }
+    }
+
+    expect(statuses.sort()).toEqual(['running', 'started']);
   });
 });
 

@@ -11,6 +11,7 @@ import { octopusAppPlugin } from './app-plugin.js';
 import { octopusPortalPlugin } from './portal-plugin.js';
 import { Registry } from './server/registry.js';
 import { createOctopusServer } from './server/server.js';
+import { startOctopus } from './server/start.js';
 
 const listen = (server: http.Server) =>
   new Promise<string>((resolve) =>
@@ -107,6 +108,30 @@ describe('Vite plugins', () => {
       expect(portal.headers.get('access-control-allow-origin')).toBe('http://localhost:3000');
       expect(otherPortal.headers.get('access-control-allow-origin')).toBe('http://127.0.0.1:3100');
       expect(other.headers.get('access-control-allow-origin')).toBeNull();
+    });
+
+    it("keeps Vite's own CORS from allowing other origins, also with server.cors: true", async () => {
+      const server = await createServer({
+        root,
+        configFile: false,
+        logLevel: 'silent',
+        server: { port: 0, host: '127.0.0.1', cors: true },
+        optimizeDeps: { noDiscovery: true },
+        plugins: [octopusAppPlugin({ appKey: 'my-app', octopusUrl: 'http://localhost:1' })],
+      });
+      await server.listen();
+      cleanup.push(() => server.close());
+      const address = server.httpServer?.address() as AddressInfo;
+      const url = `http://localhost:${address.port}`;
+      const allowedFor = async (origin: string) =>
+        (await fetch(`${url}/@vite/client`, { headers: { origin } })).headers.get(
+          'access-control-allow-origin',
+        );
+
+      expect(await allowedFor('http://example.com')).toBeNull();
+      // Vite's default rule would allow this one.
+      expect(await allowedFor('http://evil.localhost:3000')).toBeNull();
+      expect(await allowedFor('http://localhost:3000')).toBe('http://localhost:3000');
     });
 
     it("gives imported assets the dev server's own address, so they load inside the portal", async () => {
@@ -211,6 +236,27 @@ describe('Vite plugins', () => {
         expect(await fetch(`${octopusUrl}/api/apps`).then((r) => r.json())).toEqual([]);
       });
 
+      await server.close();
+      await vi.waitFor(async () => {
+        await expect(fetch(`${octopusUrl}/api/apps`)).rejects.toThrow();
+      });
+    });
+
+    it('starts its own Octopus when the one it used stops, e.g. after a Vite restart', async () => {
+      const octopusUrl = await freeUrl();
+      // Run by someone else, e.g. the dev server Vite replaces on a restart.
+      const other = await startOctopus(Number(new URL(octopusUrl).port), () => {});
+      const lines: string[] = [];
+      const { server } = await startVite([
+        octopusPortalPlugin({ octopusUrl, log: (line) => lines.push(line), checkMs: 50 }),
+      ]);
+      await vi.waitFor(() => expect(lines.join('\n')).toContain('(already running)'));
+
+      await other.close();
+
+      await vi.waitFor(() => expect(lines.join('\n')).toContain('(started by the portal)'));
+      expect(await fetch(`${octopusUrl}/api/apps`).then((r) => r.json())).toEqual([]);
+      // The Octopus it started now lives as long as this dev server.
       await server.close();
       await vi.waitFor(async () => {
         await expect(fetch(`${octopusUrl}/api/apps`)).rejects.toThrow();

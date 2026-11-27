@@ -48,7 +48,7 @@ import { octopusPortalPlugin } from '@equinor/fusion-framework-vite-plugin-octop
 octopusPortalPlugin({ octopusUrl: 'http://localhost:2000' });
 ```
 
-- Manifest, config and script requests for registered apps are answered from their dev server; everything else goes on to the portal's API proxy (`/@fusion-api`), i.e. to CI.
+- Manifest, config and script reads (`GET`, `HEAD`) for registered apps are answered from their dev server; everything else, including writes such as `PUT` of a build's config, goes on to the portal's API proxy (`/@fusion-api`), i.e. to CI.
 - `GET /@fusion-api/octopus/apps/<appKey>` answers `{ "source": "local" | "mock" | "ci" }`, so the portal UI can show where an app comes from.
 - API requests from an app in mock mode go to its mock server, for the services the mock server lists (`/@fusion-mock/discovery`). The plugin recognises the app by the `x-fusion-app` header the framework adds to the app's requests, and doesn't forward the portal's token. Other services, other apps and the portal itself use CI. Answers from the mock server carry `x-octopus: mock`.
 - An app in mock mode never falls back to CI for the services it mocks: when its mock server doesn't list its services, or Octopus can't confirm the app is still in mock mode, its requests get a `502`.
@@ -75,7 +75,7 @@ await octopus.close();
 | `GET /api/apps` | Registered apps |
 | `PUT /api/apps/:appKey` | Register or renew `{ url, mockUrl?, instanceId, startedAt? }`; `410` when unregistered by hand |
 | `DELETE /api/apps/:appKey[?instanceId=]` | Unregister; with `instanceId` only that dev server's entry, without it (by hand) all of them until they restart |
-| `/proxy/<apps API path>` | Manifest, config and scripts of registered apps; `404` with `x-octopus: miss` otherwise |
+| `/proxy/<apps API path>` | Manifest, config and scripts of registered apps (`GET`, `HEAD`); `404` with `x-octopus: miss` otherwise |
 
 - An app can run in several dev servers at once, e.g. a normal one and one in mock mode, also in the same process. Each dev server registers as its own instance. The one that started last is used; when it stops, the next most recent takes over.
 - Octopus removes dev servers without a heartbeat for 15 seconds, and dev servers that stop answering (checked every 2 seconds, and on each request).

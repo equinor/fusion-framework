@@ -145,7 +145,7 @@ const proxyToApp = (
  * | `GET /api/apps` | Registered apps as JSON |
  * | `PUT /api/apps/:appKey` | Registers an app or renews its entry (`{ url, mockUrl?, instanceId, startedAt? }`) |
  * | `DELETE /api/apps/:appKey[?instanceId=]` | Removes an app. With `instanceId` (the app itself), only that process's entry; without (page or CLI), also refuses that process's heartbeats until it restarts |
- * | `/proxy/<apps API path>` | Manifest, config and scripts of registered apps; `404` with `x-octopus: miss` otherwise |
+ * | `/proxy/<apps API path>` | Manifest, config and scripts of registered apps (`GET`, `HEAD`); `404` with `x-octopus: miss` otherwise |
  *
  * @param options - Registry and event listener.
  * @returns An HTTP server that is not yet listening.
@@ -251,7 +251,9 @@ export const createOctopusServer = ({ registry, onEvent }: OctopusServerOptions)
       const path = url.pathname.slice(PROXY_PREFIX.length);
       const appRequest = parseAppRequest(path);
       const app = appRequest && registry.get(appRequest.appKey);
-      if (!appRequest || !app) {
+      // Only reads are served; a miss sends writes on to CI.
+      const isRead = req.method === 'GET' || req.method === 'HEAD';
+      if (!appRequest || !app || !isRead) {
         sendMiss(res);
         return;
       }

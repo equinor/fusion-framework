@@ -31,6 +31,29 @@ export interface EnsureOctopusState {
   running?: RunningOctopus;
 }
 
+/** What answers at an Octopus address: Octopus, another program, or nothing. */
+type ProbeResult = 'octopus' | 'other' | 'none';
+
+/**
+ * Finds out what answers at `octopusUrl`. Only Octopus answers `GET /api/apps` with a list, so
+ * another program on the port is not mistaken for it. A program that accepts the connection but
+ * does not answer within a second counts as another program.
+ *
+ * @param octopusUrl - Octopus address.
+ * @returns What answers.
+ */
+const probeOctopus = async (octopusUrl: string): Promise<ProbeResult> => {
+  try {
+    const response = await fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) });
+    const body: unknown = response.ok ? await response.json().catch(() => undefined) : undefined;
+    return Array.isArray(body) ? 'octopus' : 'other';
+  } catch (error) {
+    // A timeout means a program holds the port without answering; any other failure, e.g. a
+    // refused connection, means nothing answers.
+    return (error as Error).name === 'TimeoutError' ? 'other' : 'none';
+  }
+};
+
 /**
  * Makes sure Octopus runs at `octopusUrl`: uses one that already answers, or starts one when
  * nothing does.
@@ -46,20 +69,20 @@ export const ensureOctopus = async (
     state = {},
   }: { log?: (line: string) => void; state?: EnsureOctopusState } = {},
 ): Promise<OctopusStatus> => {
-  try {
-    const response = await fetch(`${octopusUrl}/api/apps`, { signal: AbortSignal.timeout(1000) });
-    // Only Octopus answers this with a list, so another program on the port is not mistaken for it.
-    const body: unknown = response.ok ? await response.json().catch(() => undefined) : undefined;
-    if (Array.isArray(body)) {
-      log(`🐙 Octopus at ${octopusUrl} (already running)`);
-      return 'running';
-    }
+  const portTaken = (): OctopusStatus => {
     log(
       `🐙 Something other than Octopus answers at ${octopusUrl}; local apps are off. Use another Octopus address.`,
     );
     return 'port-taken';
-  } catch {
-    // Nothing answers; start Octopus here.
+  };
+
+  const found = await probeOctopus(octopusUrl);
+  if (found === 'octopus') {
+    log(`🐙 Octopus at ${octopusUrl} (already running)`);
+    return 'running';
+  }
+  if (found === 'other') {
+    return portTaken();
   }
 
   const url = parseLocalUrl(octopusUrl);
@@ -75,10 +98,14 @@ export const ensureOctopus = async (
     log(`🐙 Octopus at ${octopusUrl} (started by the portal)`);
     return 'started';
   } catch (error) {
-    // Another dev server started it at the same moment.
+    // Something took the port since the check, e.g. another dev server starting Octopus at the
+    // same moment. Only a real Octopus counts as running; anything else must not get requests.
     if ((error as NodeJS.ErrnoException).code === 'EADDRINUSE') {
-      log(`🐙 Octopus at ${octopusUrl} (already running)`);
-      return 'running';
+      if ((await probeOctopus(octopusUrl)) === 'octopus') {
+        log(`🐙 Octopus at ${octopusUrl} (already running)`);
+        return 'running';
+      }
+      return portTaken();
     }
     log(`🐙 Failed to start Octopus at ${octopusUrl}: ${(error as Error).message}`);
     return 'not-local';
@@ -117,7 +144,10 @@ export const createAppRequestHandler = (
     const url = parseRequestUrl(req.url);
     const path = url.pathname.replace(/^\/apps/, '');
     const appRequest = parseAppRequest(path);
-    if (!url.pathname.startsWith('/apps/') || !appRequest) {
+    // A local app only answers reads. Writes, e.g. `PUT` of a build's config, go to CI, where
+    // they are stored.
+    const isRead = req.method === 'GET' || req.method === 'HEAD';
+    if (!url.pathname.startsWith('/apps/') || !appRequest || !isRead) {
       next();
       return;
     }
@@ -357,19 +387,25 @@ export interface OctopusPortalPluginOptions {
   apiBase?: string;
   /** Writes status and warnings. Defaults to the Vite logger. */
   log?: (line: string) => void;
+  /**
+   * How often to check, in milliseconds, that an Octopus run by someone else still answers, so
+   * the plugin can start its own when it stops. Defaults to 2000.
+   */
+  checkMs?: number;
 }
 
 /**
  * Vite plugin for a portal dev server: loads apps registered with Octopus from their local dev
  * server, and every other app from CI as before.
  *
- * - Manifest, config and script requests for registered apps are answered through Octopus;
+ * - Manifest, config and script reads (`GET`, `HEAD`) for registered apps are answered through Octopus;
  *   everything else goes on to the portal's API proxy.
  * - `GET <apiBase>/octopus/apps/<appKey>` tells the portal UI whether an app is local, local in
  *   mock mode, or from CI.
  * - API requests from an app in mock mode go to its mock server, for the services it mocks.
  * - When nothing answers at the Octopus address, the plugin starts Octopus, and stops it again
- *   when the dev server closes.
+ *   when the dev server closes. While someone else runs it, e.g. `ffc octopus` or the dev server
+ *   Vite replaces on a restart, the plugin starts its own once that Octopus stops.
  * - Requests only go to Octopus once it is known to run. While it starts, and when another
  *   program has its port, everything goes to CI. The portal's token is never sent to Octopus.
  *
@@ -397,15 +433,40 @@ export const octopusPortalPlugin = (options: OctopusPortalPluginOptions = {}): P
       // another program has the port or Octopus is not on this machine, everything goes to CI,
       // so no request, and none of the portal's headers, reach an unrelated program.
       let forwarding = false;
-      // An Octopus started here lives as long as this dev server.
-      void ensureOctopus(octopusUrl, { log, state }).then((status) => {
-        forwarding = status === 'running' || status === 'started';
+      let watch: NodeJS.Timeout | undefined;
+      let checking = false;
+
+      const connect = async (): Promise<void> => {
+        const status = await ensureOctopus(octopusUrl, { log, state });
+        // An Octopus started here lives as long as this dev server.
         if (closed) {
           void state.running?.close();
+          return;
         }
-      });
+        forwarding = status === 'running' || status === 'started';
+        // An Octopus run by someone else can stop while this dev server runs. On a restart, Vite
+        // creates the new dev server before closing the old one, which then stops the Octopus it
+        // started. Watch it, and take over when it is gone.
+        if (status === 'running' && !watch) {
+          watch = setInterval(() => {
+            if (closed || checking || state.running) {
+              return;
+            }
+            checking = true;
+            void probeOctopus(octopusUrl)
+              .then((found) => (found === 'none' ? connect() : undefined))
+              .finally(() => {
+                checking = false;
+              });
+          }, options.checkMs ?? 2000);
+          watch.unref();
+        }
+      };
+
+      void connect();
       server.httpServer?.once('close', () => {
         closed = true;
+        clearInterval(watch);
         void state.running?.close();
       });
 

@@ -66,11 +66,15 @@ export const octopusAppPlugin = (options: OctopusAppPluginOptions): Plugin => {
     name: 'fusion-framework-octopus-app',
     apply: 'serve',
 
-    // The portal imports the app's source directly, so without a scan Vite would only discover
-    // dependencies as they are requested, re-bundle them mid-load, and fail the page with
-    // "Outdated Optimize Dep".
-    config: (config) =>
-      sourceDir && !config.optimizeDeps?.entries
+    config: (config) => ({
+      // Vite's own CORS handling runs after this plugin's and could allow more origins, e.g.
+      // `*.localhost`, or every website with `server.cors: true`. Turning it off leaves the
+      // decision to the localhost-only handler below.
+      server: { cors: false },
+      // The portal imports the app's source directly, so without a scan Vite would only
+      // discover dependencies as they are requested, re-bundle them mid-load, and fail the page
+      // with "Outdated Optimize Dep".
+      ...(sourceDir && !config.optimizeDeps?.entries
         ? {
             optimizeDeps: {
               entries: [
@@ -80,7 +84,8 @@ export const octopusAppPlugin = (options: OctopusAppPluginOptions): Plugin => {
               ],
             },
           }
-        : undefined,
+        : {}),
+    }),
 
     configureServer(server) {
       if (configuredServers.has(server)) {
