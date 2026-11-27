@@ -3,6 +3,7 @@ import appCommand from './app/index.js';
 import authCommands from './auth/index.js';
 import createCommand from './create/index.js';
 import discoCommand from './disco/index.js';
+import octopusCommand from './octopus/index.js';
 import portalCommand from './portal/index.js';
 import telemetryCommand from './telemetry/index.js';
 import { registerOptionalMockServerCommand } from './register-optional-mock-server-command.js';
@@ -11,7 +12,8 @@ import { loadPlugins } from '../plugins/load-plugins.js';
 /**
  * Registers all built-in CLI commands and optional plugins on the Commander program.
  *
- * Built-in command groups: `app`, `auth`, `create`, `disco`, `portal`, `telemetry`, `mock-server`.
+ * Built-in command groups: `app`, `auth`, `create`, `disco`, `octopus`, `portal`, `telemetry`,
+ * `mock-server`.
  * Configured plugins load before the optional `mock-server` fallback so an explicit
  * `mockServerPlugin()` registration can retain its app-specific defaults. When no configured
  * plugin owns that command, it delegates to the installed plugin package or registers an
@@ -24,6 +26,7 @@ export default async (program: Command) => {
   program.addCommand(authCommands);
   program.addCommand(createCommand);
   program.addCommand(discoCommand);
+  program.addCommand(octopusCommand);
   program.addCommand(portalCommand);
   program.addCommand(telemetryCommand);
 

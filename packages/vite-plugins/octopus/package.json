@@ -1,0 +1,52 @@
+{
+  "name": "@equinor/fusion-framework-vite-plugin-octopus",
+  "version": "0.0.0",
+  "description": "Vite plugins that let a local Fusion portal load apps from their local dev servers through Octopus, a local app registry and proxy",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/esm/server/index.js",
+      "types": "./dist/types/server/index.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/vite-plugins/octopus"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest",
+    "prepack": "pnpm build"
+  },
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "dev-server",
+    "local-development",
+    "typescript"
+  ],
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vite": "^8.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.0.0",
+    "vitest": "catalog:vitest"
+  }
+}

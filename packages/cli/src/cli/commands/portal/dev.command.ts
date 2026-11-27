@@ -1,6 +1,12 @@
 import { createCommand } from 'commander';
 
-import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-cli/bin';
+import { DEFAULT_OCTOPUS_URL } from '@equinor/fusion-framework-vite-plugin-octopus';
+
+import {
+  ConsoleLogger,
+  resolveOctopusUrl,
+  startPortalDevServer,
+} from '@equinor/fusion-framework-cli/bin';
 
 /**
  * CLI command: `dev`
@@ -20,6 +26,8 @@ import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-c
  *   --debug              Enable debug mode
  *   --env <environment>  Runtime environment for the dev server (default: local)
  *   --port <port>        Port for the development server (default: 3000)
+ *   --octopus [url]      Load apps registered with Octopus from their local dev server, and start
+ *                        Octopus if it is not running (default: http://localhost:2000)
  *
  * Configuration:
  *   dev-server.config.ts  Optional configuration file for API mocking, service discovery,
@@ -28,6 +36,7 @@ import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-c
  * Example:
  *   $ ffc portal dev
  *   $ ffc portal dev --port 4000
+ *   $ ffc portal dev --octopus
  *   $ ffc portal dev --debug
  *
  * @see startPortalDevServer for implementation details
@@ -46,6 +55,7 @@ export const command = createCommand('dev')
       'Examples:',
       '  $ ffc portal dev',
       '  $ ffc portal dev --port 4000',
+      '  $ ffc portal dev --octopus',
       '  $ ffc portal dev --debug',
       '',
       'See https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html for configuration options.',
@@ -54,6 +64,10 @@ export const command = createCommand('dev')
   .option('--debug', 'Enable debug mode', !!process.env.RUNNER_DEBUG)
   .option('--env <environment>', 'Runtime environment for the dev server', 'local')
   .option('--port <port>', 'Port for the development server', '3000')
+  .option(
+    '--octopus [url]',
+    `Load apps registered with Octopus (e.g. "ffc app dev --octopus") from their local dev server, and start Octopus if it is not running (default: ${DEFAULT_OCTOPUS_URL})`,
+  )
   .action(async (options) => {
     const log = new ConsoleLogger('portal:dev', { debug: options.debug });
 
@@ -62,6 +76,7 @@ export const command = createCommand('dev')
       server: { port: Number(options.port) },
       log,
       env: options.env,
+      octopus: resolveOctopusUrl(options.octopus),
     });
     log.succeed('Development server started successfully.');
   });

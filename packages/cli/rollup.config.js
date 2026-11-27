@@ -6,7 +6,12 @@ import replace from '@rollup/plugin-replace';
 
 import pkg from './package.json' with { type: 'json' };
 
-const externals = [...Object.keys(pkg.dependencies), 'keytar'];
+// Externals match exact import paths, so subpath imports are listed on their own.
+const externals = [
+  ...Object.keys(pkg.dependencies),
+  '@equinor/fusion-framework-vite-plugin-octopus/server',
+  'keytar',
+];
 const plugins = [
   json(),
   resolve({ preferBuiltins: true }),

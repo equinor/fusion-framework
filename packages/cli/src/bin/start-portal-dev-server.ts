@@ -1,5 +1,6 @@
 import { mergeConfig as mergeConfigVite } from 'vite';
 
+import { octopusPortalPlugin } from '@equinor/fusion-framework-vite-plugin-octopus';
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 import { createDevServer, type CreateDevServerOptions, type ConsoleLogger } from './utils/index.js';
@@ -43,6 +44,12 @@ export const startPortalDevServer = async (options?: {
   server?: {
     port?: number;
   };
+  /**
+   * Octopus address (e.g. `http://localhost:2000`). When set, the portal loads apps registered
+   * with Octopus from their local dev server, and starts Octopus when it is not running
+   * (optional).
+   */
+  octopus?: string;
 }) => {
   const { log } = options ?? {};
 
@@ -74,6 +81,9 @@ export const startPortalDevServer = async (options?: {
         allow: [pkg.root],
       },
     },
+    plugins: options?.octopus
+      ? [octopusPortalPlugin({ octopusUrl: options.octopus, log: (line) => log?.info(line) })]
+      : [],
   });
 
   const devServerConfig: CreateDevServerOptions = {

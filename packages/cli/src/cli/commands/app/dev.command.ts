@@ -1,6 +1,12 @@
 import { createCommand } from 'commander';
 
-import { startAppDevServer, ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
+import { DEFAULT_OCTOPUS_URL } from '@equinor/fusion-framework-vite-plugin-octopus';
+
+import {
+  ConsoleLogger,
+  resolveOctopusUrl,
+  startAppDevServer,
+} from '@equinor/fusion-framework-cli/bin';
 
 const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
 
@@ -23,9 +29,11 @@ const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
  *   --manifest <path>    Path to the app manifest file (app.manifest[.env]?.[ts,js,json])
  *   --config <path>      Path to the app config file (app.config[.env]?.[ts,js,json])
  *   --env <environment>  Runtime environment for the dev server (default: local)
- *   --port <port>        Port for the development server (default: 3000)
+ *   --port <port>        Port for the development server (default: 3000, or a free port with --octopus)
  *   --host <host>        Host for the development server (default: localhost)
  *   --mock [endpoint]    Point API service discovery at a local mock server (default: http://localhost:4010)
+ *   --octopus [url]      Register the app with Octopus, so a local portal loads it from this dev server
+ *                        (default: http://localhost:2000)
  *
  * Configuration:
  *   dev-server.config.ts  Optional configuration file for API mocking, service discovery,
@@ -38,6 +46,7 @@ const DEFAULT_MOCK_ENDPOINT = 'http://localhost:4010';
  *   $ ffc app dev --host 0.0.0.0
  *   $ ffc app dev --mock
  *   $ ffc app dev --mock http://localhost:5010
+ *   $ ffc app dev --octopus
  *
  * @see startAppDevServer for implementation details
  * @see {@link https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html | Dev server configuration guide}
@@ -59,6 +68,7 @@ export const command = createCommand('dev')
       '  $ ffc app dev --host 0.0.0.0',
       '  $ ffc app dev --mock',
       '  $ ffc app dev --mock http://localhost:5010',
+      '  $ ffc app dev --octopus',
       '',
       'See https://equinor.github.io/fusion-framework/cli/docs/dev-server/configuration.html for configuration options.',
     ].join('\n'),
@@ -67,11 +77,18 @@ export const command = createCommand('dev')
   .option('--manifest <path>', 'Path to the app manifest file (app.manifest[.env]?.[ts,js,json])')
   .option('--config <path>', 'Path to the app config file (app.config[.env]?.[ts,js,json])')
   .option('--env <environment>', 'Runtime environment for the dev server', 'local')
-  .option('--port <port>', 'Port for the development server', '3000')
+  .option(
+    '--port <port>',
+    'Port for the development server (default: 3000, or a free port with --octopus)',
+  )
   .option('--host <host>', 'Host for the development server')
   .option(
     '--mock [endpoint]',
     `Point API service discovery at a local mock server, e.g. one started with "ffc mock-server" (default endpoint: ${DEFAULT_MOCK_ENDPOINT})`,
+  )
+  .option(
+    '--octopus [url]',
+    `Register the app with Octopus, so a local portal started with "ffc portal dev --octopus" loads it from this dev server (default: ${DEFAULT_OCTOPUS_URL})`,
   )
   .action(async (options) => {
     const log = new ConsoleLogger('app:dev', { debug: options.debug });
@@ -88,6 +105,7 @@ export const command = createCommand('dev')
       port: options.port,
       host: options.host,
       mock,
+      octopus: resolveOctopusUrl(options.octopus),
     });
     log.succeed('Development server started successfully.');
   });
