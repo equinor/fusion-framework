@@ -15,7 +15,7 @@ const Styled = {
   `,
   Indicator: styled.div<{ $active: boolean }>`
     align-self: stretch;
-    background: ${({ $active }) => ($active ? '#007079' : '#dcdcdc')};
+    background: ${({ $active }) => ($active ? 'var(--eds-color-bg-accent-fill-emphasis-default)' : 'var(--eds-color-bg-neutral-fill-muted-default)')};
   `,
   Name: styled.div`
     min-width: 0;

@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right } from '@equinor/eds-icons';
 
-import { tokens } from '@equinor/eds-tokens';
 import { styled } from 'styled-components';
 
 const Styled = {
@@ -17,7 +16,7 @@ const Styled = {
         align-items: center;
         background: none;
         border: none;
-        color: ${tokens.colors.infographic.primary__moss_green_100.hex};
+        color: var(--eds-color-text-accent-subtle);
         cursor: pointer;
         :hover {
             background: none;
@@ -29,7 +28,7 @@ const Styled = {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        border-left: 1px solid ${tokens.colors.infographic.primary__moss_green_100.hex};
+        border-left: 1px solid var(--eds-color-border-accent-strong);
     `,
 };
 

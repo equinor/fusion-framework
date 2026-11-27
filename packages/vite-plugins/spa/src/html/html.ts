@@ -49,6 +49,8 @@ export const html = `
           padding: 0;
           height: 100%;
           font-family: 'EquinorFont', sans-serif;
+          /* Resolves once the portal loads EDS variables; until then the browser default applies. */
+          background-color: var(--eds-color-bg-neutral-surface);
         }
       </style>
     </head>

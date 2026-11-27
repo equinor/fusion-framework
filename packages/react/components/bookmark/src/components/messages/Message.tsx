@@ -1,5 +1,4 @@
 import { Icon, Typography } from '@equinor/eds-core-react';
-import { tokens } from '@equinor/eds-tokens';
 import type { PropsWithChildren } from 'react';
 import { styled } from 'styled-components';
 
@@ -11,14 +10,14 @@ const getMessageType = (type?: PortalMessageType) => {
   // Map each message type to its icon and color; unknown types render nothing
   switch (type) {
     case 'Error':
-      return { color: tokens.colors.interactive.danger__resting.hex, icon: error_outlined };
+      return { color: 'var(--eds-color-text-danger-subtle)', icon: error_outlined };
     case 'Info':
-      return { color: tokens.colors.interactive.primary__resting.hex, icon: error_outlined };
+      return { color: 'var(--eds-color-text-accent-subtle)', icon: error_outlined };
     case 'Warning':
-      return { color: tokens.colors.interactive.warning__resting.hex, icon: error_outlined };
+      return { color: 'var(--eds-color-text-warning-subtle)', icon: error_outlined };
     case 'NoContent':
       return {
-        color: tokens.colors.interactive.primary__resting.hex,
+        color: 'var(--eds-color-text-accent-subtle)',
         icon: file_description,
       };
     default:
@@ -70,12 +69,13 @@ export const Message = ({
       <Icon
         data-testid="icon"
         size={40}
-        color={currentType?.color || color || tokens.colors.text.static_icons__tertiary.hex}
+        // Applied as CSS so `var()` colours resolve; the SVG `fill` attribute can't use them
+        style={{ color: currentType?.color || color || 'var(--eds-color-text-neutral-subtle)' }}
         data={currentType?.icon || error_outlined}
       />
       <Styles.Content>
         <Typography
-          color={tokens.colors.text.static_icons__default.hex}
+          color="var(--eds-color-text-neutral-strong)"
           variant={'h3'}
           aria-label={`Title for ${type} message`}
         >

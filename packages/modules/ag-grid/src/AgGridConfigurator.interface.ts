@@ -27,7 +27,7 @@ export interface AgGridConfig {
  *
  * enableAgGrid(configurator, (builder) => {
  *   builder.setLicenseKey('your-key');
- *   builder.setTheme((theme) => theme.withParams({ accentColor: '#007079' }));
+ *   builder.setTheme((theme) => theme.withParams({ accentColor: 'var(--eds-color-bg-accent-fill-emphasis-default)' }));
  * });
  * ```
  */
@@ -65,14 +65,12 @@ export interface IAgGridConfigurator {
    * @example
    * ```ts
    * builder.setTheme((theme) => theme.withParams({
-   *   backgroundColor: "#1f2836",
-   *   browserColorScheme: "dark",
    *   chromeBackgroundColor: {
    *     ref: "foregroundColor",
    *     mix: 0.07,
    *     onto: "backgroundColor"
    *   },
-   *   foregroundColor: "#FFF",
+   *   headerTextColor: "var(--eds-color-text-accent-strong)",
    *   headerFontSize: 14
    * }));
    * ```

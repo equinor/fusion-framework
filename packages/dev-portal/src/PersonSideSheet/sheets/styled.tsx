@@ -13,7 +13,7 @@ export const Styled = {
         flex-flow: row nowrap;
         justify-content: space-between;
         margin: 1em 0;
-        border-left: 3px solid var(--eds_interactive_primary__resting, rgba(0, 112, 121, 1));
+        border-left: 3px solid var(--eds-color-border-accent-strong);
         cursor: pointer;
     `,
   SwitchLabel: styled.div`

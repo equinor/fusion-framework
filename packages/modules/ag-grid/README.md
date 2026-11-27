@@ -51,18 +51,39 @@ The theme can be customized by providing a custom theme in the application.
 > [!TIP]
 > AG Grid has a [theme builder](https://www.ag-grid.com/theme-builder/) that can be used to preview and generate a custom theme.
 
+### Light and dark mode
+
+The default `fusionTheme` maps its accent, background, foreground and border colours to
+EDS CSS custom properties (`var(--eds-color-…)`) and sets `browserColorScheme: 'inherit'`.
+The grid therefore follows the active EDS colour scheme instead of always rendering light.
+
+> [!IMPORTANT]
+> The host page must load the EDS variables stylesheet; the theme has no literal fallbacks.
+>
+> ```ts
+> import '@equinor/eds-tokens/css/variables';
+> ```
+>
+> EDS uses dark values when an ancestor has `data-color-scheme="dark"`, or when the
+> OS/browser prefers dark and the root has no `data-color-scheme="light"`. Set
+> `data-color-scheme` explicitly if native controls should follow too, because the stylesheet
+> keeps `:root { color-scheme: light }` unless the attribute is `dark`.
+
+Prefer EDS CSS custom properties over hard-coded colours or the deprecated `tokens` object
+from `@equinor/eds-tokens` when you customise the theme, so overrides follow the colour scheme too.
+Keep `browserColorScheme` as `inherit` so native scrollbars and inputs in the grid match
+the host page's colour scheme.
+
 ```ts
 enableAgGrid(configurator, (builder) => {
     builder.setTheme((theme) => {
         return theme.withParams({
-            backgroundColor: "#1f2836",
-            browserColorScheme: "dark",
             chromeBackgroundColor: {
                 ref: "foregroundColor",
                 mix: 0.07,
                 onto: "backgroundColor"
             },
-            foregroundColor: "#FFF",
+            headerTextColor: "var(--eds-color-text-accent-strong)",
             headerFontSize: 14
         });
     });
@@ -87,7 +108,7 @@ const MyComponent = () => {
     const [hasError, setHasError] = useState(false);
     const theme = useMemo(() => baseTheme.withParams({
         // add red text color if error
-        cellTextColor: hasError ? "#FF0000" : baseTheme.cellTextColor,
+        cellTextColor: hasError ? "var(--eds-color-text-danger-subtle)" : baseTheme.cellTextColor,
     }), [baseTheme, hasError]);
 
     return (

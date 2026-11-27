@@ -26,6 +26,12 @@ import { HelpSideSheet } from './HelpSideSheet/index.js';
 import { HeaderActions } from './HeaderActions.js';
 
 const Styled = {
+  // Classic TopBar paints a fixed light background, so map it to scheme-aware EDS tokens
+  TopBar: styled(TopBar)`
+        background: var(--eds-color-bg-neutral-surface);
+        border-bottom-color: var(--eds-color-border-neutral-subtle);
+        color: var(--eds-color-text-neutral-strong);
+    `,
   Title: styled.div`
         display: flex;
         align-items: center;
@@ -69,7 +75,7 @@ export const Header = () => {
         currentUser ? { id: currentUser.localAccountId, name: currentUser.name } : undefined
       }
     >
-      <TopBar id={topBarId} sticky={false} style={{ padding: '0 1em', height: 48 }}>
+      <Styled.TopBar id={topBarId} sticky={false} style={{ padding: '0 1em', height: 48 }}>
         <TopBar.Header>
           <Styled.Title>
             <FusionLogo />
@@ -85,7 +91,7 @@ export const Header = () => {
           <ContextSelector />
         </TopBar.CustomContent>
         {/* since buttons are 40px but have 48px click bounds */}
-      </TopBar>
+      </Styled.TopBar>
       <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={onBookmarkClose} />
       <PersonSideSheet
         azureId={currentUser?.localAccountId}

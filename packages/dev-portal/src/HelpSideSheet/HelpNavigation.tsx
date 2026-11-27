@@ -13,7 +13,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    border-right: 1px solid #dcdcdc;
+    border-right: 1px solid var(--eds-color-border-neutral-subtle);
   `,
   Toggle: styled.div`
     display: flex;
@@ -28,7 +28,7 @@ const Styled = {
     list-style: none;
     margin: auto 0 0;
     padding: 0;
-    border-top: 1px solid #dcdcdc;
+    border-top: 1px solid var(--eds-color-border-neutral-subtle);
   `,
   Item: styled.button<{ $active?: boolean; $indent?: boolean }>`
     display: flex;
@@ -38,16 +38,16 @@ const Styled = {
     min-height: 42px;
     padding: 0 0.75rem 0 ${({ $indent }) => ($indent ? '0.75rem' : '0.5rem')};
     border: none;
-    border-bottom: 1px solid #f0f0f0;
-    background: ${({ $active }) => ($active ? '#007079' : 'transparent')};
-    color: ${({ $active }) => ($active ? '#ffffff' : '#007079')};
+    border-bottom: 1px solid var(--eds-color-border-neutral-subtle);
+    background: ${({ $active }) => ($active ? 'var(--eds-color-bg-accent-fill-emphasis-default)' : 'none')};
+    color: ${({ $active }) => ($active ? 'var(--eds-color-text-accent-strong-on-emphasis)' : 'var(--eds-color-text-accent-subtle)')};
     font: inherit;
     font-size: 0.875rem;
     text-align: left;
     cursor: pointer;
 
     &:hover {
-      background: ${({ $active }) => ($active ? '#007079' : '#deedee')};
+      background: ${({ $active }) => ($active ? 'var(--eds-color-bg-accent-fill-emphasis-hover)' : 'var(--eds-color-bg-accent-fill-muted-default)')};
     }
 
     & > span {

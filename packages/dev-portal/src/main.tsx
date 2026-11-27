@@ -7,12 +7,8 @@ import { PeopleResolverProvider } from '@equinor/fusion-framework-react-componen
 
 import { EquinorLoader } from './EquinorLoader.js';
 import { configure } from './configure.js';
+import { installEdsColorScheme } from './install-eds-color-scheme.js';
 import { Router } from './Router.js';
-
-import fallbackSvg from './resources/svg.js';
-
-/** Fallback avatar image used when a person photo cannot be loaded. */
-const fallbackImage = new Blob([fallbackSvg], { type: 'image/svg+xml' });
 
 /**
  * Mounts the Fusion Dev Portal into the given DOM element.
@@ -25,6 +21,7 @@ const fallbackImage = new Blob([fallbackSvg], { type: 'image/svg+xml' });
  * @param args - Render arguments containing a `ref` to the parent Fusion Framework instance.
  */
 export const render: FusionRenderFn = (target, args) => {
+  installEdsColorScheme(target.ownerDocument);
   ReactDOM.createRoot(target).render(
     <ThemeProvider theme={theme}>
       <Framework
@@ -32,7 +29,8 @@ export const render: FusionRenderFn = (target, args) => {
         parent={args.ref}
         fallback={<EquinorLoader text="Loading framework" />}
       >
-        <PeopleResolverProvider options={{ fallbackImage }}>
+        {/* No fallback image: a missing photo shows the person avatar's themed placeholder, which follows the colour scheme. */}
+        <PeopleResolverProvider>
           <Router />
         </PeopleResolverProvider>
       </Framework>

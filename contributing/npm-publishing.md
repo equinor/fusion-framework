@@ -15,6 +15,9 @@ The decision and its trade-offs are recorded in
 
 ## Release channels
 
+For the opt-in dark-mode PR chain, see [preview with local Verdaccio](dark-mode-preview.md).
+That workflow never publishes to npm or changes a release channel.
+
 All channels run in [`release.yml`](../.github/workflows/release.yml). Do not publish to npm from
 any other workflow, and do not rename the file or the environment. If you do, every package
 loses its trust configuration.

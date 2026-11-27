@@ -1,5 +1,4 @@
 import { Icon } from '@equinor/eds-core-react';
-import { tokens } from '@equinor/eds-tokens';
 import { useFramework } from '@equinor/fusion-framework-react';
 
 import { styled } from 'styled-components';
@@ -16,6 +15,7 @@ const Styled = {
         line-height: 16px;
         letter-spacing: 0em;
         text-align: right;
+        color: var(--eds-color-text-neutral-subtle);
     `,
 };
 
@@ -40,11 +40,9 @@ export const SharedIcon = ({ createdBy, createdById }: SharedIconProps) => {
       {!isMe && <Styled.CreatedBy>shared by {createdBy}</Styled.CreatedBy>}
       <Icon
         name="share"
-        color={
-          isMe
-            ? tokens.colors.interactive.primary__resting.hex
-            : tokens.colors.interactive.disabled__border.hex
-        }
+        style={{
+          color: isMe ? 'var(--eds-color-text-accent-subtle)' : 'var(--eds-color-text-disabled)',
+        }}
       />
     </Styled.Row>
   );

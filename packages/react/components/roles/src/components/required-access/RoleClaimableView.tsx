@@ -16,9 +16,9 @@ const Styled = {
 `,
 
   ClaimCard: styled(Card)`
-  border: 1px solid rgb(0 0 0 / 20%);
+  border: 1px solid var(--eds-color-border-neutral-subtle);
   border-radius: 0.25rem;
-  box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 12%);
+  box-shadow: var(--eds-elevation-low);
 `,
 };
 
